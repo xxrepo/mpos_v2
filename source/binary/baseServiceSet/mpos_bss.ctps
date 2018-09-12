@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="22">
+      <Unit0>
+        <Filename Value="mpos_bss.ppr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="15"/>
+        <CursorPos X="43" Y="30"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="..\..\kit\CMSDK\cm_DB.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="46"/>
+        <CursorPos X="47" Y="62"/>
+        <UsageCount Value="23"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\..\kit\CMSDK\cm_InterfaceLoader.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="23"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\kit\CMSDK\cm_InterfaceRegister.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="23"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\..\kit\CMSDK\cm_interfaces.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="16"/>
+        <CursorPos X="26" Y="29"/>
+        <UsageCount Value="23"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\..\kit\CMSDK\cm_messager.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="233"/>
+        <CursorPos X="17" Y="247"/>
+        <UsageCount Value="23"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="244"/>
+        <CursorPos X="10" Y="267"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\..\public\uDB.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="7"/>
+        <CursorPos X="9" Y="4"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\..\kit\CMSDK\platform\cm_LCLLibraryPlat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="23"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\..\public\uMPOS.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="4"/>
+        <UsageCount Value="23"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="uDBImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uDBUtils"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="13"/>
+        <UsageCount Value="20"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\..\public\uConstant.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="15"/>
+        <UsageCount Value="20"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="..\..\kit\CMSDK\platform\cm_LibraryPlat.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="..\..\public\uLibraryAssistant.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="10"/>
+        <CursorPos X="12" Y="29"/>
+        <UsageCount Value="10"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="291"/>
+        <CursorPos X="8" Y="299"/>
+        <UsageCount Value="11"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="..\..\kit\CMSDK\cm_classes.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="3" Y="24"/>
+        <UsageCount Value="11"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-db\src\sqldb\sqldb.pp"/>
+        <UnitName Value="SQLDB"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2474"/>
+        <CursorPos X="29" Y="2468"/>
+        <UsageCount Value="10"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <UnitName Value="Forms"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1823"/>
+        <CursorPos X="3" Y="1836"/>
+        <UsageCount Value="10"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2005"/>
+        <CursorPos X="3" Y="2018"/>
+        <UsageCount Value="11"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\lists.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1006"/>
+        <CursorPos X="5" Y="1008"/>
+        <UsageCount Value="11"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\intf.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="76"/>
+        <CursorPos X="37" Y="81"/>
+        <UsageCount Value="11"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="uDBUtils.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="47" Y="165"/>
+        <UsageCount Value="11"/>
+      </Unit21>
+    </Units>
+    <JumpHistory Count="12" HistoryIndex="11">
+      <Position1>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="14" Column="33"/>
+      </Position1>
+      <Position2>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="40" Column="23" TopLine="16"/>
+      </Position2>
+      <Position3>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="38" Column="41" TopLine="16"/>
+      </Position3>
+      <Position4>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="26" Column="35" TopLine="17"/>
+      </Position4>
+      <Position5>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="33" Column="17" TopLine="17"/>
+      </Position5>
+      <Position6>
+        <Filename Value="..\..\public\uDB.pas"/>
+        <Caret Line="16" Column="25"/>
+      </Position6>
+      <Position7>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="13" Column="45"/>
+      </Position7>
+      <Position8>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="28" Column="19" TopLine="15"/>
+      </Position8>
+      <Position9>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
+        <Caret Line="79" Column="20" TopLine="77"/>
+      </Position9>
+      <Position10>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
+        <Caret Line="163" Column="30" TopLine="154"/>
+      </Position10>
+      <Position11>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
+        <Caret Line="188" Column="35" TopLine="178"/>
+      </Position11>
+      <Position12>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
+        <Caret Line="243" Column="10" TopLine="220"/>
+      </Position12>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

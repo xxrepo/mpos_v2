@@ -1,0 +1,24 @@
+program MPOS;
+
+{$mode objfpc}{$H+}
+
+uses
+  {$IFDEF UNIX}
+  cthreads,
+  {$ENDIF}
+  Interfaces, // this includes the adLCL widgetset
+  Forms,
+  uFormMain, uStart, uMenus, uMenuUtils;
+
+{$R *.res}
+
+begin
+  RequireDerivedFormResource := True;
+  Application.Scaled := True;
+  Application.Initialize;
+  POSStart.Init;
+  Application.CreateForm(TMainForm, MainForm);
+  POSStart.Start;
+  Application.Run;
+end.
+

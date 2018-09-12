@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="8">
+      <Unit0>
+        <Filename Value="project1.ppr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="72"/>
+        <CursorPos X="34" Y="85"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="C:\codetyphon\typhon\components\pl_Barcodes\source\ubarcodes.pas"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="338"/>
+        <CursorPos Y="352"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="C:\codetyphon\typhon\components\pl_Barcodes\source\uqr.pas"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="1729"/>
+        <CursorPos X="69" Y="1750"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\wincontrol.inc"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="7402"/>
+        <CursorPos Y="7416"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="1125"/>
+        <CursorPos X="29" Y="1136"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\canvas.inc"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="22"/>
+        <CursorPos X="32" Y="36"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <UnitName Value="LR_Class"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="637"/>
+        <CursorPos X="17" Y="648"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit7>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\canvas.inc"/>
+        <Caret Line="1778" Column="22" TopLine="1755"/>
+      </Position1>
+      <Position2>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\canvas.inc"/>
+        <Caret Line="1791" Column="25" TopLine="1769"/>
+      </Position2>
+      <Position3>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\canvas.inc"/>
+        <Caret Line="1795" Column="29" TopLine="1773"/>
+      </Position3>
+      <Position4>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="74" Column="36" TopLine="59"/>
+      </Position4>
+      <Position5>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="75" Column="36" TopLine="60"/>
+      </Position5>
+      <Position6>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="70" Column="9" TopLine="59"/>
+      </Position6>
+      <Position7>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="823" Column="26" TopLine="812"/>
+      </Position7>
+      <Position8>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="1138" Column="29" TopLine="1115"/>
+      </Position8>
+      <Position9>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="1355" Column="89" TopLine="1334"/>
+      </Position9>
+      <Position10>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="1356" Column="78" TopLine="1335"/>
+      </Position10>
+      <Position11>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="2573" Column="56" TopLine="2550"/>
+      </Position11>
+      <Position12>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="2579" Column="13" TopLine="2556"/>
+      </Position12>
+      <Position13>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="2586" Column="24" TopLine="2563"/>
+      </Position13>
+      <Position14>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="2610" Column="54" TopLine="2587"/>
+      </Position14>
+      <Position15>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="4839" Column="46" TopLine="4817"/>
+      </Position15>
+      <Position16>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="7" Column="66"/>
+      </Position16>
+      <Position17>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="416" Column="15" TopLine="393"/>
+      </Position17>
+      <Position18>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="9" Column="73"/>
+      </Position18>
+      <Position19>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="425" Column="41" TopLine="411"/>
+      </Position19>
+      <Position20>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="1138" Column="29" TopLine="1115"/>
+      </Position20>
+      <Position21>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="1355" Column="89" TopLine="1346"/>
+      </Position21>
+      <Position22>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="1356" Column="37" TopLine="1346"/>
+      </Position22>
+      <Position23>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="571" Column="24" TopLine="560"/>
+      </Position23>
+      <Position24>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="191" Column="41" TopLine="187"/>
+      </Position24>
+      <Position25>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="384" Column="34" TopLine="361"/>
+      </Position25>
+      <Position26>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="398" Column="29" TopLine="375"/>
+      </Position26>
+      <Position27>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="571" Column="30" TopLine="569"/>
+      </Position27>
+      <Position28>
+        <Filename Value="C:\codetyphon\typhon\components\lz_Report\source\lr_class.pas"/>
+        <Caret Line="625" Column="35" TopLine="602"/>
+      </Position28>
+      <Position29>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="83" Column="3" TopLine="68"/>
+      </Position29>
+      <Position30>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="84" Column="51" TopLine="72"/>
+      </Position30>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

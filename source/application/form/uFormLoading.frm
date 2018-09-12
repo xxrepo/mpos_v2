@@ -1,0 +1,72 @@
+object LoadingForm: TLoadingForm
+  Left = 264
+  Height = 174
+  Top = 183
+  Width = 406
+  BorderStyle = bsNone
+  Caption = 'LoadingForm'
+  ClientHeight = 174
+  ClientWidth = 406
+  Color = 7672663
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '6.5'
+  object LabelMsg: TLabel
+    Left = 8
+    Height = 12
+    Top = 134
+    Width = 390
+    Align = alBottom
+    BorderSpacing.Around = 8
+    Caption = 'LabelMsg'
+    Font.Color = clWhite
+    ParentColor = False
+    ParentFont = False
+  end
+  object ProgressBar: TProgressBar
+    Left = 48
+    Height = 20
+    Top = 80
+    Width = 312
+    Smooth = True
+    Step = 1
+    TabOrder = 0
+  end
+  object LabelTitle: TLabel
+    Left = 120
+    Height = 40
+    Top = 32
+    Width = 180
+    Caption = '加载中...'
+    Font.Color = clWhite
+    Font.Height = -40
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelRight: TLabel
+    Left = 8
+    Height = 12
+    Top = 154
+    Width = 390
+    Align = alBottom
+    Alignment = taCenter
+    BorderSpacing.Around = 8
+    Caption = 'Copyright'
+    Font.Color = 16747660
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelMsg2: TLabel
+    Left = 8
+    Height = 11
+    Top = 115
+    Width = 390
+    Align = alBottom
+    BorderSpacing.Around = 8
+    Caption = 'LabelMsg2'
+    Font.Color = 8815234
+    Font.Height = -11
+    ParentColor = False
+    ParentFont = False
+  end
+end

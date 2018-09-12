@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<themes>
+	<theme name='lavender' title="薰衣草">
+        <titleColor>$d88e9c</titleColor>
+		<titleFont>
+		    <color>0</color>
+			<size>22</size>
+			<name>黑体</name>
+		</titleFont>
+		<boardColor>$ffffff</boardColor>
+		<panelColor>$fbd5dd</panelColor>
+		<defaultFont>
+		    <color>0</color>
+			<size>11</size>
+			<name>宋体</name>
+		</defaultFont>
+		<statusBarColor>$1f0d1f</statusBarColor>
+	    
+		<service>
+			<titleColor>$e99fad</titleColor>
+			<titleFont>
+				<color>0</color>
+				<size>14</size>
+				<name>黑体</name>
+			</titleFont>
+			<buttonBarColor>$e99fad</buttonBarColor>
+		</service>
+			
+		<popup>
+		    <titleColor>$e99fad</titleColor>
+			<titleFont>
+				<color>0</color>
+				<size>18</size>
+				<name>黑体</name>
+			</titleFont>
+			<backgroundColor>$fbd5dd</backgroundColor>
+			<defaultFont>
+				<color>0</color>
+				<size>12</size>
+				<name>宋体</name>
+			</defaultFont>
+		    <selectedButtonFontColor>$944a58</selectedButtonFontColor>
+		</popup>
+
+		<color1>$cfc76c</color1>
+		<color2>$748de3</color2>
+		<color3>$e7bf66</color3>
+		<color4>$dddddd</color4>
+	</theme>
+
+	<!--  -->
+
+	<theme name='sweet' title="甜蜜">
+	    <titleColor>$d89fce</titleColor>
+		<titleFont>
+		    <color>0</color>
+			<size>22</size>
+			<name>黑体</name>
+		</titleFont>
+		<boardColor>$ffffff</boardColor>
+		<panelColor>$ead5ff</panelColor>
+		<defaultFont>
+		    <color>0</color>
+			<size>11</size>
+			<name>宋体</name>
+		</defaultFont>
+		<statusBarColor>$1f0d1f</statusBarColor>
+	    
+		<service>
+			<titleColor>$d89fce</titleColor>
+			<titleFont>
+				<color>0</color>
+				<size>14</size>
+				<name>黑体</name>
+			</titleFont>
+			<buttonBarColor>$d89fce</buttonBarColor>
+		</service>
+
+		<popup>
+		    <titleColor>$d89fce</titleColor>
+			<titleFont>
+				<color>0</color>
+				<size>18</size>
+				<name>黑体</name>
+			</titleFont>
+			<backgroundColor>$ead5ff</backgroundColor>
+			<defaultFont>
+				<color>0</color>
+				<size>12</size>
+				<name>宋体</name>
+			</defaultFont>
+		    <selectedButtonFontColor>$834a69</selectedButtonFontColor>
+		</popup>
+
+		<color1>$bec77d</color1>
+		<color2>$638df4</color2>
+		<color3>$d6bf77</color3>
+		<color4>$ccddff</color4>
+	</theme>
+</themes>

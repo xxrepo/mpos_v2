@@ -1,0 +1,11 @@
+ACanvas.FillRect(c.Left-FSW-FSI, c.Top-FSW-FSI, c.Left+FSH, c.Top-FSI);
+  ACanvas.FillRect(c.Left-FSW-FSI, c.Top-FSI, c.Left-FSI, c.Top+FSH);
+  //
+  ACanvas.FillRect(c.BoundsRect.Right-FSH, c.Top-FSW-FSI, c.BoundsRect.Right+FSW+FSI, c.Top-FSI);
+  ACanvas.FillRect(c.BoundsRect.Right+FSI, c.Top-FSI, c.BoundsRect.Right+FSW+FSI, c.Top+FSH);
+  //
+  ACanvas.FillRect(c.Left-FSW-FSI, c.BoundsRect.Bottom+FSI, c.Left+FSH, c.BoundsRect.Bottom+FSW+FSI);
+  ACanvas.FillRect(c.Left-FSW-FSI, c.BoundsRect.Bottom-FSH, c.Left-FSI, c.BoundsRect.Bottom+FSI);
+  //
+  ACanvas.FillRect(c.BoundsRect.Right-FSH, c.BoundsRect.Bottom+FSI, c.BoundsRect.Right+FSW+FSI, c.BoundsRect.Bottom+FSW+FSI);
+  ACanvas.FillRect(c.BoundsRect.Right+FSI, c.BoundsRect.Bottom-FSH, c.BoundsRect.Right+FSW+FSI, c.BoundsRect.Bottom+FSI);

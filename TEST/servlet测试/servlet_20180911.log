@@ -1,0 +1,24 @@
+[2018-09-11 08:40:26.419 Info] ============================================================
+[2018-09-11 08:40:27.448 Debug] TServletContextHandler:ContextPath:/a/b URL.path:/a/b
+[2018-09-11 08:40:27.448 Debug] TServletContextHandler:--1----------------
+[2018-09-11 08:40:27.448 Debug] TServletContextHandler:--/a/b/test--/a/b/test
+[2018-09-11 08:40:27.448 Debug] TServletContextHandler:--2----------------
+[2018-09-11 08:40:27.448 Info] TTestServlet:hello world!
+[2018-09-11 08:40:27.448 Info] TTestServlet:test.servlet
+[2018-09-11 08:40:27.448 Info] TTestServlet:------------------------------
+[2018-09-11 08:40:27.448 Info] TTestServlet:cm_JettyImpl.TServletContextHandler
+[2018-09-11 08:40:27.448 Info] TTestServlet:over.
+[2018-09-11 11:56:25.758 Info] ============================================================
+[2018-09-11 11:58:33.910 Info] ============================================================
+[2018-09-11 11:58:54.471 Info] ============================================================
+[2018-09-11 11:58:55.553 Debug] TServletContextHandler:ContextPath:/a/b URL.path:/a/b
+[2018-09-11 11:58:55.554 Debug] TServletContextHandler:--1----------------
+[2018-09-11 11:58:55.554 Debug] TServletContextHandler:--/a/b/test--/a/b/test
+[2018-09-11 11:58:55.554 Debug] TServletContextHandler:--2----------------
+[2018-09-11 11:58:55.554 Info] TTestServlet:hello world!
+[2018-09-11 11:58:55.554 Info] TTestServlet:test.servlet
+[2018-09-11 11:58:55.554 Info] TTestServlet:------------------------------
+[2018-09-11 11:58:55.554 Info] TTestServlet:cm_JettyImpl.TServletContextHandler
+[2018-09-11 11:58:55.554 Info] TTestServlet:over.
+[2018-09-11 14:04:32.526 Info] ============================================================
+[2018-09-11 14:04:33.887 Info] TServer:Handle(cmstp://test:80/a/b/test?x=aaa&y=123) There is no start handle.

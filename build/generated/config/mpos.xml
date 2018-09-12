@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mpos>
+	<resources>
+		<ico>img/logo.ico</ico>
+		<logo>img/logo.png</logo>
+	</resources>
+	<XMLConfig>
+		 <test>config/test.xml</test>
+	</XMLConfig>
+</mpos>

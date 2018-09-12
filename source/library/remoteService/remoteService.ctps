@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="32">
+      <Unit0>
+        <Filename Value="remoteService.ppr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="11"/>
+        <CursorPos X="37" Y="21"/>
+        <UsageCount Value="216"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="..\..\kit\CMSDK\cm_InterfaceLoader.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="216"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\..\kit\CMSDK\cm_InterfaceRegister.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="216"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\public\uLibraryAssistant.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="31" Y="11"/>
+        <UsageCount Value="216"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\..\kit\CMSDK\platform\cm_LCLLibraryPlat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="216"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="uRemoteServiceHttpImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <TopLine Value="870"/>
+        <CursorPos X="5" Y="981"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\..\public\uMPOS.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="59"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\..\service\uRemoteService.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="44"/>
+        <CursorPos Y="64"/>
+        <UsageCount Value="212"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="uRemoteServiceWstImpl.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="128"/>
+        <CursorPos X="25" Y="173"/>
+        <UsageCount Value="212"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="uPosService.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="249"/>
+        <CursorPos X="49" Y="248"/>
+        <UsageCount Value="212"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="PosService.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="841"/>
+        <CursorPos X="140" Y="853"/>
+        <UsageCount Value="196"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="x.wst"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="196"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="PosService_proxy.pas"/>
+        <UnitName Value="PosService_Proxy"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="425"/>
+        <CursorPos X="68" Y="448"/>
+        <UsageCount Value="196"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="C:\codetyphon\typhon\components\pl_WST\source\fpc_http_protocol.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="15" Y="62"/>
+        <UsageCount Value="102"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="C:\codetyphon\typhon\components\pl_WST\source\service_intf.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="72"/>
+        <CursorPos X="3" Y="87"/>
+        <UsageCount Value="2"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="C:\codetyphon\typhon\components\pl_WST\source\indy_http_protocol.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="64" Y="13"/>
+        <UsageCount Value="3"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="C:\codetyphon\typhon\components\pl_Indy\source\IdHTTP.pas"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="97"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="C:\codetyphon\typhon\components\pl_Indy\source\IdCookie.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="193"/>
+        <CursorPos X="81" Y="204"/>
+        <UsageCount Value="97"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="C:\codetyphon\typhon\components\pl_Indy\source\IdURI.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="66"/>
+        <CursorPos X="3" Y="81"/>
+        <UsageCount Value="97"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="175"/>
+        <CursorPos X="3" Y="163"/>
+        <UsageCount Value="97"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="..\..\kit\CMSDK\cm_XML.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="53"/>
+        <CursorPos X="3" Y="61"/>
+        <UsageCount Value="4"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="C:\codetyphon\typhon\components\pl_WST\source\soap_formatter.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="235"/>
+        <CursorPos X="97" Y="255"/>
+        <UsageCount Value="3"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="..\..\kit\CMSDK\cm_parameter.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="46"/>
+        <CursorPos X="15" Y="53"/>
+        <UsageCount Value="102"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="C:\codetyphon\typhon\components\pl_WST\source\base_service_intf.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="257"/>
+        <CursorPos X="3" Y="272"/>
+        <UsageCount Value="101"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="..\..\kit\CMSDK\cm_DOM.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="172"/>
+        <CursorPos X="34" Y="185"/>
+        <UsageCount Value="50"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\win\sysosh.inc"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="3" Y="33"/>
+        <UsageCount Value="16"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\threadh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="17"/>
+        <CursorPos X="22" Y="159"/>
+        <UsageCount Value="1"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\sysstrh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="218"/>
+        <CursorPos X="22" Y="229"/>
+        <UsageCount Value="31"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="C:\codetyphon\typhon\components\pl_Indy\source\IdAntiFreeze.pas"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="2"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="..\..\kit\CMSDK\cm_messager.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="280"/>
+        <UsageCount Value="6"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\application.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="218"/>
+        <CursorPos X="23" Y="233"/>
+        <UsageCount Value="6"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <UnitName Value="Forms"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1477"/>
+        <CursorPos X="69" Y="1490"/>
+        <UsageCount Value="6"/>
+      </Unit31>
+    </Units>
+    <JumpHistory Count="9" HistoryIndex="8">
+      <Position1>
+        <Filename Value="uRemoteServiceHttpImpl.pas"/>
+        <Caret Line="780" TopLine="402"/>
+      </Position1>
+      <Position2>
+        <Filename Value="uRemoteServiceHttpImpl.pas"/>
+        <Caret Line="26" Column="54" TopLine="10"/>
+      </Position2>
+      <Position3>
+        <Filename Value="uRemoteServiceHttpImpl.pas"/>
+        <Caret Line="24" Column="42" TopLine="7"/>
+      </Position3>
+      <Position4>
+        <Filename Value="uRemoteServiceHttpImpl.pas"/>
+        <Caret Line="24" Column="21" TopLine="9"/>
+      </Position4>
+      <Position5>
+        <Filename Value="uRemoteServiceHttpImpl.pas"/>
+        <Caret Line="8" Column="46" TopLine="3"/>
+      </Position5>
+      <Position6>
+        <Filename Value="uRemoteServiceHttpImpl.pas"/>
+        <Caret Line="11" Column="20" TopLine="4"/>
+      </Position6>
+      <Position7>
+        <Filename Value="uRemoteServiceHttpImpl.pas"/>
+        <Caret Line="8" Column="41"/>
+      </Position7>
+      <Position8>
+        <Filename Value="uRemoteServiceHttpImpl.pas"/>
+        <Caret Line="12" Column="63" TopLine="2"/>
+      </Position8>
+      <Position9>
+        <Filename Value="remoteService.ppr"/>
+        <Caret Line="9" Column="54"/>
+      </Position9>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="1" ActiveMode="default">
+        <Mode0 Name="default">
+          <local>
+            <HostApplicationFilename Value="D:\SourceCode\NewSrc\MPOS\build\generated\MPOS.exe"/>
+          </local>
+        </Mode0>
+      </Modes>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

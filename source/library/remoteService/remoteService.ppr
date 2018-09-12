@@ -1,0 +1,38 @@
+library remoteService;
+
+{$mode objfpc}{$H+}
+
+uses {$IFDEF UNIX}
+  cthreads, {$ENDIF}
+  Classes,
+  Interfaces,
+  Forms,
+  cm_InterfaceLoader,
+  cm_InterfaceRegister,
+  uLibraryAssistant,
+  uRemoteService,
+  //uRemoteServiceWstImpl,
+  uRemoteServiceHttpImpl;
+
+  function LoadExport(ARegister: ICMInterfaceRegister; const AInfo: ICMLibInfo): boolean; stdcall;
+  begin
+    Result := False;
+    if not LibraryInitialize(ARegister) then
+      Exit;
+    if (ARegister.PutInterface(IRemoteService, THttpRemoteService.Create(nil)) >= 0) then
+      //if (ARegister.PutInterface(IRemoteService, TWstRemoteService.Create(nil), 'WST') >= 0) then
+      Result := True;
+  end;
+
+  function UnloadExport(AStatus: integer): boolean; stdcall;
+  begin
+    Result := LibraryFinalize;
+  end;
+
+exports
+  LoadExport,
+  UnloadExport;
+
+begin
+  Application.Initialize;
+end.

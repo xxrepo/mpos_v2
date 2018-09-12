@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cms-app version="2.5">
+  <display-name>DWTest</display-name>
+  <servlet>
+    <servlet-name>B</servlet-name>
+    <servlet-interface>com.B</servlet-interface>
+	<init-param>
+	  <param-name>name1</param-name>
+	  <param-value>value1</param-value>
+	</init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>B</servlet-name>
+    <url-pattern>/B</url-pattern>
+	<url-pattern>/BB</url-pattern>
+  </servlet-mapping>
+  
+  <filter>
+    <filter-name>F</filter-name>
+    <filter-interface>com.F</filter-interface>
+  </filter>
+  <filter-mapping>
+    <filter-name>F</filter-name>
+    <url-pattern>/B</url-pattern>
+  </filter-mapping>
+
+  <listener>
+    <listener-interface>com.L</listener-interface>
+  </listener>
+</cms-app>
