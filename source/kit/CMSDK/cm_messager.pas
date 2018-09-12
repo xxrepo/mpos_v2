@@ -243,7 +243,7 @@ type
   private
     FMessager: TCMMessager;
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent); override; overload;
     constructor Create(AOwner: TComponent; AHandler: ICMMessageHandler); overload;
     function Messager: TCMMessager;
   end;
