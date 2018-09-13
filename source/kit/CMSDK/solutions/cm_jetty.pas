@@ -156,6 +156,13 @@ type
   { TJettyServletContext }
 
   TJettyServletContext = class(TServletContext)
+  private
+    FHandler: IHandler;
+    FServletHolders: TServletHolderList;
+  public
+    constructor Create(AHandler: IHandler);
+    destructor Destroy; override;
+    procedure RegisterServlet(AHolder: IServletHolder);
   public
     function GetNamedDispatcher(const AName: string): IRequestDispatcher; override;
     function GetRequestDispatcher(const APath: string): IRequestDispatcher; override;
@@ -180,14 +187,59 @@ implementation
 
 { TJettyServletContext }
 
+constructor TJettyServletContext.Create(AHandler: IHandler);
+begin
+  FHandler := AHandler;
+  FServletHolders := TServletHolderList.Create;
+end;
+
+destructor TJettyServletContext.Destroy;
+begin
+  FHandler := nil;
+  FServletHolders.Free;
+  inherited Destroy;
+end;
+
+procedure TJettyServletContext.RegisterServlet(AHolder: IServletHolder);
+begin
+  FServletHolders.Add(AHolder);
+end;
+
 function TJettyServletContext.GetNamedDispatcher(const AName: string): IRequestDispatcher;
+var
+  i: Integer;
+  sh: IServletHolder;
 begin
   Result := nil;
+  for i:=0 to FServletHolders.Count-1 do
+    begin
+      sh := FServletHolders[i];
+      if sh.GetServlet.GetServletConfig.GetServletName = AName then
+        begin
+          //TODO 路径问题
+          Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + sh.GetURLPatterns[0]]);
+          Result := TJettyRequestDispatcher.Create(Self.GetContextPath + sh.GetURLPatterns[0], FHandler);
+          Exit;
+        end;
+    end;
 end;
 
 function TJettyServletContext.GetRequestDispatcher(const APath: string): IRequestDispatcher;
+var
+  i: Integer;
+  sh: IServletHolder;
 begin
   Result := nil;
+  for i:=0 to FServletHolders.Count-1 do
+    begin
+      sh := FServletHolders[i];
+      if sh.GetURLPatterns.IndexOf(APath) >=0 then
+        begin
+          Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + APath]);
+          Result := TJettyRequestDispatcher.Create(Self.GetContextPath + APath, FHandler);
+          Exit;
+        end;
+    end;
 end;
 
 { TJettyRequestDispatcher }

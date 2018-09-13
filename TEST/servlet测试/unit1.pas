@@ -140,18 +140,25 @@ var
   response: IServletResponse;
   s: IServlet;
   sh: TServletHolder;
+  //
+  servletHandler: IServletHandler;
 begin
   //server
   server := TServer.Create;
   //servlet context
   scHandler := TServletContextHandler.Create;
-  scHandler.SetContextPath('/a/b');
+  scHandler.SetContextPath('/test');
   s := TTestServlet.Create;
   sh := TServletHolder.Create;
   sh.SetName('kkkkkkkk');
-  sh.AddURLPattern('/test');
+  sh.AddURLPattern('/a/b');
   sh.SetServlet(s);
   scHandler.AddServlet(sh);
+
+  //-------------------------------------
+  servletHandler := nil;
+  scHandler.SetHandler(servletHandler);
+  //-------------------------------------
 
   server.SetHandler(scHandler);
 
@@ -164,7 +171,7 @@ begin
   server.Start;
 
   //request
-  request := TServletRequest.Create('cmstp://test:80/a/b/test?x=aaa&y=123');
+  request := TServletRequest.Create('cmstp://test:80/test/a/b?x=aaa&y=123');
   response := TServletResponse.Create;
   server.Handle(request, response);
   println(response.GetContent.Get('test').AsString);

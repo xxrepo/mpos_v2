@@ -29,6 +29,8 @@ begin
   Messager.Info(Self.GetServletConfig.GetServletContext.GetServerInfo);
 
   AResponse.GetContent.SetString('test', 'haha');
+  Messager.Info('------------------------------');
+  Self.GetServletContext.GetRequestDispatcher('/a/b');
 
   Messager.Info('over.');
 end;

@@ -25,10 +25,13 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <RequiredPackages Count="1">
+    <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="adLCL"/>
+        <PackageName Value="pl_generics"/>
       </Item1>
+      <Item2>
+        <PackageName Value="adLCL"/>
+      </Item2>
     </RequiredPackages>
     <Units Count="3">
       <Unit0>
@@ -39,6 +42,7 @@
         <Filename Value="unit1.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
       </Unit1>
@@ -56,7 +60,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="D:\_Pascal\work_new_src\MPOS\source\kit\CMSDK"/>
+      <OtherUnitFiles Value="D:\_Pascal\work_new_src\MPOS\source\kit\CMSDK\"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

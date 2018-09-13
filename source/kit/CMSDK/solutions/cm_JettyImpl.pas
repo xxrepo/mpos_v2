@@ -1,4 +1,4 @@
-{
+f{
     This file is part of the CM SDK.
     Copyright (c) 2013-2018 by the ChenMeng studio
 
@@ -139,6 +139,7 @@ type
     FWrapper: IHandlerWrapper;
   protected
     procedure DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse); virtual;
+    procedure ThisHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse); virtual;
   public
     constructor Create;
     procedure Handle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse); override;
@@ -149,15 +150,16 @@ type
 
   { TServletContextHandler }
 
-  TServletContextHandler = class(THandlerWrapper, IContextHandler, IServletContextHandler, IServletFind)
+  TServletContextHandler = class(THandlerWrapper, IContextHandler, IServletContextHandler)
   private
     FServletContext: TServletContext;
-    FFilters: TFilterHolderList;
-    FServlets: TServletHolderList;
+    FFilterHolders: TFilterHolderList;
+    FServletHolders: TServletHolderList;
   public
     constructor Create;
     destructor Destroy; override;
     procedure DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse); override;
+    procedure ThisHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse); override;
   public //ContextHandler
     procedure SetContextPath(const APath: string);
     function GetContextPath: string;
@@ -167,30 +169,29 @@ type
   public //ServletContextHandler
     procedure AddFilter(AFilter: IFilterHolder);
     procedure AddServlet(AHolder: IServletHolder);
-  public //IServletFind
-    function FindByPath(const APath: string): IServlet;
-    function FindByName(const AName: string): IServlet;
   end;
 
-  {
-  TServletHandler = class(TScopedHandler, IServletHandler)
+
+  { TServletHandler }
+
+  TServletHandler = class(THandlerWrapper, IServletHandler)
   protected
-    procedure DoStart; override;
-    procedure DoStop; override;
-    //procedure start​(LifeCycle l)
+    FServletContext: IServletContext;
   public
-    procedure Init;
+    constructor Create(AServletContext: IServletContext);
+    destructor Destroy; override;
+  public //IServletHandler
     procedure AddFilter(AFilter: TFilterHolder);
     procedure AddListener(AListener: TListenerHolder);
     procedure AddServlet(AHolder: TServletHolder);
     function GetFilter(const AName: string): TFilterHolder;
     function GetFilters: TFilterHolderArray;
     function GetListeners: TListenerHolderArray;
-    function GetServlet(const AName: string): TServletHolder
+    function GetServlet(const AName: string): TServletHolder;
     function GetServletContext: IServletContext;
     function GetServlets: TServletHolderArray;
   end;
-  }
+
   (***************************************** Server ***********************************************)
 
   { TServer }
@@ -426,13 +427,20 @@ var
 begin
   h := GetHandler;
   if Assigned(h) then
-    h.Handle(ATarget, ARequest, AResponse);
+    h.Handle(ATarget, ARequest, AResponse)
+  else
+    ThisHandle(ATarget, ARequest, AResponse);
+end;
+
+procedure THandlerWrapper.ThisHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
+begin
+  //
 end;
 
 procedure THandlerWrapper.Handle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
 var
   h: IHandler;
-  i: Integer;
+  //i: Integer;
 begin
   Messager.Debug('Handle(%s, *, *)...', [ATarget]);
   if not Self.IsRunning then
@@ -445,11 +453,18 @@ begin
       if Supports(FWrapper, IHandler, h) then
         h.Handle(ATarget, ARequest, AResponse)
       else
-        for i:=0 to FWrapper.GetHandlers.Count-1 do
-          FWrapper.GetHandlers[i].Handle(ATarget, ARequest, AResponse);
+        begin
+          //for i:=0 to FWrapper.GetHandlers.Count-1 do
+          //  FWrapper.GetHandlers[i].Handle(ATarget, ARequest, AResponse);
+          h := FWrapper.GetHandler;
+          if Assigned(h) then
+            h.Handle(ATarget, ARequest, AResponse);
+        end;
     end
   else
-    DoHandle(ATarget, ARequest, AResponse);
+    begin
+      DoHandle(ATarget, ARequest, AResponse);
+    end;
 end;
 
 procedure THandlerWrapper.SetHandler(AHandler: IHandler);
@@ -475,21 +490,26 @@ end;
 constructor TServletContextHandler.Create;
 begin
   inherited Create;
-  FServletContext := TJettyServletContext.Create;
+  FServletContext := TJettyServletContext.Create(Self);
   FServletContext.ServerInfo := Self.UnitName + '.' + Self.ClassName;
-  FFilters := TFilterHolderList.Create;
-  FServlets := TServletHolderList.Create;
+  FFilterHolders := TFilterHolderList.Create;
+  FServletHolders := TServletHolderList.Create;
 end;
 
 destructor TServletContextHandler.Destroy;
 begin
   FServletContext.Free;
-  FFilters.Free;
-  FServlets.Free;
+  FFilterHolders.Free;
+  FServletHolders.Free;
   inherited Destroy;
 end;
 
 procedure TServletContextHandler.DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
+begin
+  inherited DoHandle(ATarget, ARequest, AResponse);
+end;
+
+procedure TServletContextHandler.ThisHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
 var
   FURL: TCMURL;
   i: Integer;
@@ -501,14 +521,14 @@ begin
   if StartsStr(GetContextPath, FURL.Path) then
     begin
       Messager.Debug('--1----------------');
-      for i:=0 to FServlets.Count-1 do
+      for i:=0 to FServletHolders.Count-1 do
         begin
           //匹配 servlet
-          Messager.Debug('--%s--%s', [GetContextPath + FServlets[i].GetURLPatterns[0], FURL.GetFullPath]);
-          if SameText(GetContextPath + FServlets[i].GetURLPatterns[0], FURL.GetFullPath) then
+          Messager.Debug('--%s--%s', [GetContextPath + FServletHolders[i].GetURLPatterns[0], FURL.GetFullPath]);
+          if SameText(GetContextPath + FServletHolders[i].GetURLPatterns[0], FURL.GetFullPath) then
             begin
               Messager.Debug('--2----------------');
-              servlet := FServlets[i].GetServlet;
+              servlet := FServletHolders[i].GetServlet;
               if Assigned(servlet) then
                 begin
                   //调用 init() 注入 servlet config
@@ -518,7 +538,6 @@ begin
                 end;
             end;
         end;
-      inherited DoHandle(ATarget, ARequest, AResponse);
     end;
 end;
 
@@ -549,22 +568,12 @@ end;
 
 procedure TServletContextHandler.AddFilter(AFilter: IFilterHolder);
 begin
-  FFilters.Add(AFilter);
+  FFilterHolders.Add(AFilter);
 end;
 
 procedure TServletContextHandler.AddServlet(AHolder: IServletHolder);
 begin
-  FServlets.Add(AHolder);
-end;
-
-function TServletContextHandler.FindByPath(const APath: string): IServlet;
-begin
-  Result := nil;
-end;
-
-function TServletContextHandler.FindByName(const AName: string): IServlet;
-begin
-  Result := nil;
+  FServletHolders.Add(AHolder);
 end;
 
 { TServer }
@@ -624,6 +633,64 @@ end;
 function TServer.GetThreadPool: TExecuteThreadBool;
 begin
   Result := FThreadPool;
+end;
+
+{ TServletHandler }
+
+constructor TServletHandler.Create(AServletContext: IServletContext);
+begin
+  FServletContext := AServletContext;
+end;
+
+destructor TServletHandler.Destroy;
+begin
+  FServletContext := nil;
+  inherited Destroy;
+end;
+
+procedure TServletHandler.AddFilter(AFilter: TFilterHolder);
+begin
+
+end;
+
+procedure TServletHandler.AddListener(AListener: TListenerHolder);
+begin
+
+end;
+
+procedure TServletHandler.AddServlet(AHolder: TServletHolder);
+begin
+
+end;
+
+function TServletHandler.GetFilter(const AName: string): TFilterHolder;
+begin
+
+end;
+
+function TServletHandler.GetFilters: TFilterHolderArray;
+begin
+
+end;
+
+function TServletHandler.GetListeners: TListenerHolderArray;
+begin
+
+end;
+
+function TServletHandler.GetServlet(const AName: string): TServletHolder;
+begin
+
+end;
+
+function TServletHandler.GetServletContext: IServletContext;
+begin
+
+end;
+
+function TServletHandler.GetServlets: TServletHolderArray;
+begin
+
 end;
 
 

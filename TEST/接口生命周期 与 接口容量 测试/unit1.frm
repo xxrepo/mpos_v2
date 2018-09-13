@@ -1,11 +1,11 @@
 object Form1: TForm1
   Left = 308
-  Height = 333
+  Height = 382
   Top = 186
-  Width = 738
+  Width = 764
   Caption = 'Form1'
-  ClientHeight = 333
-  ClientWidth = 738
+  ClientHeight = 382
+  ClientWidth = 764
   LCLVersion = '6.5'
   object Button1: TButton
     Left = 456
@@ -18,7 +18,7 @@ object Form1: TForm1
   end
   object Memo1: TMemo
     Left = 0
-    Height = 333
+    Height = 382
     Top = 0
     Width = 440
     Align = alLeft
@@ -89,5 +89,59 @@ object Form1: TForm1
     Caption = 'Button8'
     OnClick = Button8Click
     TabOrder = 8
+  end
+  object Button9: TButton
+    Left = 456
+    Height = 25
+    Top = 216
+    Width = 75
+    Caption = 'Button9'
+    OnClick = Button9Click
+    TabOrder = 9
+  end
+  object Button10: TButton
+    Left = 456
+    Height = 25
+    Top = 246
+    Width = 75
+    Caption = 'Button10'
+    OnClick = Button10Click
+    TabOrder = 10
+  end
+  object Button11: TButton
+    Left = 544
+    Height = 25
+    Top = 216
+    Width = 75
+    Caption = 'Button11'
+    OnClick = Button11Click
+    TabOrder = 11
+  end
+  object Button12: TButton
+    Left = 456
+    Height = 25
+    Top = 280
+    Width = 75
+    Caption = 'Button12'
+    OnClick = Button12Click
+    TabOrder = 12
+  end
+  object Button13: TButton
+    Left = 456
+    Height = 25
+    Top = 312
+    Width = 75
+    Caption = 'Button13'
+    OnClick = Button13Click
+    TabOrder = 13
+  end
+  object Button14: TButton
+    Left = 544
+    Height = 25
+    Top = 280
+    Width = 75
+    Caption = 'Button14'
+    OnClick = Button14Click
+    TabOrder = 14
   end
 end
