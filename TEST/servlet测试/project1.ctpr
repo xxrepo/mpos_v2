@@ -33,7 +33,7 @@
         <PackageName Value="adLCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="20">
+    <Units Count="21">
       <Unit0>
         <Filename Value="project1.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -59,66 +59,71 @@
         <IsPartOfProject Value="True"/>
       </Unit4>
       <Unit5>
-        <Filename Value="..\..\source\kit\CMSDK\cm_servlet.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\cm_netutils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit5>
       <Unit6>
-        <Filename Value="..\..\source\kit\CMSDK\cm_netutils.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\cm_sysutils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="..\..\source\kit\CMSDK\cm_sysutils.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\cm_collections.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit7>
       <Unit8>
-        <Filename Value="..\..\source\kit\CMSDK\cm_collections.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\cm_net.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit8>
       <Unit9>
-        <Filename Value="..\..\source\kit\CMSDK\cm_net.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
       <Unit10>
-        <Filename Value="..\..\source\kit\CMSDK\cm_servletutils.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\cm_threadutils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit10>
       <Unit11>
-        <Filename Value="..\..\source\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\cm_logutils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit11>
       <Unit12>
-        <Filename Value="..\..\source\kit\CMSDK\cm_cmstp.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\platform\cm_PlatBase.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit12>
       <Unit13>
-        <Filename Value="..\..\source\kit\CMSDK\solutions\cm_jetty.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit13>
-      <Unit14>
-        <Filename Value="..\..\source\kit\CMSDK\cm_threadutils.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit14>
-      <Unit15>
-        <Filename Value="..\..\source\kit\CMSDK\solutions\cm_JettyImpl.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit15>
-      <Unit16>
-        <Filename Value="..\..\source\kit\CMSDK\cm_logutils.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit16>
-      <Unit17>
-        <Filename Value="..\..\source\kit\CMSDK\platform\cm_PlatBase.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit17>
-      <Unit18>
         <Filename Value="unit2.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit2"/>
-      </Unit18>
-      <Unit19>
+      </Unit13>
+      <Unit14>
         <Filename Value="..\..\source\kit\CMSDK\cm_generics.pas"/>
         <IsPartOfProject Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_cmstp.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_servlet.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_servletutils.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit19>
+      <Unit20>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyHolder.inc"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Unit3"/>
+      </Unit20>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -129,7 +134,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\source\kit\CMSDK;..\..\source\kit\CMSDK\solutions;..\..\source\kit\CMSDK\platform"/>
+      <OtherUnitFiles Value="..\..\source\kit\CMSDK;..\..\source\kit\CMSDK\solutions;..\..\source\kit\CMSDK\platform;..\..\source\kit\CMSDK\cmservice"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

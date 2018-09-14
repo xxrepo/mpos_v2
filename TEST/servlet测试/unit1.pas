@@ -54,7 +54,7 @@ var
   s: string;
   uri: TCMURL;
 begin
-  s := 'http://aaa:111@localhost/a/b/c.do?x=aaa&y=123#www.pbccrc.org.cn';
+  s := 'http://aaa:111@localhost:80/a/b/c.do?x=aaa&y=123#www.pbccrc.org.cn';
   Memo1.Lines.Add(s);
   uri := TCMURL.Create(s);
   Memo1.Lines.Add('Protocol:' + uri.Protocol);
@@ -63,13 +63,15 @@ begin
   Memo1.Lines.Add('Host:' + uri.Host);
   Memo1.Lines.Add('Port:' + uri.Port);
   Memo1.Lines.Add('Path:' + uri.Path);
+  Memo1.Lines.Add('ContextPath:' + uri.ContextPath);
+  Memo1.Lines.Add('LetPath:' + uri.LetPath);
   Memo1.Lines.Add('Document:' + uri.Document);
   Memo1.Lines.Add('Params:' + uri.Params);
   Memo1.Lines.Add('Bookmark:' + uri.Bookmark);
 
-  Memo1.Lines.Add('GetFullPath:' + uri.GetFullPath);
   //Memo1.Lines.Add('URI:' + uri.URL);
-  //Memo1.Lines.Add('URI:' + uri.GetFullURL());
+  Memo1.Lines.Add('URI:' + uri.GetFullURL());
+  Memo1.Lines.Add('URI:' + uri.GetFullURL(False));
 end;
 
 var
@@ -138,8 +140,8 @@ var
   connector: IConnector;
   request: IServletRequest;
   response: IServletResponse;
-  s: IServlet;
-  sh: TServletHolder;
+  s, s2: IServlet;
+  sh, sh2: TServletHolder;
   //
   servletHandler: IServletHandler;
 begin
@@ -148,16 +150,25 @@ begin
   //servlet context
   scHandler := TServletContextHandler.Create;
   scHandler.SetContextPath('/test');
+
   s := TTestServlet.Create;
-  sh := TServletHolder.Create;
-  sh.SetName('kkkkkkkk');
+  sh := TServletHolder.Create(scHandler.JettyServletContext);
+  sh.SetName('server 111');
   sh.AddURLPattern('/a/b');
   sh.SetServlet(s);
   scHandler.AddServlet(sh);
 
+  s2 := TTestServlet2.Create;
+  sh2 := TServletHolder.Create(scHandler.JettyServletContext);
+  sh2.SetName('server 222');
+  sh2.AddURLPattern('/a/b2');
+  sh2.SetServlet(s2);
+  scHandler.AddServlet(sh2);
+
   //-------------------------------------
-  servletHandler := nil;
+  servletHandler := TServletHandler.Create(scHandler.JettyServletContext);;
   scHandler.SetHandler(servletHandler);
+  servletHandler.Start;
   //-------------------------------------
 
   server.SetHandler(scHandler);
@@ -167,22 +178,32 @@ begin
   server.AddConnector(connector);
 
   sh.Start;
+  sh2.Start;
   scHandler.Start;
   server.Start;
 
   //request
   request := TServletRequest.Create('cmstp://test:80/test/a/b?x=aaa&y=123');
   response := TServletResponse.Create;
-  server.Handle(request, response);
+
+  server.Handle(request.GetRequestURL, request, response);
   println(response.GetContent.Get('test').AsString);
+
+  //println('--again--------');
+  //server.Handle(request, response);
+
   println('--over--------');
 end;
 
 procedure TForm1.Button7Click(Sender: TObject);
-//var
-//  ls: TCMHashInterfaceList<IServletFindRegister>;
+var
+  conn: TCMSTPURLConnection;
 begin
-
+  conn := TCMSTPURLConnection.Create('cmstp://test:80/test/a/b?x=aaa&y=123');
+  conn.RequestParameters.SetString('msg', 'How are you?');
+  conn.Connect;
+  println('--re--:' + conn.ResponseContent.Get('test').AsString);
+  println('--over--------');
 end;
 
 procedure TForm1.FormShow(Sender: TObject);

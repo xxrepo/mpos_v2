@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the adLCL widgetset
-  Forms, Unit1, cm_servlet, cm_netutils, cm_net, cm_servletutils, cm_cmstp, cm_jetty, cm_classes, cm_JettyImpl, Unit2
+  Forms, Unit1, cm_netutils, cm_net, cm_classes, Unit2
   { you can add units after this };
 
 {$R *.res}

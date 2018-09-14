@@ -21,15 +21,16 @@ type
     FHost: string;
     FPort: string;
     FPath: string;
+    FContextPath: string;
+    FLetPath: string;
     FDocument: string;
     FParams: string;
     FBookmark: string;
     function GetURL: string;
     procedure SetURL(const Value: String);
   public
-    constructor Create(const AURL: string); virtual;
+    constructor Create(const AURL: string);
     function GetFullURL(AuthAndBookmark: Boolean=True): string;
-    function GetFullPath: string;
     property URL: string read GetURL write SetURL;
     property Protocol: string read FProtocol write FProtocol;
     property Username: string read FUserName write FUserName;
@@ -37,6 +38,8 @@ type
     property Host: string read FHost write FHost;
     property Port: string read FPort write FPort;
     property Path: string read FPath write FPath;
+    property ContextPath: string read FContextPath write FContextPath;
+    property LetPath: string read FLetPath write FLetPath;
     property Document: string read FDocument write FDocument;
     property Params: string read FParams write FParams;
     property Bookmark : string read FBookmark write FBookMark; //锚点（也称为“引用”）。
@@ -68,6 +71,8 @@ begin
   FHost := '';
   FPort := '';
   FPath := '';
+  FContextPath := '';
+  FLetPath := '';
   FDocument := '';
   FParams := '';
   FBookmark := '';
@@ -80,15 +85,18 @@ begin
   FBookmark := RCutStr(iStr, '#');
   FParams := RCutStr(iStr, '?');
   //剩下 host port path document
-  p := PosR('/', iStr);
+  FPath := RCutStr(iStr, '/');
+  p := Pos('/', FPath);
   if p > 0 then
     begin
-      FDocument := Copy(iStr, p+1, MaxInt);
-      iStr := Copy(iStr, 1, p-1);
+      FContextPath := '/' + Copy(FPath, 1, p-1);
+      FLetPath := Copy(FPath, p, MaxInt);
     end;
-  FPath := '/' + RCutStr(iStr, '/');
-  FHost := LCutStr(iStr, ':');
-  FPort := iStr;
+  FPath := '/' + FPath;
+  FDocument := Copy(FPath, PosR('/', FPath)+1, MaxInt);
+  //
+  FPort := RCutStr(iStr, ':');
+  FHost := iStr;
 end;
 
 function TCMURL.GetFullURL(AuthAndBookmark: Boolean): string;
@@ -112,11 +120,6 @@ begin
   if (FBookmark <> '') and AuthAndBookmark then
     oStr := oStr + '#' + FBookmark;
   Result := oStr;
-end;
-
-function TCMURL.GetFullPath: string;
-begin
-  Result := FPath + '/' + FDocument;
 end;
 
 

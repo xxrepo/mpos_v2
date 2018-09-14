@@ -223,6 +223,7 @@ type
   public
     constructor Create;
     constructor Create(AHandler: ICMMessageHandler); overload;
+    procedure AfterConstruction; override;
     function Messager: TCMMessager;
   end;
 
@@ -421,6 +422,13 @@ end;
 constructor TCMMessageable.Create(AHandler: ICMMessageHandler);
 begin
   FMessager := TCMMessageManager.GetInstance.GetMessager(Self, AHandler);
+end;
+
+procedure TCMMessageable.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  if not Assigned(FMessager) then
+    FMessager := TCMMessageManager.GetInstance.GetMessager(Self);
 end;
 
 function TCMMessageable.Messager: TCMMessager;

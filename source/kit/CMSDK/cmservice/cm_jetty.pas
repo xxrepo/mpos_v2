@@ -20,7 +20,7 @@ interface
 
 uses
   Classes, SysUtils, Generics.Collections, Generics.Defaults,
-  cm_interfaces, cm_messager, cm_parameter, cm_threadutils,
+  cm_interfaces, cm_messager, cm_generics, cm_parameter, cm_threadutils,
   cm_servlet, cm_servletutils;
 
 type
@@ -70,13 +70,17 @@ type
 
   IServletHolder = interface(IHolder)
     ['{2011D13B-71A3-4B41-8EB5-3EA454F213DD}']
-    procedure AddURLPattern(const AURLPattern: string);
-    function GetURLPatterns: TStrings;
     procedure SetServlet(AServlet: IServlet);
     function GetServlet: IServlet;
+    //为方便实现容器，下述不再一味模仿 jetty 。
+    procedure AddURLPattern(const AURLPattern: string);
+    function GetURLPatterns: TStrings;
+    procedure Init;
+    function Initialized: Boolean;
+    function GetServletConfig: IServletConfig;
   end;
 
-  TServletHolderList = TList<IServletHolder>;
+  TServletHolderList = TCMHashInterfaceList<IServletHolder>;
 
   (************************* Handler **************************************************************)
 
@@ -130,12 +134,12 @@ type
 
   IServletHandler = interface(IHandlerContainer)
     ['{2F2719A8-316E-4B04-8FB5-D0945A68A0AC}']
-    procedure AddFilter(AFilter: IFilterHolder);
-    procedure AddListener(AListener: IListenerHolder);
+    //procedure AddFilter(AFilter: IFilterHolder);
+    //procedure AddListener(AListener: IListenerHolder);
     procedure AddServlet(AServlet: IServletHolder);
-    function GetFilter(const AName: string): IFilterHolder;
-    function GetFilters: TFilterHolderList;
-    function GetListeners: TListenerHolderList;
+    //function GetFilter(const AName: string): IFilterHolder;
+    //function GetFilters: TFilterHolderList;
+    //function GetListeners: TListenerHolderList;
     function GetServlet(const AName: string): IServletHolder;
     function GetServletContext: IServletContext;
     function GetServlets: TServletHolderList;
@@ -151,18 +155,29 @@ type
     function GetThreadPool: TExecuteThreadBool;
   end;
 
-  (************************* base class ***********************************************************)
+  (*-----------------------------------------------------------------------------------------------
+     以下：为实现的拓展定义，与基本类型
+   -----------------------------------------------------------------------------------------------*)
+
+  IJettyServletContext = interface(IServletContext)
+    ['{0D7D47E8-05EF-4657-8E4B-ED8FB97B5931}']
+    procedure AddServlet(AHolder: IServletHolder);
+    function GetServlet(const AName: string): IServletHolder;
+    function GetServlets: TServletHolderList;
+  end;
 
   { TJettyServletContext }
 
-  TJettyServletContext = class(TServletContext)
+  TJettyServletContext = class(TServletContext, IJettyServletContext)
   private
     FHandler: IHandler;
     FServletHolders: TServletHolderList;
   public
     constructor Create(AHandler: IHandler);
     destructor Destroy; override;
-    procedure RegisterServlet(AHolder: IServletHolder);
+    procedure AddServlet(AHolder: IServletHolder);
+    function GetServlet(const AName: string): IServletHolder;
+    function GetServlets: TServletHolderList;
   public
     function GetNamedDispatcher(const AName: string): IRequestDispatcher; override;
     function GetRequestDispatcher(const APath: string): IRequestDispatcher; override;
@@ -200,9 +215,19 @@ begin
   inherited Destroy;
 end;
 
-procedure TJettyServletContext.RegisterServlet(AHolder: IServletHolder);
+procedure TJettyServletContext.AddServlet(AHolder: IServletHolder);
 begin
-  FServletHolders.Add(AHolder);
+  FServletHolders.Add(AHolder.GetName, AHolder);
+end;
+
+function TJettyServletContext.GetServlet(const AName: string): IServletHolder;
+begin
+  Result := FServletHolders.Find(AName);
+end;
+
+function TJettyServletContext.GetServlets: TServletHolderList;
+begin
+  Result := FServletHolders;
 end;
 
 function TJettyServletContext.GetNamedDispatcher(const AName: string): IRequestDispatcher;
@@ -246,6 +271,7 @@ end;
 
 constructor TJettyRequestDispatcher.Create(const ATarget: string; AHandler: IHandler);
 begin
+  inherited Create;
   FTarget := ATarget;
   FHandler := AHandler;
 end;

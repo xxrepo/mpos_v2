@@ -118,7 +118,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    procedure Init; virtual; overload;
+    procedure Init; virtual; abstract; overload;
     function GetInitParameter(const AName: string): string;
     function GetInitParameterNames: TStrings;
     function GetServletContext: IServletContext;
@@ -169,11 +169,6 @@ begin
   Over;
   FConfig := nil;
   inherited Destroy;
-end;
-
-procedure TGenericServlet.Init;
-begin
-
 end;
 
 function TGenericServlet.GetInitParameter(const AName: string): string;
