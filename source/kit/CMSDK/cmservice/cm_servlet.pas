@@ -74,7 +74,7 @@ type
   }
   IServletResponse = interface(ICMBase)
     ['{20E17C78-451E-454E-B313-2C8454174A3F}']
-    function IsCommitted: Boolean;
+    function IsCommitted: Boolean;  //TODO 考虑是否需要
     procedure SetContentType(const AType: string);
     function GetContentType: string;
     function GetContent: ICMParameterDataList;

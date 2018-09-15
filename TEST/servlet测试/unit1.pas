@@ -9,7 +9,7 @@ uses
   cm_messager, cm_sysutils, cm_netutils, cm_PlatBase, cm_logutils,
   cm_servlet, cm_servletutils,
   cm_cmstp,
-  cm_jetty, cm_JettyImpl,
+  cm_jetty, cm_JettyImpl, cm_JettyCMS,
   Unit2;
 
 type
@@ -135,7 +135,7 @@ end;
 
 procedure TForm1.Button6Click(Sender: TObject);
 var
-  server: TServer;
+  server: TCMSServer;
   scHandler: TServletContextHandler;
   connector: IConnector;
   request: IServletRequest;
@@ -146,7 +146,8 @@ var
   servletHandler: IServletHandler;
 begin
   //server
-  server := TServer.Create;
+  server := TCMSServer.Create;
+  CMSTPService := server;
   //servlet context
   scHandler := TServletContextHandler.Create;
   scHandler.SetContextPath('/test');
@@ -183,7 +184,7 @@ begin
   server.Start;
 
   //request
-  request := TServletRequest.Create('cmstp://test:80/test/a/b?x=aaa&y=123');
+  request := TJettyServletRequest.Create('cmstp://test:80/test/a/b?x=aaa&y=123', server);
   response := TServletResponse.Create;
 
   server.Handle(request.GetRequestURL, request, response);

@@ -19,7 +19,7 @@ unit cm_JettyImpl;
 interface
 
 uses
-  Classes, SysUtils, StrUtils, Dialogs,
+  Classes, SysUtils, Dialogs,
   cm_messager, cm_parameter, cm_ParameterUtils, cm_threadutils, cm_netutils,
   cm_servlet, cm_servletutils,
   cm_jetty,
@@ -195,14 +195,11 @@ type
   (***************************************** Server ***********************************************)
 
   { TServer }
-
-  TServer = class(THandlerWrapper, IServer, ICMSTPService)
+  //TODO 多线程
+  TServer = class(THandlerWrapper, IServer)
   private
     FConnectors: TConnectorList;
     FThreadPool: TExecuteThreadBool;
-  protected
-    //procedure DoStart; override;
-    //procedure DoStop; override;
   public
     constructor Create;
     destructor Destroy; override;
@@ -213,8 +210,6 @@ type
     procedure RemoveConnector(AConnector: IConnector);
     function GetConnectors: TConnectorList;
     function GetThreadPool: TExecuteThreadBool;
-  public //ICMSTPService
-    function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponseContent: ICMConstantParameterDataList): Boolean;
   end;
 
 
@@ -222,110 +217,7 @@ implementation
 
 {$I cm_JettyHolder.inc}
 
-{ TLifeCycle }
 
-procedure TLifeCycle.DoStart;
-begin
-  //
-end;
-
-procedure TLifeCycle.DoStop;
-begin
-  //
-end;
-
-constructor TLifeCycle.Create;
-begin
-  inherited Create;
-  FIsRunning := False;
-  FIsStopped := False;
-end;
-
-procedure TLifeCycle.Start;
-begin
-  if not FIsRunning then
-    begin
-      DoStart;
-      FIsRunning := True;
-      FIsStopped := False;
-    end;
-end;
-
-procedure TLifeCycle.Stop;
-begin
-  if not FIsStopped then
-    begin
-      DoStop;
-      FIsRunning := False;
-      FIsStopped := True;
-    end;
-end;
-
-function TLifeCycle.IsRunning: Boolean;
-begin
-  Result := FIsRunning;
-end;
-
-function TLifeCycle.IsStopped: Boolean;
-begin
-  Result := FIsStopped;
-end;
-
-{ TConnector }
-
-constructor TConnector.Create(const AProtocol: string; APort: Word);
-begin
-  inherited Create;
-  FProtocol := AProtocol;
-  FPort := APort;
-end;
-
-function TConnector.GetProtocol: string;
-begin
-  Result := FProtocol;
-end;
-
-function TConnector.GetPort: Word;
-begin
-  Result := FPort;
-end;
-
-{ THandler }
-
-constructor THandler.Create;
-begin
-  inherited Create;
-  FServer := nil;
-end;
-
-procedure THandler.SetServer(AServer: IServer);
-begin
-  FServer := AServer;
-end;
-
-function THandler.GetServer: IServer;
-begin
-  Result := FServer;
-end;
-
-{ THandlerContainer }
-
-constructor THandlerContainer.Create;
-begin
-  inherited Create;
-  FHandlers := THandlerList.Create;
-end;
-
-destructor THandlerContainer.Destroy;
-begin
-  FHandlers.Free;
-  inherited Destroy;
-end;
-
-function THandlerContainer.GetHandlers: THandlerList;
-begin
-  Result := FHandlers;
-end;
 
 { THandlerWrapper }
 
@@ -522,19 +414,6 @@ begin
   Result := FThreadPool;
 end;
 
-function TServer.CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponseContent: ICMConstantParameterDataList): Boolean;
-var
-  request: IServletRequest;
-  response: IServletResponse;
-begin
-  request := TServletRequest.Create(AURL);
-  response := TServletResponse.Create;
-  //TODO 请求参数
-
-  Self.Handle(AURL, request, response);
-  TheResponseContent := response.GetContent;
-end;
-
 { TServletHandler }
 
 constructor TServletHandler.Create(AJettyServletContext: IJettyServletContext);
@@ -592,7 +471,7 @@ end;
 
 function TServletHandler.GetServlets: TServletHolderList;
 begin
-
+  Result := FJettyServletContext.GetServlets;
 end;
 
 

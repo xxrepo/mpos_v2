@@ -159,11 +159,26 @@ type
      以下：为实现的拓展定义，与基本类型
    -----------------------------------------------------------------------------------------------*)
 
+  { IJettyServletContext
+    //由上下文记录，以便处理器从中提取内容处理。
+  }
   IJettyServletContext = interface(IServletContext)
     ['{0D7D47E8-05EF-4657-8E4B-ED8FB97B5931}']
     procedure AddServlet(AHolder: IServletHolder);
     function GetServlet(const AName: string): IServletHolder;
     function GetServlets: TServletHolderList;
+  end;
+
+  { TJettyServletRequest }
+
+  TJettyServletRequest = class(TServletRequest)
+  private
+    FHandler: IHandler;
+  public
+    constructor Create(const AURL: string; AHandler: IHandler);
+    property Parameters: ICMParameterDataList read FParameters write FParameters;
+  public
+    function GetRequestDispatcher(const APath: string): IRequestDispatcher; override;
   end;
 
   { TJettyServletContext }
@@ -250,21 +265,21 @@ begin
 end;
 
 function TJettyServletContext.GetRequestDispatcher(const APath: string): IRequestDispatcher;
-var
-  i: Integer;
-  sh: IServletHolder;
+//var
+//  i: Integer;
+//  sh: IServletHolder;
 begin
-  Result := nil;
-  for i:=0 to FServletHolders.Count-1 do
-    begin
-      sh := FServletHolders[i];
-      if sh.GetURLPatterns.IndexOf(APath) >=0 then
-        begin
+  //Result := nil;
+  //for i:=0 to FServletHolders.Count-1 do
+  //  begin
+  //    sh := FServletHolders[i];
+  //    if sh.GetURLPatterns.IndexOf(APath) >=0 then
+  //      begin
           Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + APath]);
           Result := TJettyRequestDispatcher.Create(Self.GetContextPath + APath, FHandler);
-          Exit;
-        end;
-    end;
+        //  Exit;
+        //end;
+    //end;
 end;
 
 { TJettyRequestDispatcher }
@@ -304,6 +319,19 @@ begin
       if (n <> '') and (not p.IsNull) then
         AResponse.GetContent.SetData(n, p);
     end;
+end;
+
+{ TJettyServletRequest }
+
+constructor TJettyServletRequest.Create(const AURL: string; AHandler: IHandler);
+begin
+  inherited Create(AURL);
+  FHandler := AHandler;
+end;
+
+function TJettyServletRequest.GetRequestDispatcher(const APath: string): IRequestDispatcher;
+begin
+  Result := TJettyRequestDispatcher.Create(APath, FHandler);
 end;
 
 end.

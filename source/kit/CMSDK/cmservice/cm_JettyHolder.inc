@@ -1,4 +1,108 @@
 
+{ TLifeCycle }
+
+procedure TLifeCycle.DoStart;
+begin
+  //
+end;
+
+procedure TLifeCycle.DoStop;
+begin
+  //
+end;
+
+constructor TLifeCycle.Create;
+begin
+  inherited Create;
+  FIsRunning := False;
+  FIsStopped := False;
+end;
+
+procedure TLifeCycle.Start;
+begin
+  if not FIsRunning then
+    begin
+      DoStart;
+      FIsRunning := True;
+      FIsStopped := False;
+    end;
+end;
+
+procedure TLifeCycle.Stop;
+begin
+  if not FIsStopped then
+    begin
+      DoStop;
+      FIsRunning := False;
+      FIsStopped := True;
+    end;
+end;
+
+function TLifeCycle.IsRunning: Boolean;
+begin
+  Result := FIsRunning;
+end;
+
+function TLifeCycle.IsStopped: Boolean;
+begin
+  Result := FIsStopped;
+end;
+
+{ TConnector }
+
+constructor TConnector.Create(const AProtocol: string; APort: Word);
+begin
+  inherited Create;
+  FProtocol := AProtocol;
+  FPort := APort;
+end;
+
+function TConnector.GetProtocol: string;
+begin
+  Result := FProtocol;
+end;
+
+function TConnector.GetPort: Word;
+begin
+  Result := FPort;
+end;
+
+{ THandler }
+
+constructor THandler.Create;
+begin
+  inherited Create;
+  FServer := nil;
+end;
+
+procedure THandler.SetServer(AServer: IServer);
+begin
+  FServer := AServer;
+end;
+
+function THandler.GetServer: IServer;
+begin
+  Result := FServer;
+end;
+
+{ THandlerContainer }
+
+constructor THandlerContainer.Create;
+begin
+  inherited Create;
+  FHandlers := THandlerList.Create;
+end;
+
+destructor THandlerContainer.Destroy;
+begin
+  FHandlers.Free;
+  inherited Destroy;
+end;
+
+function THandlerContainer.GetHandlers: THandlerList;
+begin
+  Result := FHandlers;
+end;
 
 { THolder }
 

@@ -20,8 +20,9 @@ uses
 type
 
   ICMBase = interface(IUnknown)
-    ['{1B27FA82-F5D8-4C44-A44E-CD2A5B8E3975}']
+    ['{B024BC87-6FFF-4CDE-BA0D-CA90269454A0}']
     function GetImplementorName: string;
+    function GetHashCode: PtrInt;
   end;
 
   { TCMBase }

@@ -15,7 +15,8 @@ unit cm_generics;
 interface
 
 uses
-  Classes, SysUtils, Contnrs;
+  Classes, SysUtils, Contnrs,
+  cm_interfaces;
 
 type
 
@@ -49,8 +50,9 @@ type
     function Rename(const AOldName, ANewName: shortstring): Integer; {$ifdef CCLASSESINLINE}inline;{$endif}
     property Capacity: Integer read GetCapacity write SetCapacity;
     property Count: Integer read GetCount write SetCount;
-    property OwnsObjects: Boolean read GetOwnsObjects write SetOwnsObjects;
     property Items[Index: Integer]: T read GetItem write SetItem; default;
+    //
+    property OwnsObjects: Boolean read GetOwnsObjects write SetOwnsObjects;
   end;
 
   { TInterfaceItem }
@@ -95,6 +97,37 @@ type
     property Capacity: Integer read GetCapacity write SetCapacity;
     property Count: Integer read GetCount write SetCount;
     property Items[Index: Integer]: T read GetItem write SetItem; default;
+  end;
+
+  { TCMMapEntry }
+
+  TCMMapEntry<K: ICMBase; V: IUnknown> = class
+  private
+    FK: K;
+    FV: V;
+  public
+    constructor Create(AKey: K; AValue: V);
+    destructor Destroy; override;
+    property Key: K read FK;
+    property Value: V read FV;
+  end;
+
+  { TCMHashInterfaceMap }
+
+  TCMHashInterfaceMap<K: ICMBase; V: IUnknown> = class
+  private
+    FList: TFPHashObjectList;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure Clear;
+    function ContainsKey(AKey: K): Boolean;
+    function Get(AKey: K): V;
+    function IsEmpty: Boolean;
+    function Put(AKey: K; AValue: V): V;  //返回以前与 key 关联的值，如果没有针对 key 的映射关系，则返回 nil。
+    function Remove(AKey: K): V; //返回以前与 key 关联的值。
+    function Size: Integer;
+    //TODO 迭代
   end;
 
 implementation
@@ -344,6 +377,74 @@ end;
 function TCMHashInterfaceList<T>.Rename(const AOldName, ANewName: shortstring): Integer; {$ifdef CCLASSESINLINE}inline;{$endif}
 begin
   Result := FObjectList.Rename(AOldName, ANewName);
+end;
+
+{ TCMMapEntry }
+
+constructor TCMMapEntry<V, K>.Create(AKey: K; AValue: V);
+begin
+  FK := AKey;
+  FV := AValue;
+end;
+
+destructor TCMMapEntry<V, K>.Destroy;
+begin
+  FK := K(nil);
+  FV := V(nil);
+  inherited Destroy;
+end;
+
+{ TCMHashInterfaceMap }
+
+constructor TCMHashInterfaceMap<V, K>.Create;
+begin
+  FList := TFPHashObjectList.Create(True);
+end;
+
+destructor TCMHashInterfaceMap<V, K>.Destroy;
+begin
+  FList.Free;
+  inherited Destroy;
+end;
+
+procedure TCMHashInterfaceMap<V, K>.Clear;
+begin
+  FList.Clear;
+end;
+
+function TCMHashInterfaceMap<V, K>.ContainsKey(AKey: K): Boolean;
+begin
+  Result := FList.FindIndexOf(IntToStr(ICMBase(AKey).GetHashCode)) >= 0;
+end;
+
+function TCMHashInterfaceMap<V, K>.Get(AKey: K): V;
+var
+  me: TCMMapEntry<V, K>;
+begin
+  Result := nil;
+  me := TCMMapEntry<V, K>(FList.Find(IntToStr(ICMBase(AKey).GetHashCode)));
+  if Assigned(me) then
+    Result := me.Value;
+end;
+
+function TCMHashInterfaceMap<V, K>.IsEmpty: Boolean;
+begin
+
+end;
+
+function TCMHashInterfaceMap<V, K>.Put(AKey: K; AValue: V): V;
+begin
+
+end;
+
+function TCMHashInterfaceMap<V, K>.Remove(AKey: K): V;
+begin
+
+end;
+
+function TCMHashInterfaceMap<V, K>.Size: Integer;
+begin
+
 end;
 
 

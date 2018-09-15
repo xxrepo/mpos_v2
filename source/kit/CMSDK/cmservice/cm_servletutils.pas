@@ -11,16 +11,10 @@ uses
 
 type
 
-  IServletFind = interface(ICMBase)
-    ['{776A5ABB-0DFD-4F7B-9242-1A31B9C821D3}']
-    function FindByPath(const APath: string): IServlet;
-    function FindByName(const AName: string): IServlet;
-  end;
-
   { TServletRequest }
 
   TServletRequest = class(TCMBase, IServletRequest)
-  private
+  protected
     FAttributes: ICMParameterDataList;
     FParameters: ICMParameterDataList;
     FURL: string;

@@ -20,6 +20,7 @@ type
   protected
     FRequestParameters: ICMParameterDataList;
     FResponseContent: ICMConstantParameterDataList;
+    //FContentType: string;
   public
     constructor Create(const AURL: string); virtual;
     destructor Destroy; override;
@@ -29,6 +30,7 @@ type
     property RequestParameters: ICMParameterDataList read FRequestParameters;
     procedure Connect; virtual; abstract;
     property ResponseContent: ICMConstantParameterDataList read FResponseContent;
+    //property ContentType: string read FContentType;
   end;
 
 implementation
@@ -42,6 +44,7 @@ begin
   FReadTimeout := 0;
   FRequestParameters := nil;
   FResponseContent := nil;
+  //FContentType := '';
 end;
 
 destructor TURLConnection.Destroy;
