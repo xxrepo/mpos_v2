@@ -215,87 +215,7 @@ type
 
 implementation
 
-{$I cm_JettyHolder.inc}
-
-
-
-{ THandlerWrapper }
-
-constructor THandlerWrapper.Create;
-begin
-  inherited Create;
-  FWrapper := nil;
-end;
-
-procedure THandlerWrapper.BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean);
-begin
-  //
-end;
-
-procedure THandlerWrapper.DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
-begin
-  //
-end;
-
-
-//有 Wrapper 时交由其处理，否则经前置处理后有子处理器时交由处理器处理，无子处理器时调用 DoHandle()
-procedure THandlerWrapper.Handle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
-var
-  h: IHandler;
-  canHandle: Boolean;
-begin
-  Messager.Debug('Handle()...');
-  if not Self.IsRunning then
-    begin
-      Messager.Info('Handle() There is no start handle.');
-      Exit;
-    end;
-  if Assigned(FWrapper) then
-    begin
-      if Supports(FWrapper, IHandler, h) then
-        h.Handle(ATarget, ARequest, AResponse)
-      else
-        begin
-          //for i:=0 to FWrapper.GetHandlers.Count-1 do
-          //  FWrapper.GetHandlers[i].Handle(ATarget, ARequest, AResponse);
-          //暂不考虑 Handler Collection 的情况
-          h := FWrapper.GetHandler;
-          if Assigned(h) then
-            h.Handle(ATarget, ARequest, AResponse);
-        end;
-    end
-  else
-    begin
-      canHandle := True;
-      BeforeHandle(ATarget, ARequest, AResponse, canHandle);
-      if CanHandle then
-        begin
-          h := GetHandler;
-          if Assigned(h) then
-            h.Handle(ATarget, ARequest, AResponse)
-          else
-            DoHandle(ATarget, ARequest, AResponse);
-        end;
-    end;
-end;
-
-procedure THandlerWrapper.SetHandler(AHandler: IHandler);
-begin
-  FHandlers.Clear;
-  FHandlers.Add(AHandler);
-end;
-
-function THandlerWrapper.GetHandler: IHandler;
-begin
-  Result := nil;
-  if FHandlers.Count > 0 then
-    Result := FHandlers[0];
-end;
-
-procedure THandlerWrapper.InsertHandler(AWrapper: IHandlerWrapper);
-begin
-  FWrapper := AWrapper;
-end;
+{$I cm_JettyBase.inc}
 
 { TServletContextHandler }
 
@@ -347,6 +267,71 @@ begin
   FJettyServletContext.AddServlet(AHolder);
 end;
 
+{ TServletHandler }
+
+constructor TServletHandler.Create(AJettyServletContext: IJettyServletContext);
+begin
+  inherited Create;
+  FJettyServletContext := AJettyServletContext;
+end;
+
+destructor TServletHandler.Destroy;
+begin
+  FJettyServletContext := nil;
+  inherited Destroy;
+end;
+
+procedure TServletHandler.DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
+var
+  FURL: TCMURL;
+  i: Integer;
+  servlet: IServlet;
+  sthdList: TServletHolderList;
+begin
+  FURL := TCMURL.Create(ATarget);
+  Messager.Debug('ContextPath:%s URL.path:%s', [FJettyServletContext.GetContextPath, FURL.Path]);
+  //上下文路径应在前置服务器处理器中匹对，这里只需对 servlet 的路径作匹对。
+  sthdList := FJettyServletContext.GetServlets;
+  for i:=0 to sthdList.Count-1 do
+    begin
+      Messager.Debug('ThisHandle() check servlet: %s...', [sthdList[i].GetName]);
+      if sthdList[i].GetURLPatterns.IndexOf(FURL.LetPath) >= 0 then
+        begin
+          Messager.Debug('--2----------------');
+          if not sthdList[i].Initialized then
+            sthdList[i].Init;
+          servlet := sthdList[i].GetServlet;
+          if Assigned(servlet) then
+            begin
+              Messager.Debug('ThisHandle() 111111111');
+              servlet.Service(ARequest, AResponse);
+              Messager.Debug('ThisHandle() 222222222');
+            end;
+        end;
+      Messager.Debug('ThisHandle() 33333');
+    end;
+end;
+
+procedure TServletHandler.AddServlet(AServlet: IServletHolder);
+begin
+  FJettyServletContext.AddServlet(AServlet);
+end;
+
+function TServletHandler.GetServlet(const AName: string): IServletHolder;
+begin
+  Result := FJettyServletContext.GetServlet(AName);
+end;
+
+function TServletHandler.GetServletContext: IServletContext;
+begin
+  Result := FJettyServletContext;
+end;
+
+function TServletHandler.GetServlets: TServletHolderList;
+begin
+  Result := FJettyServletContext.GetServlets;
+end;
+
 { TServer }
 
 constructor TServer.Create;
@@ -370,8 +355,8 @@ var
   i: Integer;
   sch: IServletContextHandler;
 begin
-  CanHandle := False;
   Messager.Debug('开始前置处理（检验连接器）...');
+  CanHandle := False;
   FURL := TCMURL.Create(ATarget);
   try
     for i:=0 to FConnectors.Count-1 do
@@ -414,65 +399,7 @@ begin
   Result := FThreadPool;
 end;
 
-{ TServletHandler }
 
-constructor TServletHandler.Create(AJettyServletContext: IJettyServletContext);
-begin
-  inherited Create;
-  FJettyServletContext := AJettyServletContext;
-end;
-
-destructor TServletHandler.Destroy;
-begin
-  FJettyServletContext := nil;
-  inherited Destroy;
-end;
-
-procedure TServletHandler.DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
-var
-  FURL: TCMURL;
-  i: Integer;
-  servlet: IServlet;
-  sthdList: TServletHolderList;
-begin
-  FURL := TCMURL.Create(ATarget);
-  Messager.Debug('ContextPath:%s URL.path:%s', [FJettyServletContext.GetContextPath, FURL.Path]);
-  //上下文路径在前置服务器处理器中已匹对，这里只需对 servlet 的路径作匹对。
-  sthdList := FJettyServletContext.GetServlets;
-  for i:=0 to sthdList.Count-1 do
-    begin
-      Messager.Debug('ThisHandle() check servlet: %s...', [sthdList[i].GetName]);
-      if sthdList[i].GetURLPatterns.IndexOf(FURL.LetPath) >= 0 then
-        begin
-          Messager.Debug('--2----------------');
-          if not sthdList[i].Initialized then
-            sthdList[i].Init;
-          servlet := sthdList[i].GetServlet;
-          if Assigned(servlet) then
-            servlet.Service(ARequest, AResponse);
-        end;
-    end;
-end;
-
-procedure TServletHandler.AddServlet(AServlet: IServletHolder);
-begin
-  FJettyServletContext.AddServlet(AServlet);
-end;
-
-function TServletHandler.GetServlet(const AName: string): IServletHolder;
-begin
-  Result := FJettyServletContext.GetServlet(AName);
-end;
-
-function TServletHandler.GetServletContext: IServletContext;
-begin
-  Result := FJettyServletContext;
-end;
-
-function TServletHandler.GetServlets: TServletHolderList;
-begin
-  Result := FJettyServletContext.GetServlets;
-end;
 
 
 

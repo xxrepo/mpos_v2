@@ -36,8 +36,8 @@ begin
 end;
 
 procedure TTestServlet.Service(ARequest: IServletRequest; AResponse: IServletResponse);
-var
-  rd: IRequestDispatcher;
+//var
+//  rd: IRequestDispatcher;
 begin
   Messager.Info('hello world!');
   Messager.Info(Self.GetServletName);
@@ -46,9 +46,9 @@ begin
 
   AResponse.GetContent.SetString('test', 'haha');
   Messager.Info('--GetRequestDispatcher()----------------------------');
-  rd := Self.GetServletContext.GetRequestDispatcher('/a/b2');
+  //rd := Self.GetServletContext.GetRequestDispatcher('/a/b2');
 
-  rd.Forward(ARequest, AResponse);
+  //rd.Forward(ARequest, AResponse);
 
   Messager.Info('over.');
 end;

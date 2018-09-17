@@ -381,13 +381,13 @@ end;
 
 { TCMMapEntry }
 
-constructor TCMMapEntry<V, K>.Create(AKey: K; AValue: V);
+constructor TCMMapEntry<K, V>.Create(AKey: K; AValue: V);
 begin
   FK := AKey;
   FV := AValue;
 end;
 
-destructor TCMMapEntry<V, K>.Destroy;
+destructor TCMMapEntry<K, V>.Destroy;
 begin
   FK := K(nil);
   FV := V(nil);
@@ -396,55 +396,69 @@ end;
 
 { TCMHashInterfaceMap }
 
-constructor TCMHashInterfaceMap<V, K>.Create;
+constructor TCMHashInterfaceMap<K, V>.Create;
 begin
   FList := TFPHashObjectList.Create(True);
 end;
 
-destructor TCMHashInterfaceMap<V, K>.Destroy;
+destructor TCMHashInterfaceMap<K, V>.Destroy;
 begin
   FList.Free;
   inherited Destroy;
 end;
 
-procedure TCMHashInterfaceMap<V, K>.Clear;
+procedure TCMHashInterfaceMap<K, V>.Clear;
 begin
   FList.Clear;
 end;
 
-function TCMHashInterfaceMap<V, K>.ContainsKey(AKey: K): Boolean;
+function TCMHashInterfaceMap<K, V>.ContainsKey(AKey: K): Boolean;
 begin
   Result := FList.FindIndexOf(IntToStr(ICMBase(AKey).GetHashCode)) >= 0;
 end;
 
-function TCMHashInterfaceMap<V, K>.Get(AKey: K): V;
+function TCMHashInterfaceMap<K, V>.Get(AKey: K): V;
 var
-  me: TCMMapEntry<V, K>;
+  me: TCMMapEntry<K, V>;
 begin
-  Result := nil;
-  me := TCMMapEntry<V, K>(FList.Find(IntToStr(ICMBase(AKey).GetHashCode)));
+  Result := V(nil);
+  me := TCMMapEntry<K, V>(FList.Find(IntToStr(ICMBase(AKey).GetHashCode)));
   if Assigned(me) then
     Result := me.Value;
 end;
 
-function TCMHashInterfaceMap<V, K>.IsEmpty: Boolean;
+function TCMHashInterfaceMap<K, V>.IsEmpty: Boolean;
 begin
-
+  Result := FList.Count <= 0;
 end;
 
-function TCMHashInterfaceMap<V, K>.Put(AKey: K; AValue: V): V;
+function TCMHashInterfaceMap<K, V>.Put(AKey: K; AValue: V): V;
+var
+  me: TCMMapEntry<K, V>;
 begin
-
+  Result := V(nil);
+  me := TCMMapEntry<K, V>.Create(AKey, AValue);
+  if FList.Add(IntToStr(ICMBase(AKey).GetHashCode), me) >= 0 then
+    Result := AValue;
 end;
 
-function TCMHashInterfaceMap<V, K>.Remove(AKey: K): V;
+function TCMHashInterfaceMap<K, V>.Remove(AKey: K): V;
+var
+  me: TCMMapEntry<K, V>;
 begin
-
+  Result := V(nil);
+  me := TCMMapEntry<K, V>(FList.Find(IntToStr(ICMBase(AKey).GetHashCode)));
+  if Assigned(me) then
+    begin
+      Result := me.Value;
+      if FList.Remove(me) >= 0 then
+        Result := V(nil);
+    end;
 end;
 
 function TCMHashInterfaceMap<V, K>.Size: Integer;
 begin
-
+  Result := FList.Count;
 end;
 
 

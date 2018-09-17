@@ -15,9 +15,28 @@ uses
 
 type
 
+  ICMSTPResponse = interface(ICMBase)
+    ['{0B1111A0-9270-4A4D-BFED-CEEFE97D344A}']
+    function GetContentType: string;
+    function GetContent: ICMConstantParameterDataList;
+  end;
+
   ICMSTPService = interface(ICMBase)
     ['{5B139E17-51B5-44B2-9045-E563EEEBB66B}']
-    function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponseContent: ICMConstantParameterDataList): Boolean;
+    function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
+  end;
+
+  { TCMSTPResponse }
+
+  TCMSTPResponse = class(TCMBase, ICMSTPResponse)
+  private
+    FContentType: string;
+    FContent: ICMConstantParameterDataList;
+  public
+    constructor Create(const AContentType: string; AContent: ICMConstantParameterDataList);
+    destructor Destroy; override;
+    function GetContentType: string;
+    function GetContent: ICMConstantParameterDataList;
   end;
 
   { TCMSTPURLConnection }  //TODO 连接未有响应时，响应体为空的情况；是否请求成功的标识
@@ -67,11 +86,18 @@ begin
 end;
 
 procedure TCMSTPURLConnection.Connect;
+var
+  rsp: ICMSTPResponse;
 begin
   FResponseContent := nil;
   if Assigned(CMSTPService) then
     begin
-      CMSTPService.CMSTP(URL, FRequestParameters, FResponseContent);
+      if CMSTPService.CMSTP(URL, FRequestParameters, rsp) then
+        begin
+          FResponseContent := rsp.GetContent;
+
+          FResponseContent.Get('test').AsString;
+        end;
     end;
 end;
 
@@ -97,6 +123,32 @@ function TServletCollection.Remove(const ACode: string): IServlet;
 begin
   Result := FList.Find(ACode);
 end;
+
+{ TCMSTPResponse }
+
+constructor TCMSTPResponse.Create(const AContentType: string; AContent: ICMConstantParameterDataList);
+begin
+  FContentType := AContentType;
+  FContent := AContent;
+end;
+
+destructor TCMSTPResponse.Destroy;
+begin
+  FContent := nil;
+  inherited Destroy;
+end;
+
+function TCMSTPResponse.GetContentType: string;
+begin
+  Result := FContentType;
+end;
+
+function TCMSTPResponse.GetContent: ICMConstantParameterDataList;
+begin
+  Result := FContent;
+end;
+
+
 
 end.
 

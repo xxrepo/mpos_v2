@@ -17,23 +17,23 @@ type
 
   TCMSServer = class(TServer, ICMSTPService)
   public //ICMSTPService
-    function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponseContent: ICMConstantParameterDataList): Boolean;
+    function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
   end;
 
 implementation
 
 { TCMSServer }
 
-function TCMSServer.CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponseContent: ICMConstantParameterDataList): Boolean;
+function TCMSServer.CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
 var
   request: TJettyServletRequest;
-  response: TServletResponse;
+  response: IServletResponse;
   dl: ICMParameterDataList;
   i: Integer;
 begin
   Result := False;
   request := TJettyServletRequest.Create(AURL, Self);
-  response := TServletResponse.Create;
+
   //请求参数
   if Supports(ARequestParameters, ICMParameterDataList, dl) then
     request.Parameters := dl
@@ -43,9 +43,22 @@ begin
         request.Parameters.SetData(ARequestParameters.GetName(i), ARequestParameters.Get(i));
     end;
   //
+  response := TServletResponse.Create;
+
+  Messager.Debug('>>1' + response.GetContent.Get('test').AsString);
   Self.Handle(AURL, request, response);
-  TheResponseContent := response.GetContent;
-  response.Committed := True;
+
+  TheResponse := TCMSTPResponse.Create(response.GetContentType, response.GetContent);
+
+  //Messager.Debug('>>2' + BoolToStr(Assigned(response.GetContent), True));
+  //Messager.Debug('>>3' + response.GetContent.Get('test').AsString);
+
+  Messager.Debug('>>4' + TheResponse.GetContent.Get('test').AsString);
+
+  //TheResponseContent := response.GetContent;
+  //response.Committed := True;
+
+  Result := True;
 end;
 
 end.

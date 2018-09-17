@@ -1,5 +1,13 @@
 
+
 { TLifeCycle }
+
+constructor TLifeCycle.Create;
+begin
+  inherited Create;
+  FIsRunning := False;
+  FIsStopped := False;
+end;
 
 procedure TLifeCycle.DoStart;
 begin
@@ -9,13 +17,6 @@ end;
 procedure TLifeCycle.DoStop;
 begin
   //
-end;
-
-constructor TLifeCycle.Create;
-begin
-  inherited Create;
-  FIsRunning := False;
-  FIsStopped := False;
 end;
 
 procedure TLifeCycle.Start;
@@ -65,43 +66,6 @@ end;
 function TConnector.GetPort: Word;
 begin
   Result := FPort;
-end;
-
-{ THandler }
-
-constructor THandler.Create;
-begin
-  inherited Create;
-  FServer := nil;
-end;
-
-procedure THandler.SetServer(AServer: IServer);
-begin
-  FServer := AServer;
-end;
-
-function THandler.GetServer: IServer;
-begin
-  Result := FServer;
-end;
-
-{ THandlerContainer }
-
-constructor THandlerContainer.Create;
-begin
-  inherited Create;
-  FHandlers := THandlerList.Create;
-end;
-
-destructor THandlerContainer.Destroy;
-begin
-  FHandlers.Free;
-  inherited Destroy;
-end;
-
-function THandlerContainer.GetHandlers: THandlerList;
-begin
-  Result := FHandlers;
 end;
 
 { THolder }
@@ -216,3 +180,121 @@ function TServletHolder.GetServletConfig: IServletConfig;
 begin
   Result := FServletConfig;
 end;
+
+{ THandler }
+
+constructor THandler.Create;
+begin
+  inherited Create;
+  FServer := nil;
+end;
+
+procedure THandler.SetServer(AServer: IServer);
+begin
+  FServer := AServer;
+end;
+
+function THandler.GetServer: IServer;
+begin
+  Result := FServer;
+end;
+
+{ THandlerContainer }
+
+constructor THandlerContainer.Create;
+begin
+  inherited Create;
+  FHandlers := THandlerList.Create;
+end;
+
+destructor THandlerContainer.Destroy;
+begin
+  FHandlers.Free;
+  inherited Destroy;
+end;
+
+function THandlerContainer.GetHandlers: THandlerList;
+begin
+  Result := FHandlers;
+end;
+
+{ THandlerWrapper }
+
+constructor THandlerWrapper.Create;
+begin
+  inherited Create;
+  FWrapper := nil;
+end;
+
+procedure THandlerWrapper.BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean);
+begin
+  //
+end;
+
+procedure THandlerWrapper.DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
+begin
+  //
+end;
+
+//有 Wrapper 时交由其处理，否则经前置处理后有子处理器时交由处理器处理，无子处理器时调用 DoHandle()
+procedure THandlerWrapper.Handle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
+var
+  h: IHandler;
+  canHandle: Boolean;
+begin
+  Messager.Debug('Handle()...');
+  if not Self.IsRunning then
+    begin
+      Messager.Info('Handle() There is no start handle.');
+      Exit;
+    end;
+  if Assigned(FWrapper) then
+    begin
+      if Supports(FWrapper, IHandler, h) then
+        h.Handle(ATarget, ARequest, AResponse)
+      else
+        begin
+          //for i:=0 to FWrapper.GetHandlers.Count-1 do
+          //  FWrapper.GetHandlers[i].Handle(ATarget, ARequest, AResponse);
+          //暂不考虑 Handler Collection 的情况
+          h := FWrapper.GetHandler;
+          if Assigned(h) then
+            h.Handle(ATarget, ARequest, AResponse);
+        end;
+    end
+  else
+    begin
+      canHandle := True;
+      BeforeHandle(ATarget, ARequest, AResponse, canHandle);
+      if CanHandle then
+        begin
+          h := GetHandler;
+          if Assigned(h) then
+            h.Handle(ATarget, ARequest, AResponse)
+          else
+            DoHandle(ATarget, ARequest, AResponse);
+        end;
+    end;
+end;
+
+procedure THandlerWrapper.SetHandler(AHandler: IHandler);
+begin
+  FHandlers.Clear;
+  FHandlers.Add(AHandler);
+end;
+
+function THandlerWrapper.GetHandler: IHandler;
+begin
+  Result := nil;
+  if FHandlers.Count > 0 then
+    Result := FHandlers[0];
+end;
+
+procedure THandlerWrapper.InsertHandler(AWrapper: IHandlerWrapper);
+begin
+  FWrapper := AWrapper;
+end;
+
+
+
+
