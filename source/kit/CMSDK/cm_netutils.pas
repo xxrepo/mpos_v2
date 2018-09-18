@@ -22,7 +22,7 @@ type
     FPort: string;
     FPath: string;
     FContextPath: string;
-    FLetPath: string;
+    FServletPath: string;
     FDocument: string;
     FParams: string;
     FBookmark: string;
@@ -39,7 +39,7 @@ type
     property Port: string read FPort write FPort;
     property Path: string read FPath write FPath;
     property ContextPath: string read FContextPath write FContextPath;
-    property LetPath: string read FLetPath write FLetPath;
+    property ServletPath: string read FServletPath write FServletPath;
     property Document: string read FDocument write FDocument;
     property Params: string read FParams write FParams;
     property Bookmark : string read FBookmark write FBookMark; //锚点（也称为“引用”）。
@@ -72,7 +72,7 @@ begin
   FPort := '';
   FPath := '';
   FContextPath := '';
-  FLetPath := '';
+  FServletPath := '';
   FDocument := '';
   FParams := '';
   FBookmark := '';
@@ -90,7 +90,7 @@ begin
   if p > 0 then
     begin
       FContextPath := '/' + Copy(FPath, 1, p-1);
-      FLetPath := Copy(FPath, p, MaxInt);
+      FServletPath := Copy(FPath, p, MaxInt);
     end;
   FPath := '/' + FPath;
   FDocument := Copy(FPath, PosR('/', FPath)+1, MaxInt);

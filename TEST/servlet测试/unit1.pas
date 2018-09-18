@@ -64,7 +64,7 @@ begin
   Memo1.Lines.Add('Port:' + uri.Port);
   Memo1.Lines.Add('Path:' + uri.Path);
   Memo1.Lines.Add('ContextPath:' + uri.ContextPath);
-  Memo1.Lines.Add('LetPath:' + uri.LetPath);
+  Memo1.Lines.Add('ServletPath:' + uri.ServletPath);
   Memo1.Lines.Add('Document:' + uri.Document);
   Memo1.Lines.Add('Params:' + uri.Params);
   Memo1.Lines.Add('Bookmark:' + uri.Bookmark);

@@ -155,21 +155,47 @@ type
     procedure InsertHandler(AWrapper: IHandlerWrapper);
   end;
 
-  { TServletContextHandler }
+  (***************************************** Server ***********************************************)
 
-  TServletContextHandler = class(THandlerWrapper, IContextHandler, IServletContextHandler)
+  { TServer }
+  //TODO 多线程
+  TServer = class(THandlerWrapper, IServer)
+  private
+    FConnectors: TConnectorList;
+    FThreadPool: TExecuteThreadBool;
+  public
+    constructor Create;
+    destructor Destroy; override;
+  protected
+    procedure BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean); override;
+  public //IServer
+    procedure AddConnector(AConnector: IConnector);
+    procedure RemoveConnector(AConnector: IConnector);
+    function GetConnectors: TConnectorList;
+    function GetThreadPool: TExecuteThreadBool;
+  end;
+
+  { TContextHandler }
+
+  TContextHandler = class(THandlerWrapper, IContextHandler)
   private
     FJettyServletContext: TJettyServletContext;
   public
     constructor Create;
     destructor Destroy; override;
     property JettyServletContext: TJettyServletContext read FJettyServletContext;
-  public //ContextHandler
+  public
     procedure SetContextPath(const APath: string);
     function GetContextPath: string;
     function GetInitParameters: ICMConstantParameterDataList;
     function GetAttributes: ICMParameterDataList;
     procedure SetServerInfo(const AServerInfo: string);
+    function GetServerInfo: string;
+  end;
+
+  { TServletContextHandler }
+
+  TServletContextHandler = class(TContextHandler, IServletContextHandler)
   public //ServletContextHandler
     procedure AddFilter(AFilter: IFilterHolder);
     procedure AddServlet(AHolder: IServletHolder);
@@ -192,70 +218,122 @@ type
     function GetServlets: TServletHolderList;
   end;
 
-  (***************************************** Server ***********************************************)
 
-  { TServer }
-  //TODO 多线程
-  TServer = class(THandlerWrapper, IServer)
-  private
-    FConnectors: TConnectorList;
-    FThreadPool: TExecuteThreadBool;
-  public
-    constructor Create;
-    destructor Destroy; override;
-  protected
-    procedure BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean); override;
-  public //IServer
-    procedure AddConnector(AConnector: IConnector);
-    procedure RemoveConnector(AConnector: IConnector);
-    function GetConnectors: TConnectorList;
-    function GetThreadPool: TExecuteThreadBool;
-  end;
 
 
 implementation
 
 {$I cm_JettyBase.inc}
 
-{ TServletContextHandler }
+{ TServer }
 
-constructor TServletContextHandler.Create;
+constructor TServer.Create;
+begin
+  inherited Create;
+  FConnectors := TConnectorList.Create;
+  FThreadPool := TExecuteThreadBool.Create(nil);
+end;
+
+destructor TServer.Destroy;
+begin
+  FConnectors.Free;
+  FThreadPool.Free;
+  inherited Destroy;
+end;
+
+//TODO 后继应实现 IHandlerCollection
+//校验连接器
+procedure TServer.BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean);
+var
+  i: Integer;
+  sch: IServletContextHandler;
+begin
+  Messager.Debug('开始前置处理（检验连接器）...');
+  CanHandle := False;
+  for i:=0 to FConnectors.Count-1 do
+    begin
+      //protocol、port相等时进行下一步。
+      //TODO host操作
+      if SameText(FConnectors[i].GetProtocol, ARequest.GetProtocol) and (FConnectors[i].GetPort = ARequest.GetPort) then
+        begin
+          //校验 context path
+          if Supports(Self.GetHandler, IServletContextHandler, sch) then
+            if sch.GetContextPath = ARequest.GetContextPath then
+              begin
+                CanHandle := True;
+                Exit;
+              end;
+        end;
+    end;
+  Messager.Debug('没有匹配的连接器（%s）.', [ATarget]);
+end;
+
+procedure TServer.AddConnector(AConnector: IConnector);
+begin
+  FConnectors.Add(AConnector);
+end;
+
+procedure TServer.RemoveConnector(AConnector: IConnector);
+begin
+  FConnectors.Remove(AConnector);
+end;
+
+function TServer.GetConnectors: TConnectorList;
+begin
+  Result := FConnectors;
+end;
+
+function TServer.GetThreadPool: TExecuteThreadBool;
+begin
+  Result := FThreadPool;
+end;
+
+{ TContextHandler }
+
+constructor TContextHandler.Create;
 begin
   inherited Create;
   FJettyServletContext := TJettyServletContext.Create(Self);
   FJettyServletContext.ServerInfo := Self.UnitName + '.' + Self.ClassName;
 end;
 
-destructor TServletContextHandler.Destroy;
+destructor TContextHandler.Destroy;
 begin
   FJettyServletContext.Free;
   inherited Destroy;
 end;
 
-procedure TServletContextHandler.SetContextPath(const APath: string);
+procedure TContextHandler.SetContextPath(const APath: string);
 begin
   FJettyServletContext.ContextPath := APath;
 end;
 
-function TServletContextHandler.GetContextPath: string;
+function TContextHandler.GetContextPath: string;
 begin
   Result := FJettyServletContext.GetContextPath;
 end;
 
-function TServletContextHandler.GetInitParameters: ICMConstantParameterDataList;
+function TContextHandler.GetInitParameters: ICMConstantParameterDataList;
 begin
   Result := FJettyServletContext.GetInitParameters;
 end;
 
-function TServletContextHandler.GetAttributes: ICMParameterDataList;
+function TContextHandler.GetAttributes: ICMParameterDataList;
 begin
   Result := FJettyServletContext.GetAttributes;
 end;
 
-procedure TServletContextHandler.SetServerInfo(const AServerInfo: string);
+procedure TContextHandler.SetServerInfo(const AServerInfo: string);
 begin
   FJettyServletContext.ServerInfo := AServerInfo;
 end;
+
+function TContextHandler.GetServerInfo: string;
+begin
+  Result := FJettyServletContext.GetServerInfo;
+end;
+
+{ TServletContextHandler }
 
 procedure TServletContextHandler.AddFilter(AFilter: IFilterHolder);
 begin
@@ -295,7 +373,7 @@ begin
   for i:=0 to sthdList.Count-1 do
     begin
       Messager.Debug('ThisHandle() check servlet: %s...', [sthdList[i].GetName]);
-      if sthdList[i].GetURLPatterns.IndexOf(FURL.LetPath) >= 0 then
+      if sthdList[i].GetURLPatterns.IndexOf(FURL.ServletPath) >= 0 then
         begin
           Messager.Debug('--2----------------');
           if not sthdList[i].Initialized then
@@ -332,72 +410,9 @@ begin
   Result := FJettyServletContext.GetServlets;
 end;
 
-{ TServer }
 
-constructor TServer.Create;
-begin
-  inherited Create;
-  FConnectors := TConnectorList.Create;
-  FThreadPool := TExecuteThreadBool.Create(nil);
-end;
 
-destructor TServer.Destroy;
-begin
-  FConnectors.Free;
-  FThreadPool.Free;
-  inherited Destroy;
-end;
 
-//TODO 后继应实现 IHandlerCollection
-procedure TServer.BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean);
-var
-  FURL: TCMURL;
-  i: Integer;
-  sch: IServletContextHandler;
-begin
-  Messager.Debug('开始前置处理（检验连接器）...');
-  CanHandle := False;
-  FURL := TCMURL.Create(ATarget);
-  try
-    for i:=0 to FConnectors.Count-1 do
-      begin
-        //protocol、port相等时进行下一步。
-        //TODO host操作
-        if SameText(FConnectors[i].GetProtocol, FURL.Protocol) and (IntToStr(FConnectors[i].GetPort) = FURL.Port) then
-          begin
-            //校验 context path
-            if Supports(Self.GetHandler, IServletContextHandler, sch) then
-              if sch.GetContextPath = FURL.ContextPath then
-                begin
-                  CanHandle := True;
-                  Exit;
-                end;
-          end;
-      end;
-  finally
-    FURL.Free;
-  end;
-end;
-
-procedure TServer.AddConnector(AConnector: IConnector);
-begin
-  FConnectors.Add(AConnector);
-end;
-
-procedure TServer.RemoveConnector(AConnector: IConnector);
-begin
-  FConnectors.Remove(AConnector);
-end;
-
-function TServer.GetConnectors: TConnectorList;
-begin
-  Result := FConnectors;
-end;
-
-function TServer.GetThreadPool: TExecuteThreadBool;
-begin
-  Result := FThreadPool;
-end;
 
 
 

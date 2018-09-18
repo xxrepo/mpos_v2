@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils,
   cm_interfaces, cm_messager,
-  cm_servlet, cm_parameter, cm_ParameterUtils;
+  cm_servlet, cm_parameter, cm_ParameterUtils,
+  cm_netutils;
 
 type
 
@@ -18,12 +19,20 @@ type
     FAttributes: ICMParameterDataList;
     FParameters: ICMParameterDataList;
     FURL: string;
+    FProtocol, FHost: string;
+    FPort: Word;
+    FContextPath, FServletPath: string;
   public
     constructor Create(const AURL: string);
   public
     function GetAttributes: ICMParameterDataList;
     function GetParameters: ICMConstantParameterDataList;
     function GetRequestURL: string;
+    function GetProtocol: string;
+    function GetHost: string;
+    function GetPort: Word;
+    function GetContextPath: string;
+    function GetServletPath: string;
     function GetRequestDispatcher(const APath: string): IRequestDispatcher; virtual; abstract;
   end;
 
@@ -92,10 +101,22 @@ implementation
 { TServletRequest }
 
 constructor TServletRequest.Create(const AURL: string);
+var
+  u: TCMURL;
 begin
   FAttributes := TCMParameterDataList.Create;
   FParameters := TCMParameterDataList.Create;
   FURL := AURL;
+  u := TCMURL.Create(FURL);
+  try
+    FProtocol := u.Protocol;
+    FHost := u.Host;
+    FPort := StrToIntDef(u.Port, 80);
+    FContextPath := u.ContextPath;
+    FServletPath := u.ServletPath;
+  finally
+    u.Free;
+  end;
 end;
 
 function TServletRequest.GetAttributes: ICMParameterDataList;
@@ -111,6 +132,31 @@ end;
 function TServletRequest.GetRequestURL: string;
 begin
   Result := FURL;
+end;
+
+function TServletRequest.GetProtocol: string;
+begin
+  Result := FProtocol;
+end;
+
+function TServletRequest.GetHost: string;
+begin
+  Result := FHost;
+end;
+
+function TServletRequest.GetPort: Word;
+begin
+  Result := FPort;
+end;
+
+function TServletRequest.GetContextPath: string;
+begin
+  Result := FContextPath;
+end;
+
+function TServletRequest.GetServletPath: string;
+begin
+  Result := FServletPath;
 end;
 
 { TServletResponse }

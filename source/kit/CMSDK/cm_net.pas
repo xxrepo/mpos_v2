@@ -19,8 +19,9 @@ type
     FReadTimeout: Integer;
   protected
     FRequestParameters: ICMParameterDataList;
+    FConnected: Boolean;
+    FContentType: string;
     FResponseContent: ICMConstantParameterDataList;
-    //FContentType: string;
   public
     constructor Create(const AURL: string); virtual;
     destructor Destroy; override;
@@ -29,8 +30,9 @@ type
     property ReadTimeout: Integer read FReadTimeout write FReadTimeout;
     property RequestParameters: ICMParameterDataList read FRequestParameters;
     procedure Connect; virtual; abstract;
+    property Connected: Boolean read FConnected;
+    property ContentType: string read FContentType;
     property ResponseContent: ICMConstantParameterDataList read FResponseContent;
-    //property ContentType: string read FContentType;
   end;
 
 implementation
@@ -43,8 +45,9 @@ begin
   FConnectTimeout := 0;
   FReadTimeout := 0;
   FRequestParameters := nil;
+  FConnected := False;
+  FContentType := '';
   FResponseContent := nil;
-  //FContentType := '';
 end;
 
 destructor TURLConnection.Destroy;

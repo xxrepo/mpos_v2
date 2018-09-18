@@ -124,6 +124,7 @@ type
     function GetInitParameters: ICMConstantParameterDataList;
     function GetAttributes: ICMParameterDataList;
     procedure SetServerInfo(const AServerInfo: string);
+    function GetServerInfo: string;
   end;
 
   IServletContextHandler = interface(IContextHandler)

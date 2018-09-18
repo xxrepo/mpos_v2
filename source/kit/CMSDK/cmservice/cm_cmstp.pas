@@ -89,14 +89,16 @@ procedure TCMSTPURLConnection.Connect;
 var
   rsp: ICMSTPResponse;
 begin
+  FConnected := False;
+  FContentType := '';
   FResponseContent := nil;
   if Assigned(CMSTPService) then
     begin
       if CMSTPService.CMSTP(URL, FRequestParameters, rsp) then
         begin
+          FContentType := rsp.GetContentType;
           FResponseContent := rsp.GetContent;
-
-          FResponseContent.Get('test').AsString;
+          FConnected := True;
         end;
     end;
 end;

@@ -62,10 +62,15 @@ type
     生命周期只存于容器内部
   }
   IServletRequest = interface(ICMBase)
-    ['{51C015D2-DE4D-4D7D-B92B-414CA0705D77}']
+    ['{F69A91CB-95F3-4720-9A8B-E339559A30FD}']
     function GetAttributes: ICMParameterDataList; //只存在于容器内部
     function GetParameters: ICMConstantParameterDataList;
     function GetRequestURL: string;
+    function GetProtocol: string;
+    function GetHost: string;
+    function GetPort: Word;
+    function GetContextPath: string;
+    function GetServletPath: string;
     function GetRequestDispatcher(const APath: string): IRequestDispatcher;
   end;
 

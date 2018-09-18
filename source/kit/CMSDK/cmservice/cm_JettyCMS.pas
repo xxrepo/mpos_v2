@@ -33,7 +33,6 @@ var
 begin
   Result := False;
   request := TJettyServletRequest.Create(AURL, Self);
-
   //请求参数
   if Supports(ARequestParameters, ICMParameterDataList, dl) then
     request.Parameters := dl
@@ -44,20 +43,9 @@ begin
     end;
   //
   response := TServletResponse.Create;
-
-  Messager.Debug('>>1' + response.GetContent.Get('test').AsString);
   Self.Handle(AURL, request, response);
-
   TheResponse := TCMSTPResponse.Create(response.GetContentType, response.GetContent);
-
-  //Messager.Debug('>>2' + BoolToStr(Assigned(response.GetContent), True));
-  //Messager.Debug('>>3' + response.GetContent.Get('test').AsString);
-
-  Messager.Debug('>>4' + TheResponse.GetContent.Get('test').AsString);
-
-  //TheResponseContent := response.GetContent;
-  //response.Committed := True;
-
+  //
   Result := True;
 end;
 
