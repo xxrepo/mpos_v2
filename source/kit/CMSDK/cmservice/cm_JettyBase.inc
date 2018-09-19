@@ -226,18 +226,20 @@ begin
   FWrapper := nil;
 end;
 
-procedure THandlerWrapper.BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean);
+procedure THandlerWrapper.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean)
+  ;
 begin
   //
 end;
 
-procedure THandlerWrapper.DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
+procedure THandlerWrapper.DoHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse)
+  ;
 begin
   //
 end;
 
 //有 Wrapper 时交由其处理，否则经前置处理后有子处理器时交由处理器处理，无子处理器时调用 DoHandle()
-procedure THandlerWrapper.Handle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
+procedure THandlerWrapper.Handle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse);
 var
   h: IHandler;
   canHandle: Boolean;
@@ -251,7 +253,7 @@ begin
   if Assigned(FWrapper) then
     begin
       if Supports(FWrapper, IHandler, h) then
-        h.Handle(ATarget, ARequest, AResponse)
+        h.Handle(ARequest, AResponse)
       else
         begin
           //for i:=0 to FWrapper.GetHandlers.Count-1 do
@@ -259,20 +261,20 @@ begin
           //暂不考虑 Handler Collection 的情况
           h := FWrapper.GetHandler;
           if Assigned(h) then
-            h.Handle(ATarget, ARequest, AResponse);
+            h.Handle(ARequest, AResponse);
         end;
     end
   else
     begin
       canHandle := True;
-      BeforeHandle(ATarget, ARequest, AResponse, canHandle);
+      BeforeHandle(ARequest, AResponse, canHandle);
       if CanHandle then
         begin
           h := GetHandler;
           if Assigned(h) then
-            h.Handle(ATarget, ARequest, AResponse)
+            h.Handle(ARequest, AResponse)
           else
-            DoHandle(ATarget, ARequest, AResponse);
+            DoHandle(ARequest, AResponse);
         end;
     end;
 end;

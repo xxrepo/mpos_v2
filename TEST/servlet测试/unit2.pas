@@ -39,18 +39,17 @@ procedure TTestServlet.Service(ARequest: IServletRequest; AResponse: IServletRes
 var
   rd: IRequestDispatcher;
 begin
-  Messager.Info('hello world!');
-  Messager.Info(Self.GetServletName);
-  Messager.Info('------------------------------');
-  Messager.Info(Self.GetServletConfig.GetServletContext.GetServerInfo);
+  Messager.Info('Service() hello world!');
+  Messager.Info('Service() ServletName:' + Self.GetServletName);
+  Messager.Info('Service() ServerInfo:' + Self.GetServletConfig.GetServletContext.GetServerInfo);
 
   AResponse.GetContent.SetString('test', 'haha');
-  Messager.Info('--GetRequestDispatcher()----------------------------');
-  rd := Self.GetServletContext.GetRequestDispatcher('/a/b2');
+  Messager.Info('Service() --GetRequestDispatcher()----------------------------');
+  //rd := Self.GetServletContext.GetRequestDispatcher('/a/b2');
 
-  rd.Forward(ARequest, AResponse);
+  //rd.Forward(ARequest, AResponse);
 
-  Messager.Info('over.');
+  Messager.Info('Service() over.');
 end;
 
 { TTestServlet2 }
@@ -62,7 +61,7 @@ end;
 
 procedure TTestServlet2.Service(ARequest: IServletRequest; AResponse: IServletResponse);
 begin
-  Messager.Info('hello world! 222');
+  Messager.Info('Service() hello world! 222');
   AResponse.GetContent.SetString('test', 'haha 222');
 end;
 

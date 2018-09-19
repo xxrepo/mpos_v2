@@ -31,6 +31,8 @@ uses
   function QuotedCHStr(const AStr: string): string;
   function IfEmpty(const AValue, AThen: string): string;
   //
+  function ValidateStr(const ARegExprExpression, AStr: string): Boolean;
+  //
   function StreamToString(AStream: TStream): string;
   function FileToString(AFileName: TFileName): string;
   function StringToFile(const AStr: string; AFileName: TFileName): Boolean;
@@ -75,6 +77,8 @@ const
         );
 
 implementation
+
+uses RegExpr;
 
 function RepairLibraryFileExt(const fileName: string; checkPrefix: Boolean=False): string;
 var
@@ -192,6 +196,19 @@ begin
     Result := AThen
   else
     Result := AValue;
+end;
+
+function ValidateStr(const ARegExprExpression, AStr: string): Boolean;
+var
+  re: TRegExpr;
+begin
+  Result := False;
+  re := TRegExpr.Create(ARegExprExpression);
+  try
+    Result := RE.Exec(AStr);
+  finally
+    FreeAndNil(re);
+  end;
 end;
 
 function StreamToString(AStream: TStream): string;

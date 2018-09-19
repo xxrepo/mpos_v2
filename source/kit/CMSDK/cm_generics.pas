@@ -99,6 +99,12 @@ type
     property Items[Index: Integer]: T read GetItem write SetItem; default;
   end;
 
+  IIterator<E: IUnknown> = interface(ICMBase)
+    ['{4729D3B9-0279-4CE0-905A-C99ADC8E34B9}']
+    function HasNext: Boolean; //如果仍有元素可以迭代，则返回 true。
+    function Next: E; //返回迭代的下一个元素。
+  end;
+
   { TCMMapEntry }
 
   TCMMapEntry<K: ICMBase; V: IUnknown> = class

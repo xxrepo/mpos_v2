@@ -27,7 +27,7 @@ implementation
 function TCMSServer.CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
 var
   request: TJettyServletRequest;
-  response: IServletResponse;
+  response: IJettyServletResponse;
   dl: ICMParameterDataList;
   i: Integer;
 begin
@@ -42,8 +42,8 @@ begin
         request.Parameters.SetData(ARequestParameters.GetName(i), ARequestParameters.Get(i));
     end;
   //
-  response := TServletResponse.Create;
-  Self.Handle(AURL, request, response);
+  response := TJettyServletResponse.Create;
+  Self.Handle(request, response);
   TheResponse := TCMSTPResponse.Create(response.GetContentType, response.GetContent);
   //
   Result := True;

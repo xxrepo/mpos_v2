@@ -125,7 +125,7 @@ type
     constructor Create;
     procedure SetServer(AServer: IServer);
     function GetServer: IServer;
-    procedure Handle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse); virtual; abstract;
+    procedure Handle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse); virtual; abstract;
   end;
 
   { THandlerContainer }
@@ -145,11 +145,11 @@ type
   private
     FWrapper: IHandlerWrapper;
   protected
-    procedure BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean); virtual;
-    procedure DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse); virtual;
+    procedure BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean); virtual;
+    procedure DoHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse); virtual;
   public
     constructor Create;
-    procedure Handle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse); override;
+    procedure Handle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse); override;
     procedure SetHandler(AHandler: IHandler);
     function GetHandler: IHandler;
     procedure InsertHandler(AWrapper: IHandlerWrapper);
@@ -167,7 +167,7 @@ type
     constructor Create;
     destructor Destroy; override;
   protected
-    procedure BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean); override;
+    procedure BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean); override;
   public //IServer
     procedure AddConnector(AConnector: IConnector);
     procedure RemoveConnector(AConnector: IConnector);
@@ -184,6 +184,8 @@ type
     constructor Create;
     destructor Destroy; override;
     property JettyServletContext: TJettyServletContext read FJettyServletContext;
+  protected
+    procedure BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean); override;
   public
     procedure SetContextPath(const APath: string);
     function GetContextPath: string;
@@ -210,7 +212,7 @@ type
   public
     constructor Create(AJettyServletContext: IJettyServletContext);
     destructor Destroy; override;
-    procedure DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse); override;
+    procedure DoHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse); override;
   public //IServletHandler
     procedure AddServlet(AServlet: IServletHolder);
     function GetServlet(const AName: string): IServletHolder;
@@ -243,29 +245,23 @@ end;
 
 //TODO 后继应实现 IHandlerCollection
 //校验连接器
-procedure TServer.BeforeHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse; var CanHandle: Boolean);
+procedure TServer.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean)
+  ;
 var
   i: Integer;
-  sch: IServletContextHandler;
 begin
   Messager.Debug('开始前置处理（检验连接器）...');
   CanHandle := False;
   for i:=0 to FConnectors.Count-1 do
     begin
-      //protocol、port相等时进行下一步。
       //TODO host操作
       if SameText(FConnectors[i].GetProtocol, ARequest.GetProtocol) and (FConnectors[i].GetPort = ARequest.GetPort) then
         begin
-          //校验 context path
-          if Supports(Self.GetHandler, IServletContextHandler, sch) then
-            if sch.GetContextPath = ARequest.GetContextPath then
-              begin
-                CanHandle := True;
-                Exit;
-              end;
+          CanHandle := True;
+          Exit;
         end;
     end;
-  Messager.Debug('没有匹配的连接器（%s）.', [ATarget]);
+  Messager.Debug('没有匹配的连接器（%s）.', [ARequest.GetRequestURL]);
 end;
 
 procedure TServer.AddConnector(AConnector: IConnector);
@@ -301,6 +297,20 @@ destructor TContextHandler.Destroy;
 begin
   FJettyServletContext.Free;
   inherited Destroy;
+end;
+
+//校验上下文路径
+procedure TContextHandler.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean)
+  ;
+begin
+  Messager.Debug('开始前置处理（校验上下文路径）...');
+  CanHandle := False;
+  if Self.GetContextPath = ARequest.GetContextPath then
+    begin
+      CanHandle := True;
+      Exit;
+    end;
+  Messager.Debug('上下文路径不匹配（%s）.', [ARequest.GetRequestURL]);
 end;
 
 procedure TContextHandler.SetContextPath(const APath: string);
@@ -359,34 +369,38 @@ begin
   inherited Destroy;
 end;
 
-procedure TServletHandler.DoHandle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
+procedure TServletHandler.DoHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse);
 var
-  FURL: TCMURL;
   i: Integer;
   servlet: IServlet;
   sthdList: TServletHolderList;
 begin
-  FURL := TCMURL.Create(ATarget);
-  Messager.Debug('ContextPath:%s URL.path:%s', [FJettyServletContext.GetContextPath, FURL.Path]);
-  //上下文路径应在前置服务器处理器中匹对，这里只需对 servlet 的路径作匹对。
+  Messager.Debug('DoHandle()... [RequestURL: %s]', [ARequest.GetRequestURL]);
+  //TODO
+  //servlet 路径匹配规则：
+  //1.精确匹配
+  //2.路径匹配，先最长路径匹配，再最短路径匹配
+  //3.扩展名匹配
+  //4.缺省匹配
   sthdList := FJettyServletContext.GetServlets;
   for i:=0 to sthdList.Count-1 do
     begin
-      Messager.Debug('ThisHandle() check servlet: %s...', [sthdList[i].GetName]);
-      if sthdList[i].GetURLPatterns.IndexOf(FURL.ServletPath) >= 0 then
+      if sthdList[i].GetURLPatterns.IndexOf(ARequest.GetServletPath) >= 0 then
         begin
-          Messager.Debug('--2----------------');
           if not sthdList[i].Initialized then
             sthdList[i].Init;
+          //
           servlet := sthdList[i].GetServlet;
           if Assigned(servlet) then
             begin
-              Messager.Debug('ThisHandle() 111111111');
+              Messager.Debug('DoHandle() servlet.Service() begin...');
               servlet.Service(ARequest, AResponse);
-              Messager.Debug('ThisHandle() 222222222');
+              Messager.Debug('DoHandle() servlet.Service() end.');
             end;
-        end;
-      Messager.Debug('ThisHandle() 33333');
+          Exit;
+        end
+      else
+        Messager.Debug('DoHandle() Servlet: %s 不进行处理. [ServletPath: %s]', [sthdList[i].GetName, ARequest.GetServletPath]);
     end;
 end;
 

@@ -25,6 +25,28 @@ uses
 
 type
 
+  //--------- servlet 适应性扩展定义 ---------------------------------------------------------------
+
+  { IJettyServletRequest
+    // 应对 RequestDispatcher
+  }
+  IJettyServletRequest = interface(IServletRequest)
+    ['{F14EA8C7-B431-43FB-88D3-87D6BE44DC87}']
+    procedure SetContextPath(const AContextPath: string);
+    procedure SetServletPath(const AServletPath: string);
+  end;
+
+  IJettyServletResponse = interface(IServletResponse)
+    ['{6AD78E14-BEE2-42D2-833C-F927E1D00B84}']
+
+  end;
+
+  //------------------------------------------------------------------------------------------------
+
+  { ILifeCycle
+    // The lifecycle interface for generic components.
+    Classes implementing this interface have a defined life cycle defined by the methods of this interface.
+  }
   ILifeCycle = interface(ICMBase)
     ['{6F11D00F-825E-4DA2-9F85-8DDF9918EF2C}']
     procedure Start;
@@ -87,10 +109,10 @@ type
   IServer = interface;
 
   IHandler = interface(ILifeCycle)
-    ['{CEB5A742-7382-4231-B06C-EACDC9AD395C}']
+    ['{A3994D45-7A79-4A41-89FC-95202BDF6256}']
     procedure SetServer(AServer: IServer);
     function GetServer: IServer;
-    procedure Handle(const ATarget: string; ARequest: IServletRequest; AResponse: IServletResponse);
+    procedure Handle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse);
   end;
 
   THandlerList = TList<IHandler>;
@@ -170,9 +192,11 @@ type
     function GetServlets: TServletHolderList;
   end;
 
+
+
   { TJettyServletRequest }
 
-  TJettyServletRequest = class(TServletRequest)
+  TJettyServletRequest = class(TServletRequest, IJettyServletRequest)
   private
     FHandler: IHandler;
   public
@@ -180,6 +204,13 @@ type
     property Parameters: ICMParameterDataList read FParameters write FParameters;
   public
     function GetRequestDispatcher(const APath: string): IRequestDispatcher; override;
+  public
+    procedure SetContextPath(const AContextPath: string);
+    procedure SetServletPath(const AServletPath: string);
+  end;
+
+  TJettyServletResponse = class(TServletResponse, IJettyServletResponse)
+
   end;
 
   { TJettyServletContext }
@@ -203,10 +234,11 @@ type
 
   TJettyRequestDispatcher = class(TCMMessageable, IRequestDispatcher)
   private
-    FTarget: string;
+    FContextPath: string;
+    FServletPath: string;
     FHandler: IHandler;
   public
-    constructor Create(const ATarget: string; AHandler: IHandler);
+    constructor Create(const AContextPath, AServletPath: string; AHandler: IHandler);
     destructor Destroy; override;
   public
     procedure Forward(ARequest: IServletRequest; AResponse: IServletResponse);
@@ -259,36 +291,25 @@ begin
         begin
           //TODO 路径问题
           Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + sh.GetURLPatterns[0]]);
-          Result := TJettyRequestDispatcher.Create(Self.GetContextPath + sh.GetURLPatterns[0], FHandler);
+          Result := TJettyRequestDispatcher.Create(Self.GetContextPath, sh.GetURLPatterns[0], FHandler);
           Exit;
         end;
     end;
 end;
 
 function TJettyServletContext.GetRequestDispatcher(const APath: string): IRequestDispatcher;
-//var
-//  i: Integer;
-//  sh: IServletHolder;
 begin
-  //Result := nil;
-  //for i:=0 to FServletHolders.Count-1 do
-  //  begin
-  //    sh := FServletHolders[i];
-  //    if sh.GetURLPatterns.IndexOf(APath) >=0 then
-  //      begin
-          Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + APath]);
-          Result := TJettyRequestDispatcher.Create(Self.GetContextPath + APath, FHandler);
-        //  Exit;
-        //end;
-    //end;
+  Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + APath]);
+  Result := TJettyRequestDispatcher.Create(Self.GetContextPath, APath, FHandler);
 end;
 
 { TJettyRequestDispatcher }
 
-constructor TJettyRequestDispatcher.Create(const ATarget: string; AHandler: IHandler);
+constructor TJettyRequestDispatcher.Create(const AContextPath, AServletPath: string; AHandler: IHandler);
 begin
   inherited Create;
-  FTarget := ATarget;
+  FContextPath := AContextPath;
+  FServletPath := AServletPath;
   FHandler := AHandler;
 end;
 
@@ -301,7 +322,7 @@ end;
 procedure TJettyRequestDispatcher.Forward(ARequest: IServletRequest; AResponse: IServletResponse);
 begin
   AResponse.GetContent.Clear;
-  FHandler.Handle(FTarget, ARequest, AResponse);
+  //FHandler.Handle(ARequest, AResponse);
 end;
 
 procedure TJettyRequestDispatcher.Include(ARequest: IServletRequest; AResponse: IServletResponse);
@@ -312,7 +333,7 @@ var
   p: ICMParameterData;
 begin
   rps := TServletResponse.Create;
-  FHandler.Handle(FTarget, ARequest, rps);
+  //FHandler.Handle(ARequest, rps);
   for i:=0 to rps.GetContent.Count-1 do
     begin
       n := rps.GetContent.GetName(i);
@@ -332,7 +353,17 @@ end;
 
 function TJettyServletRequest.GetRequestDispatcher(const APath: string): IRequestDispatcher;
 begin
-  Result := TJettyRequestDispatcher.Create(APath, FHandler);
+  Result := TJettyRequestDispatcher.Create(APath, '', FHandler);
+end;
+
+procedure TJettyServletRequest.SetContextPath(const AContextPath: string);
+begin
+  FContextPath := AContextPath;
+end;
+
+procedure TJettyServletRequest.SetServletPath(const AServletPath: string);
+begin
+  FServletPath := AServletPath;
 end;
 
 end.

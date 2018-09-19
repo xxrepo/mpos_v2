@@ -171,7 +171,6 @@ end;
 
 destructor TServletResponse.Destroy;
 begin
-  Messager.Warning('Destroy()...');
   inherited Destroy;
 end;
 
@@ -192,7 +191,6 @@ end;
 
 function TServletResponse.GetContent: ICMParameterDataList;
 begin
-  Messager.Warning('GetContent()...' + BoolToStr(Assigned(FContent), True));
   Result := FContent;
 end;
 

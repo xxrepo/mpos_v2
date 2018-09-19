@@ -187,7 +187,7 @@ begin
   request := TJettyServletRequest.Create('cmstp://test:80/test/a/b?x=aaa&y=123', server);
   response := TServletResponse.Create;
 
-  server.Handle(request.GetRequestURL, request, response);
+  //server.Handle(request, response);
   println(response.GetContent.Get('test').AsString);
 
   //println('--again--------');
