@@ -103,13 +103,13 @@ type
     FURLPatterns: TStrings;
     FInitialized: Boolean;
     FServletConfig: IServletConfig;
+    procedure Init; //TODO 后继改进
   public
     constructor Create(AServletContext: IServletContext);
     procedure SetServlet(AServlet: IServlet);
     function GetServlet: IServlet;
     procedure AddURLPattern(const AURLPattern: string);
     function GetURLPatterns: TStrings;
-    procedure Init;
     function Initialized: Boolean;
     function GetServletConfig: IServletConfig;
   end;
@@ -212,6 +212,8 @@ type
   public
     constructor Create(AJettyServletContext: IJettyServletContext);
     destructor Destroy; override;
+  protected
+    procedure BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean); override;
     procedure DoHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse); override;
   public //IServletHandler
     procedure AddServlet(AServlet: IServletHolder);
@@ -300,8 +302,7 @@ begin
 end;
 
 //校验上下文路径
-procedure TContextHandler.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean)
-  ;
+procedure TContextHandler.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean);
 begin
   Messager.Debug('开始前置处理（校验上下文路径）...');
   CanHandle := False;
@@ -369,6 +370,24 @@ begin
   inherited Destroy;
 end;
 
+//TODO
+//servlet 路径匹配规则：
+//1.精确匹配
+//2.路径匹配，先最长路径匹配，再最短路径匹配
+//3.扩展名匹配
+//4.缺省匹配
+procedure TServletHandler.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean);
+begin
+  Messager.Debug('开始前置处理（校验 servlet url-pattern）...');
+  CanHandle := False;
+  //if Self.GetContextPath = ARequest.GetContextPath then
+    begin
+      CanHandle := True;
+      Exit;
+    end;
+  Messager.Debug('上下文路径不匹配（%s）.', [ARequest.GetRequestURL]);
+end;
+
 procedure TServletHandler.DoHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse);
 var
   i: Integer;
@@ -376,20 +395,12 @@ var
   sthdList: TServletHolderList;
 begin
   Messager.Debug('DoHandle()... [RequestURL: %s]', [ARequest.GetRequestURL]);
-  //TODO
-  //servlet 路径匹配规则：
-  //1.精确匹配
-  //2.路径匹配，先最长路径匹配，再最短路径匹配
-  //3.扩展名匹配
-  //4.缺省匹配
+  //
   sthdList := FJettyServletContext.GetServlets;
   for i:=0 to sthdList.Count-1 do
     begin
       if sthdList[i].GetURLPatterns.IndexOf(ARequest.GetServletPath) >= 0 then
         begin
-          if not sthdList[i].Initialized then
-            sthdList[i].Init;
-          //
           servlet := sthdList[i].GetServlet;
           if Assigned(servlet) then
             begin

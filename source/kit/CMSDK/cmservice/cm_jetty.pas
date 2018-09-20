@@ -97,7 +97,6 @@ type
     //为方便实现容器，下述不再一味模仿 jetty 。
     procedure AddURLPattern(const AURLPattern: string);
     function GetURLPatterns: TStrings;
-    procedure Init;
     function Initialized: Boolean;
     function GetServletConfig: IServletConfig;
   end;
@@ -230,8 +229,9 @@ type
     function GetRequestDispatcher(const APath: string): IRequestDispatcher; override;
   end;
 
-  { TJettyRequestDispatcher }
-
+  { TJettyRequestDispatcher
+    // 实现思路：通过获取相应 IHandler 后创建 RequestDispatcher 否则应返回 nil。
+  }
   TJettyRequestDispatcher = class(TCMMessageable, IRequestDispatcher)
   private
     FContextPath: string;
@@ -320,9 +320,17 @@ begin
 end;
 
 procedure TJettyRequestDispatcher.Forward(ARequest: IServletRequest; AResponse: IServletResponse);
+var
+  req: IJettyServletRequest;
+  rsp: IJettyServletResponse;
 begin
   AResponse.GetContent.Clear;
-  //FHandler.Handle(ARequest, AResponse);
+  if Supports(ARequest, IJettyServletRequest, req) and Supports(AResponse, IJettyServletResponse, rsp) then
+    begin
+      req.SetContextPath(FContextPath);
+      req.SetServletPath(FServletPath);
+      FHandler.Handle(req, rsp);
+    end;
 end;
 
 procedure TJettyRequestDispatcher.Include(ARequest: IServletRequest; AResponse: IServletResponse);

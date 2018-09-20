@@ -147,6 +147,8 @@ end;
 
 function TServletHolder.GetServlet: IServlet;
 begin
+  Result := nil;
+  Init;
   Result := FServlet;
 end;
 
