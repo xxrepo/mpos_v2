@@ -28,17 +28,22 @@ type
   //--------- servlet 适应性扩展定义 ---------------------------------------------------------------
 
   { IJettyServletRequest
-    // 应对 RequestDispatcher
+    // 应对 RequestDispatcher，声明皆内部使用
   }
   IJettyServletRequest = interface(IServletRequest)
     ['{F14EA8C7-B431-43FB-88D3-87D6BE44DC87}']
-    procedure SetContextPath(const AContextPath: string);
-    procedure SetServletPath(const AServletPath: string);
+    procedure SetTargetServlet(AServlet: IServlet);
+    function GetTargetServlet: IServlet;
+    procedure SetForwordMode(AValue: Boolean);
+    function GetForwordMode: Boolean;
+    //procedure SetForword
   end;
 
   IJettyServletResponse = interface(IServletResponse)
     ['{6AD78E14-BEE2-42D2-833C-F927E1D00B84}']
-
+    // 如果使用forward跳转则其后面的response输出则不会执行，
+    //而用include来跳转，则include的servlet执行完后，再返回到原来的servlet执行response的输出
+    function IsForwarded: Boolean;
   end;
 
   //------------------------------------------------------------------------------------------------
@@ -101,7 +106,13 @@ type
     function GetServletConfig: IServletConfig;
   end;
 
-  TServletHolderList = TCMHashInterfaceList<IServletHolder>;
+  { TServletHolderList }
+
+  TServletHolderList = class(TCMHashInterfaceList<IServletHolder>)
+  public
+    function IsMatchingPath(const AServletPath: string): Boolean; //为方便实现 RequestDispatcher
+    function GetMatchingPath(const AServletPath: string): Boolean;
+  end;
 
   (************************* Handler **************************************************************)
 
@@ -167,22 +178,13 @@ type
     function GetServlets: TServletHolderList;
   end;
 
-  (************************* Server ***************************************************************)
-
-  IServer = interface(IHandlerContainer)
-    ['{F5085010-2151-463B-82BD-3126B9549F19}']
-    procedure AddConnector(AConnector: IConnector);
-    procedure RemoveConnector(AConnector: IConnector);
-    function GetConnectors: TConnectorList;
-    function GetThreadPool: TExecuteThreadBool;
-  end;
-
   (*-----------------------------------------------------------------------------------------------
      以下：为实现的拓展定义，与基本类型
    -----------------------------------------------------------------------------------------------*)
 
   { IJettyServletContext
-    //由上下文记录，以便处理器从中提取内容处理。
+    // 拓展的 ServletContext
+    // 由上下文记录，以便处理器从中提取内容处理。
   }
   IJettyServletContext = interface(IServletContext)
     ['{0D7D47E8-05EF-4657-8E4B-ED8FB97B5931}']
@@ -191,25 +193,42 @@ type
     function GetServlets: TServletHolderList;
   end;
 
+  IServer = interface(IHandlerContainer)
+    ['{F5085010-2151-463B-82BD-3126B9549F19}']
+    procedure AddConnector(AConnector: IConnector);
+    procedure RemoveConnector(AConnector: IConnector);
+    function GetConnectors: TConnectorList;
+    procedure RegisterServletContext(AServletContext: IJettyServletContext);
+    function GetThreadPool: TExecuteThreadBool;
+    //
+    //function GetRequestDispatcher(const AContextPath, AServletPath: string): IRequestDispatcher;
+  end;
 
-
-  { TJettyServletRequest }
-
+  { TJettyServletRequest
+    // 拓展的 ServletRequest
+  }
   TJettyServletRequest = class(TServletRequest, IJettyServletRequest)
   private
     FHandler: IHandler;
+    FServlet: IServlet;
+    FForwordMode: Boolean;
   public
     constructor Create(const AURL: string; AHandler: IHandler);
     property Parameters: ICMParameterDataList read FParameters write FParameters;
   public
     function GetRequestDispatcher(const APath: string): IRequestDispatcher; override;
   public
-    procedure SetContextPath(const AContextPath: string);
-    procedure SetServletPath(const AServletPath: string);
+    procedure SetTargetServlet(AServlet: IServlet);
+    function GetTargetServlet: IServlet;
+    procedure SetForwordMode(AValue: Boolean);
+    function GetForwordMode: Boolean;
   end;
 
-  TJettyServletResponse = class(TServletResponse, IJettyServletResponse)
+  { TJettyServletResponse }
 
+  TJettyServletResponse = class(TServletResponse, IJettyServletResponse)
+  public
+    function IsForwarded: Boolean;
   end;
 
   { TJettyServletContext }
@@ -234,11 +253,10 @@ type
   }
   TJettyRequestDispatcher = class(TCMMessageable, IRequestDispatcher)
   private
-    FContextPath: string;
-    FServletPath: string;
+    FServlet: IServlet;
     FHandler: IHandler;
   public
-    constructor Create(const AContextPath, AServletPath: string; AHandler: IHandler);
+    constructor Create(AServlet: IServlet; AHandler: IHandler);
     destructor Destroy; override;
   public
     procedure Forward(ARequest: IServletRequest; AResponse: IServletResponse);
@@ -291,7 +309,7 @@ begin
         begin
           //TODO 路径问题
           Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + sh.GetURLPatterns[0]]);
-          Result := TJettyRequestDispatcher.Create(Self.GetContextPath, sh.GetURLPatterns[0], FHandler);
+          Result := TJettyRequestDispatcher.Create(sh.GetServlet, FHandler);
           Exit;
         end;
     end;
@@ -300,16 +318,15 @@ end;
 function TJettyServletContext.GetRequestDispatcher(const APath: string): IRequestDispatcher;
 begin
   Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + APath]);
-  Result := TJettyRequestDispatcher.Create(Self.GetContextPath, APath, FHandler);
+  //Result := TJettyRequestDispatcher.Create(, FHandler);
 end;
 
 { TJettyRequestDispatcher }
 
-constructor TJettyRequestDispatcher.Create(const AContextPath, AServletPath: string; AHandler: IHandler);
+constructor TJettyRequestDispatcher.Create(AServlet: IServlet; AHandler: IHandler);
 begin
   inherited Create;
-  FContextPath := AContextPath;
-  FServletPath := AServletPath;
+  FServlet := AServlet;
   FHandler := AHandler;
 end;
 
@@ -327,9 +344,13 @@ begin
   AResponse.GetContent.Clear;
   if Supports(ARequest, IJettyServletRequest, req) and Supports(AResponse, IJettyServletResponse, rsp) then
     begin
-      req.SetContextPath(FContextPath);
-      req.SetServletPath(FServletPath);
-      FHandler.Handle(req, rsp);
+      req.SetForwordMode(True);
+      try
+        req.SetTargetServlet(FServlet);
+        FHandler.Handle(req, rsp);
+      finally
+        req.SetForwordMode(False);
+      end;
     end;
 end;
 
@@ -357,21 +378,61 @@ constructor TJettyServletRequest.Create(const AURL: string; AHandler: IHandler);
 begin
   inherited Create(AURL);
   FHandler := AHandler;
+  FServlet := nil;
+  FForwordMode := False;
 end;
 
 function TJettyServletRequest.GetRequestDispatcher(const APath: string): IRequestDispatcher;
 begin
-  Result := TJettyRequestDispatcher.Create(APath, '', FHandler);
+  //Result := TJettyRequestDispatcher.Create(APath, '', FHandler);
 end;
 
-procedure TJettyServletRequest.SetContextPath(const AContextPath: string);
+procedure TJettyServletRequest.SetTargetServlet(AServlet: IServlet);
 begin
-  FContextPath := AContextPath;
+  FServlet := AServlet;
 end;
 
-procedure TJettyServletRequest.SetServletPath(const AServletPath: string);
+function TJettyServletRequest.GetTargetServlet: IServlet;
 begin
-  FServletPath := AServletPath;
+  Result := FServlet;
+end;
+
+procedure TJettyServletRequest.SetForwordMode(AValue: Boolean);
+begin
+  FForwordMode := AValue;
+end;
+
+function TJettyServletRequest.GetForwordMode: Boolean;
+begin
+  Result := FForwordMode;
+end;
+
+{ TJettyServletResponse }
+
+function TJettyServletResponse.IsForwarded: Boolean;
+begin
+  Result := False;
+end;
+
+{ TServletHolderList }
+
+//TODO
+//servlet 路径匹配规则：
+//1.精确匹配
+//2.路径匹配，先最长路径匹配，再最短路径匹配
+//3.扩展名匹配
+//4.缺省匹配
+function TServletHolderList.MatchingPath(const AServletPath: string): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+  for i:=0 to Self.Count-1 do
+    if Self[i].GetURLPatterns.IndexOf(AServletPath) >= 0 then
+      begin
+        Result := True;
+        Exit;
+      end;
 end;
 
 end.

@@ -23,6 +23,10 @@
   <filter-mapping>
     <filter-name>F</filter-name>
     <url-pattern>/B</url-pattern>
+	<dispatcher>REQUEST</dispatcher>  
+    <dispatcher>FORWARD</dispatcher>  
+    <dispatcher>INCLUDE</dispatcher>  
+    <dispatcher>EXCEPTION</dispatcher>
   </filter-mapping>
 
   <listener>

@@ -172,6 +172,7 @@ type
     procedure AddConnector(AConnector: IConnector);
     procedure RemoveConnector(AConnector: IConnector);
     function GetConnectors: TConnectorList;
+    procedure RegisterServletContext(AServletContext: IJettyServletContext);
     function GetThreadPool: TExecuteThreadBool;
   end;
 
@@ -247,8 +248,7 @@ end;
 
 //TODO 后继应实现 IHandlerCollection
 //校验连接器
-procedure TServer.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean)
-  ;
+procedure TServer.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean);
 var
   i: Integer;
 begin
@@ -279,6 +279,11 @@ end;
 function TServer.GetConnectors: TConnectorList;
 begin
   Result := FConnectors;
+end;
+
+procedure TServer.RegisterServletContext(AServletContext: IJettyServletContext);
+begin
+
 end;
 
 function TServer.GetThreadPool: TExecuteThreadBool;
@@ -370,32 +375,17 @@ begin
   inherited Destroy;
 end;
 
-//TODO
-//servlet 路径匹配规则：
-//1.精确匹配
-//2.路径匹配，先最长路径匹配，再最短路径匹配
-//3.扩展名匹配
-//4.缺省匹配
 procedure TServletHandler.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean);
+var
+  i: Integer;
+  sthdList: TServletHolderList;
+  servlet: IServlet;
 begin
   Messager.Debug('开始前置处理（校验 servlet url-pattern）...');
   CanHandle := False;
-  //if Self.GetContextPath = ARequest.GetContextPath then
-    begin
-      CanHandle := True;
-      Exit;
-    end;
-  Messager.Debug('上下文路径不匹配（%s）.', [ARequest.GetRequestURL]);
-end;
-
-procedure TServletHandler.DoHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse);
-var
-  i: Integer;
-  servlet: IServlet;
-  sthdList: TServletHolderList;
-begin
-  Messager.Debug('DoHandle()... [RequestURL: %s]', [ARequest.GetRequestURL]);
   //
+  //if FJettyServletContext.GetServlets.MatchingPath(ARequest.GetServletPath);
+
   sthdList := FJettyServletContext.GetServlets;
   for i:=0 to sthdList.Count-1 do
     begin
@@ -404,15 +394,31 @@ begin
           servlet := sthdList[i].GetServlet;
           if Assigned(servlet) then
             begin
-              Messager.Debug('DoHandle() servlet.Service() begin...');
-              servlet.Service(ARequest, AResponse);
-              Messager.Debug('DoHandle() servlet.Service() end.');
+              ARequest.SetTargetServlet(servlet);
+              CanHandle := True;
+              Exit;
             end;
           Exit;
-        end
-      else
-        Messager.Debug('DoHandle() Servlet: %s 不进行处理. [ServletPath: %s]', [sthdList[i].GetName, ARequest.GetServletPath]);
+        end;
     end;
+  Messager.Debug('上下文路径不匹配（%s）.', [ARequest.GetRequestURL]);
+end;
+
+procedure TServletHandler.DoHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse);
+var
+  servlet: IServlet;
+begin
+  Messager.Debug('DoHandle()... [RequestURL: %s]', [ARequest.GetRequestURL]);
+  //
+  servlet := ARequest.GetTargetServlet;
+  if Assigned(servlet) then
+    begin
+      Messager.Debug('DoHandle() servlet.Service() begin...');
+      servlet.Service(ARequest, AResponse);
+      Messager.Debug('DoHandle() servlet.Service() end.');
+    end
+  else
+    Messager.Debug('DoHandle() 没有目标 Servlet 不进行处理. [ServletPath: %s]', [ARequest.GetServletPath]);
 end;
 
 procedure TServletHandler.AddServlet(AServlet: IServletHolder);

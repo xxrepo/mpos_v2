@@ -269,7 +269,10 @@ begin
   else
     begin
       canHandle := True;
-      BeforeHandle(ARequest, AResponse, canHandle);
+      //
+      if not ARequest.GetForwordMode then
+        BeforeHandle(ARequest, AResponse, canHandle);
+      //
       if CanHandle then
         begin
           h := GetHandler;
