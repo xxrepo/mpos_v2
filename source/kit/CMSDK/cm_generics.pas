@@ -136,6 +136,8 @@ type
     //TODO 迭代
   end;
 
+  //TCMinter
+
 implementation
 
 { TCMHashObjectList }

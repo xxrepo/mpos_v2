@@ -45,8 +45,9 @@ begin
 
   AResponse.GetContent.SetString('test', 'haha');
   Messager.Info('Service() --GetRequestDispatcher()----------------------------');
-  //rd := Self.GetServletContext.GetRequestDispatcher('/a/b2');
 
+  //rd := Self.GetServletContext.GetRequestDispatcher('/a/b2');
+  rd := ARequest.GetRequestDispatcher('a/b2');
   //rd.Forward(ARequest, AResponse);
 
   Messager.Info('Service() over.');

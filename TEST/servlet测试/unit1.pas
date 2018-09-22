@@ -213,6 +213,7 @@ begin
   //servlet context
   scHandler := TServletContextHandler.Create;
   scHandler.SetContextPath('/test');
+  println(scHandler.GetContextPath);
 
   s := TTestServlet.Create;
   sh := TServletHolder.Create(scHandler.JettyServletContext);

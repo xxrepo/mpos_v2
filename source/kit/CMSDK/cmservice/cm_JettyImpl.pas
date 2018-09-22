@@ -150,7 +150,7 @@ type
   public
     constructor Create;
     procedure Handle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse); override;
-    procedure SetHandler(AHandler: IHandler);
+    procedure SetHandler(AHandler: IHandler); virtual;
     function GetHandler: IHandler;
     procedure InsertHandler(AWrapper: IHandlerWrapper);
   end;
@@ -163,17 +163,19 @@ type
   private
     FConnectors: TConnectorList;
     FThreadPool: TExecuteThreadBool;
+    FServletContext: TInterfaceList;
   public
     constructor Create;
     destructor Destroy; override;
+    procedure SetHandler(AHandler: IHandler); override;
   protected
     procedure BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean); override;
   public //IServer
     procedure AddConnector(AConnector: IConnector);
     procedure RemoveConnector(AConnector: IConnector);
     function GetConnectors: TConnectorList;
-    procedure RegisterServletContext(AServletContext: IJettyServletContext);
     function GetThreadPool: TExecuteThreadBool;
+    function GetServletContext(const AContextPath: string): IJettyServletContext;
   end;
 
   { TContextHandler }
@@ -202,6 +204,7 @@ type
   public //ServletContextHandler
     procedure AddFilter(AFilter: IFilterHolder);
     procedure AddServlet(AHolder: IServletHolder);
+    function GetServletContext: IJettyServletContext;
   end;
 
 
@@ -237,13 +240,24 @@ begin
   inherited Create;
   FConnectors := TConnectorList.Create;
   FThreadPool := TExecuteThreadBool.Create(nil);
+  FServletContext := TInterfaceList.Create;
 end;
 
 destructor TServer.Destroy;
 begin
   FConnectors.Free;
   FThreadPool.Free;
+  FServletContext.Free;
   inherited Destroy;
+end;
+
+procedure TServer.SetHandler(AHandler: IHandler);
+begin
+  inherited SetHandler(AHandler);
+  if Supports(AHandler, IServletContextHandler) then
+    begin
+      FServletContext.Add(IServletContextHandler(AHandler));
+    end;
 end;
 
 //TODO 后继应实现 IHandlerCollection
@@ -281,14 +295,25 @@ begin
   Result := FConnectors;
 end;
 
-procedure TServer.RegisterServletContext(AServletContext: IJettyServletContext);
-begin
-
-end;
-
 function TServer.GetThreadPool: TExecuteThreadBool;
 begin
   Result := FThreadPool;
+end;
+
+function TServer.GetServletContext(const AContextPath: string): IJettyServletContext;
+var
+  enumerator: TInterfaceListEnumerator;
+  sc: IJettyServletContext;
+begin
+  Result := nil;
+  enumerator := FServletContext.GetEnumerator;
+  while (enumerator.MoveNext) do
+    begin
+      sc := IJettyServletContext(enumerator.GetCurrent);
+      Messager.Debug('sc.GetContextPath:%s - AContextPath:%s', [sc.GetContextPath, AContextPath]);
+      if sc.GetContextPath = AContextPath then
+        Result := sc;
+    end;
 end;
 
 { TContextHandler }
@@ -361,6 +386,11 @@ begin
   FJettyServletContext.AddServlet(AHolder);
 end;
 
+function TServletContextHandler.GetServletContext: IJettyServletContext;
+begin
+  Result := FJettyServletContext;
+end;
+
 { TServletHandler }
 
 constructor TServletHandler.Create(AJettyServletContext: IJettyServletContext);
@@ -377,29 +407,23 @@ end;
 
 procedure TServletHandler.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean);
 var
-  i: Integer;
-  sthdList: TServletHolderList;
+  sh: IServletHolder;
   servlet: IServlet;
 begin
   Messager.Debug('开始前置处理（校验 servlet url-pattern）...');
   CanHandle := False;
   //
-  //if FJettyServletContext.GetServlets.MatchingPath(ARequest.GetServletPath);
-
-  sthdList := FJettyServletContext.GetServlets;
-  for i:=0 to sthdList.Count-1 do
+  sh := FJettyServletContext.GetServlets.GetByMatchingPath(ARequest.GetServletPath);
+  if Assigned(sh) then
     begin
-      if sthdList[i].GetURLPatterns.IndexOf(ARequest.GetServletPath) >= 0 then
+      servlet := sh.GetServlet;
+      if Assigned(servlet) then
         begin
-          servlet := sthdList[i].GetServlet;
-          if Assigned(servlet) then
-            begin
-              ARequest.SetTargetServlet(servlet);
-              CanHandle := True;
-              Exit;
-            end;
+          ARequest.SetTargetServlet(servlet);
+          CanHandle := True;
           Exit;
         end;
+      Exit;
     end;
   Messager.Debug('上下文路径不匹配（%s）.', [ARequest.GetRequestURL]);
 end;

@@ -19,34 +19,11 @@ unit cm_jetty;
 interface
 
 uses
-  Classes, SysUtils, Generics.Collections, Generics.Defaults,
-  cm_interfaces, cm_messager, cm_generics, cm_parameter, cm_threadutils,
+  Classes, SysUtils, Generics.Collections, Generics.Defaults, Dialogs,
+  cm_sysutils, cm_interfaces, cm_messager, cm_generics, cm_parameter, cm_threadutils,
   cm_servlet, cm_servletutils;
 
 type
-
-  //--------- servlet 适应性扩展定义 ---------------------------------------------------------------
-
-  { IJettyServletRequest
-    // 应对 RequestDispatcher，声明皆内部使用
-  }
-  IJettyServletRequest = interface(IServletRequest)
-    ['{F14EA8C7-B431-43FB-88D3-87D6BE44DC87}']
-    procedure SetTargetServlet(AServlet: IServlet);
-    function GetTargetServlet: IServlet;
-    procedure SetForwordMode(AValue: Boolean);
-    function GetForwordMode: Boolean;
-    //procedure SetForword
-  end;
-
-  IJettyServletResponse = interface(IServletResponse)
-    ['{6AD78E14-BEE2-42D2-833C-F927E1D00B84}']
-    // 如果使用forward跳转则其后面的response输出则不会执行，
-    //而用include来跳转，则include的servlet执行完后，再返回到原来的servlet执行response的输出
-    function IsForwarded: Boolean;
-  end;
-
-  //------------------------------------------------------------------------------------------------
 
   { ILifeCycle
     // The lifecycle interface for generic components.
@@ -111,11 +88,14 @@ type
   TServletHolderList = class(TCMHashInterfaceList<IServletHolder>)
   public
     function IsMatchingPath(const AServletPath: string): Boolean; //为方便实现 RequestDispatcher
-    function GetMatchingPath(const AServletPath: string): Boolean;
+    function GetByMatchingPath(const AServletPath: string): IServletHolder;
   end;
 
   (************************* Handler **************************************************************)
 
+  IJettyServletRequest = interface;
+  IJettyServletResponse = interface;
+  IJettyServletContext = interface;
   IServer = interface;
 
   IHandler = interface(ILifeCycle)
@@ -163,6 +143,7 @@ type
     ['{EEAB8590-7C93-4727-9F8D-438454DD4805}']
     procedure AddFilter(AFilter: IFilterHolder);
     procedure AddServlet(AHolder: IServletHolder);
+    function GetServletContext: IJettyServletContext;
   end;
 
   IServletHandler = interface(IHandlerContainer)
@@ -193,15 +174,37 @@ type
     function GetServlets: TServletHolderList;
   end;
 
+  //--------- servlet 适应性扩展定义 ---------------------------------------------------------------
+
+  { IJettyServletRequest
+    // 应对 RequestDispatcher，声明皆内部使用
+  }
+  IJettyServletRequest = interface(IServletRequest)
+    ['{F14EA8C7-B431-43FB-88D3-87D6BE44DC87}']
+    procedure SetTargetServlet(AServlet: IServlet);
+    function GetTargetServlet: IServlet;
+    procedure SetForwordMode(AValue: Boolean);
+    function GetForwordMode: Boolean;
+    //procedure SetForword
+    //请求到达 ContextHandler 时应设置
+    function GetServer: IServer;
+  end;
+
+  IJettyServletResponse = interface(IServletResponse)
+    ['{6AD78E14-BEE2-42D2-833C-F927E1D00B84}']
+    // 如果使用forward跳转则其后面的response输出则不会执行，
+    //而用include来跳转，则include的servlet执行完后，再返回到原来的servlet执行response的输出
+    function IsForwarded: Boolean;
+  end;
+
   IServer = interface(IHandlerContainer)
     ['{F5085010-2151-463B-82BD-3126B9549F19}']
     procedure AddConnector(AConnector: IConnector);
     procedure RemoveConnector(AConnector: IConnector);
     function GetConnectors: TConnectorList;
-    procedure RegisterServletContext(AServletContext: IJettyServletContext);
     function GetThreadPool: TExecuteThreadBool;
     //
-    //function GetRequestDispatcher(const AContextPath, AServletPath: string): IRequestDispatcher;
+    function GetServletContext(const AContextPath: string): IJettyServletContext;
   end;
 
   { TJettyServletRequest
@@ -209,11 +212,11 @@ type
   }
   TJettyServletRequest = class(TServletRequest, IJettyServletRequest)
   private
-    FHandler: IHandler;
+    FServer: IServer;
     FServlet: IServlet;
     FForwordMode: Boolean;
   public
-    constructor Create(const AURL: string; AHandler: IHandler);
+    constructor Create(const AURL: string; AServer: IServer);
     property Parameters: ICMParameterDataList read FParameters write FParameters;
   public
     function GetRequestDispatcher(const APath: string): IRequestDispatcher; override;
@@ -222,6 +225,7 @@ type
     function GetTargetServlet: IServlet;
     procedure SetForwordMode(AValue: Boolean);
     function GetForwordMode: Boolean;
+    function GetServer: IServer;
   end;
 
   { TJettyServletResponse }
@@ -253,10 +257,10 @@ type
   }
   TJettyRequestDispatcher = class(TCMMessageable, IRequestDispatcher)
   private
-    FServlet: IServlet;
+    FServlet: IServletHolder;
     FHandler: IHandler;
   public
-    constructor Create(AServlet: IServlet; AHandler: IHandler);
+    constructor Create(AServlet: IServletHolder; AHandler: IHandler);
     destructor Destroy; override;
   public
     procedure Forward(ARequest: IServletRequest; AResponse: IServletResponse);
@@ -309,7 +313,7 @@ begin
         begin
           //TODO 路径问题
           Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + sh.GetURLPatterns[0]]);
-          Result := TJettyRequestDispatcher.Create(sh.GetServlet, FHandler);
+          Result := TJettyRequestDispatcher.Create(sh, FHandler);
           Exit;
         end;
     end;
@@ -323,7 +327,7 @@ end;
 
 { TJettyRequestDispatcher }
 
-constructor TJettyRequestDispatcher.Create(AServlet: IServlet; AHandler: IHandler);
+constructor TJettyRequestDispatcher.Create(AServlet: IServletHolder; AHandler: IHandler);
 begin
   inherited Create;
   FServlet := AServlet;
@@ -346,7 +350,7 @@ begin
     begin
       req.SetForwordMode(True);
       try
-        req.SetTargetServlet(FServlet);
+        req.SetTargetServlet(FServlet.GetServlet);
         FHandler.Handle(req, rsp);
       finally
         req.SetForwordMode(False);
@@ -374,17 +378,40 @@ end;
 
 { TJettyServletRequest }
 
-constructor TJettyServletRequest.Create(const AURL: string; AHandler: IHandler);
+constructor TJettyServletRequest.Create(const AURL: string; AServer: IServer);
 begin
   inherited Create(AURL);
-  FHandler := AHandler;
+  FServer := AServer;
   FServlet := nil;
   FForwordMode := False;
 end;
 
 function TJettyServletRequest.GetRequestDispatcher(const APath: string): IRequestDispatcher;
+var
+  path, contextPath, servletPath: string;
+  servletContext: IJettyServletContext;
+  servletHolder: IServletHolder;
 begin
-  //Result := TJettyRequestDispatcher.Create(APath, '', FHandler);
+  Result := nil;
+  if APath[1] = '/' then
+    begin
+      path := Copy(APath, 2, 1024);
+      contextPath := LCutStr(path, '/');
+      servletPath := '/' + path;
+    end
+  else
+    begin
+      contextPath := Self.GetContextPath;
+      servletPath := '/' + APath;
+    end;
+  ShowMessageFmt('%s-%s', [contextPath, servletPath]);
+  servletContext := FServer.GetServletContext(contextPath);
+  if Assigned(servletContext) then
+    begin
+      servletHolder := servletContext.GetServlets.GetByMatchingPath(servletPath);
+      if Assigned(servletHolder) then
+        Result := TJettyRequestDispatcher.Create(servletHolder, FServer);
+    end;
 end;
 
 procedure TJettyServletRequest.SetTargetServlet(AServlet: IServlet);
@@ -407,6 +434,11 @@ begin
   Result := FForwordMode;
 end;
 
+function TJettyServletRequest.GetServer: IServer;
+begin
+  Result := FServer;
+end;
+
 { TJettyServletResponse }
 
 function TJettyServletResponse.IsForwarded: Boolean;
@@ -422,7 +454,7 @@ end;
 //2.路径匹配，先最长路径匹配，再最短路径匹配
 //3.扩展名匹配
 //4.缺省匹配
-function TServletHolderList.MatchingPath(const AServletPath: string): Boolean;
+function TServletHolderList.IsMatchingPath(const AServletPath: string): Boolean;
 var
   i: Integer;
 begin
@@ -431,6 +463,19 @@ begin
     if Self[i].GetURLPatterns.IndexOf(AServletPath) >= 0 then
       begin
         Result := True;
+        Exit;
+      end;
+end;
+
+function TServletHolderList.GetByMatchingPath(const AServletPath: string): IServletHolder;
+var
+  i: Integer;
+begin
+  Result := nil;
+  for i:=0 to Self.Count-1 do
+    if Self[i].GetURLPatterns.IndexOf(AServletPath) >= 0 then
+      begin
+        Result := Self[i];
         Exit;
       end;
 end;
