@@ -67,7 +67,7 @@ type
   end;
 
   { TCMHashInterfaceList
-        因考虑到接口自动生命周期与其实现难度的问题，用 TInterfaceItem<T: IUnknown> 对接口进行托管处理，
+    // 因考虑到接口自动生命周期与其实现难度的问题，用 TInterfaceItem<T: IUnknown> 对接口进行托管处理，
     如此则存放量大时诸如：Remove(AInft: T)、IndexOf(AObject: T) 效率将下降。
   }
 
@@ -136,7 +136,77 @@ type
     //TODO 迭代
   end;
 
-  //TCMinter
+
+  { TCMInterfaceListEnumerator
+    // 此语法上不支持泛型定义前置，只能先如此
+  }
+  TCMInterfaceListEnumerator<T: IUnknown> = class abstract
+  public
+    function GetCurrent: T; virtual; abstract;
+    function MoveNext: Boolean; virtual; abstract;
+    property Current: T read GetCurrent;
+  end;
+
+  { TCMInterfaceList
+    // copy and update by TInterfaceList
+    // TODO 更改实现
+  }
+  TCMInterfaceList<T: IUnknown> = class
+  private
+    FList : TInterfaceList;
+  protected type
+    TCMInterfaceListEnumeratorImpl = class(TCMInterfaceListEnumerator<T>)
+    private
+      FList: TCMInterfaceList<T>;
+      FPosition: Integer;
+    public
+      constructor Create(AList: TCMInterfaceList<T>);
+      function GetCurrent: T; override;
+      function MoveNext: Boolean; override;
+    end;
+  protected
+    function Get(i: Integer) : T;
+    function GetCapacity: Integer;
+    function GetCount: Integer;
+    procedure Put(i: Integer; item: T);
+    procedure SetCapacity(NewCapacity: Integer);
+    procedure SetCount(NewCount: Integer);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    //
+    procedure Clear;
+    procedure Delete(index: Integer);
+    procedure Exchange(index1, index2: Integer);
+    function First: T;
+    function GetEnumerator: TCMInterfaceListEnumerator<T>;
+    function IndexOf(item: T): Integer;
+    function Add(item: T): Integer;
+    procedure Insert(i: Integer; item: T);
+    function Last: T;
+    function Remove(item: T): Integer;
+    procedure Lock;
+    procedure Unlock;
+    //
+    function Expand: TCMInterfaceList<T>;
+    //
+    property Capacity: Integer read GetCapacity write SetCapacity;
+    property Count: Integer read GetCount write SetCount;
+    property Items[Index: Integer] : T read Get write Put; default;
+  end;
+
+  { TCMInterfaceListEnumerator }
+
+  //TCMInterfaceListEnumerator<T: IUnknown> = class
+  //private
+  //  FList: TCMInterfaceList<T>;
+  //  FPosition: Integer;
+  //public
+  //  constructor Create(AList: TCMInterfaceList<T>);
+  //  function GetCurrent: T;
+  //  function MoveNext: Boolean;
+  //  property Current: T read GetCurrent;
+  //end;
 
 implementation
 
@@ -467,6 +537,136 @@ end;
 function TCMHashInterfaceMap<V, K>.Size: Integer;
 begin
   Result := FList.Count;
+end;
+
+{ TCMInterfaceList }
+
+function TCMInterfaceList<T>.Get(i: Integer): T;
+begin
+  Result := T(FList[i]);
+end;
+
+function TCMInterfaceList<T>.GetCapacity: Integer;
+begin
+  Result := FList.Capacity;
+end;
+
+function TCMInterfaceList<T>.GetCount: Integer;
+begin
+  Result := FList.Count;
+end;
+
+procedure TCMInterfaceList<T>.Put(i: Integer; item: T);
+begin
+  FList[i] := item;
+end;
+
+procedure TCMInterfaceList<T>.SetCapacity(NewCapacity: Integer);
+begin
+  FList.Capacity := NewCapacity;
+end;
+
+procedure TCMInterfaceList<T>.SetCount(NewCount: Integer);
+begin
+  FList.Count := NewCount;
+end;
+
+constructor TCMInterfaceList<T>.Create;
+begin
+  FList := TInterfaceList.Create;
+end;
+
+destructor TCMInterfaceList<T>.Destroy;
+begin
+  FList.Free;
+  inherited Destroy;
+end;
+
+procedure TCMInterfaceList<T>.Clear;
+begin
+  FList.Clear;
+end;
+
+procedure TCMInterfaceList<T>.Delete(index: Integer);
+begin
+  FList.Delete(index);
+end;
+
+procedure TCMInterfaceList<T>.Exchange(index1, index2: Integer);
+begin
+  FList.Exchange(index1, index2);
+end;
+
+function TCMInterfaceList<T>.First: T;
+begin
+  Result := T(FList.First);
+end;
+
+function TCMInterfaceList<T>.GetEnumerator: TCMInterfaceListEnumerator<T>;
+begin
+  Result := TCMInterfaceListEnumeratorImpl.Create(Self);
+end;
+
+function TCMInterfaceList<T>.IndexOf(item: T): Integer;
+begin
+  Result := FList.IndexOf(item);
+end;
+
+function TCMInterfaceList<T>.Add(item: T): Integer;
+begin
+  Result := FList.Add(item);
+end;
+
+procedure TCMInterfaceList<T>.Insert(i: Integer; item: T);
+begin
+  FList.Insert(i, item);
+end;
+
+function TCMInterfaceList<T>.Last: T;
+begin
+  Result := T(FList.Last);
+end;
+
+function TCMInterfaceList<T>.Remove(item: T): Integer;
+begin
+  Result := FList.Remove(item);
+end;
+
+procedure TCMInterfaceList<T>.Lock;
+begin
+  FList.Lock;
+end;
+
+procedure TCMInterfaceList<T>.Unlock;
+begin
+  FList.Unlock;
+end;
+
+function TCMInterfaceList<T>.Expand: TCMInterfaceList<T>;
+begin
+  FList.Expand;
+  Result := Self;
+end;
+
+{ TCMInterfaceList.TCMInterfaceListEnumeratorImpl }
+
+constructor TCMInterfaceList<T>.TCMInterfaceListEnumeratorImpl.Create(AList: TCMInterfaceList<T>);
+begin
+  inherited create;
+  FList := AList;
+  FPosition:=-1;
+end;
+
+function TCMInterfaceList<T>.TCMInterfaceListEnumeratorImpl.GetCurrent: T;
+begin
+  Result := FList[FPosition];
+end;
+
+function TCMInterfaceList<T>.TCMInterfaceListEnumeratorImpl.MoveNext: Boolean;
+begin
+  Result := False;
+  Inc(FPosition);
+  Result := FPosition < FList.Count;
 end;
 
 

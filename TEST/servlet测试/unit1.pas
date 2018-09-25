@@ -213,7 +213,7 @@ begin
   //servlet context
   scHandler := TServletContextHandler.Create;
   scHandler.SetContextPath('/test');
-  println(scHandler.GetContextPath);
+  Messager.Info('ServletContextHandler加入后:' + scHandler.GetContextPath);
 
   s := TTestServlet.Create;
   sh := TServletHolder.Create(scHandler.JettyServletContext);

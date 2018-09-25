@@ -20,7 +20,7 @@ interface
 
 uses
   Classes, SysUtils, Dialogs,
-  cm_messager, cm_parameter, cm_ParameterUtils, cm_threadutils, cm_netutils,
+  cm_messager, cm_parameter, cm_ParameterUtils, cm_threadutils,
   cm_servlet, cm_servletutils,
   cm_jetty,
   cm_cmstp;
@@ -123,7 +123,7 @@ type
     FServer: IServer;
   public
     constructor Create;
-    procedure SetServer(AServer: IServer);
+    procedure SetServer(AServer: IServer); virtual;
     function GetServer: IServer;
     procedure Handle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse); virtual; abstract;
   end;
@@ -163,7 +163,7 @@ type
   private
     FConnectors: TConnectorList;
     FThreadPool: TExecuteThreadBool;
-    FServletContext: TInterfaceList;
+    FServletContextList: TJettyServletContextList;
   public
     constructor Create;
     destructor Destroy; override;
@@ -190,6 +190,7 @@ type
   protected
     procedure BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean); override;
   public
+    procedure SetServer(AServer: IServer); override;
     procedure SetContextPath(const APath: string);
     function GetContextPath: string;
     function GetInitParameters: ICMConstantParameterDataList;
@@ -202,7 +203,7 @@ type
 
   TServletContextHandler = class(TContextHandler, IServletContextHandler)
   public //ServletContextHandler
-    procedure AddFilter(AFilter: IFilterHolder);
+    //procedure AddFilter(AFilter: IFilterHolder);
     procedure AddServlet(AHolder: IServletHolder);
     function GetServletContext: IJettyServletContext;
   end;
@@ -240,23 +241,29 @@ begin
   inherited Create;
   FConnectors := TConnectorList.Create;
   FThreadPool := TExecuteThreadBool.Create(nil);
-  FServletContext := TInterfaceList.Create;
+  FServletContextList := TJettyServletContextList.Create;
+  Self.SetServer(Self);
 end;
 
 destructor TServer.Destroy;
 begin
   FConnectors.Free;
   FThreadPool.Free;
-  FServletContext.Free;
+  FServletContextList.Free;
   inherited Destroy;
 end;
 
 procedure TServer.SetHandler(AHandler: IHandler);
+var
+  sch: IServletContextHandler;
+  sc: IJettyServletContext;
 begin
   inherited SetHandler(AHandler);
-  if Supports(AHandler, IServletContextHandler) then
+  if Supports(AHandler, IServletContextHandler, sch) then
     begin
-      FServletContext.Add(IServletContextHandler(AHandler));
+      sc := sch.GetServletContext;
+      if Assigned(sc) then
+        FServletContextList.Add(sc);
     end;
 end;
 
@@ -302,15 +309,14 @@ end;
 
 function TServer.GetServletContext(const AContextPath: string): IJettyServletContext;
 var
-  enumerator: TInterfaceListEnumerator;
+  enumerator: TJettyServletContextEnumerator;
   sc: IJettyServletContext;
 begin
   Result := nil;
-  enumerator := FServletContext.GetEnumerator;
+  enumerator := FServletContextList.GetEnumerator;
   while (enumerator.MoveNext) do
     begin
       sc := IJettyServletContext(enumerator.GetCurrent);
-      Messager.Debug('sc.GetContextPath:%s - AContextPath:%s', [sc.GetContextPath, AContextPath]);
       if sc.GetContextPath = AContextPath then
         Result := sc;
     end;
@@ -322,7 +328,6 @@ constructor TContextHandler.Create;
 begin
   inherited Create;
   FJettyServletContext := TJettyServletContext.Create(Self);
-  FJettyServletContext.ServerInfo := Self.UnitName + '.' + Self.ClassName;
 end;
 
 destructor TContextHandler.Destroy;
@@ -342,6 +347,12 @@ begin
       Exit;
     end;
   Messager.Debug('上下文路径不匹配（%s）.', [ARequest.GetRequestURL]);
+end;
+
+procedure TContextHandler.SetServer(AServer: IServer);
+begin
+  inherited SetServer(AServer);
+   FJettyServletContext.ServerInfo := AServer.GetImplementorName;
 end;
 
 procedure TContextHandler.SetContextPath(const APath: string);
@@ -375,11 +386,6 @@ begin
 end;
 
 { TServletContextHandler }
-
-procedure TServletContextHandler.AddFilter(AFilter: IFilterHolder);
-begin
-
-end;
 
 procedure TServletContextHandler.AddServlet(AHolder: IServletHolder);
 begin

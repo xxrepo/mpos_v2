@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="43">
+    <Units Count="44">
       <Unit0>
         <Filename Value="project1.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -20,8 +20,8 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="206"/>
-        <CursorPos Y="216"/>
+        <TopLine Value="171"/>
+        <CursorPos X="36" Y="184"/>
         <UsageCount Value="208"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -46,8 +46,8 @@
         <Filename Value="..\..\source\kit\CMSDK\cm_messager.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="427"/>
-        <CursorPos X="12" Y="359"/>
+        <TopLine Value="643"/>
+        <CursorPos Y="657"/>
         <UsageCount Value="208"/>
       </Unit4>
       <Unit5>
@@ -69,8 +69,7 @@
       <Unit7>
         <Filename Value="..\..\source\kit\CMSDK\cm_collections.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="12"/>
-        <TopLine Value="59"/>
+        <EditorIndex Value="10"/>
         <CursorPos X="56" Y="61"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -78,7 +77,7 @@
       <Unit8>
         <Filename Value="..\..\source\kit\CMSDK\cm_net.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="16"/>
+        <EditorIndex Value="17"/>
         <TopLine Value="14"/>
         <CursorPos X="15" Y="22"/>
         <UsageCount Value="203"/>
@@ -121,16 +120,16 @@
         <UnitName Value="Unit2"/>
         <EditorIndex Value="2"/>
         <TopLine Value="36"/>
-        <CursorPos X="47" Y="53"/>
+        <CursorPos Y="52"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit13>
       <Unit14>
         <Filename Value="..\..\source\kit\CMSDK\cm_generics.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="13"/>
-        <TopLine Value="120"/>
-        <CursorPos X="13" Y="139"/>
+        <EditorIndex Value="11"/>
+        <TopLine Value="139"/>
+        <CursorPos X="42" Y="143"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
       </Unit14>
@@ -140,62 +139,62 @@
         <EditorIndex Value="5"/>
         <TopLine Value="22"/>
         <CursorPos X="45" Y="94"/>
-        <UsageCount Value="153"/>
+        <UsageCount Value="160"/>
         <Loaded Value="True"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="232"/>
-        <CursorPos X="3" Y="240"/>
-        <UsageCount Value="153"/>
+        <TopLine Value="176"/>
+        <CursorPos X="38" Y="191"/>
+        <UsageCount Value="160"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="333"/>
-        <CursorPos X="31" Y="349"/>
-        <UsageCount Value="153"/>
+        <TopLine Value="238"/>
+        <CursorPos X="40" Y="249"/>
+        <UsageCount Value="160"/>
         <Loaded Value="True"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_servlet.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="61"/>
-        <CursorPos X="75" Y="74"/>
-        <UsageCount Value="153"/>
+        <TopLine Value="23"/>
+        <CursorPos X="3" Y="37"/>
+        <UsageCount Value="160"/>
         <Loaded Value="True"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_servletutils.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
         <TopLine Value="53"/>
-        <CursorPos X="52" Y="67"/>
-        <UsageCount Value="153"/>
+        <CursorPos X="55" Y="63"/>
+        <UsageCount Value="160"/>
         <Loaded Value="True"/>
       </Unit19>
       <Unit20>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyCMS.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="9"/>
         <TopLine Value="23"/>
-        <CursorPos X="52" Y="35"/>
-        <UsageCount Value="153"/>
+        <CursorPos X="36" Y="45"/>
+        <UsageCount Value="160"/>
         <Loaded Value="True"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyBase.inc"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="10"/>
-        <TopLine Value="280"/>
-        <CursorPos X="3" Y="289"/>
-        <UsageCount Value="144"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="180"/>
+        <CursorPos X="44" Y="268"/>
+        <UsageCount Value="151"/>
         <Loaded Value="True"/>
       </Unit21>
       <Unit22>
@@ -255,7 +254,7 @@
       </Unit29>
       <Unit30>
         <Filename Value="..\..\source\kit\CMSDK\cm_parameter.pas"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="16"/>
         <TopLine Value="102"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
@@ -292,26 +291,26 @@
       <Unit35>
         <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-base\src\contnrs.pp"/>
         <UnitName Value="Contnrs"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="15"/>
         <TopLine Value="308"/>
         <CursorPos X="19" Y="315"/>
-        <UsageCount Value="83"/>
+        <UsageCount Value="86"/>
         <Loaded Value="True"/>
       </Unit35>
       <Unit36>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
-        <EditorIndex Value="8"/>
-        <TopLine Value="2031"/>
-        <CursorPos X="16" Y="2049"/>
-        <UsageCount Value="12"/>
+        <EditorIndex Value="13"/>
+        <TopLine Value="2007"/>
+        <CursorPos X="19" Y="2023"/>
+        <UsageCount Value="15"/>
         <Loaded Value="True"/>
       </Unit36>
       <Unit37>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\intf.inc"/>
-        <EditorIndex Value="9"/>
-        <TopLine Value="182"/>
-        <CursorPos X="46" Y="188"/>
-        <UsageCount Value="12"/>
+        <EditorIndex Value="14"/>
+        <TopLine Value="18"/>
+        <CursorPos X="39" Y="32"/>
+        <UsageCount Value="15"/>
         <Loaded Value="True"/>
       </Unit37>
       <Unit38>
@@ -324,21 +323,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="117"/>
         <CursorPos X="18" Y="132"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit39>
       <Unit40>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\sysstr.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="986"/>
         <CursorPos X="60" Y="998"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit40>
       <Unit41>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\win\wininc\base.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="58"/>
         <CursorPos X="21" Y="81"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit41>
       <Unit42>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\sysutilh.inc"/>
@@ -347,127 +346,136 @@
         <CursorPos X="4" Y="41"/>
         <UsageCount Value="9"/>
       </Unit42>
+      <Unit43>
+        <Filename Value="C:\codetyphon\typhon\components\pl_Generics\source\generics.collections.pas"/>
+        <UnitName Value="Generics.Collections"/>
+        <EditorIndex Value="12"/>
+        <TopLine Value="1467"/>
+        <CursorPos Y="1481"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit43>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="414" Column="68" TopLine="392"/>
+        <Caret Line="170" Column="48" TopLine="156"/>
       </Position1>
       <Position2>
-        <Filename Value="unit2.pas"/>
-        <Caret Line="53" Column="52" TopLine="36"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="187" Column="22" TopLine="179"/>
       </Position2>
       <Position3>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="412" TopLine="392"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="343" Column="49" TopLine="326"/>
       </Position3>
       <Position4>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="398" TopLine="388"/>
+        <Caret Line="252" Column="21" TopLine="242"/>
       </Position4>
       <Position5>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="404" TopLine="388"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="326" Column="24" TopLine="317"/>
       </Position5>
       <Position6>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="407" TopLine="388"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="162" Column="29" TopLine="154"/>
       </Position6>
       <Position7>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="389" Column="26" TopLine="388"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="193" Column="19" TopLine="178"/>
       </Position7>
       <Position8>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="22" Column="71" TopLine="392"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="341" Column="34" TopLine="338"/>
       </Position8>
       <Position9>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="404" TopLine="393"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="193" Column="20" TopLine="177"/>
       </Position9>
       <Position10>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="408" TopLine="393"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="356" Column="53" TopLine="341"/>
       </Position10>
       <Position11>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
-        <Caret Line="313" Column="83" TopLine="295"/>
+        <Caret Line="23" Column="63" TopLine="9"/>
       </Position11>
       <Position12>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="404" TopLine="393"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyBase.inc"/>
+        <Caret Line="255" Column="19" TopLine="248"/>
       </Position12>
       <Position13>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="408" TopLine="393"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyBase.inc"/>
+        <Caret Line="257" Column="23" TopLine="248"/>
       </Position13>
       <Position14>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
-        <Caret Line="193" Column="23" TopLine="181"/>
+        <Caret Line="146" Column="25" TopLine="133"/>
       </Position14>
       <Position15>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
-        <Caret Line="349" Column="14" TopLine="338"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Caret Line="119" Column="39" TopLine="106"/>
       </Position15>
       <Position16>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
-        <Caret Line="185" Column="30" TopLine="171"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyBase.inc"/>
+        <Caret Line="268" Column="16" TopLine="248"/>
       </Position16>
       <Position17>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="240" Column="39" TopLine="237"/>
+        <Caret Line="252" Column="18" TopLine="244"/>
       </Position17>
       <Position18>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="154" Column="35" TopLine="151"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Caret Line="246" Column="54" TopLine="236"/>
       </Position18>
       <Position19>
-        <Filename Value="unit2.pas"/>
-        <Caret Line="53" Column="47" TopLine="36"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Caret Line="174" Column="46" TopLine="156"/>
       </Position19>
       <Position20>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="404" TopLine="391"/>
+        <Caret Line="280" Column="6" TopLine="267"/>
       </Position20>
       <Position21>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="154" Column="35" TopLine="142"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Caret Line="305" Column="5" TopLine="293"/>
       </Position21>
       <Position22>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="211" Column="3" TopLine="199"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Caret Line="349" Column="73" TopLine="324"/>
       </Position22>
       <Position23>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="153" Column="37" TopLine="136"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="350" Column="5" TopLine="320"/>
       </Position23>
       <Position24>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="216" Column="37" TopLine="206"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="187" Column="20" TopLine="179"/>
       </Position24>
       <Position25>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Caret Line="404" TopLine="391"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Caret Line="352" Column="49" TopLine="338"/>
       </Position25>
       <Position26>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
-        <Caret Line="303" Column="73" TopLine="297"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Caret Line="204" Column="32" TopLine="193"/>
       </Position26>
       <Position27>
         <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
-        <Caret Line="324" Column="34" TopLine="315"/>
+        <Caret Line="333" Column="38" TopLine="320"/>
       </Position27>
       <Position28>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
-        <Caret Line="349" TopLine="333"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Caret Line="391" Column="40" TopLine="376"/>
       </Position28>
       <Position29>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
-        <Caret Line="350" TopLine="333"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Caret Line="390" Column="48" TopLine="379"/>
       </Position29>
       <Position30>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
-        <Caret Line="349" Column="31" TopLine="333"/>
+        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Caret Line="409" Column="21" TopLine="392"/>
       </Position30>
     </JumpHistory>
     <RunParams>
@@ -475,43 +483,4 @@
       <Modes Count="0" ActiveMode=""/>
     </RunParams>
   </ProjectSession>
-  <Debugging>
-    <BreakPoints Count="5">
-      <Item1>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Line Value="398"/>
-      </Item1>
-      <Item2>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Line Value="404"/>
-      </Item2>
-      <Item3>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Line Value="408"/>
-      </Item3>
-      <Item4>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Line Value="411"/>
-      </Item4>
-      <Item5>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
-        <Line Value="413"/>
-      </Item5>
-    </BreakPoints>
-  </Debugging>
 </CONFIG>

@@ -113,8 +113,8 @@ type
   end;
 
   { IHandlerWrapper
-    //A HandlerWrapper acts as a Handler but delegates the handle method and life cycle events to a delegate.
-    //This is primarily used to implement the Decorator pattern.
+    // A HandlerWrapper acts as a Handler but delegates the handle method and life cycle events to a delegate.
+    // This is primarily used to implement the Decorator pattern.
   }
   IHandlerWrapper = interface(IHandlerContainer)
     ['{91ED7C60-217D-4F84-ADBD-8F58C00E501B}']
@@ -141,7 +141,7 @@ type
 
   IServletContextHandler = interface(IContextHandler)
     ['{EEAB8590-7C93-4727-9F8D-438454DD4805}']
-    procedure AddFilter(AFilter: IFilterHolder);
+    //procedure AddFilter(AFilter: IFilterHolder);
     procedure AddServlet(AHolder: IServletHolder);
     function GetServletContext: IJettyServletContext;
   end;
@@ -174,6 +174,10 @@ type
     function GetServlets: TServletHolderList;
   end;
 
+  TJettyServletContextList = TCMInterfaceList<IJettyServletContext>;
+
+  TJettyServletContextEnumerator = TCMInterfaceListEnumerator<IJettyServletContext>;
+
   //--------- servlet 适应性扩展定义 ---------------------------------------------------------------
 
   { IJettyServletRequest
@@ -185,8 +189,6 @@ type
     function GetTargetServlet: IServlet;
     procedure SetForwordMode(AValue: Boolean);
     function GetForwordMode: Boolean;
-    //procedure SetForword
-    //请求到达 ContextHandler 时应设置
     function GetServer: IServer;
   end;
 
@@ -267,7 +269,6 @@ type
     procedure Include(ARequest: IServletRequest; AResponse: IServletResponse);
   end;
 
-
 implementation
 
 { TJettyServletContext }
@@ -320,9 +321,30 @@ begin
 end;
 
 function TJettyServletContext.GetRequestDispatcher(const APath: string): IRequestDispatcher;
+var
+  path, contextPath, servletPath: string;
+  servletContext: IJettyServletContext;
+  servletHolder: IServletHolder;
 begin
-  Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + APath]);
-  //Result := TJettyRequestDispatcher.Create(, FHandler);
+  Result := nil;
+  if APath[1] = '/' then
+    begin
+      path := Copy(APath, 2, 1024);
+      contextPath := LCutStr(path, '/');
+      servletPath := '/' + path;
+    end
+  else
+    begin
+      contextPath := Self.GetContextPath;
+      servletPath := '/' + APath;
+    end;
+  servletContext := FHandler.GetServer.GetServletContext(contextPath);
+  if Assigned(servletContext) then
+    begin
+      servletHolder := servletContext.GetServlets.GetByMatchingPath(servletPath);
+      if Assigned(servletHolder) then
+        Result := TJettyRequestDispatcher.Create(servletHolder, FHandler);
+    end;
 end;
 
 { TJettyRequestDispatcher }
@@ -360,19 +382,30 @@ end;
 
 procedure TJettyRequestDispatcher.Include(ARequest: IServletRequest; AResponse: IServletResponse);
 var
-  rps: IServletResponse;
+  req: IJettyServletRequest;
+  rps: IJettyServletResponse;
   i: Integer;
   n: string;
   p: ICMParameterData;
 begin
-  rps := TServletResponse.Create;
-  //FHandler.Handle(ARequest, rps);
-  for i:=0 to rps.GetContent.Count-1 do
+  rps := TJettyServletResponse.Create;
+  if Supports(ARequest, IJettyServletRequest, req) then
     begin
-      n := rps.GetContent.GetName(i);
-      p := rps.GetContent.Get(i);
-      if (n <> '') and (not p.IsNull) then
-        AResponse.GetContent.SetData(n, p);
+      req.SetForwordMode(True);
+      try
+        //---------------------------------------------------
+        FHandler.Handle(req, rps);
+        for i:=0 to rps.GetContent.Count-1 do
+          begin
+            n := rps.GetContent.GetName(i);
+            p := rps.GetContent.Get(i);
+            if (n <> '') and (not p.IsNull) then
+              AResponse.GetContent.SetData(n, p);
+          end;
+        //---------------------------------------------------
+      finally
+        req.SetForwordMode(False);
+      end;
     end;
 end;
 
@@ -404,7 +437,6 @@ begin
       contextPath := Self.GetContextPath;
       servletPath := '/' + APath;
     end;
-  ShowMessageFmt('%s-%s', [contextPath, servletPath]);
   servletContext := FServer.GetServletContext(contextPath);
   if Assigned(servletContext) then
     begin

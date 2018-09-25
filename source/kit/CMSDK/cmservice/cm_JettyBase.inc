@@ -254,7 +254,7 @@ begin
     end;
   if Assigned(FWrapper) then
     begin
-      if Supports(FWrapper, IHandler, h) then
+      {if Supports(FWrapper, IHandler, h) then
         h.Handle(ARequest, AResponse)
       else
         begin
@@ -264,7 +264,8 @@ begin
           h := FWrapper.GetHandler;
           if Assigned(h) then
             h.Handle(ARequest, AResponse);
-        end;
+        end;}
+      FWrapper.Handle(ARequest, AResponse);
     end
   else
     begin

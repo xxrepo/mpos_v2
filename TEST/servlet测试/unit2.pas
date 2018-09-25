@@ -48,7 +48,8 @@ begin
 
   //rd := Self.GetServletContext.GetRequestDispatcher('/a/b2');
   rd := ARequest.GetRequestDispatcher('a/b2');
-  //rd.Forward(ARequest, AResponse);
+  if Assigned(rd) then
+    rd.Forward(ARequest, AResponse);
 
   Messager.Info('Service() over.');
 end;
