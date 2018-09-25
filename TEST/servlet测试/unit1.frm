@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 308
+  Left = 325
   Height = 419
-  Top = 186
+  Top = 187
   Width = 629
   Caption = 'Form1'
   ClientHeight = 419
@@ -64,15 +64,6 @@ object Form1: TForm1
     OnClick = Button5Click
     TabOrder = 5
   end
-  object Button6: TButton
-    Left = 408
-    Height = 25
-    Top = 144
-    Width = 75
-    Caption = 'jetty'
-    OnClick = Button6Click
-    TabOrder = 6
-  end
   object Button7: TButton
     Left = 408
     Height = 25
@@ -80,6 +71,6 @@ object Form1: TForm1
     Width = 75
     Caption = 'cmstp'
     OnClick = Button7Click
-    TabOrder = 7
+    TabOrder = 6
   end
 end

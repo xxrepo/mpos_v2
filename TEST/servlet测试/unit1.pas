@@ -9,7 +9,7 @@ uses
   cm_messager, cm_sysutils, cm_netutils, cm_PlatBase, cm_logutils,
   cm_servlet, cm_servletutils,
   cm_cmstp,
-  cm_jetty, cm_JettyImpl, cm_JettyCMS,
+  cm_jetty, cm_JettyBase, cm_JettyImpl, cm_JettyCMS,
   Unit2;
 
 type
@@ -22,7 +22,6 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
-    Button6: TButton;
     Button7: TButton;
     Memo1: TMemo;
     procedure Button1Click(Sender: TObject);
@@ -30,7 +29,6 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
-    procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -131,69 +129,6 @@ begin
   //
   //println(conn.ResponseContent.Get('test1').AsString);
   //println('----------');
-end;
-
-procedure TForm1.Button6Click(Sender: TObject);
-var
-  server: TCMSServer;
-  scHandler: TServletContextHandler;
-  connector: IConnector;
-  request: IServletRequest;
-  response: IServletResponse;
-  s, s2: IServlet;
-  sh, sh2: TServletHolder;
-  //
-  servletHandler: IServletHandler;
-begin
-  //server
-  server := TCMSServer.Create;
-  CMSTPService := server;
-  //servlet context
-  scHandler := TServletContextHandler.Create;
-  scHandler.SetContextPath('/test');
-
-  s := TTestServlet.Create;
-  sh := TServletHolder.Create(scHandler.JettyServletContext);
-  sh.SetName('server 111');
-  sh.AddURLPattern('/a/b');
-  sh.SetServlet(s);
-  scHandler.AddServlet(sh);
-
-  s2 := TTestServlet2.Create;
-  sh2 := TServletHolder.Create(scHandler.JettyServletContext);
-  sh2.SetName('server 222');
-  sh2.AddURLPattern('/a/b2');
-  sh2.SetServlet(s2);
-  scHandler.AddServlet(sh2);
-
-  //-------------------------------------
-  servletHandler := TServletHandler.Create(scHandler.JettyServletContext);;
-  scHandler.SetHandler(servletHandler);
-  servletHandler.Start;
-  //-------------------------------------
-
-  server.SetHandler(scHandler);
-
-  //连接器
-  connector := TConnector.Create('cmstp');
-  server.AddConnector(connector);
-
-  sh.Start;
-  sh2.Start;
-  scHandler.Start;
-  server.Start;
-
-  //request
-  request := TJettyServletRequest.Create('cmstp://test:80/test/a/b?x=aaa&y=123', server);
-  response := TServletResponse.Create;
-
-  //server.Handle(request, response);
-  println(response.GetContent.Get('test').AsString);
-
-  //println('--again--------');
-  //server.Handle(request, response);
-
-  println('--over--------');
 end;
 
 procedure TForm1.Button7Click(Sender: TObject);

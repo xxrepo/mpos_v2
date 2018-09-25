@@ -22,97 +22,14 @@ uses
   Classes, SysUtils, Dialogs,
   cm_messager, cm_parameter, cm_ParameterUtils, cm_threadutils,
   cm_servlet, cm_servletutils,
-  cm_jetty,
+  cm_jetty, cm_JettyBase,
   cm_cmstp;
 
 type
 
-  { TLifeCycle }
 
-  TLifeCycle = class(TCMMessageable, ILifeCycle)
-  private
-    FIsRunning: Boolean;
-    FIsStopped: Boolean;
-  protected
-    procedure DoStart; virtual;
-    procedure DoStop; virtual;
-  public
-    constructor Create;
-    procedure Start;
-    procedure Stop;
-    function IsRunning: Boolean;
-    function IsStopped: Boolean;
-  end;
 
-  { TConnector }
 
-  TConnector = class(TLifeCycle, IConnector)
-  private
-    FProtocol: string;
-    FPort: Word;
-  public
-    constructor Create(const AProtocol: string; APort: Word=80);
-    function GetProtocol: string;
-    function GetPort: Word;
-  end;
-
-  (***************************************** Holder ***********************************************)
-
-  { THolder }
-
-  THolder = class(TLifeCycle, IHolder)
-  private
-    FName: string;
-    FInitParameters: ICMParameterDataList;
-  public
-    constructor Create;
-    property InitParameters: ICMParameterDataList read FInitParameters;
-    procedure SetName(const AName: string);
-    function GetName: string;
-    function GetInitParameters: ICMConstantParameterDataList;
-  end;
-
-  { TFilterHolder }
-
-  TFilterHolder = class(THolder, IFilterHolder)
-  private
-    FFilter: IFilter;
-  public
-    constructor Create;
-    procedure SetFilter(AFilter: IFilter);
-    function GetFilter: IFilter;
-  end;
-
-  { TListenerHolder }
-
-  TListenerHolder = class(THolder, IListenerHolder)
-  private
-    FListener: IListener;
-  public
-    constructor Create;
-    procedure SetListener(AListener: IListener);
-    function GetListener: IListener;
-  end;
-
-  { TServletHolder }
-
-  TServletHolder = class(THolder, IServletHolder)
-  private
-    FServletContext: IServletContext;
-    FServlet: IServlet;
-    FURLPatterns: TStrings;
-    FInitialized: Boolean;
-    FServletConfig: IServletConfig;
-    procedure Init; //TODO 后继改进
-  public
-    constructor Create(AServletContext: IServletContext);
-    procedure SetServlet(AServlet: IServlet);
-    function GetServlet: IServlet;
-    procedure AddURLPattern(const AURLPattern: string);
-    function GetURLPatterns: TStrings;
-    function Initialized: Boolean;
-    function GetServletConfig: IServletConfig;
-  end;
 
   (***************************************** HandlerWrapper ***************************************)
 

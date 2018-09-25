@@ -207,7 +207,8 @@ var
 
 procedure TForm1.menuClick(Sender: TObject);
 begin
-  gridMenu.SelectMenuItem(TControl(Sender));
+  //gridMenu.SelectMenuItem(TControl(Sender));
+  gridMenu.SelectedControl := TControl(Sender);
 end;
 
 procedure TForm1.Button6Click(Sender: TObject);
