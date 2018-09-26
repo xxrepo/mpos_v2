@@ -149,7 +149,7 @@ type
 
   { TCMInterfaceList
     // copy and update by TInterfaceList
-    // TODO 更改实现
+    // TODO 应直接实现为好
   }
   TCMInterfaceList<T: IUnknown> = class
   private
@@ -194,19 +194,6 @@ type
     property Count: Integer read GetCount write SetCount;
     property Items[Index: Integer] : T read Get write Put; default;
   end;
-
-  { TCMInterfaceListEnumerator }
-
-  //TCMInterfaceListEnumerator<T: IUnknown> = class
-  //private
-  //  FList: TCMInterfaceList<T>;
-  //  FPosition: Integer;
-  //public
-  //  constructor Create(AList: TCMInterfaceList<T>);
-  //  function GetCurrent: T;
-  //  function MoveNext: Boolean;
-  //  property Current: T read GetCurrent;
-  //end;
 
 implementation
 

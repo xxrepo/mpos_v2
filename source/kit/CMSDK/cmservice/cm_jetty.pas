@@ -52,17 +52,23 @@ type
     procedure SetName(const AName: string);
     function GetName: string;
     function GetInitParameters: ICMConstantParameterDataList;
-    //boolean	isAsyncSupported​()
-    //void	setAsyncSupported​(boolean suspendable)
+    function IsAsyncSupported: Boolean;
+    procedure SetAsyncSupported(Suspendable: Boolean);
   end;
 
   IFilterHolder = interface(IHolder)
     ['{1178C633-64AF-40B6-AA1F-64D6F4365BDF}']
     procedure SetFilter(AFilter: IFilter);
     function GetFilter: IFilter;
+    //
+    procedure AddURLPattern(const AURLPattern: string);
+    function GetURLPatterns: TStrings;
   end;
 
-  TFilterHolderList = TList<IFilterHolder>;
+  TFilterHolderList = class(TCMHashInterfaceList<IFilterHolder>)
+  public
+    function GetByMatchingPath(const AServletPath: string): IServletHolder;
+  end;
 
   IListenerHolder = interface(IHolder)
     ['{465B175A-9B87-4551-9675-EDC08B1C2352}']
@@ -70,7 +76,7 @@ type
     function GetListener: IListener;
   end;
 
-  TListenerHolderList = TList<IListenerHolder>;
+  TListenerHolderList = TCMHashInterfaceList<IListenerHolder>;
 
   IServletHolder = interface(IHolder)
     ['{2011D13B-71A3-4B41-8EB5-3EA454F213DD}']
@@ -83,8 +89,9 @@ type
     function GetServletConfig: IServletConfig;
   end;
 
-  { TServletHolderList }
-
+  { TServletHolderList
+    // 一个 ServletHolder 集合，实现对 servlet 路径的匹配。
+  }
   TServletHolderList = class(TCMHashInterfaceList<IServletHolder>)
   public
     function IsMatchingPath(const AServletPath: string): Boolean; //为方便实现 RequestDispatcher
@@ -98,6 +105,17 @@ type
   IJettyServletContext = interface;
   IServer = interface;
 
+  { IHandler
+    // A Jetty Server Handler.
+    // A Handler instance is required by a Server to handle incoming requests.
+    // A Handler may:
+      1.Completely generate the Response
+      2.Examine/modify the request and call another Handler (see HandlerWrapper).
+      3.Pass the request to one or more other Handlers (see HandlerCollection).
+      4.Handlers are passed the servlet API request and response object, but are not Servlets.
+    The servlet container is implemented by handlers for context, security, session and servlet that
+    modify the request objectbefore passing it to the next stage of handling.
+  }
   IHandler = interface(ILifeCycle)
     ['{A3994D45-7A79-4A41-89FC-95202BDF6256}']
     procedure SetServer(AServer: IServer);
@@ -155,8 +173,8 @@ type
     //function GetFilters: TFilterHolderList;
     //function GetListeners: TListenerHolderList;
     function GetServlet(const AName: string): IServletHolder;
-    function GetServletContext: IServletContext;
     function GetServlets: TServletHolderList;
+    function GetServletContext: IServletContext;
   end;
 
   (*-----------------------------------------------------------------------------------------------
@@ -172,6 +190,9 @@ type
     procedure AddServlet(AHolder: IServletHolder);
     function GetServlet(const AName: string): IServletHolder;
     function GetServlets: TServletHolderList;
+    //
+    procedure AddFilter(AHolder: IFilterHolder);
+    function GetFilters: TFilterHolderList;
   end;
 
   TJettyServletContextList = TCMInterfaceList<IJettyServletContext>;
@@ -187,16 +208,21 @@ type
     ['{F14EA8C7-B431-43FB-88D3-87D6BE44DC87}']
     procedure SetTargetServlet(AServlet: IServlet);
     function GetTargetServlet: IServlet;
-    procedure SetForwordMode(AValue: Boolean);
-    function GetForwordMode: Boolean;
+    procedure SetDirectMode(AValue: Boolean);
+    function IsDirectMode: Boolean;
     function GetServer: IServer;
   end;
 
+  { IJettyServletResponse
+    // 如果使用forward跳转则其后面的response输出则不会执行，
+    而用include来跳转，则include的servlet执行完后，再返回到原来的servlet执行response的输出
+  }
   IJettyServletResponse = interface(IServletResponse)
     ['{6AD78E14-BEE2-42D2-833C-F927E1D00B84}']
-    // 如果使用forward跳转则其后面的response输出则不会执行，
-    //而用include来跳转，则include的servlet执行完后，再返回到原来的servlet执行response的输出
+    procedure SetForwarded;
     function IsForwarded: Boolean;
+    procedure SetInclued;
+    function IsInclued: Boolean;
   end;
 
   IServer = interface(IHandlerContainer)
@@ -205,7 +231,7 @@ type
     procedure RemoveConnector(AConnector: IConnector);
     function GetConnectors: TConnectorList;
     function GetThreadPool: TExecuteThreadBool;
-    //
+    //应对 RequestDispatcher
     function GetServletContext(const AContextPath: string): IJettyServletContext;
   end;
 
@@ -216,7 +242,7 @@ type
   private
     FServer: IServer;
     FServlet: IServlet;
-    FForwordMode: Boolean;
+    FDirectMode: Boolean;
   public
     constructor Create(const AURL: string; AServer: IServer);
     property Parameters: ICMParameterDataList read FParameters write FParameters;
@@ -225,16 +251,22 @@ type
   public
     procedure SetTargetServlet(AServlet: IServlet);
     function GetTargetServlet: IServlet;
-    procedure SetForwordMode(AValue: Boolean);
-    function GetForwordMode: Boolean;
+    procedure SetDirectMode(AValue: Boolean);
+    function IsDirectMode: Boolean;
     function GetServer: IServer;
   end;
 
   { TJettyServletResponse }
 
   TJettyServletResponse = class(TServletResponse, IJettyServletResponse)
+  private
+    FForwarded, FInclued: Boolean;
   public
+    constructor Create;
+    procedure SetForwarded;
     function IsForwarded: Boolean;
+    procedure SetInclued;
+    function IsInclued: Boolean;
   end;
 
   { TJettyServletContext }
@@ -243,12 +275,16 @@ type
   private
     FHandler: IHandler;
     FServletHolders: TServletHolderList;
+    FFilterHolders: TFilterHolderList;
   public
     constructor Create(AHandler: IHandler);
     destructor Destroy; override;
+  public //IJettyServletContext
     procedure AddServlet(AHolder: IServletHolder);
     function GetServlet(const AName: string): IServletHolder;
     function GetServlets: TServletHolderList;
+    procedure AddFilter(AHolder: IFilterHolder);
+    function GetFilters: TFilterHolderList;
   public
     function GetNamedDispatcher(const AName: string): IRequestDispatcher; override;
     function GetRequestDispatcher(const APath: string): IRequestDispatcher; override;
@@ -269,6 +305,15 @@ type
     procedure Include(ARequest: IServletRequest; AResponse: IServletResponse);
   end;
 
+  { TJettyFilterChain }
+
+  TJettyFilterChain = class(TCMMessageable, IFilterChain)
+  private
+
+  public
+    procedure DoFilter(ARequest: IServletRequest; AResponse: IServletResponse);
+  end;
+
 implementation
 
 { TJettyServletContext }
@@ -277,12 +322,14 @@ constructor TJettyServletContext.Create(AHandler: IHandler);
 begin
   FHandler := AHandler;
   FServletHolders := TServletHolderList.Create;
+  FFilterHolders := TFilterHolderList.Create;
 end;
 
 destructor TJettyServletContext.Destroy;
 begin
   FHandler := nil;
   FServletHolders.Free;
+  FFilterHolders.Free;
   inherited Destroy;
 end;
 
@@ -301,20 +348,30 @@ begin
   Result := FServletHolders;
 end;
 
+procedure TJettyServletContext.AddFilter(AHolder: IFilterHolder);
+begin
+  FFilterHolders.Add(AHolder);
+end;
+
+function TJettyServletContext.GetFilters: TFilterHolderList;
+begin
+  Result := FFilterHolders;
+end;
+
 function TJettyServletContext.GetNamedDispatcher(const AName: string): IRequestDispatcher;
 var
   i: Integer;
   sh: IServletHolder;
 begin
   Result := nil;
+  Messager.Debug('GetNamedDispatcher(%s)...', [AName]);
   for i:=0 to FServletHolders.Count-1 do
     begin
       sh := FServletHolders[i];
       if sh.GetServlet.GetServletConfig.GetServletName = AName then
         begin
-          //TODO 路径问题
-          Messager.Debug('GetRequestDispatcher() dispatcher:%s', [Self.GetContextPath + sh.GetURLPatterns[0]]);
           Result := TJettyRequestDispatcher.Create(sh, FHandler);
+          Messager.Debug('GetNamedDispatcher(%s) OK.', [AName]);
           Exit;
         end;
     end;
@@ -327,6 +384,7 @@ var
   servletHolder: IServletHolder;
 begin
   Result := nil;
+  Messager.Debug('GetRequestDispatcher(%s)...', [APath]);
   if APath[1] = '/' then
     begin
       path := Copy(APath, 2, 1024);
@@ -343,7 +401,10 @@ begin
     begin
       servletHolder := servletContext.GetServlets.GetByMatchingPath(servletPath);
       if Assigned(servletHolder) then
-        Result := TJettyRequestDispatcher.Create(servletHolder, FHandler);
+        begin
+          Result := TJettyRequestDispatcher.Create(servletHolder, FHandler);
+          Messager.Debug('GetRequestDispatcher(%s) OK.', [APath]);
+        end;
     end;
 end;
 
@@ -365,17 +426,18 @@ end;
 procedure TJettyRequestDispatcher.Forward(ARequest: IServletRequest; AResponse: IServletResponse);
 var
   req: IJettyServletRequest;
-  rsp: IJettyServletResponse;
+  rps: IJettyServletResponse;
 begin
   AResponse.GetContent.Clear;
-  if Supports(ARequest, IJettyServletRequest, req) and Supports(AResponse, IJettyServletResponse, rsp) then
+  if Supports(ARequest, IJettyServletRequest, req) and Supports(AResponse, IJettyServletResponse, rps) then
     begin
-      req.SetForwordMode(True);
+      req.SetDirectMode(True);
       try
         req.SetTargetServlet(FServlet.GetServlet);
-        FHandler.Handle(req, rsp);
+        FHandler.Handle(req, rps);
+        rps.SetForwarded;
       finally
-        req.SetForwordMode(False);
+        req.SetDirectMode(False);
       end;
     end;
 end;
@@ -383,28 +445,29 @@ end;
 procedure TJettyRequestDispatcher.Include(ARequest: IServletRequest; AResponse: IServletResponse);
 var
   req: IJettyServletRequest;
-  rps: IJettyServletResponse;
+  rps, inclueRps: IJettyServletResponse;
   i: Integer;
   n: string;
   p: ICMParameterData;
 begin
-  rps := TJettyServletResponse.Create;
-  if Supports(ARequest, IJettyServletRequest, req) then
+  inclueRps := TJettyServletResponse.Create;
+  if Supports(ARequest, IJettyServletRequest, req) and Supports(AResponse, IJettyServletResponse, rps) then
     begin
-      req.SetForwordMode(True);
+      req.SetDirectMode(True);
       try
         //---------------------------------------------------
-        FHandler.Handle(req, rps);
-        for i:=0 to rps.GetContent.Count-1 do
+        FHandler.Handle(req, inclueRps);
+        for i:=0 to inclueRps.GetContent.Count-1 do
           begin
-            n := rps.GetContent.GetName(i);
-            p := rps.GetContent.Get(i);
+            n := inclueRps.GetContent.GetName(i);
+            p := inclueRps.GetContent.Get(i);
             if (n <> '') and (not p.IsNull) then
-              AResponse.GetContent.SetData(n, p);
+              rps.GetContent.SetData(n, p);
           end;
+        rps.SetInclued;
         //---------------------------------------------------
       finally
-        req.SetForwordMode(False);
+        req.SetDirectMode(False);
       end;
     end;
 end;
@@ -416,9 +479,10 @@ begin
   inherited Create(AURL);
   FServer := AServer;
   FServlet := nil;
-  FForwordMode := False;
+  FDirectMode := False;
 end;
 
+//TODO 与 ServletContext.GetRequestDispatcher() 重复代码
 function TJettyServletRequest.GetRequestDispatcher(const APath: string): IRequestDispatcher;
 var
   path, contextPath, servletPath: string;
@@ -426,6 +490,7 @@ var
   servletHolder: IServletHolder;
 begin
   Result := nil;
+  TCMMessageManager.GetInstance.GetMessager(Self).Debug('GetRequestDispatcher(%s)...', [APath]);
   if APath[1] = '/' then
     begin
       path := Copy(APath, 2, 1024);
@@ -442,7 +507,10 @@ begin
     begin
       servletHolder := servletContext.GetServlets.GetByMatchingPath(servletPath);
       if Assigned(servletHolder) then
-        Result := TJettyRequestDispatcher.Create(servletHolder, FServer);
+        begin
+          Result := TJettyRequestDispatcher.Create(servletHolder, FServer);
+          TCMMessageManager.GetInstance.GetMessager(Self).Debug('GetRequestDispatcher(%s) OK.', [APath]);
+        end;
     end;
 end;
 
@@ -456,14 +524,14 @@ begin
   Result := FServlet;
 end;
 
-procedure TJettyServletRequest.SetForwordMode(AValue: Boolean);
+procedure TJettyServletRequest.SetDirectMode(AValue: Boolean);
 begin
-  FForwordMode := AValue;
+  FDirectMode := AValue;
 end;
 
-function TJettyServletRequest.GetForwordMode: Boolean;
+function TJettyServletRequest.IsDirectMode: Boolean;
 begin
-  Result := FForwordMode;
+  Result := FDirectMode;
 end;
 
 function TJettyServletRequest.GetServer: IServer;
@@ -473,9 +541,30 @@ end;
 
 { TJettyServletResponse }
 
+constructor TJettyServletResponse.Create;
+begin
+  FForwarded := False;
+  FInclued := False;
+end;
+
+procedure TJettyServletResponse.SetForwarded;
+begin
+  FForwarded := True;
+end;
+
 function TJettyServletResponse.IsForwarded: Boolean;
 begin
-  Result := False;
+  Result := FForwarded;
+end;
+
+procedure TJettyServletResponse.SetInclued;
+begin
+  FInclued := True;
+end;
+
+function TJettyServletResponse.IsInclued: Boolean;
+begin
+  Result := FInclued;
 end;
 
 { TServletHolderList }
@@ -510,6 +599,13 @@ begin
         Result := Self[i];
         Exit;
       end;
+end;
+
+{ TJettyFilterChain }
+
+procedure TJettyFilterChain.DoFilter(ARequest: IServletRequest; AResponse: IServletResponse);
+begin
+
 end;
 
 end.

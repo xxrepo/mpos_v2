@@ -90,7 +90,7 @@ begin
     begin
       canHandle := True;
       //
-      if not ARequest.GetForwordMode then
+      if not ARequest.IsDirectMode then
         BeforeHandle(ARequest, AResponse, canHandle);
       //
       if CanHandle then

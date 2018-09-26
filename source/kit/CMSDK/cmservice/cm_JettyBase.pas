@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_interfaces, cm_messager, cm_parameter, cm_ParameterUtils,
+  cm_messager, cm_parameter, cm_ParameterUtils,
   cm_servlet, cm_servletutils, cm_jetty;
 
 type
@@ -48,12 +48,15 @@ type
   private
     FName: string;
     FInitParameters: ICMParameterDataList;
+    FAsyncSupported: Boolean;
   public
     constructor Create;
     property InitParameters: ICMParameterDataList read FInitParameters;
     procedure SetName(const AName: string);
     function GetName: string;
     function GetInitParameters: ICMConstantParameterDataList;
+    function IsAsyncSupported: Boolean;
+    procedure SetAsyncSupported(Suspendable: Boolean);
   end;
 
   { TFilterHolder }
@@ -61,10 +64,15 @@ type
   TFilterHolder = class(THolder, IFilterHolder)
   private
     FFilter: IFilter;
+    FURLPatterns: TStrings;
   public
     constructor Create;
+    destructor Destroy; override;
+  public
     procedure SetFilter(AFilter: IFilter);
     function GetFilter: IFilter;
+    procedure AddURLPattern(const AURLPattern: string);
+    function GetURLPatterns: TStrings;
   end;
 
   { TListenerHolder }
@@ -90,6 +98,8 @@ type
     procedure Init; //TODO 后继改进
   public
     constructor Create(AServletContext: IServletContext);
+    destructor Destroy; override;
+  public
     procedure SetServlet(AServlet: IServlet);
     function GetServlet: IServlet;
     procedure AddURLPattern(const AURLPattern: string);
@@ -176,6 +186,7 @@ begin
   inherited Create;
   FName := '';
   FInitParameters := TCMParameterDataList.Create;
+  FAsyncSupported := False;
 end;
 
 procedure THolder.SetName(const AName: string);
@@ -193,12 +204,29 @@ begin
   Result := FInitParameters;
 end;
 
+function THolder.IsAsyncSupported: Boolean;
+begin
+  Result := FAsyncSupported;
+end;
+
+procedure THolder.SetAsyncSupported(Suspendable: Boolean);
+begin
+  FAsyncSupported := Suspendable;
+end;
+
 { TFilterHolder }
 
 constructor TFilterHolder.Create;
 begin
   inherited Create;
   FFilter := nil;
+  FURLPatterns := TStringList.Create;
+end;
+
+destructor TFilterHolder.Destroy;
+begin
+  FURLPatterns.Free;
+  inherited Destroy;
 end;
 
 procedure TFilterHolder.SetFilter(AFilter: IFilter);
@@ -209,6 +237,16 @@ end;
 function TFilterHolder.GetFilter: IFilter;
 begin
   Result := FFilter;
+end;
+
+procedure TFilterHolder.AddURLPattern(const AURLPattern: string);
+begin
+  FURLPatterns.Add(AURLPattern);
+end;
+
+function TFilterHolder.GetURLPatterns: TStrings;
+begin
+  Result := FURLPatterns;
 end;
 
 { TListenerHolder }
@@ -239,6 +277,13 @@ begin
   FURLPatterns := TStringList.Create;
   FInitialized := False;
   FServletConfig := nil;
+end;
+
+destructor TServletHolder.Destroy;
+begin
+  FServletContext := nil;
+  FURLPatterns.Free;
+  inherited Destroy;
 end;
 
 procedure TServletHolder.SetServlet(AServlet: IServlet);

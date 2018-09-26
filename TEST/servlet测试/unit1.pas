@@ -7,10 +7,8 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls, Menus,
   cm_messager, cm_sysutils, cm_netutils, cm_PlatBase, cm_logutils,
-  cm_servlet, cm_servletutils,
   cm_cmstp,
-  cm_jetty, cm_JettyBase, cm_JettyImpl, cm_JettyCMS,
-  Unit2;
+  cm_CMSTPUtils;
 
 type
 
@@ -133,55 +131,8 @@ end;
 
 procedure TForm1.Button7Click(Sender: TObject);
 var
-  server: TCMSServer;
-  scHandler: TServletContextHandler;
-  connector: IConnector;
-  s, s2: IServlet;
-  sh, sh2: TServletHolder;
-  servletHandler: IServletHandler;
-  //
   conn: TCMSTPURLConnection;
 begin
-  //server
-  server := TCMSServer.Create;
-  CMSTPService := server;
-  //servlet context
-  scHandler := TServletContextHandler.Create;
-  scHandler.SetContextPath('/test');
-  Messager.Info('ServletContextHandler加入后:' + scHandler.GetContextPath);
-
-  s := TTestServlet.Create;
-  sh := TServletHolder.Create(scHandler.JettyServletContext);
-  sh.SetName('server 111');
-  sh.AddURLPattern('/a/b');
-  sh.SetServlet(s);
-  scHandler.AddServlet(sh);
-
-  s2 := TTestServlet2.Create;
-  sh2 := TServletHolder.Create(scHandler.JettyServletContext);
-  sh2.SetName('server 222');
-  sh2.AddURLPattern('/a/b2');
-  sh2.SetServlet(s2);
-  scHandler.AddServlet(sh2);
-
-  //-------------------------------------
-  servletHandler := TServletHandler.Create(scHandler.JettyServletContext);;
-  scHandler.SetHandler(servletHandler);
-  servletHandler.Start;
-  //-------------------------------------
-
-  server.SetHandler(scHandler);
-
-  //连接器
-  connector := TConnector.Create('cmstp');
-  server.AddConnector(connector);
-
-  sh.Start;
-  sh2.Start;
-  scHandler.Start;
-  server.Start;
-
-
   Messager.Info('----     TCMSTPURLConnection  ----------- ###################################');
   conn := TCMSTPURLConnection.Create('cmstp://test:80/test/a/b?x=aaa&y=123');
   conn.RequestParameters.SetString('msg', 'How are you?');
@@ -205,6 +156,8 @@ begin
   cm_messager.TCMMessageManager.DefaultHandler := FMessageHandler;
 
   Self.Messager := TCMMessageManager.GetInstance.GetMessager(Self);
+  //
+  InitCMSTPService;
 end;
 
 procedure TForm1.println(const msg: string);

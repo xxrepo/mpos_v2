@@ -252,8 +252,11 @@ type
   function GetEventTypeLevelValue(Et: TEventType): Integer;
   function GetEventTypeLevelValue(Etl: TEventTypeLevel): Integer;
 
+  function DefaultMessager: TCMMessager;
+
 const
   DefaultMessageHandlerCode: string = 'DEFAULT';
+  DefaultMessagerName: string = 'DEFAULT_MESSAGER';
 
 var
   DistributionMessagerNameIncludeUnitName: Boolean = False;
@@ -284,6 +287,11 @@ begin
   etlError: Result := 5;
   etlOff: Result := 99;
   end;
+end;
+
+function DefaultMessager: TCMMessager;
+begin
+  Result := TCMMessageManager.GetInstance.GetMessager(DefaultMessagerName);
 end;
 
 { TCMMessageRecord }

@@ -84,7 +84,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    procedure SetHandler(AHandler: IHandler); override;
+    procedure SetHandler(AHandler: IHandler); override; //记录 TServletContextHandler 的 ServletContext
   protected
     procedure BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean); override;
   public //IServer
@@ -92,18 +92,17 @@ type
     procedure RemoveConnector(AConnector: IConnector);
     function GetConnectors: TConnectorList;
     function GetThreadPool: TExecuteThreadBool;
-    function GetServletContext(const AContextPath: string): IJettyServletContext;
+    function GetServletContext(const AContextPath: string): IJettyServletContext; //打出指定 Context 路径的 ServletContext，主要为实现 RequestDispatcher 而用。
   end;
 
   { TContextHandler }
 
-  TContextHandler = class(THandlerWrapper, IContextHandler)
-  private
+  TContextHandler = class abstract(THandlerWrapper, IContextHandler)
+  protected
     FJettyServletContext: TJettyServletContext;
   public
     constructor Create;
     destructor Destroy; override;
-    property JettyServletContext: TJettyServletContext read FJettyServletContext;
   protected
     procedure BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean); override;
   public
@@ -140,8 +139,8 @@ type
   public //IServletHandler
     procedure AddServlet(AServlet: IServletHolder);
     function GetServlet(const AName: string): IServletHolder;
-    function GetServletContext: IServletContext;
     function GetServlets: TServletHolderList;
+    function GetServletContext: IServletContext;
   end;
 
 
@@ -157,16 +156,16 @@ constructor TServer.Create;
 begin
   inherited Create;
   FConnectors := TConnectorList.Create;
-  FThreadPool := TExecuteThreadBool.Create(nil);
   FServletContextList := TJettyServletContextList.Create;
   Self.SetServer(Self);
+  FThreadPool := TExecuteThreadBool.Create(nil);
 end;
 
 destructor TServer.Destroy;
 begin
   FConnectors.Free;
-  FThreadPool.Free;
   FServletContextList.Free;
+  FThreadPool.Free;
   inherited Destroy;
 end;
 
@@ -330,11 +329,14 @@ end;
 
 procedure TServletHandler.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean);
 var
+  fh: IFilterHolder;
   sh: IServletHolder;
   servlet: IServlet;
 begin
   Messager.Debug('开始前置处理（校验 servlet url-pattern）...');
   CanHandle := False;
+  //
+  //fh := FJettyServletContext.GetServlets;
   //
   sh := FJettyServletContext.GetServlets.GetByMatchingPath(ARequest.GetServletPath);
   if Assigned(sh) then
@@ -378,14 +380,14 @@ begin
   Result := FJettyServletContext.GetServlet(AName);
 end;
 
-function TServletHandler.GetServletContext: IServletContext;
-begin
-  Result := FJettyServletContext;
-end;
-
 function TServletHandler.GetServlets: TServletHolderList;
 begin
   Result := FJettyServletContext.GetServlets;
+end;
+
+function TServletHandler.GetServletContext: IServletContext;
+begin
+  Result := FJettyServletContext;
 end;
 
 

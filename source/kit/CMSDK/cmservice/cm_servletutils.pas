@@ -36,21 +36,22 @@ type
     function GetRequestDispatcher(const APath: string): IRequestDispatcher; virtual; abstract;
   end;
 
-  { TServletConfig }
+  { TServletResponse }
 
-  TServletConfig = class(TCMMessageable, IServletConfig)
+  TServletResponse = class(TCMMessageable, IServletResponse)
   private
-    FName: string;
-    FContent: IServletContext;
-    FInitParameterDataList: ICMParameterDataList;
+    FCommitted: Boolean;
+    FContentType: string;
+    FContent: ICMParameterDataList;
   public
-    constructor Create(const AName: string; AContext: IServletContext);
+    constructor Create;
     destructor Destroy; override;
-    property InitParameterDataList: ICMParameterDataList read FInitParameterDataList;
+    property Committed: Boolean write FCommitted;
   public
-    function GetServletName: string;
-    function GetInitParameters: ICMConstantParameterDataList;
-    function GetServletContext: IServletContext;
+    function IsCommitted: Boolean;
+    procedure SetContentType(const AType: string);
+    function GetContentType: string;
+    function GetContent: ICMParameterDataList;
   end;
 
   { TServletContext }
@@ -77,22 +78,38 @@ type
     function GetServerInfo: string;
   end;
 
-  { TServletResponse }
+  { TServletConfig }
 
-  TServletResponse = class(TCMMessageable, IServletResponse)
+  TServletConfig = class(TCMMessageable, IServletConfig)
   private
-    FCommitted: Boolean;
-    FContentType: string;
-    FContent: ICMParameterDataList;
+    FName: string;
+    FServletContext: IServletContext;
+    FInitParameterDataList: ICMParameterDataList;
   public
-    constructor Create;
+    constructor Create(const AName: string; AContext: IServletContext);
     destructor Destroy; override;
-    property Committed: Boolean write FCommitted;
+    property InitParameterDataList: ICMParameterDataList read FInitParameterDataList;
+  public //IServletConfig
+    function GetServletName: string;
+    function GetInitParameters: ICMConstantParameterDataList;
+    function GetServletContext: IServletContext;
+  end;
+
+  { TFilterConfig }
+
+  TFilterConfig = class(TCMMessageable, IFilterConfig)
+  private
+    FName: string;
+    FServletContext: IServletContext;
+    FInitParameterDataList: ICMParameterDataList;
   public
-    function IsCommitted: Boolean;
-    procedure SetContentType(const AType: string);
-    function GetContentType: string;
-    function GetContent: ICMParameterDataList;
+    constructor Create(const AName: string; AContext: IServletContext);
+    destructor Destroy; override;
+    property InitParameterDataList: ICMParameterDataList read FInitParameterDataList;
+  public //IFilterConfig
+    function GetFilterName: string;
+    function GetInitParameters: ICMConstantParameterDataList;
+    function GetServletContext: IServletContext;
   end;
 
 
@@ -194,37 +211,6 @@ begin
   Result := FContent;
 end;
 
-{ TServletConfig }
-
-constructor TServletConfig.Create(const AName: string; AContext: IServletContext);
-begin
-  inherited Create;
-  FName := AName;
-  FContent := AContext;
-  FInitParameterDataList := TCMParameterDataList.Create;
-end;
-
-destructor TServletConfig.Destroy;
-begin
-  FInitParameterDataList := nil;
-  inherited Destroy;
-end;
-
-function TServletConfig.GetServletName: string;
-begin
-  Result := FName;
-end;
-
-function TServletConfig.GetInitParameters: ICMConstantParameterDataList;
-begin
-  Result := FInitParameterDataList;
-end;
-
-function TServletConfig.GetServletContext: IServletContext;
-begin
-  Result := FContent;
-end;
-
 { TServletContext }
 
 constructor TServletContext.Create;
@@ -271,7 +257,69 @@ begin
   Result := FServerInfo;
 end;
 
+{ TServletConfig }
 
+constructor TServletConfig.Create(const AName: string; AContext: IServletContext);
+begin
+  inherited Create;
+  FName := AName;
+  FServletContext := AContext;
+  FInitParameterDataList := TCMParameterDataList.Create;
+end;
+
+destructor TServletConfig.Destroy;
+begin
+  FServletContext := nil;
+  FInitParameterDataList := nil;
+  inherited Destroy;
+end;
+
+function TServletConfig.GetServletName: string;
+begin
+  Result := FName;
+end;
+
+function TServletConfig.GetInitParameters: ICMConstantParameterDataList;
+begin
+  Result := FInitParameterDataList;
+end;
+
+function TServletConfig.GetServletContext: IServletContext;
+begin
+  Result := FServletContext;
+end;
+
+{ TFilterConfig }
+
+constructor TFilterConfig.Create(const AName: string; AContext: IServletContext);
+begin
+  inherited Create;
+  FName := AName;
+  FServletContext := AContext;
+  FInitParameterDataList := TCMParameterDataList.Create;
+end;
+
+destructor TFilterConfig.Destroy;
+begin
+  FServletContext := nil;
+  FInitParameterDataList := nil;
+  inherited Destroy;
+end;
+
+function TFilterConfig.GetFilterName: string;
+begin
+  Result := FName;
+end;
+
+function TFilterConfig.GetInitParameters: ICMConstantParameterDataList;
+begin
+  Result := FInitParameterDataList;
+end;
+
+function TFilterConfig.GetServletContext: IServletContext;
+begin
+  Result := FServletContext;
+end;
 
 
 
