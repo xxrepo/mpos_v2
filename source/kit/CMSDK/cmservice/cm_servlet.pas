@@ -114,28 +114,6 @@ type
     function GetServletInfo: string;
   end;
 
-  { TGenericServlet
-    //一种与协议无关的servlet
-  }
-  TGenericServlet = class(TCMMessageable, IServlet)
-  private
-    FConfig: IServletConfig;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    procedure Init; virtual; abstract; overload;
-    function GetInitParameter(const AName: string): string;
-    function GetInitParameterNames: TStrings;
-    function GetServletContext: IServletContext;
-    function GetServletName: string;
-  public //IServlet
-    procedure Init(AConfig: IServletConfig); overload;
-    function GetServletConfig: IServletConfig;
-    procedure Service(ARequest: IServletRequest; AResponse: IServletResponse); virtual;
-    procedure Over; virtual;
-    function GetServletInfo: string;
-  end;
-
   IFilterChain = interface(ICMBase)
     ['{D15BEB93-9DCF-4B1B-8340-7D6B9D021244}']
     procedure DoFilter(ARequest: IServletRequest; AResponse: IServletResponse);
@@ -159,6 +137,46 @@ type
     ['{7AE370E9-8E70-4BCD-A76B-F7E5185A1709}']
   end;
 
+  { IServletContainer
+        这是一个 servlet 容器接口
+    用于动态配置 servlet 应用时先行放入容器，后继可以依据配置的 code 找到相应的 servlet。
+    由此，也意味着对于一个 servlet 应具有唯一的 code，这个 code 仅仅用于辨别无其他意义。
+  }
+  IServletCollection = interface(ICMBase)
+    ['{04970409-8397-4A99-9BE6-EB46638B66BB}']
+    function AddServlet(const ACode: string; AServlet: IServlet): Boolean;
+    function AddFilter(const ACode: string; AFilter: IFilter): Boolean;
+    function AddListener(const ACode: string; AListener: IListener): Boolean;
+  end;
+
+  { TGenericServlet
+    //一种与协议无关的servlet
+  }
+  TGenericServlet = class(TCMMessageable, IServlet)
+  private
+    FConfig: IServletConfig;
+  protected
+    FCode: string;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure AfterConstruction; override;
+    procedure Init; virtual; abstract; overload;
+    function GetInitParameter(const AName: string): string;
+    function GetInitParameterNames: TStrings;
+    function GetServletContext: IServletContext;
+    function GetServletName: string;
+  public //IServlet
+    procedure Init(AConfig: IServletConfig); overload;
+    function GetServletConfig: IServletConfig;
+    procedure Service(ARequest: IServletRequest; AResponse: IServletResponse); virtual;
+    procedure Over; virtual;
+    function GetServletInfo: string;
+  end;
+
+var
+  ServletCollection: IServletCollection = nil;
+
 implementation
 
 { TGenericServlet }
@@ -167,6 +185,7 @@ constructor TGenericServlet.Create;
 begin
   inherited Create;
   FConfig := nil;
+  FCode := Self.GetImplementorName;
 end;
 
 destructor TGenericServlet.Destroy;
@@ -174,6 +193,13 @@ begin
   Over;
   FConfig := nil;
   inherited Destroy;
+end;
+
+procedure TGenericServlet.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  if Assigned(ServletCollection) then
+    ServletCollection.AddServlet(Self.FCode, Self);
 end;
 
 function TGenericServlet.GetInitParameter(const AName: string): string;
