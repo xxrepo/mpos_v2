@@ -329,13 +329,13 @@ end;
 
 procedure TServletHandler.BeforeHandle(ARequest: IJettyServletRequest; AResponse: IJettyServletResponse; var CanHandle: Boolean);
 var
-  fh: IFilterHolder;
+  //fh: IFilterHolder;
   sh: IServletHolder;
   servlet: IServlet;
 begin
   Messager.Debug('开始前置处理（校验 servlet url-pattern）...');
   CanHandle := False;
-  //
+  //TODO 过滤器
   //fh := FJettyServletContext.GetServlets;
   //
   sh := FJettyServletContext.GetServlets.GetByMatchingPath(ARequest.GetServletPath);

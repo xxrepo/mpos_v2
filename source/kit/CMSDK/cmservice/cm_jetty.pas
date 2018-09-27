@@ -65,9 +65,11 @@ type
     function GetURLPatterns: TStrings;
   end;
 
+  { TFilterHolderList }
+
   TFilterHolderList = class(TCMHashInterfaceList<IFilterHolder>)
   public
-    function GetByMatchingPath(const AServletPath: string): IServletHolder;
+    function GetByMatchingPath(const AServletPath: string): IFilterHolder;
   end;
 
   IListenerHolder = interface(IHolder)
@@ -350,7 +352,7 @@ end;
 
 procedure TJettyServletContext.AddFilter(AHolder: IFilterHolder);
 begin
-  FFilterHolders.Add(AHolder);
+  FFilterHolders.Add(AHolder.GetName, AHolder);
 end;
 
 function TJettyServletContext.GetFilters: TFilterHolderList;
@@ -606,6 +608,21 @@ end;
 procedure TJettyFilterChain.DoFilter(ARequest: IServletRequest; AResponse: IServletResponse);
 begin
 
+end;
+
+{ TFilterHolderList }
+
+function TFilterHolderList.GetByMatchingPath(const AServletPath: string): IFilterHolder;
+var
+  i: Integer;
+begin
+  Result := nil;
+  for i:=0 to Self.Count-1 do
+    if Self[i].GetURLPatterns.IndexOf(AServletPath) >= 0 then
+      begin
+        Result := Self[i];
+        Exit;
+      end;
 end;
 
 end.

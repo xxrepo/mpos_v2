@@ -157,7 +157,7 @@ begin
 
   Self.Messager := TCMMessageManager.GetInstance.GetMessager(Self);
   //
-  InitCMSTPService;
+  TSimpleCMSTP.Create;
 end;
 
 procedure TForm1.println(const msg: string);
