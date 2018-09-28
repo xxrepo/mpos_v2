@@ -91,9 +91,9 @@ type
   { ICMParameterLoader }
 
   ICMParameterLoader = interface(ICMBase)
-    ['{7D0D5A93-8810-4A4A-BF2A-34E4C432CB10}']
-    function AddParameters(ABase: ICMParameter; ADataSet: TDataSet): Integer; overload; //约定参数 id 为增序, id 不大于 80'000'000. dataset 以 id 正排序
-    function AddParameters(ABase: ICMParameter; ANode: TCMDOMNode): Integer; overload;
+    ['{D6D7FCEF-349E-46E6-8050-32808EFCF89F}']
+    function LoadParameters(ABase: ICMParameter; ADataSet: TDataSet): Integer; overload; //约定参数 id 为增序, id 不大于 80'000'000. dataset 以 id 正排序
+    function LoadParameters(ABase: ICMParameter; ANode: TCMDOMNode): Integer; overload;
   end;
 
   { ICMConstantParameterDataList }

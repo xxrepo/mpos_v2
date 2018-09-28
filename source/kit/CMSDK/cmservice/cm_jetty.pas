@@ -162,7 +162,8 @@ type
   IServletContextHandler = interface(IContextHandler)
     ['{EEAB8590-7C93-4727-9F8D-438454DD4805}']
     //procedure AddFilter(AFilter: IFilterHolder);
-    procedure AddServlet(AHolder: IServletHolder);
+    procedure AddServlet(AHolder: IServletHolder); overload;
+    function AddServlet(const AName: string; AServlet: IServlet): IServletHolder; overload;
     function GetServletContext: IJettyServletContext;
   end;
 
@@ -545,6 +546,7 @@ end;
 
 constructor TJettyServletResponse.Create;
 begin
+  inherited Create;
   FForwarded := False;
   FInclued := False;
 end;

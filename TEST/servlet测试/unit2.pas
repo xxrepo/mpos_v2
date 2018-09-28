@@ -43,6 +43,9 @@ begin
   Messager.Info('Service() ServletName:' + Self.GetServletName);
   Messager.Info('Service() ServerInfo:' + Self.GetServletConfig.GetServletContext.GetServerInfo);
 
+  Messager.Error('>> %s', [BoolToStr(Assigned(AResponse), True)]);
+  Messager.Error('>> %s', [BoolToStr(Assigned(AResponse.GetContent), True)]);
+
   AResponse.GetContent.SetString('test', 'haha');
   Messager.Info('Service() --GetRequestDispatcher()----------------------------');
 

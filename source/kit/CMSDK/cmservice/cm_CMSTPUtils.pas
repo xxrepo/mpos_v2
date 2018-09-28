@@ -19,6 +19,7 @@ type
   private
     FList: TCMHashInterfaceList<IServlet>;
     FServer: TCMSServer;
+    FServletContextHandler: TServletContextHandler;
     procedure InitCMSTPService;
   public
     constructor Create;
@@ -29,7 +30,10 @@ type
     function AddListener(const ACode: string; AListener: IListener): Boolean;
   public
     function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
+    //function AddServlet(const AName: string; AServlet: IServlet): IServletHolder;
   end;
+
+
 
 implementation
 
@@ -39,41 +43,44 @@ uses Unit2;
 
 procedure TSimpleCMSTP.InitCMSTPService;
 var
-  servletContextHandler: TServletContextHandler;
+
   connector: IConnector;
   s, s2: IServlet;
   sh, sh2: TServletHolder;
+  ish: IServletHolder;
   servletHandler: IServletHandler;
 begin
   //server
   FServer := TCMSServer.Create;
-  CMSTPService := FServer;
   //servlet context
-  servletContextHandler := TServletContextHandler.Create;
-  servletContextHandler.SetContextPath('/test');
-  DefaultMessager.Info('ServletContextHandler加入后:' + servletContextHandler.GetContextPath);
+  FServletContextHandler := TServletContextHandler.Create;
+  FServletContextHandler.SetContextPath('/test');
+  DefaultMessager.Info('ServletContextHandler加入后:' + FServletContextHandler.GetContextPath);
 
   s := TTestServlet.Create;
-  sh := TServletHolder.Create(servletContextHandler.GetServletContext);
-  sh.SetName('server 111');
-  sh.AddURLPattern('/a/b');
-  sh.SetServlet(s);
-  servletContextHandler.AddServlet(sh);
+  //sh := TServletHolder.Create(servletContextHandler.GetServletContext);
+  //sh.SetName('server 111');
+  //sh.AddURLPattern('/a/b');
+  //sh.SetServlet(s);
+  //servletContextHandler.AddServlet(sh);
+
+  ish := FServletContextHandler.AddServlet('S11', s);
+  ish.AddURLPattern('/a/b');
 
   s2 := TTestServlet2.Create;
-  sh2 := TServletHolder.Create(servletContextHandler.GetServletContext);
+  sh2 := TServletHolder.Create(FServletContextHandler.GetServletContext);
   sh2.SetName('server 222');
   sh2.AddURLPattern('/a/b2');
   sh2.SetServlet(s2);
-  servletContextHandler.AddServlet(sh2);
+  FServletContextHandler.AddServlet(sh2);
 
   //-------------------------------------
-  servletHandler := TServletHandler.Create(servletContextHandler.GetServletContext);;
-  servletContextHandler.SetHandler(servletHandler);
+  servletHandler := TServletHandler.Create(FServletContextHandler.GetServletContext);;
+  FServletContextHandler.SetHandler(servletHandler);
   servletHandler.Start;
   //-------------------------------------
 
-  FServer.SetHandler(servletContextHandler);
+  FServer.SetHandler(FServletContextHandler);
 
   //连接器
   connector := TConnector.Create('cmstp');
@@ -81,7 +88,7 @@ begin
 
   sh.Start;
   sh2.Start;
-  servletContextHandler.Start;
+  FServletContextHandler.Start;
   FServer.Start;
 end;
 
@@ -89,8 +96,8 @@ constructor TSimpleCMSTP.Create;
 begin
   FList := TCMHashInterfaceList<IServlet>.Create;
   FServer := nil;
-  //CMSTPService := Self;
-  InitCMSTPService;
+  TCMSTPURLConnection.CMSTPService := Self;
+  //InitCMSTPService;
 end;
 
 destructor TSimpleCMSTP.Destroy;

@@ -6,22 +6,12 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_interfaces,
-  cm_net, cm_servlet,
-  cm_parameter,
-  cm_ParameterUtils;
+  cm_interfaces, cm_net,
+  cm_parameter, cm_ParameterUtils,
+  cm_servlet, cm_jetty;
 
 
 type
-
-  { TCMSTPURLConnection
-    //TODO 连接未有响应时，响应体为空的情况；是否请求成功的标识
-  }
-  TCMSTPURLConnection = class(TURLConnection)
-  public
-    constructor Create(const AURL: string); override;
-    procedure Connect; override;
-  end;
 
   ICMSTPResponse = interface(ICMBase)
     ['{0B1111A0-9270-4A4D-BFED-CEEFE97D344A}']
@@ -33,6 +23,17 @@ type
     ['{5B139E17-51B5-44B2-9045-E563EEEBB66B}']
     function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
   end;
+
+  ICMSTP = interface(ICMBase)
+    ['{43A79E53-A8D0-472C-93B1-3EE0710A7E05}']
+    function AddServlet(const AName: string; AServlet: IServlet): IServletHolder;
+  end;
+
+  //TServletConfig = class
+  //public
+  //  property
+  //end;
+
 
   { TCMSTPResponse }
 
@@ -47,38 +48,20 @@ type
     function GetContent: ICMConstantParameterDataList;
   end;
 
-
-
-var
-  CMSTPService: ICMSTPService = nil;
+  { TCMSTPURLConnection
+    //TODO 连接未有响应时，响应体为空的情况；是否请求成功的标识
+  }
+  TCMSTPURLConnection = class(TURLConnection)
+  private
+    class var FCMSTPService: ICMSTPService;
+  public
+    class property CMSTPService: ICMSTPService write FCMSTPService;
+  public
+    constructor Create(const AURL: string); override;
+    procedure Connect; override;
+  end;
 
 implementation
-
-{ TCMSTPURLConnection }
-
-constructor TCMSTPURLConnection.Create(const AURL: string);
-begin
-  inherited Create(AURL);
-  FRequestParameters := TCMParameterDataList.Create;
-end;
-
-procedure TCMSTPURLConnection.Connect;
-var
-  rsp: ICMSTPResponse;
-begin
-  FConnected := False;
-  FContentType := '';
-  FResponseContent := nil;
-  if Assigned(CMSTPService) then
-    begin
-      if CMSTPService.CMSTP(URL, FRequestParameters, rsp) then
-        begin
-          FContentType := rsp.GetContentType;
-          FResponseContent := rsp.GetContent;
-          FConnected := True;
-        end;
-    end;
-end;
 
 { TCMSTPResponse }
 
@@ -102,6 +85,32 @@ end;
 function TCMSTPResponse.GetContent: ICMConstantParameterDataList;
 begin
   Result := FContent;
+end;
+
+{ TCMSTPURLConnection }
+
+constructor TCMSTPURLConnection.Create(const AURL: string);
+begin
+  inherited Create(AURL);
+  FRequestParameters := TCMParameterDataList.Create;
+end;
+
+procedure TCMSTPURLConnection.Connect;
+var
+  rsp: ICMSTPResponse;
+begin
+  FConnected := False;
+  FContentType := '';
+  FResponseContent := nil;
+  if Assigned(FCMSTPService) then
+    begin
+      if FCMSTPService.CMSTP(URL, FRequestParameters, rsp) then
+        begin
+          FContentType := rsp.GetContentType;
+          FResponseContent := rsp.GetContent;
+          FConnected := True;
+        end;
+    end;
 end;
 
 

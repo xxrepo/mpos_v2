@@ -15,7 +15,7 @@ type
 
   { TCMSServer }
 
-  TCMSServer = class(TServer, ICMSTPService)
+  TCMSServer = class(TServer)
   public //ICMSTPService
     function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
   end;

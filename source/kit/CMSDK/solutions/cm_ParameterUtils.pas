@@ -259,8 +259,8 @@ type
     procedure Lock;
     procedure Unlock;
   public
-    function AddParameters(ABase: ICMParameter; ADataSet: TDataSet): Integer;  overload;
-    function AddParameters(ABase: ICMParameter; ANode: TCMDOMNode): Integer;  overload;
+    function LoadParameters(ABase: ICMParameter; ADataSet: TDataSet): Integer;  overload;
+    function LoadParameters(ABase: ICMParameter; ANode: TCMDOMNode): Integer;  overload;
   end;
 
   { TCMParameter }
@@ -996,7 +996,7 @@ begin
   FSyncObj.Release;
 end;
 
-function TCMParameterSet.AddParameters(ABase: ICMParameter; ADataSet: TDataSet): Integer;
+function TCMParameterSet.LoadParameters(ABase: ICMParameter; ADataSet: TDataSet): Integer;
 var
   exist: Boolean;
   minParentId: Integer;
@@ -1088,7 +1088,7 @@ begin
     end;
 end;
 
-function TCMParameterSet.AddParameters(ABase: ICMParameter; ANode: TCMDOMNode): Integer;
+function TCMParameterSet.LoadParameters(ABase: ICMParameter; ANode: TCMDOMNode): Integer;
 var
   name, value: string;
   rootCell: TCMParameterCell;

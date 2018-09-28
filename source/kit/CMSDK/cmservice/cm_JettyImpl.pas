@@ -121,6 +121,7 @@ type
   public //ServletContextHandler
     //procedure AddFilter(AFilter: IFilterHolder);
     procedure AddServlet(AHolder: IServletHolder);
+    function AddServlet(const AName: string; AServlet: IServlet): IServletHolder;
     function GetServletContext: IJettyServletContext;
   end;
 
@@ -306,6 +307,18 @@ end;
 procedure TServletContextHandler.AddServlet(AHolder: IServletHolder);
 begin
   FJettyServletContext.AddServlet(AHolder);
+end;
+
+function TServletContextHandler.AddServlet(const AName: string; AServlet: IServlet): IServletHolder;
+var
+  h: TServletHolder;
+begin
+  Result := nil;
+  h := TServletHolder.Create(FJettyServletContext);
+  h.SetName(AName);
+  h.SetServlet(AServlet);
+  Self.AddServlet(h);
+  Result := h;
 end;
 
 function TServletContextHandler.GetServletContext: IJettyServletContext;
