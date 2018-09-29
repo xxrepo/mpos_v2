@@ -19,7 +19,7 @@ type
   public
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
-    procedure AfterConstruction;override;
+    procedure AfterConstruction; override;
     function GetImplementorName: string; virtual;
     procedure SetTheme(ATheme: ITheme); virtual;
     function Messager: TCMMessager;
@@ -40,8 +40,8 @@ end;
 
 destructor TPOSForm.Destroy;
 begin
-  inherited Destroy;
   TThemeableManager.GetInstance.RemoveThemeable(Self);
+  inherited Destroy;
 end;
 
 procedure TPOSForm.AfterConstruction;

@@ -1,5 +1,5 @@
 object POSForm: TPOSForm
-  Left = 341
+  Left = 308
   Height = 240
   Top = 186
   Width = 320

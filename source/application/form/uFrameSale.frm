@@ -8,7 +8,7 @@ object SaleFrame: TSaleFrame
   ClientWidth = 706
   OnResize = FrameResize
   TabOrder = 0
-  DesignLeft = 341
+  DesignLeft = 308
   DesignTop = 186
   object PanelSale: TPanel
     Left = 0
@@ -34,7 +34,7 @@ object SaleFrame: TSaleFrame
         Left = 64
         Height = 27
         Top = 17
-        Width = 328
+        Width = 300
         BorderStyle = bsNone
         Font.Height = -27
         Font.Name = '黑体'
@@ -53,40 +53,52 @@ object SaleFrame: TSaleFrame
         ParentColor = False
         TabOrder = 1
       end
-      object Label1: TLabel
-        Left = 512
-        Height = 12
-        Top = 31
-        Width = 36
-        Caption = '数量：'
-        ParentColor = False
-      end
-      object Label2: TLabel
-        Left = 584
-        Height = 12
-        Top = 31
-        Width = 36
-        Caption = '合计：'
-        ParentColor = False
-      end
-      object Lab_sumCost: TLabel
-        Left = 624
-        Height = 27
-        Top = 17
-        Width = 56
-        Caption = '0.00'
-        Font.Color = 155368
-        Font.Height = -27
-        ParentColor = False
-        ParentFont = False
-      end
-      object Lab_count: TLabel
-        Left = 548
-        Height = 12
-        Top = 31
-        Width = 6
-        Caption = '0'
-        ParentColor = False
+      object PanelSum: TPanel
+        Left = 448
+        Height = 55
+        Top = 0
+        Width = 258
+        Align = alRight
+        BevelOuter = bvNone
+        ClientHeight = 55
+        ClientWidth = 258
+        TabOrder = 2
+        object Label1: TLabel
+          Left = 8
+          Height = 12
+          Top = 32
+          Width = 36
+          Caption = '数量：'
+          ParentColor = False
+        end
+        object Label2: TLabel
+          Left = 96
+          Height = 12
+          Top = 32
+          Width = 36
+          Caption = '合计：'
+          ParentColor = False
+        end
+        object Lab_sumCost: TLabel
+          Left = 136
+          Height = 24
+          Top = 20
+          Width = 48
+          Caption = '0.00'
+          Font.Color = 155368
+          Font.Height = -24
+          Font.Name = '黑体'
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lab_count: TLabel
+          Left = 48
+          Height = 12
+          Top = 32
+          Width = 6
+          Caption = '0'
+          ParentColor = False
+        end
       end
     end
     object PanelItems: TPanel

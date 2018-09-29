@@ -12,7 +12,8 @@ uses
   uStart, uFormSetting,
   uSetting,
   uDAO,
-  uFrameSale, uSale, uSaleDTO;
+  uFrameSale, uSale, uSaleDTO,
+  uFrameNavigator;
 
 type
 
@@ -42,10 +43,12 @@ type
     procedure Panel5Click(Sender: TObject);
     procedure Panel6Click(Sender: TObject);
     procedure Panel7Click(Sender: TObject);
+    procedure PanelRightHintDblClick(Sender: TObject);
   private
     FPOSTitlePanel: TPOSTitlePanel;
     FHasSet: Boolean;
     FSaleFrame: TSaleFrame;
+    FNavigatorFrame: TNavigatorFrame;
   public
     procedure SetTheme(ATheme: ITheme); override;
   end;
@@ -72,6 +75,11 @@ begin
   FSaleFrame.Align := alClient;
 
   InterfaceRegister.PutInterface('ISaleBoard', ISaleBoard, FSaleFrame);
+
+  //
+  FNavigatorFrame := TNavigatorFrame.Create(Self);
+  FNavigatorFrame.Parent := PanelRight;
+  FNavigatorFrame.Align := alClient;
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -102,9 +110,15 @@ begin
           Self.Height := 768;
         end;
       workRect := PanelWork.BoundsRect;
+
+      workRect.Width := workRect.Width - 12;
+
       POSStart.SetWorkRect(workRect);
     end;
   POSStart.AfterLogin;
+
+  //test
+  PanelRightHint.Width := 12;
 end;
 
 procedure TMainForm.Panel1Click(Sender: TObject);
@@ -196,6 +210,14 @@ begin
   vo.Price := 6.98;
   vo.Quantity := Random(88);
   FSaleFrame.AddShowItem(vo);
+end;
+
+procedure TMainForm.PanelRightHintDblClick(Sender: TObject);
+begin
+  if TPanel(Sender).Width < 200 then
+    TPanel(Sender).Width := 200
+  else
+    TPanel(Sender).Width := 12;
 end;
 
 procedure TMainForm.SetTheme(ATheme: ITheme);

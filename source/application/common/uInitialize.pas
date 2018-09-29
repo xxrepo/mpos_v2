@@ -93,7 +93,7 @@ begin
       end;
     if ns.ReadXML(node, DefaultConfigFileName) then
       begin
-        FParameterLoader.AddParameters(paramObj, node);
+        FParameterLoader.LoadParameters(paramObj, node);
         node.Free;
       end;
     Messager.Info('开始加载配置的XML文件参数...');
@@ -111,7 +111,7 @@ begin
             if ns.ReadXML(node, fn) then
               begin
                 Messager.Debug('开始加载XML文件:%s...', [fn]);
-                FParameterLoader.AddParameters(paramObj, node);
+                FParameterLoader.LoadParameters(paramObj, node);
                 node.Free;
               end;
           end;
@@ -195,7 +195,7 @@ begin
                 themeName := node.ChildNodes[i].GetAttribute('name');
                 themeTitle := node.ChildNodes[i].GetAttribute('title');
                 //加入配置参数
-                FParameterLoader.AddParameters(themesParameter, node.ChildNodes[i]);
+                FParameterLoader.LoadParameters(themesParameter, node.ChildNodes[i]);
                 //构建主题
                 theme := TCMTheme.Create(themeName, themeTitle, FPOSSystem.Parameter.Get('themes').Get(themeName));
                 //加入控制器

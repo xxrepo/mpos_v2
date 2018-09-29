@@ -4,6 +4,6 @@ object POSFrame: TPOSFrame
   Top = 0
   Width = 320
   TabOrder = 0
-  DesignLeft = 264
-  DesignTop = 183
+  DesignLeft = 308
+  DesignTop = 186
 end

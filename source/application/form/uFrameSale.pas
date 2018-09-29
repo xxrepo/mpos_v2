@@ -48,6 +48,7 @@ type
     LabelCommodity: TLabel;
     LabelPrice: TLabel;
     LabelQuantity: TLabel;
+    PanelSum: TPanel;
     PanelMsg: TPanel;
     PanelAdjustment: TPanel;
     PanelBottom: TPanel;

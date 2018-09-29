@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="74">
+    <Units Count="75">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -18,9 +18,9 @@
         <ComponentName Value="POSForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="45"/>
-        <CursorPos X="3" Y="60"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="38"/>
+        <CursorPos X="74" Y="46"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -156,12 +156,10 @@
       <Unit18>
         <Filename Value="..\kit\CMSDK\cm_sysutils.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="312"/>
-        <CursorPos Y="319"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="266"/>
+        <CursorPos X="21" Y="323"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\kit\CMSDK\cm_theme.pas"/>
@@ -251,9 +249,9 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="6"/>
-        <TopLine Value="122"/>
-        <CursorPos X="48" Y="145"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="210"/>
+        <CursorPos X="60" Y="235"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -307,9 +305,9 @@
       <Unit36>
         <Filename Value="common\uInitialize.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="66"/>
-        <CursorPos X="22" Y="22"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="185"/>
+        <CursorPos X="48" Y="198"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit36>
@@ -368,9 +366,9 @@
         <ComponentName Value="POSFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="14"/>
-        <CursorPos X="106" Y="36"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="23"/>
+        <CursorPos X="56" Y="33"/>
         <UsageCount Value="257"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -381,9 +379,9 @@
         <ComponentName Value="ServiceForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="37"/>
-        <CursorPos X="18" Y="53"/>
+        <CursorPos X="58" Y="42"/>
         <UsageCount Value="256"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -428,18 +426,20 @@
         <ComponentName Value="MenuForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="4"/>
-        <CursorPos X="38" Y="26"/>
+        <EditorIndex Value="7"/>
+        <CursorPos X="35" Y="31"/>
         <UsageCount Value="253"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit49>
       <Unit50>
         <Filename Value="common\uSetting.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="26"/>
-        <CursorPos X="54" Y="31"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="15"/>
+        <CursorPos X="56" Y="12"/>
         <UsageCount Value="252"/>
+        <Loaded Value="True"/>
       </Unit50>
       <Unit51>
         <Filename Value="form\uFrameSale.pas"/>
@@ -447,9 +447,10 @@
         <ComponentName Value="SaleFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
-        <EditorIndex Value="7"/>
-        <TopLine Value="160"/>
-        <CursorPos X="46" Y="166"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="52"/>
+        <CursorPos X="45" Y="91"/>
         <UsageCount Value="207"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -484,24 +485,37 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="120"/>
+        <UsageCount Value="124"/>
       </Unit55>
       <Unit56>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="NavigatorFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="12"/>
+        <CursorPos X="30" Y="24"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit56>
+      <Unit57>
         <Filename Value="..\model\uSaleBoardModel.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="37"/>
         <CursorPos X="47" Y="53"/>
         <UsageCount Value="188"/>
-      </Unit56>
-      <Unit57>
+      </Unit57>
+      <Unit58>
         <Filename Value="..\model\uSaleModel.pas"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
         <UsageCount Value="188"/>
-      </Unit57>
-      <Unit58>
+      </Unit58>
+      <Unit59>
         <Filename Value="..\public\form\uFrameMenu.pas"/>
         <ComponentName Value="Frame1"/>
         <HasResources Value="True"/>
@@ -510,240 +524,240 @@
         <TopLine Value="11"/>
         <CursorPos X="86" Y="20"/>
         <UsageCount Value="165"/>
-      </Unit58>
-      <Unit59>
+      </Unit59>
+      <Unit60>
         <Filename Value="..\kit\CMSDK\platform\cm_PlatConstant.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="8"/>
         <UsageCount Value="103"/>
-      </Unit59>
-      <Unit60>
+      </Unit60>
+      <Unit61>
         <Filename Value="..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="100"/>
         <CursorPos X="21" Y="103"/>
         <UsageCount Value="105"/>
-      </Unit60>
-      <Unit61>
+      </Unit61>
+      <Unit62>
         <Filename Value="..\library\baseServiceSet\uDBUtils.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="233"/>
         <CursorPos X="61" Y="255"/>
         <UsageCount Value="63"/>
-      </Unit61>
-      <Unit62>
+      </Unit62>
+      <Unit63>
         <Filename Value="..\kit\CMSDK\cm_ThemeControls.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="73" Y="14"/>
         <UsageCount Value="77"/>
-      </Unit62>
-      <Unit63>
+      </Unit63>
+      <Unit64>
         <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
         <UnitName Value="Forms"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="424"/>
         <CursorPos X="19" Y="438"/>
         <UsageCount Value="42"/>
-      </Unit63>
-      <Unit64>
+      </Unit64>
+      <Unit65>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="412"/>
         <CursorPos X="28" Y="426"/>
         <UsageCount Value="3"/>
-      </Unit64>
-      <Unit65>
+      </Unit65>
+      <Unit66>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\typinfo.pp"/>
         <UnitName Value="TypInfo"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="811"/>
         <CursorPos X="24" Y="819"/>
         <UsageCount Value="14"/>
-      </Unit65>
-      <Unit66>
+      </Unit66>
+      <Unit67>
         <Filename Value="C:\codetyphon\typhon\lcl\include\control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3549"/>
         <CursorPos Y="3568"/>
         <UsageCount Value="22"/>
-      </Unit66>
-      <Unit67>
+      </Unit67>
+      <Unit68>
         <Filename Value="C:\codetyphon\typhon\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2242"/>
         <CursorPos X="80" Y="2255"/>
         <UsageCount Value="23"/>
-      </Unit67>
-      <Unit68>
+      </Unit68>
+      <Unit69>
         <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
         <UnitName Value="ExtCtrls"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1005"/>
         <CursorPos X="18" Y="1007"/>
         <UsageCount Value="50"/>
-      </Unit68>
-      <Unit69>
+      </Unit69>
+      <Unit70>
         <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-base\src\contnrs.pp"/>
         <UnitName Value="Contnrs"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="80"/>
         <CursorPos X="57" Y="89"/>
         <UsageCount Value="76"/>
-      </Unit69>
-      <Unit70>
+      </Unit70>
+      <Unit71>
         <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
         <UnitName Value="Graphics"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1112"/>
         <CursorPos X="24" Y="1127"/>
         <UsageCount Value="3"/>
-      </Unit70>
-      <Unit71>
+      </Unit71>
+      <Unit72>
         <Filename Value="C:\codetyphon\typhon\lcl\include\custompanel.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="142"/>
         <CursorPos X="40" Y="154"/>
         <UsageCount Value="49"/>
-      </Unit71>
-      <Unit72>
+      </Unit72>
+      <Unit73>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\persist.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="98"/>
         <CursorPos X="25" Y="108"/>
         <UsageCount Value="3"/>
-      </Unit72>
-      <Unit73>
+      </Unit73>
+      <Unit74>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\osutilsh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="44"/>
         <CursorPos X="58" Y="62"/>
         <UsageCount Value="1"/>
-      </Unit73>
+      </Unit74>
     </Units>
     <OtherDefines Count="1">
       <Define0 Value="Test"/>
     </OtherDefines>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="240" Column="32" TopLine="225"/>
+        <Filename Value="form\uFormMain.pas"/>
+        <Caret Line="148" Column="37" TopLine="139"/>
       </Position1>
       <Position2>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="259" Column="63" TopLine="245"/>
+        <Caret Line="166" Column="46" TopLine="160"/>
       </Position2>
       <Position3>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="503" Column="14" TopLine="484"/>
+        <Caret Line="180" Column="48" TopLine="161"/>
       </Position3>
       <Position4>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="507" Column="34" TopLine="477"/>
+        <Caret Line="322" Column="36" TopLine="312"/>
       </Position4>
       <Position5>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="373" Column="50" TopLine="357"/>
+        <Caret Line="323" Column="68" TopLine="312"/>
       </Position5>
       <Position6>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="84" Column="22" TopLine="67"/>
+        <Caret Line="371" Column="12" TopLine="348"/>
       </Position6>
       <Position7>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="572" Column="3" TopLine="550"/>
+        <Caret Line="45" Column="14" TopLine="31"/>
       </Position7>
       <Position8>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="574" Column="89" TopLine="553"/>
+        <Caret Line="323" Column="49" TopLine="303"/>
       </Position8>
       <Position9>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="59" Column="21" TopLine="52"/>
+        <Caret Line="370" Column="12" TopLine="347"/>
       </Position9>
       <Position10>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="583" TopLine="561"/>
+        <Caret Line="46" Column="14" TopLine="32"/>
       </Position10>
       <Position11>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="579" TopLine="561"/>
+        <Caret Line="323" Column="70" TopLine="300"/>
       </Position11>
       <Position12>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="582" TopLine="561"/>
+        <Caret Line="371" Column="14" TopLine="348"/>
       </Position12>
       <Position13>
         <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="583" TopLine="561"/>
+        <Caret Line="45" Column="16" TopLine="31"/>
       </Position13>
       <Position14>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="581" Column="69" TopLine="546"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="12" Column="18"/>
       </Position14>
       <Position15>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="582" Column="69" TopLine="555"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="15" Column="18"/>
       </Position15>
       <Position16>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="237" Column="13" TopLine="228"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="20" Column="18"/>
       </Position16>
       <Position17>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="576" Column="7" TopLine="559"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="31" Column="82" TopLine="9"/>
       </Position17>
       <Position18>
-        <Filename Value="..\public\form\uFormService.pas"/>
-        <Caret Line="53" Column="18" TopLine="37"/>
+        <Filename Value="..\public\form\uForm.pas"/>
+        <Caret Line="47" Column="27" TopLine="36"/>
       </Position18>
       <Position19>
-        <Filename Value="..\public\form\uForm.pas"/>
-        <Caret Line="24" Column="19" TopLine="10"/>
+        <Filename Value="..\public\form\uFrame.pas"/>
+        <Caret Line="19" Column="20" TopLine="11"/>
       </Position19>
       <Position20>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="563" Column="31" TopLine="560"/>
+        <Filename Value="..\public\form\uForm.pas"/>
+        <Caret Line="21" Column="21" TopLine="8"/>
       </Position20>
       <Position21>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="12" Column="34"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="21" Column="67" TopLine="11"/>
       </Position21>
       <Position22>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="4" Column="48"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="33" TopLine="11"/>
       </Position22>
       <Position23>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="171" Column="46" TopLine="157"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="41" TopLine="14"/>
       </Position23>
       <Position24>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="141" Column="16" TopLine="127"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="40" TopLine="14"/>
       </Position24>
       <Position25>
-        <Filename Value="form\uFrameSale.pas"/>
-        <Caret Line="173" Column="39" TopLine="160"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="39" TopLine="14"/>
       </Position25>
       <Position26>
-        <Filename Value="form\uFormMain.pas"/>
-        <Caret Line="198" Column="36" TopLine="194"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="38" TopLine="14"/>
       </Position26>
       <Position27>
-        <Filename Value="common\uStart.pas"/>
-        <Caret Line="69" Column="30" TopLine="56"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="37" TopLine="14"/>
       </Position27>
       <Position28>
-        <Filename Value="common\uStart.pas"/>
-        <Caret Line="65" Column="24" TopLine="56"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="36" TopLine="14"/>
       </Position28>
       <Position29>
-        <Filename Value="common\uStart.pas"/>
-        <Caret Line="70" Column="16" TopLine="56"/>
+        <Filename Value="form\uFrameNavigator.pas"/>
+        <Caret Line="35" TopLine="13"/>
       </Position29>
       <Position30>
-        <Filename Value="..\kit\CMSDK\cm_sysutils.pas"/>
-        <Caret Line="44" Column="20" TopLine="22"/>
+        <Filename Value="form\uFormMain.pas"/>
+        <Caret Line="227" Column="11" TopLine="210"/>
       </Position30>
     </JumpHistory>
     <RunParams>

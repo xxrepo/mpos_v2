@@ -49,28 +49,18 @@ inherited MainForm: TMainForm
     ClientWidth = 995
     TabOrder = 2
     object PanelRightHint: TPanel
-      Left = 983
+      Left = 795
       Height = 362
       Top = 0
-      Width = 12
-      Align = alRight
-      BorderSpacing.Left = 2
-      BevelOuter = bvNone
-      ParentColor = False
-      TabOrder = 0
-    end
-    object PanelRight: TPanel
-      Left = 817
-      Height = 362
-      Top = 0
-      Width = 164
+      Width = 200
       Align = alRight
       BorderSpacing.Left = 2
       BevelOuter = bvNone
       ClientHeight = 362
-      ClientWidth = 164
+      ClientWidth = 200
       ParentColor = False
-      TabOrder = 1
+      TabOrder = 0
+      OnDblClick = PanelRightHintDblClick
       object Panel1: TPanel
         Left = 16
         Height = 40
@@ -135,11 +125,22 @@ inherited MainForm: TMainForm
         OnClick = Panel7Click
       end
     end
+    object PanelRight: TPanel
+      Left = 629
+      Height = 362
+      Top = 0
+      Width = 164
+      Align = alRight
+      BorderSpacing.Left = 2
+      BevelOuter = bvNone
+      ParentColor = False
+      TabOrder = 1
+    end
     object PanelClient: TPanel
       Left = 0
       Height = 362
       Top = 0
-      Width = 815
+      Width = 627
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 2
