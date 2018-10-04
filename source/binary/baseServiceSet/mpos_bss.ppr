@@ -26,8 +26,8 @@ begin
     mh.SetFormatter(TPOSSQLMessageFormatter.Create);
   //2、创建 Connection
   con := TCMSQLiteConnection.Create(nil, mh);
-  con.DatabaseName := 'data/mpos.db';
   con.DefaultLibrary := 'bin/sqlite3.dll';
+  con.DatabaseName := 'data/mpos.db';
   con.SetStatementClass(TPOSStatement);
   ARegister.PutInterface(ICMSQLiteConnection, con);
   //3、构建一个默认的 Statement

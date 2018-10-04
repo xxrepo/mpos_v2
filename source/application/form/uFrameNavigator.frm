@@ -1,16 +1,15 @@
 inherited NavigatorFrame: TNavigatorFrame
   Height = 363
-  Width = 421
+  Width = 160
   ClientHeight = 363
-  ClientWidth = 421
-  object PanelTitle: TPanel[0]
-    Left = 6
+  ClientWidth = 160
+  OnResize = FrameResize
+  object PanelTop: TPanel[0]
+    Left = 0
     Height = 38
     Top = 0
-    Width = 409
+    Width = 160
     Align = alTop
-    BorderSpacing.Left = 6
-    BorderSpacing.Right = 6
     BevelOuter = bvNone
     Color = clMoneyGreen
     ParentColor = False
@@ -20,11 +19,20 @@ inherited NavigatorFrame: TNavigatorFrame
     Left = 0
     Height = 55
     Top = 308
-    Width = 421
+    Width = 160
     Align = alBottom
     BevelOuter = bvNone
     Color = clMoneyGreen
     ParentColor = False
     TabOrder = 1
+  end
+  object PanelClient: TPanel[2]
+    Left = 0
+    Height = 270
+    Top = 38
+    Width = 160
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 2
   end
 end

@@ -225,7 +225,7 @@ begin
   inherited SetTheme(ATheme);
   PanelClient.Color := ATheme.Parameter.Get('panelColor').AsInteger;
   PanelRight.Color := PanelClient.Color;
-  PanelBottom.Color := ATheme.Parameter.Get('statusBarColor').AsInteger;
+  PanelBottom.Color := ATheme.Parameter.Get('footer.color').AsInteger;
   //
   Panel1.Color := ATheme.Parameter.Get('color1').AsInteger;
   Panel2.Color := ATheme.Parameter.Get('color2').AsInteger;

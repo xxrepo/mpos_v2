@@ -1,7 +1,7 @@
 inherited MainForm: TMainForm
-  Left = 368
+  Left = 86
   Height = 448
-  Top = 368
+  Top = 86
   Width = 995
   BorderStyle = bsNone
   Caption = 'MainForm'
@@ -40,91 +40,14 @@ inherited MainForm: TMainForm
     Left = 0
     Height = 362
     Top = 54
-    Width = 995
+    Width = 793
     Align = alClient
     BorderSpacing.Top = 2
     BorderSpacing.Bottom = 2
     BevelOuter = bvNone
     ClientHeight = 362
-    ClientWidth = 995
+    ClientWidth = 793
     TabOrder = 2
-    object PanelRightHint: TPanel
-      Left = 795
-      Height = 362
-      Top = 0
-      Width = 200
-      Align = alRight
-      BorderSpacing.Left = 2
-      BevelOuter = bvNone
-      ClientHeight = 362
-      ClientWidth = 200
-      ParentColor = False
-      TabOrder = 0
-      OnDblClick = PanelRightHintDblClick
-      object Panel1: TPanel
-        Left = 16
-        Height = 40
-        Top = 8
-        Width = 60
-        Caption = 'Panel1'
-        TabOrder = 0
-        OnClick = Panel1Click
-      end
-      object Panel2: TPanel
-        Left = 88
-        Height = 40
-        Top = 8
-        Width = 60
-        Caption = 'Panel2'
-        TabOrder = 1
-        OnClick = Panel2Click
-      end
-      object Panel3: TPanel
-        Left = 16
-        Height = 40
-        Top = 56
-        Width = 60
-        Caption = 'Panel3'
-        TabOrder = 2
-        OnClick = Panel3Click
-      end
-      object Panel4: TPanel
-        Left = 88
-        Height = 40
-        Top = 56
-        Width = 60
-        Caption = 'Panel4'
-        TabOrder = 3
-        OnClick = Panel4Click
-      end
-      object Panel5: TPanel
-        Left = 16
-        Height = 50
-        Top = 112
-        Width = 98
-        Caption = 'Panel5'
-        TabOrder = 4
-        OnClick = Panel5Click
-      end
-      object Panel6: TPanel
-        Left = 8
-        Height = 24
-        Top = 216
-        Width = 82
-        Caption = 'Panel6'
-        TabOrder = 5
-        OnClick = Panel6Click
-      end
-      object Panel7: TPanel
-        Left = 8
-        Height = 26
-        Top = 184
-        Width = 82
-        Caption = 'Panel7'
-        TabOrder = 6
-        OnClick = Panel7Click
-      end
-    end
     object PanelRight: TPanel
       Left = 629
       Height = 362
@@ -134,7 +57,7 @@ inherited MainForm: TMainForm
       BorderSpacing.Left = 2
       BevelOuter = bvNone
       ParentColor = False
-      TabOrder = 1
+      TabOrder = 0
     end
     object PanelClient: TPanel
       Left = 0
@@ -143,7 +66,84 @@ inherited MainForm: TMainForm
       Width = 627
       Align = alClient
       BevelOuter = bvNone
+      TabOrder = 1
+    end
+  end
+  object PanelRightHint: TPanel[3]
+    Left = 795
+    Height = 366
+    Top = 52
+    Width = 200
+    Align = alRight
+    BorderSpacing.Left = 2
+    BevelOuter = bvNone
+    ClientHeight = 366
+    ClientWidth = 200
+    ParentColor = False
+    TabOrder = 3
+    OnDblClick = PanelRightHintDblClick
+    object Panel1: TPanel
+      Left = 16
+      Height = 40
+      Top = 8
+      Width = 60
+      Caption = 'Panel1'
+      TabOrder = 0
+      OnClick = Panel1Click
+    end
+    object Panel2: TPanel
+      Left = 88
+      Height = 40
+      Top = 8
+      Width = 60
+      Caption = 'Panel2'
+      TabOrder = 1
+      OnClick = Panel2Click
+    end
+    object Panel3: TPanel
+      Left = 16
+      Height = 40
+      Top = 56
+      Width = 60
+      Caption = 'Panel3'
       TabOrder = 2
+      OnClick = Panel3Click
+    end
+    object Panel4: TPanel
+      Left = 88
+      Height = 40
+      Top = 56
+      Width = 60
+      Caption = 'Panel4'
+      TabOrder = 3
+      OnClick = Panel4Click
+    end
+    object Panel5: TPanel
+      Left = 16
+      Height = 50
+      Top = 112
+      Width = 98
+      Caption = 'Panel5'
+      TabOrder = 4
+      OnClick = Panel5Click
+    end
+    object Panel6: TPanel
+      Left = 8
+      Height = 24
+      Top = 216
+      Width = 82
+      Caption = 'Panel6'
+      TabOrder = 5
+      OnClick = Panel6Click
+    end
+    object Panel7: TPanel
+      Left = 8
+      Height = 26
+      Top = 184
+      Width = 82
+      Caption = 'Panel7'
+      TabOrder = 6
+      OnClick = Panel7Click
     end
   end
 end

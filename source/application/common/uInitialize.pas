@@ -75,6 +75,7 @@ var
   xmlConfigParameter: ICMParameter;
   fn: string;
   paramObj: TCMParameter;
+  p: ICMParameter;
 begin
   Result := False;
   Messager.Info('开始初始化参数工具...');
@@ -102,7 +103,12 @@ begin
       begin
         for i:=0 to xmlConfigParameter.ItemCount-1 do
           begin
-            fn := xmlConfigParameter.GetItem(i).AsString;
+            Messager.Error('----------------------------------------');
+            p := xmlConfigParameter.GetItem(i);
+            //Messager.Debug('--Clue:', [p.Clue]);
+            Messager.Debug('--   Name:%s--Str:%s', [p.Name, p.AsString]);
+
+            fn := p.AsString;
             if not FileExistsUTF8(fn) then
               begin
                 Messager.Error('配置文件:%s不存在.', [fn]);

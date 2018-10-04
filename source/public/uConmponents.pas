@@ -84,10 +84,11 @@ end;
 procedure TPOSTitlePanel.SetTheme(ATheme: ITheme);
 begin
   inherited SetTheme(ATheme);
-  Self.Color := ATheme.Parameter.Get('titleColor').AsInteger;
-  FTitleLab.Font.Size := ATheme.Parameter.Get('titleFont').Get('size').AsInteger;
-  FTitleLab.Font.Color := ATheme.Parameter.Get('titleFont').Get('color').AsInteger;
-  FTitleLab.Font.Name := ATheme.Parameter.Get('titleFont').Get('name').AsString;
+  Self.Color := ATheme.Parameter.Get('header.color').AsInteger;
+  FTitleLab.Font.Size := ATheme.Parameter.Get('header.titleFont').Get('size').AsInteger;
+  FTitleLab.Font.Color := ATheme.Parameter.Get('header.titleFont').Get('color').AsInteger;
+  //FTitleLab.Font.Color := clLime;
+  FTitleLab.Font.Name := ATheme.Parameter.Get('header.titleFont').Get('name').AsString;
   if Self.Showing then
     SelfResize(Self);
 end;

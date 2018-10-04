@@ -4,7 +4,8 @@
 		<ico>img/logo.ico</ico>
 		<logo>img/logo.png</logo>
 	</resources>
-	<XMLConfig>
-		 <test>config/test.xml</test>
-	</XMLConfig>
+	<configFiles>	 
+		 <f>config/test.xml</f>
+		 <f>config/xxx.xml</f>
+	</configFiles>
 </mpos>

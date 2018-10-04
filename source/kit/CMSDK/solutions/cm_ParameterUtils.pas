@@ -1366,8 +1366,12 @@ begin
       begin
         if AIndex < selfCell.Children.Count then
           subCell := TCMParameterCell(selfCell.Children[AIndex]);
+
+        cm_messager.DefaultMessager.Error('--%s --%s', [subCell.Name, subCell.Data.AsString]);
       end;
     Result := TCMParameter.Create(FParameterSet, subCell);
+
+    cm_messager.DefaultMessager.Error('--2--%s --%s', [Result.Name, Result.AsString]);
   finally
     FParameterSet.Unlock;
   end;

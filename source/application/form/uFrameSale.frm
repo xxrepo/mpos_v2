@@ -42,17 +42,6 @@ object SaleFrame: TSaleFrame
         ParentFont = False
         TabOrder = 0
       end
-      object Panel3: TPanel
-        Left = 8
-        Height = 27
-        Top = 17
-        Width = 50
-        BevelOuter = bvNone
-        Caption = '扫码'
-        Color = 15640885
-        ParentColor = False
-        TabOrder = 1
-      end
       object PanelSum: TPanel
         Left = 448
         Height = 55
@@ -62,7 +51,7 @@ object SaleFrame: TSaleFrame
         BevelOuter = bvNone
         ClientHeight = 55
         ClientWidth = 258
-        TabOrder = 2
+        TabOrder = 1
         object Label1: TLabel
           Left = 8
           Height = 12
@@ -99,6 +88,19 @@ object SaleFrame: TSaleFrame
           Caption = '0'
           ParentColor = False
         end
+      end
+      object LabelScan: TLabel
+        Left = 16
+        Height = 27
+        Top = 17
+        Width = 40
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '扫码'
+        Color = 15640885
+        Layout = tlCenter
+        ParentColor = False
+        Transparent = False
       end
     end
     object PanelItems: TPanel

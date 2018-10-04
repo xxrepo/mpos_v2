@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <TopLine Value="15"/>
-        <CursorPos X="43" Y="30"/>
+        <CursorPos X="43" Y="29"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -52,8 +52,8 @@
         <Filename Value="..\..\kit\CMSDK\cm_messager.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="233"/>
-        <CursorPos X="17" Y="247"/>
+        <TopLine Value="244"/>
+        <CursorPos X="27" Y="255"/>
         <UsageCount Value="23"/>
       </Unit5>
       <Unit6>
@@ -177,7 +177,7 @@
         <UsageCount Value="11"/>
       </Unit21>
     </Units>
-    <JumpHistory Count="12" HistoryIndex="11">
+    <JumpHistory Count="13" HistoryIndex="12">
       <Position1>
         <Filename Value="mpos_bss.ppr"/>
         <Caret Line="14" Column="33"/>
@@ -226,6 +226,10 @@
         <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
         <Caret Line="243" Column="10" TopLine="220"/>
       </Position12>
+      <Position13>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="30" Column="29" TopLine="15"/>
+      </Position13>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

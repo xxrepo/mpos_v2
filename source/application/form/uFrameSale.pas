@@ -7,6 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Contnrs, Graphics, Types, Dialogs,
   cm_interfaces,
+  uFrame, cm_theme,
   uMPOS, uSale, uSaleDTO;
 
 type
@@ -37,10 +38,11 @@ type
 
   { TSaleFrame }
 
-  TSaleFrame = class(TFrame, ISaleBoard)
+  TSaleFrame = class(TPOSFrame, ISaleBoard)
     Edit1: TEdit;
     Label1: TLabel;
     Label2: TLabel;
+    LabelScan: TLabel;
     LabelNO: TLabel;
     Lab_sumCost: TLabel;
     Lab_count: TLabel;
@@ -53,7 +55,6 @@ type
     PanelAdjustment: TPanel;
     PanelBottom: TPanel;
     PanelTitle: TPanel;
-    Panel3: TPanel;
     PanelItems: TPanel;
     PanelSale: TPanel;
     procedure Edit1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -76,7 +77,6 @@ type
     procedure Up;
     procedure Down;
   public //ISaleBoard
-    function GetImplementorName: string;
     function AddShowItem(AVO: TShowItem): Boolean;
     function DeleteShowItem(const AUUID: string): Boolean;
     function UpdateShowItem(AVO: TShowItem): Boolean;
@@ -84,6 +84,8 @@ type
     function Clear: Boolean;
     procedure AddListener(AListener: ICMListener);
     procedure PromptMessage(et: TEventType; const msg: string);
+  public
+    procedure SetTheme(ATheme: ITheme); override;
   end;
 
 const
@@ -483,11 +485,6 @@ end;
 
 (**************************************************************************************************)
 
-function TSaleFrame.GetImplementorName: string;
-begin
-  Result := Self.UnitName + '.' + Self.ClassName;
-end;
-
 function TSaleFrame.AddShowItem(AVO: TShowItem): Boolean;
 var
   vo: TShowItem;
@@ -585,6 +582,12 @@ begin
   PanelMsg.Caption := msg;
   PanelMsg.Visible := True;
   PanelMsg.Left := (PanelItems.Width - PanelMsg.Width) div 2;
+end;
+
+procedure TSaleFrame.SetTheme(ATheme: ITheme);
+begin
+  inherited SetTheme(ATheme);
+  LabelScan.Color := ATheme.Parameter.Get('sale.labelScanColor').AsInteger;
 end;
 
 

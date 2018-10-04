@@ -15,7 +15,7 @@ const
   LogFileNamePrefix: string = 'mpos_';
   DefaultConfigFileName: string = 'config/mpos.xml';
   ThemeConfigFileName: string = 'config/themes.xml';
-  XMLConfigParameterName: string = 'mpos.XMLConfig';
+  XMLConfigParameterName: string = 'mpos.configFiles';
 
 type
 
