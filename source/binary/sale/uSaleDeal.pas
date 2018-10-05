@@ -16,7 +16,7 @@ uses
   cm_interfaces, cm_messager,
   uSale,
   uSaleDTO, uSaleBO,
-  uMPOS;
+  uApp;
 
 type
 

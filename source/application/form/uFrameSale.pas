@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Contnrs, Graphics, Types, Dialogs,
   cm_interfaces,
   uFrame, cm_theme,
-  uMPOS, uSale, uSaleDTO;
+  uApp, uSale, uSaleDTO;
 
 type
 
@@ -587,7 +587,7 @@ end;
 procedure TSaleFrame.SetTheme(ATheme: ITheme);
 begin
   inherited SetTheme(ATheme);
-  LabelScan.Color := ATheme.Parameter.Get('sale.labelScanColor').AsInteger;
+  LabelScan.Color := ATheme.GetParameter.Get('sale.labelScanColor').AsInteger;
 end;
 
 

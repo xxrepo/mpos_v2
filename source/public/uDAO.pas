@@ -8,7 +8,7 @@ uses
   Classes, SysUtils,
   cm_interfaces, cm_messager,
   uDB, uDBUtils,
-  uMPOS;
+  uApp;
 
 type
 
@@ -109,8 +109,8 @@ constructor TPOSDAOFactory.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   if TPOSDAOFactory.FStatement = nil then
-    if Assigned(uMPOS.InterfaceRegister) then
-      uMPOS.InterfaceRegister.OutInterface(IPOSStatement, TPOSDAOFactory.FStatement);
+    if Assigned(uApp.InterfaceRegister) then
+      uApp.InterfaceRegister.OutInterface(IPOSStatement, TPOSDAOFactory.FStatement);
   FDBHelper := TPOSDBHelper.Create(Self);
   FDBHelper.Statement := TPOSDAOFactory.FStatement;
 end;

@@ -51,12 +51,12 @@ end;
 procedure TServiceForm.SetTheme(ATheme: ITheme);
 begin
   inherited SetTheme(ATheme);
-  PanelTop.Color := ATheme.Parameter.Get('service.titleColor').AsInteger;
-  FTitleLab.Font.Size := ATheme.Parameter.Get('service.titleFont').Get('size').AsInteger;
-  FTitleLab.Font.Color := ATheme.Parameter.Get('service.titleFont').Get('color').AsInteger;
-  FTitleLab.Font.Name := ATheme.Parameter.Get('service.titleFont').Get('name').AsString;
-  PanelClient.Color := ATheme.Parameter.Get('panelColor').AsInteger;
-  PanelBottom.Color := ATheme.Parameter.Get('service.buttonBarColor').AsInteger;
+  PanelTop.Color := ATheme.GetParameter.Get('service.titleColor').AsInteger;
+  FTitleLab.Font.Size := ATheme.GetParameter.Get('service.titleFont').Get('size').AsInteger;
+  FTitleLab.Font.Color := ATheme.GetParameter.Get('service.titleFont').Get('color').AsInteger;
+  FTitleLab.Font.Name := ATheme.GetParameter.Get('service.titleFont').Get('name').AsString;
+  PanelClient.Color := ATheme.GetParameter.Get('panelColor').AsInteger;
+  PanelBottom.Color := ATheme.GetParameter.Get('service.buttonBarColor').AsInteger;
 end;
 
 

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   LCLType, StdCtrls, ComCtrls,
-  uForm, cm_theme, uConmponents, uMPOS, uSystem,
+  uForm, cm_theme, uConmponents, uApp, uSystem,
   uTest, uFormService, uFormPopupService,
   uStart, uFormSetting,
   uSetting,
@@ -94,17 +94,17 @@ var
 begin
   Self.Left := 0;
   Self.Top := 0;
-  if Assigned(POSSystem) then
+  if Assigned(AppSystem) then
     begin
       if not FHasSet then
         begin
           FPOSTitlePanel.SetTitle('');
-          FPOSTitlePanel.SetVersion('v' + POSSystem.GetVersion);
-          FPOSTitlePanel.SetImage(POSSystem.GetParameter.Get('mpos.resources.logo').AsString);
+          FPOSTitlePanel.SetVersion('v' + AppSystem.GetVersion);
+          FPOSTitlePanel.SetImage(AppSystem.GetParameter.Get('mpos.resources.logo').AsString);
           FHasSet := True;
         end;
       //
-      if POSSystem.IsTestMode then
+      if AppSystem.IsTestMode then
         begin
           Self.Width := 1024;
           Self.Height := 768;
@@ -116,6 +116,9 @@ begin
       POSStart.SetWorkRect(workRect);
     end;
   POSStart.AfterLogin;
+
+
+  FNavigatorFrame.LoadConfig;
 
   //test
   PanelRightHint.Width := 12;
@@ -155,7 +158,7 @@ var
 begin
   f := TSettingForm.Create(Self);
   f.BorderStyle := bsNone;
-  f.BoundsRect := POSSystem.GetWorkRect;
+  f.BoundsRect := AppSystem.GetWorkRect;
 
 
 
@@ -223,14 +226,14 @@ end;
 procedure TMainForm.SetTheme(ATheme: ITheme);
 begin
   inherited SetTheme(ATheme);
-  PanelClient.Color := ATheme.Parameter.Get('panelColor').AsInteger;
+  PanelClient.Color := ATheme.GetParameter.Get('panelColor').AsInteger;
   PanelRight.Color := PanelClient.Color;
-  PanelBottom.Color := ATheme.Parameter.Get('footer.color').AsInteger;
+  PanelBottom.Color := ATheme.GetParameter.Get('footer.color').AsInteger;
   //
-  Panel1.Color := ATheme.Parameter.Get('color1').AsInteger;
-  Panel2.Color := ATheme.Parameter.Get('color2').AsInteger;
-  Panel3.Color := ATheme.Parameter.Get('color3').AsInteger;
-  Panel4.Color := ATheme.Parameter.Get('color4').AsInteger;
+  Panel1.Color := ATheme.GetParameter.Get('color1').AsInteger;
+  Panel2.Color := ATheme.GetParameter.Get('color2').AsInteger;
+  Panel3.Color := ATheme.GetParameter.Get('color3').AsInteger;
+  Panel4.Color := ATheme.GetParameter.Get('color4').AsInteger;
 end;
 
 end.

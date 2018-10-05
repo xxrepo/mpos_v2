@@ -6,6 +6,8 @@
 
     This is not a complete unit, for testing
 
+    此单元用于引用 LCL 的 Application 。
+
  **********************************************************************}
 
 unit cm_LCLPlat;

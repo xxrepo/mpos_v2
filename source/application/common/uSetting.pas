@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Controls, Forms, ExtCtrls,
   cm_messager,
-  uMPOS, uFormMenu;
+  uApp, uFormMenu;
 
 
 type
@@ -32,7 +32,7 @@ begin
   inherited Create(AOwner);
   FMenuForm := TMenuForm.Create(Self);
   FMenuForm.BorderStyle := bsNone;
-  FMenuForm.BoundsRect := POSSystem.GetWorkRect;
+  FMenuForm.BoundsRect := AppSystem.GetWorkRect;
   FMenuForm.SetTitle('设置');
 
   FMenuForm.AddMenuItem('主题设置');

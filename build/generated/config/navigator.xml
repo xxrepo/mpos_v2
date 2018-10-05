@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigator>
+    <items>
+	    <item>
+		    <caption>first</caption>
+			<call>mpos/btn/first</call>
+		</item>
+		<item>
+		    <caption>222</caption>
+		</item>
+		<item>
+		    <caption>333</caption>
+		</item>
+		<item>
+		    <caption>zzz</caption>
+			<col>1</col>
+			<row>3</row>
+		</item>
+	</items>
+</navigator>

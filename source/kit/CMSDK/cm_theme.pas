@@ -22,10 +22,10 @@ uses
 type
 
   ITheme = interface(ICMBase)
-    ['{B0712F60-6285-4778-A56E-EE96DDF68C14}']
+    ['{CC4CB4B4-CD3E-4DD1-8265-FBB4F16955EA}']
     function GetName: string;
     function GetTitle: string;
-    function Parameter: ICMParameter;
+    function GetParameter: ICMParameter;
   end;
 
   IThemeable = interface(ICMBase)

@@ -58,9 +58,9 @@ end;
 procedure TPOSForm.SetTheme(ATheme: ITheme);
 begin
   FTheme := ATheme;
-  Self.Color := ATheme.Parameter.Get('boardColor').AsInteger;
-  Self.Font.Size := ATheme.Parameter.Get('defaultFont').Get('size').AsInteger;
-  Self.Font.Name := ATheme.Parameter.Get('defaultFont').Get('name').AsString;
+  Self.Color := ATheme.GetParameter.Get('boardColor').AsInteger;
+  Self.Font.Size := ATheme.GetParameter.Get('defaultFont').Get('size').AsInteger;
+  Self.Font.Name := ATheme.GetParameter.Get('defaultFont').Get('name').AsString;
 end;
 
 function TPOSForm.Messager: TCMMessager;

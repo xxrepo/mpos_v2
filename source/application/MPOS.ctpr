@@ -178,7 +178,7 @@
         <IsPartOfProject Value="True"/>
       </Unit32>
       <Unit33>
-        <Filename Value="..\public\uMPOS.pas"/>
+        <Filename Value="..\public\uApp.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit33>
       <Unit34>

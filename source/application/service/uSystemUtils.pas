@@ -13,7 +13,7 @@ type
 
   { TPOSSystem }
 
-  TPOSSystem = class(TCMMessageable, IPOSSystem)
+  TPOSSystem = class(TCMMessageable, IAppSystem)
   private
     FStartTime, FLoginTime: TDateTime;
     FParameter: ICMParameter;

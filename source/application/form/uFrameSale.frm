@@ -1,16 +1,11 @@
-object SaleFrame: TSaleFrame
-  Left = 0
+inherited SaleFrame: TSaleFrame
   Height = 375
-  Top = 0
   Width = 706
   AutoSize = True
   ClientHeight = 375
   ClientWidth = 706
   OnResize = FrameResize
-  TabOrder = 0
-  DesignLeft = 308
-  DesignTop = 186
-  object PanelSale: TPanel
+  object PanelSale: TPanel[0]
     Left = 0
     Height = 375
     Top = 0

@@ -3,9 +3,9 @@
 	<resources>
 		<ico>img/logo.ico</ico>
 		<logo>img/logo.png</logo>
-	</resources>
+	</resources>  
 	<configFiles>	 
+		 <f>config/navigator.xml</f>
 		 <f>config/test.xml</f>
-		 <f>config/xxx.xml</f>
 	</configFiles>
 </mpos>

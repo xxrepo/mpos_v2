@@ -1,3 +1,15 @@
+{
+    This file is part of the CM SDK.
+    Copyright (c) 2013-2018 by the ChenMeng studio
+
+    cm_ParameterUtils
+
+    This is not a complete unit, for testing
+
+    20181005  NOTE 1: ADD 子参数重名处理（主要应对 DOM 相同类型子节点，在应用时不建设较多的使用同名参数，这可能遇到意想不到的状况）。
+
+ **********************************************************************}
+
 unit cm_ParameterUtils;
 
 {$mode objfpc}{$H+}
@@ -930,9 +942,17 @@ begin
 end;
 
 procedure TCMParameterCell.AddChildCell(ACell: TCMParameterCell);
+var
+  i: Integer;
 begin
   ACell.FLevel := Self.Level + 1;
   ACell.FClue := Format('%s.%s', [Clue, ACell.Name]);
+  i := FChildren.FindIndexOf(ACell.Clue);
+  while i >= 0 do //重名时
+    begin
+      ACell.FClue := Format('%s.%s$%d', [Clue, ACell.Name, i+2]);
+      i := FChildren.FindIndexOf(ACell.Clue);
+    end;
   FChildren.Add(ACell.Clue, ACell);
 end;
 
@@ -1149,6 +1169,7 @@ begin
   if not Assigned(AParameterSet) then
     raise EParameterError.CreateFmt(SInvalidVar, [varName1]);
   FParameterSet := AParameterSet;
+  //
   if Assigned(ACell) then
     begin
       FId := ACell.Id;
@@ -1195,11 +1216,15 @@ begin
   FId := AutoParameterIdStart + Abs(cell.GetHashCode);
   cell.FId := FId;
   cell.Data := AData;
-  //
+  //放入集合记录
   FParameterSet.Lock;
   try
     if exist then
-      AParent.AddChildCell(cell);
+      begin
+        AParent.AddChildCell(cell);
+        if FClue <> cell.Clue then //当重名时 clue 可能已变更
+          FClue := cell.Clue;
+      end;
     FParameterSet.AddCell(cell);
   finally
     FParameterSet.Unlock;
@@ -1366,12 +1391,8 @@ begin
       begin
         if AIndex < selfCell.Children.Count then
           subCell := TCMParameterCell(selfCell.Children[AIndex]);
-
-        cm_messager.DefaultMessager.Error('--%s --%s', [subCell.Name, subCell.Data.AsString]);
       end;
     Result := TCMParameter.Create(FParameterSet, subCell);
-
-    cm_messager.DefaultMessager.Error('--2--%s --%s', [Result.Name, Result.AsString]);
   finally
     FParameterSet.Unlock;
   end;

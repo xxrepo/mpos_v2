@@ -10,7 +10,7 @@ uses
   cm_parameter, cm_ParameterUtils,
   cm_theme, cm_ThemeUtils,
   cm_LCLPlat, cm_LCLUtils,
-  uMPOS,
+  uApp,
   uSystem, uSystemUtils;
 
 type
@@ -41,9 +41,9 @@ uses uDialogs, LazFileUtils;
 
 function MessageBoxFunc(Text, Caption :PChar; Flags: Longint): Integer;
 begin
-  if uMPOS.POSSystem.GetMsgBox.Visible then
-    uMPOS.POSSystem.GetMsgBox.Close;
-  Result := uMPOS.POSSystem.GetMsgBox.MessageBox(Text, Caption, Flags)
+  if AppSystem.GetMsgBox.Visible then
+    AppSystem.GetMsgBox.Close;
+  Result := AppSystem.GetMsgBox.MessageBox(Text, Caption, Flags)
 end;
 
 { TPOSInitialize }
@@ -60,11 +60,10 @@ begin
   //1、IThemeable 需要集合: IThemeableSet
   FThemeUtil := TCMThemeUtil.Create;
   TThemeableManager.GetInstance.AddThemeableSet(FThemeUtil);
-  //2、uMPOS的全局
+  //2、InterfaceRegister、AppSystem
+  uApp.InterfaceRegister := cm_LCLPlat.InterfaceRegister;
   FPOSSystem := TPOSSystem.Create;
-  uMPOS.POSSystem := FPOSSystem;
-  uMPOS.InterfaceRegister := cm_LCLPlat.InterfaceRegister;
-  uMPOS.InterfaceRegister.PutInterface('IPOSystem', IPOSSystem, FPOSSystem);
+  InterfaceRegister.PutInterface('IAppSystem', IAppSystem, FPOSSystem);
 end;
 
 function TPOSInitialize.InitParameter: Boolean;
@@ -89,7 +88,7 @@ begin
     Messager.Info('开始加载默认配置参数...');
     if not FileExistsUTF8(DefaultConfigFileName) then
       begin
-        POSSystem.GetMsgBox.ShowMessage('默认配置文件:' + DefaultConfigFileName + '不存在.');
+        AppSystem.GetMsgBox.ShowMessage('默认配置文件:' + DefaultConfigFileName + '不存在.');
         Exit;
       end;
     if ns.ReadXML(node, DefaultConfigFileName) then
@@ -103,11 +102,7 @@ begin
       begin
         for i:=0 to xmlConfigParameter.ItemCount-1 do
           begin
-            Messager.Error('----------------------------------------');
             p := xmlConfigParameter.GetItem(i);
-            //Messager.Debug('--Clue:', [p.Clue]);
-            Messager.Debug('--   Name:%s--Str:%s', [p.Name, p.AsString]);
-
             fn := p.AsString;
             if not FileExistsUTF8(fn) then
               begin
@@ -179,7 +174,7 @@ begin
   Result := False;
   Messager.Info('开始初始化主题工具...');
   //
-  themesParameter := POSSystem.GetParameter.AddString('themes', '');
+  themesParameter := AppSystem.GetParameter.AddString('themes', '');
   //
   if not FileExistsUTF8(ThemeConfigFileName) then
     begin

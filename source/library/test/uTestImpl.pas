@@ -9,7 +9,7 @@ uses
   cm_interfaces, cm_messager,
   uTest,
   uFormTest,
-  uMPOS, cm_LCL,
+  uApp, cm_LCL,
   LCLType, InterfaceBase, LCLIntf;
 
 type

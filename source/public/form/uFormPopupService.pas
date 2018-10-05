@@ -35,9 +35,9 @@ implementation
 procedure TPopupServiceForm.SetTheme(ATheme: ITheme);
 begin
   inherited SetTheme(ATheme);
-  PanelTop.Color := ATheme.Parameter.Get('service.titleColor').AsInteger;
-  PanelClient.Color := ATheme.Parameter.Get('panelColor').AsInteger;
-  PanelBottom.Color := ATheme.Parameter.Get('service.buttonBarColor').AsInteger;
+  PanelTop.Color := ATheme.GetParameter.Get('service.titleColor').AsInteger;
+  PanelClient.Color := ATheme.GetParameter.Get('panelColor').AsInteger;
+  PanelBottom.Color := ATheme.GetParameter.Get('service.buttonBarColor').AsInteger;
 end;
 
 end.

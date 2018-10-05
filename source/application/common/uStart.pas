@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms,
   cm_messager, cm_logutils, cm_InterfaceLoader,
   cm_PlatBase, cm_LCLPlat,
-  uConstant, uSystem, uMPOS,
+  uConstant, uSystem, uApp,
   uInitialize,
   uFormLoading,
   uDB, uDAO;
@@ -90,7 +90,7 @@ begin
   FInitialize.InitParameter;
   //
   SetLoadMsg('开始加载应用图标...');
-  icoFileName := POSSystem.GetParameter.Get('mpos.resources.ico').AsString;
+  icoFileName := AppSystem.GetParameter.Get('mpos.resources.ico').AsString;
   if FileExists(icoFileName) then
     Application.Icon.LoadFromFile(icoFileName)
   else

@@ -1,7 +1,7 @@
 inherited MainForm: TMainForm
-  Left = 86
+  Left = 180
   Height = 448
-  Top = 86
+  Top = 180
   Width = 995
   BorderStyle = bsNone
   Caption = 'MainForm'

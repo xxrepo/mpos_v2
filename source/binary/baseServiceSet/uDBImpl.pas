@@ -228,6 +228,7 @@ end;
 function TPOSStatement.CreateMemDb: Boolean;
 begin
   Result := False;
+  checkPoxy;
   Messager.Debug('CreateMemDb()...');
   Result := FExtensionMethodPoxy.CreateMemDb;
   Messager.Debug('end CreateMemDb().');
@@ -242,6 +243,7 @@ end;
 
 function TPOSStatement.AttachDb: Boolean;
 begin
+  checkPoxy;
   Messager.Debug('AttachDb()...');
   Result := FExtensionMethodPoxy.AttachDb;
   Messager.Debug('end AttachDb().');
@@ -249,6 +251,7 @@ end;
 
 function TPOSStatement.MemDbExecSql(vSql: PChar): Boolean;
 begin
+  checkPoxy;
   Messager.Debug('MemDbExecSql(PChar)...');
   Result := MemDbExecSql(vSql);
   Messager.Debug('end MemDbExecSql(PChar).');
@@ -256,6 +259,7 @@ end;
 
 function TPOSStatement.MemDbExecSql(vSqlList: TStringList): Boolean;
 begin
+  checkPoxy;
   Messager.Debug('MemDbExecSql(TStringList)...');
   Result := MemDbExecSql(vSqlList);
   Messager.Debug('end MemDbExecSql(TStringList).');
@@ -263,6 +267,7 @@ end;
 
 function TPOSStatement.MemDbExecSqlOnLock(vSql: PChar; boResetConn: Boolean): Boolean;
 begin
+  checkPoxy;
   Messager.Debug('MemDbExecSqlOnLock(PChar)...');
   Result := MemDbExecSqlOnLock(vSql, boResetConn);
   Messager.Debug('end MemDbExecSqlOnLock(PChar).');
@@ -270,6 +275,7 @@ end;
 
 function TPOSStatement.MemDbExecSqlOnLock(vSqlList: TStringList; boResetConn: Boolean): Boolean;
 begin
+  checkPoxy;
   Messager.Debug('MemDbExecSqlOnLock(TStringList)...');
   Result := MemDbExecSqlOnLock(vSqlList, boResetConn);
   Messager.Debug('end MemDbExecSqlOnLock(TStringList).');

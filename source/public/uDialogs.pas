@@ -46,17 +46,17 @@ end;
 procedure TPOSMsgBox.SetTheme(ATheme: ITheme);
 begin
   FTheme := ATheme;
-  if not ATheme.Parameter.Get('popup').IsNull then
+  if not ATheme.GetParameter.Get('popup').IsNull then
     begin
-      Self.MsgBoard.TitleColor := ATheme.Parameter.Get('popup.titleColor').AsInteger;
-      Self.MsgBoard.TitleFont.Color := ATheme.Parameter.Get('popup.titleFont.color').AsInteger;
-      Self.MsgBoard.TitleFont.Size := ATheme.Parameter.Get('popup.titleFont.size').AsInteger;
-      Self.MsgBoard.TitleFont.Name := ATheme.Parameter.Get('popup.titleFont.name').AsString;
-      Self.MsgBoard.Color := ATheme.Parameter.Get('popup.backgroundColor').AsInteger;
-      Self.MsgBoard.DefaultMsgFont.Color := ATheme.Parameter.Get('popup.defaultFont.color').AsInteger;
-      Self.MsgBoard.DefaultMsgFont.Size := ATheme.Parameter.Get('popup.defaultFont').Get('size').AsInteger;
-      Self.MsgBoard.DefaultMsgFont.Name := ATheme.Parameter.Get('popup.defaultFont').Get('name').AsString;
-      Self.MsgBoard.SelectedButtonFontColor := ATheme.Parameter.Get('popup.selectedButtonFontColor').AsInteger;
+      Self.MsgBoard.TitleColor := ATheme.GetParameter.Get('popup.titleColor').AsInteger;
+      Self.MsgBoard.TitleFont.Color := ATheme.GetParameter.Get('popup.titleFont.color').AsInteger;
+      Self.MsgBoard.TitleFont.Size := ATheme.GetParameter.Get('popup.titleFont.size').AsInteger;
+      Self.MsgBoard.TitleFont.Name := ATheme.GetParameter.Get('popup.titleFont.name').AsString;
+      Self.MsgBoard.Color := ATheme.GetParameter.Get('popup.backgroundColor').AsInteger;
+      Self.MsgBoard.DefaultMsgFont.Color := ATheme.GetParameter.Get('popup.defaultFont.color').AsInteger;
+      Self.MsgBoard.DefaultMsgFont.Size := ATheme.GetParameter.Get('popup.defaultFont').Get('size').AsInteger;
+      Self.MsgBoard.DefaultMsgFont.Name := ATheme.GetParameter.Get('popup.defaultFont').Get('name').AsString;
+      Self.MsgBoard.SelectedButtonFontColor := ATheme.GetParameter.Get('popup.selectedButtonFontColor').AsInteger;
     end;
 end;
 

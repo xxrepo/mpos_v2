@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ComCtrls,
-  uMPOS;
+  uApp;
 
 type
 
@@ -41,7 +41,7 @@ implementation
 
 procedure TLoadingForm.FormCreate(Sender: TObject);
 begin
-  if not POSSystem.IsTestMode then
+  if not AppSystem.IsTestMode then
     Self.FormStyle := fsStayOnTop;
   LabelMsg.Caption := '';
   LabelMsg2.Caption := '';

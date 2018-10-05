@@ -23,7 +23,7 @@ type
     constructor Create(const AName, ATitle: string; AParameter: ICMParameter);
     function GetName: string;
     function GetTitle: string;
-    function Parameter: ICMParameter;
+    function GetParameter: ICMParameter;
   end;
 
   { TCMThemeUtil }
@@ -72,7 +72,7 @@ begin
   Result := FTitle;
 end;
 
-function TCMTheme.Parameter: ICMParameter;
+function TCMTheme.GetParameter: ICMParameter;
 begin
   Result := FParameter;
 end;

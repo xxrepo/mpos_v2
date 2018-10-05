@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms,
   cm_sysutils, cm_interfaces,
-  uMPOS,
+  uApp,
   uSale, uSaleBO, uSaleDAO;
 
 type

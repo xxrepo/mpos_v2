@@ -4,13 +4,13 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="22">
+    <Units Count="23">
       <Unit0>
         <Filename Value="mpos_bss.ppr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="15"/>
-        <CursorPos X="43" Y="29"/>
+        <TopLine Value="26"/>
+        <CursorPos X="48" Y="30"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -59,17 +59,15 @@
       <Unit6>
         <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="244"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="267"/>
         <UsageCount Value="23"/>
-        <Loaded Value="True"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\..\public\uDB.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="7"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="14"/>
         <CursorPos X="9" Y="4"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>
@@ -84,100 +82,105 @@
         <UsageCount Value="23"/>
       </Unit8>
       <Unit9>
-        <Filename Value="..\..\public\uMPOS.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="4"/>
-        <UsageCount Value="23"/>
-      </Unit9>
-      <Unit10>
         <Filename Value="uDBImpl.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uDBUtils"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="13"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="243"/>
+        <CursorPos X="13" Y="270"/>
         <UsageCount Value="20"/>
-      </Unit10>
-      <Unit11>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
         <Filename Value="..\..\public\uConstant.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="15"/>
         <UsageCount Value="20"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\..\public\uApp.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="38" Y="13"/>
+        <UsageCount Value="20"/>
       </Unit11>
       <Unit12>
+        <Filename Value="..\..\public\uMPOS.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="4"/>
+        <UsageCount Value="23"/>
+      </Unit12>
+      <Unit13>
         <Filename Value="..\..\kit\CMSDK\platform\cm_LibraryPlat.pas"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
         <UsageCount Value="20"/>
-      </Unit12>
-      <Unit13>
-        <Filename Value="..\..\public\uLibraryAssistant.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="10"/>
-        <CursorPos X="12" Y="29"/>
-        <UsageCount Value="10"/>
       </Unit13>
       <Unit14>
+        <Filename Value="..\..\public\uLibraryAssistant.pas"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit14>
+      <Unit15>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\objpash.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="291"/>
         <CursorPos X="8" Y="299"/>
         <UsageCount Value="11"/>
-      </Unit14>
-      <Unit15>
+      </Unit15>
+      <Unit16>
         <Filename Value="..\..\kit\CMSDK\cm_classes.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="24"/>
         <UsageCount Value="11"/>
-      </Unit15>
-      <Unit16>
+      </Unit16>
+      <Unit17>
         <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-db\src\sqldb\sqldb.pp"/>
         <UnitName Value="SQLDB"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2474"/>
         <CursorPos X="29" Y="2468"/>
         <UsageCount Value="10"/>
-      </Unit16>
-      <Unit17>
+      </Unit17>
+      <Unit18>
         <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
         <UnitName Value="Forms"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1823"/>
         <CursorPos X="3" Y="1836"/>
         <UsageCount Value="10"/>
-      </Unit17>
-      <Unit18>
+      </Unit18>
+      <Unit19>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2005"/>
         <CursorPos X="3" Y="2018"/>
         <UsageCount Value="11"/>
-      </Unit18>
-      <Unit19>
+      </Unit19>
+      <Unit20>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\lists.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1006"/>
         <CursorPos X="5" Y="1008"/>
         <UsageCount Value="11"/>
-      </Unit19>
-      <Unit20>
+      </Unit20>
+      <Unit21>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\intf.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="76"/>
         <CursorPos X="37" Y="81"/>
         <UsageCount Value="11"/>
-      </Unit20>
-      <Unit21>
+      </Unit21>
+      <Unit22>
         <Filename Value="uDBUtils.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="165"/>
         <UsageCount Value="11"/>
-      </Unit21>
+      </Unit22>
     </Units>
-    <JumpHistory Count="13" HistoryIndex="12">
+    <JumpHistory Count="21" HistoryIndex="20">
       <Position1>
         <Filename Value="mpos_bss.ppr"/>
         <Caret Line="14" Column="33"/>
@@ -211,25 +214,57 @@
         <Caret Line="28" Column="19" TopLine="15"/>
       </Position8>
       <Position9>
-        <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
-        <Caret Line="79" Column="20" TopLine="77"/>
-      </Position9>
-      <Position10>
-        <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
-        <Caret Line="163" Column="30" TopLine="154"/>
-      </Position10>
-      <Position11>
-        <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
-        <Caret Line="188" Column="35" TopLine="178"/>
-      </Position11>
-      <Position12>
-        <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
-        <Caret Line="243" Column="10" TopLine="220"/>
-      </Position12>
-      <Position13>
         <Filename Value="mpos_bss.ppr"/>
         <Caret Line="30" Column="29" TopLine="15"/>
+      </Position9>
+      <Position10>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="21" Column="57" TopLine="15"/>
+      </Position10>
+      <Position11>
+        <Filename Value="mpos_bss.ppr"/>
+        <Caret Line="34" Column="16" TopLine="20"/>
+      </Position11>
+      <Position12>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="37" Column="24" TopLine="25"/>
+      </Position12>
+      <Position13>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="222" Column="34" TopLine="211"/>
       </Position13>
+      <Position14>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="37" Column="24" TopLine="23"/>
+      </Position14>
+      <Position15>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="222" Column="34" TopLine="199"/>
+      </Position15>
+      <Position16>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="37" Column="24" TopLine="23"/>
+      </Position16>
+      <Position17>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="222" Column="34" TopLine="214"/>
+      </Position17>
+      <Position18>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="37" Column="24" TopLine="23"/>
+      </Position18>
+      <Position19>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="150" Column="39" TopLine="136"/>
+      </Position19>
+      <Position20>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="222" Column="34" TopLine="199"/>
+      </Position20>
+      <Position21>
+        <Filename Value="uDBImpl.pas"/>
+        <Caret Line="37" Column="24" TopLine="23"/>
+      </Position21>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

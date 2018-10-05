@@ -10,7 +10,7 @@ uses
 
 
 const
-  //日志是最先的，以常量出现
+  //日志应是最先初始化的，以常量出现
   LogPath: string = 'log/';
   LogFileNamePrefix: string = 'mpos_';
   DefaultConfigFileName: string = 'config/mpos.xml';
@@ -19,8 +19,8 @@ const
 
 type
 
-  IPOSSystem = interface(ICMBase)
-    ['{9FC11795-80A7-4CEC-8510-58F1D11161F0}']
+  IAppSystem = interface(ICMBase)
+    ['{81D73F7E-8FBE-4D85-9E58-C787DD18192E}']
     function GetVersion: string;
     function IsTestMode: Boolean;
     function GetStartTime: TDateTime;
