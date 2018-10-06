@@ -137,18 +137,6 @@ type
     ['{7AE370E9-8E70-4BCD-A76B-F7E5185A1709}']
   end;
 
-  { IServletContainer
-        这是一个 servlet 容器接口
-    用于动态配置 servlet 应用时先行放入容器，后继可以依据配置的 code 找到相应的 servlet。
-    由此，也意味着对于一个 servlet 应具有唯一的 code，这个 code 仅仅用于辨别无其他意义。
-  }
-  IServletCollection = interface(ICMBase)
-    ['{04970409-8397-4A99-9BE6-EB46638B66BB}']
-    function AddServlet(const ACode: string; AServlet: IServlet): Boolean;
-    function AddFilter(const ACode: string; AFilter: IFilter): Boolean;
-    function AddListener(const ACode: string; AListener: IListener): Boolean;
-  end;
-
   { TGenericServlet
     //一种与协议无关的servlet
   }
@@ -174,8 +162,20 @@ type
     function GetServletInfo: string;
   end;
 
+  { IServletContainer
+          这是一个 servlet 容器接口
+      用于动态配置 servlet 应用时先行放入容器，后继可以依据配置的 code 找到相应的 servlet。
+      由此，也意味着对于一个 servlet 应具有唯一的 code，这个 code 仅仅用于辨别无其他意义。
+    }
+    IServletContainer = interface(ICMBase)
+      ['{04970409-8397-4A99-9BE6-EB46638B66BB}']
+      function AddServlet(const ACode: string; AServlet: IServlet): Boolean;
+      function AddFilter(const ACode: string; AFilter: IFilter): Boolean;
+      //function AddListener(const ACode: string; AListener: IListener): Boolean;
+    end;
+
 var
-  ServletCollection: IServletCollection = nil;
+  ServletContainer: IServletContainer;
 
 implementation
 
@@ -198,8 +198,8 @@ end;
 procedure TGenericServlet.AfterConstruction;
 begin
   inherited AfterConstruction;
-  if Assigned(ServletCollection) then
-    ServletCollection.AddServlet(Self.FCode, Self);
+  if Assigned(ServletContainer) then
+    ServletContainer.AddServlet(Self.FCode, Self);
 end;
 
 function TGenericServlet.GetInitParameter(const AName: string): string;

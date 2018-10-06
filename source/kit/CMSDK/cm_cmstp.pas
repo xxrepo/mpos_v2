@@ -8,30 +8,26 @@ uses
   Classes, SysUtils,
   cm_interfaces, cm_net,
   cm_parameter, cm_ParameterUtils,
-  cm_servlet, cm_jetty;
+  cm_servlet;
 
 
 type
 
+  { ICMSTPResponse }
   ICMSTPResponse = interface(ICMBase)
     ['{0B1111A0-9270-4A4D-BFED-CEEFE97D344A}']
     function GetContentType: string;
     function GetContent: ICMConstantParameterDataList;
   end;
 
-  ICMSTPService = interface(ICMBase)
-    ['{5B139E17-51B5-44B2-9045-E563EEEBB66B}']
-    function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
-  end;
-
   ICMSTP = interface(ICMBase)
-    ['{43A79E53-A8D0-472C-93B1-3EE0710A7E05}']
-    function AddServlet(const AName: string; AServlet: IServlet): IServletHolder;
+    ['{E3875881-4509-470D-A07F-0185FD4FEA13}']
+    function Post(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
   end;
 
-  //TServletConfig = class
-  //public
-  //  property
+  //ICMSTP = interface(ICMBase)
+  //  ['{43A79E53-A8D0-472C-93B1-3EE0710A7E05}']
+  //  function AddServlet(const AName: string; AServlet: IServlet): IServletHolder;
   //end;
 
 
@@ -53,9 +49,9 @@ type
   }
   TCMSTPURLConnection = class(TURLConnection)
   private
-    class var FCMSTPService: ICMSTPService;
+    class var FCMSTPService: ICMSTP;
   public
-    class property CMSTPService: ICMSTPService write FCMSTPService;
+    class property CMSTPService: ICMSTP write FCMSTPService;
   public
     constructor Create(const AURL: string); override;
     procedure Connect; override;
@@ -104,7 +100,7 @@ begin
   FResponseContent := nil;
   if Assigned(FCMSTPService) then
     begin
-      if FCMSTPService.CMSTP(URL, FRequestParameters, rsp) then
+      if FCMSTPService.Post(URL, FRequestParameters, rsp) then
         begin
           FContentType := rsp.GetContentType;
           FResponseContent := rsp.GetContent;

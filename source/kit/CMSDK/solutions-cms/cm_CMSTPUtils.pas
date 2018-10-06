@@ -15,7 +15,7 @@ type
   { TSimpleCMSTP
     // TODO 后继整理改进
   }
-  TSimpleCMSTP = class(TCMMessageable, IServletCollection, ICMSTPService)
+  TSimpleCMSTP = class(TCMMessageable, IServletContainer, ICMSTP)
   private
     FList: TCMHashInterfaceList<IServlet>;
     FServer: TCMSServer;
@@ -27,10 +27,8 @@ type
   public
     function AddServlet(const ACode: string; AServlet: IServlet): Boolean;
     function AddFilter(const ACode: string; AFilter: IFilter): Boolean;
-    function AddListener(const ACode: string; AListener: IListener): Boolean;
   public
-    function CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
-    //function AddServlet(const AName: string; AServlet: IServlet): IServletHolder;
+    function Post(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
   end;
 
 
@@ -116,12 +114,7 @@ begin
   Result := False;
 end;
 
-function TSimpleCMSTP.AddListener(const ACode: string; AListener: IListener): Boolean;
-begin
-  Result := False;
-end;
-
-function TSimpleCMSTP.CMSTP(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
+function TSimpleCMSTP.Post(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
 begin
   Result := False;
   if not Assigned(FServer) then

@@ -80,3 +80,4 @@ __recovery/
 *.psd
 lib/
 *.log
+backups/
