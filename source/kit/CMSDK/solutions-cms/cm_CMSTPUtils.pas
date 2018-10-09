@@ -21,13 +21,14 @@ type
     FServer: TCMSServer;
     FServletContextHandler: TServletContextHandler;
     procedure InitCMSTPService;
+    procedure InjectServlet; //把容器中的 Servlet 注入
   public
     constructor Create;
     destructor Destroy; override;
-  public
+  public //IServletContainer
     function AddServlet(const ACode: string; AServlet: IServlet): Boolean;
     function AddFilter(const ACode: string; AFilter: IFilter): Boolean;
-  public
+  public //ICMSTP
     function Post(const AURL: string; ARequestParameters: ICMConstantParameterDataList; out TheResponse: ICMSTPResponse): Boolean;
   end;
 
@@ -48,6 +49,8 @@ var
   ish: IServletHolder;
   servletHandler: IServletHandler;
 begin
+  cm_servlet.ServletContainer := Self;
+
   //server
   FServer := TCMSServer.Create;
   //servlet context
@@ -62,18 +65,20 @@ begin
   //sh.SetServlet(s);
   //servletContextHandler.AddServlet(sh);
 
-  ish := FServletContextHandler.AddServlet('S11', s);
-  ish.AddURLPattern('/a/b');
+  //ish := FServletContextHandler.AddServlet('S11', s);
+  //ish.AddURLPattern('/a/b');
 
   s2 := TTestServlet2.Create;
-  sh2 := TServletHolder.Create(FServletContextHandler.GetServletContext);
+  {sh2 := TServletHolder.Create(FServletContextHandler.GetServletContext);
   sh2.SetName('server 222');
   sh2.AddURLPattern('/a/b2');
   sh2.SetServlet(s2);
-  FServletContextHandler.AddServlet(sh2);
+  FServletContextHandler.AddServlet(sh2); }
+
+  InjectServlet;
 
   //-------------------------------------
-  servletHandler := TServletHandler.Create(FServletContextHandler.GetServletContext);;
+  servletHandler := TServletHandler.Create(FServletContextHandler.GetServletContext);
   FServletContextHandler.SetHandler(servletHandler);
   servletHandler.Start;
   //-------------------------------------
@@ -88,6 +93,23 @@ begin
   sh2.Start;
   FServletContextHandler.Start;
   FServer.Start;
+end;
+
+procedure TSimpleCMSTP.InjectServlet;
+var
+  i: Integer;
+  servlet: IServlet;
+  servletHolder: IServletHolder;
+begin
+  for i:=0 to FList.Count-1 do
+    begin
+      servlet := FList[i];
+      servletHolder := TServletHolder.Create(FServletContextHandler.GetServletContext);
+      servletHolder.SetName('servlet ' + IntToStr(i));
+      servletHolder.AddURLPattern('/a/b' + IntToStr(i));
+      servletHolder.SetServlet(servlet);
+      FServletContextHandler.AddServlet(servletHolder);
+    end;
 end;
 
 constructor TSimpleCMSTP.Create;

@@ -1,3 +1,13 @@
+{
+    This file is part of the CM SDK.
+    Copyright (c) 2013-2018 by the ChenMeng studio
+
+    cm_LCLGlobalSet
+
+    This is not a complete unit, for testing
+
+ **********************************************************************}
+
 unit cm_LCLGlobalSet;
 
 {$mode objfpc}{$H+}

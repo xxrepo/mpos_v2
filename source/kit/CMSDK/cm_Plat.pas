@@ -2,15 +2,15 @@
     This file is part of the CM SDK.
     Copyright (c) 2013-2018 by the ChenMeng studio
 
-    cm_LCLPlat
+    cm_Plat
 
     This is not a complete unit, for testing
 
-    此单元用于引用 LCL 的 Application 。
+    此单元用于 Application 。
 
  **********************************************************************}
 
-unit cm_LCLPlat;
+unit cm_Plat;
 
 {$mode objfpc}{$H+}
 
@@ -20,14 +20,17 @@ uses
   Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, Graphics, Grids, Menus, ColorBox, DBGrids, ComCtrls,
   cm_messager,
   cm_InterfaceRegister, cm_InterfaceRegisterImpl,
-  cm_InterfaceLoader, cm_InterfaceLoaderImpl,
-  cm_LCL, cm_LCLUtils, cm_LCLGlobalSet, cm_LCLPropertyReaderWriter;
+  cm_InterfaceLoader, cm_InterfaceLoaderImpl
+  {$IFDEF LCL},
+  cm_LCL, cm_LCLUtils, cm_LCLGlobalSet, cm_LCLPropertyReaderWriter
+  {$ENDIF};
 
 procedure SetDefaultMessageHandler(AHandler: ICMMessageHandler);
-//Suggested that the main form to create then call
-function InitLCLManager: TCMLCLManager;
+{$IFDEF LCL}
+function InitLCLManager: TCMLCLManager; //Suggested that the main form to create then call.
 function InitLCLGenerator: TCMLCLGenerator;
 function InitLCLPropertyReaderWriter: TCMLCLPropertyReaderWriter;
+{$ENDIF}
 
 var
   InterfaceRegister: ICMInterfaceRegister = nil;
@@ -49,6 +52,7 @@ begin
   aLoader.Messager.AddMessageHandler(AHandler);
   cm_messager.TCMMessageManager.DefaultHandler := AHandler;
   InterfaceRegister.PutInterface('默认信息处理器', ICMMessageHandler, AHandler, DefaultMessageHandlerCode);
+  {$IFDEF LCL}
   //以下更换默认信息处理器时，不进行替换了
   if Assigned(aLCLManager) then
     if aLCLManager.Messager.GetMessageHandlerCount = 0 then
@@ -56,8 +60,10 @@ begin
   if Assigned(aLCLGenerator) then
     if aLCLGenerator.Messager.GetMessageHandlerCount = 0 then
       aLCLGenerator.Messager.AddMessageHandler(AHandler);
+  {$ENDIF}
 end;
 
+{$IFDEF LCL}
 function InitLCLManager: TCMLCLManager;
 var
   lclgs: TLCLGlobalSet;
@@ -128,6 +134,7 @@ begin
     end;
   Result := aLCLPropertyReaderWriter;
 end;
+{$ENDIF}
 
 initialization
   aRegister := TCMInterfaceRegister.Create(nil);

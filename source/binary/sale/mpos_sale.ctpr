@@ -67,71 +67,71 @@
         <IsPartOfProject Value="True"/>
       </Unit7>
       <Unit8>
-        <Filename Value="..\..\kit\CMSDK\platform\cm_LCLLibraryPlat.pas"/>
+        <Filename Value="..\..\service\uSale.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit8>
       <Unit9>
-        <Filename Value="..\..\service\uSale.pas"/>
+        <Filename Value="..\..\kit\CMSDK\cm_sysutils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
       <Unit10>
-        <Filename Value="..\..\kit\CMSDK\cm_sysutils.pas"/>
+        <Filename Value="..\..\kit\CMSDK\cm_collections.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit10>
       <Unit11>
-        <Filename Value="..\..\kit\CMSDK\cm_collections.pas"/>
+        <Filename Value="..\..\kit\CMSDK\cm_generics.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit11>
       <Unit12>
-        <Filename Value="..\..\kit\CMSDK\cm_generics.pas"/>
+        <Filename Value="uSaleServicePoxy.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit12>
       <Unit13>
-        <Filename Value="uSaleServicePoxy.pas"/>
+        <Filename Value="uSaleDeal.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit13>
       <Unit14>
-        <Filename Value="uSaleDeal.pas"/>
+        <Filename Value="uSaleExports.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit14>
       <Unit15>
-        <Filename Value="uSaleExports.pas"/>
+        <Filename Value="..\..\service\uSaleBO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit15>
       <Unit16>
-        <Filename Value="..\..\service\uSaleBO.pas"/>
+        <Filename Value="..\..\service\uSaleDTO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit16>
       <Unit17>
-        <Filename Value="..\..\service\uSaleDTO.pas"/>
+        <Filename Value="..\..\persistant\uSalePO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit17>
       <Unit18>
-        <Filename Value="..\..\persistant\uSalePO.pas"/>
+        <Filename Value="..\..\persistant\uSaleDAO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit18>
       <Unit19>
-        <Filename Value="..\..\persistant\uSaleDAO.pas"/>
+        <Filename Value="..\..\public\uDAO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit19>
       <Unit20>
-        <Filename Value="..\..\public\uDAO.pas"/>
+        <Filename Value="uSaleDAOImpl.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit20>
       <Unit21>
-        <Filename Value="uSaleDAOImpl.pas"/>
+        <Filename Value="uSalePersistant.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit21>
       <Unit22>
-        <Filename Value="uSalePersistant.pas"/>
+        <Filename Value="..\..\persistant\uProductPO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit22>
       <Unit23>
-        <Filename Value="..\..\persistant\uProductPO.pas"/>
+        <Filename Value="..\..\public\uApp.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit23>
       <Unit24>
-        <Filename Value="..\..\public\uApp.pas"/>
+        <Filename Value="..\..\kit\CMSDK\cm_LibraryPlat.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit24>
     </Units>
@@ -144,7 +144,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\kit\CMSDK;..\..\public;..\..\kit\CMSDK\platform;..\..\service;..\..\persistant"/>
+      <OtherUnitFiles Value="..\..\kit\CMSDK;..\..\public;..\..\service;..\..\persistant"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>

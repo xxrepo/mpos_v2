@@ -9,7 +9,7 @@ uses
   cm_messager, cm_DOM, cm_XML, cm_dialogs,
   cm_parameter, cm_ParameterUtils,
   cm_theme, cm_ThemeUtils,
-  cm_LCLPlat, cm_LCLUtils,
+  cm_Plat, cm_LCLUtils,
   uApp,
   uSystem, uSystemUtils;
 
@@ -61,7 +61,7 @@ begin
   FThemeUtil := TCMThemeUtil.Create;
   TThemeableManager.GetInstance.AddThemeableSet(FThemeUtil);
   //2、InterfaceRegister、AppSystem
-  uApp.InterfaceRegister := cm_LCLPlat.InterfaceRegister;
+  uApp.InterfaceRegister := cm_Plat.InterfaceRegister;
   FPOSSystem := TPOSSystem.Create;
   InterfaceRegister.PutInterface('IAppSystem', IAppSystem, FPOSSystem);
 end;

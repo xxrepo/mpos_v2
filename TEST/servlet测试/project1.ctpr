@@ -100,39 +100,39 @@
         <IsPartOfProject Value="True"/>
       </Unit14>
       <Unit15>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_cmstp.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\cm_servlet.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit15>
       <Unit16>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_jetty.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\cm_cmstp.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit16>
       <Unit17>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyImpl.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\solutions-cms\cm_servletutils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit17>
       <Unit18>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_servlet.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\solutions-cms\cm_JettyImpl.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit18>
       <Unit19>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_servletutils.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\solutions-cms\cm_JettyCMS.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit19>
       <Unit20>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyCMS.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\solutions-cms\cm_JettyBase.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit20>
       <Unit21>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyBase.inc"/>
+        <Filename Value="..\..\source\kit\CMSDK\solutions-cms\cm_JettyBase.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit21>
       <Unit22>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_JettyBase.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\solutions-cms\cm_jetty.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit22>
       <Unit23>
-        <Filename Value="..\..\source\kit\CMSDK\cmservice\cm_CMSTPUtils.pas"/>
+        <Filename Value="..\..\source\kit\CMSDK\solutions-cms\cm_CMSTPUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit23>
     </Units>
@@ -144,8 +144,8 @@
       <Filename Value="project1"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\source\kit\CMSDK;..\..\source\kit\CMSDK\solutions;..\..\source\kit\CMSDK\platform;..\..\source\kit\CMSDK\cmservice"/>
+      <IncludeFiles Value="$(ProjOutDir);..\..\source\kit\CMSDK\solutions-cms"/>
+      <OtherUnitFiles Value="..\..\source\kit\CMSDK;..\..\source\kit\CMSDK\solutions;..\..\source\kit\CMSDK\platform;..\..\source\kit\CMSDK\solutions-cms"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

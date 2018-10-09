@@ -134,7 +134,7 @@ var
   conn: TCMSTPURLConnection;
 begin
   Messager.Info('----     TCMSTPURLConnection  ----------- ###################################');
-  conn := TCMSTPURLConnection.Create('cmstp://test:80/test/a/b?x=aaa&y=123');
+  conn := TCMSTPURLConnection.Create('cmstp://test:80/test/a/b0?x=aaa&y=123');
   conn.RequestParameters.SetString('msg', 'How are you?');
   conn.Connect;
   println('--re--:' + conn.ResponseContent.Get('test').AsString);

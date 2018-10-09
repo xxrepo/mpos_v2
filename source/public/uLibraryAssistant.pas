@@ -13,7 +13,7 @@ interface
 uses
   Classes, SysUtils,
   cm_InterfaceRegister,
-  cm_LCLLibraryPlat,
+  cm_LibraryPlat,
   uApp;
 
 

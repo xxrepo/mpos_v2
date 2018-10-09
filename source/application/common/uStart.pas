@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms,
   cm_messager, cm_logutils, cm_InterfaceLoader,
-  cm_PlatBase, cm_LCLPlat,
+  cm_PlatBase, cm_Plat,
   uConstant, uSystem, uApp,
   uInitialize,
   uFormLoading,

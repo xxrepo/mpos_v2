@@ -22,6 +22,9 @@ uses
 
 type
 
+  { ILCLGlobalSet
+    // LCL 的一些全局变量获取的声明。
+  }
   ILCLGlobalSet = interface(ICMBase)
     ['{46FAB2C6-A6A4-4E95-9AFC-B37B431166ED}']
     function GetApplication: TApplication;

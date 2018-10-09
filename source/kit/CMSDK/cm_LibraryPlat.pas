@@ -2,13 +2,13 @@
     This file is part of the CM SDK.
     Copyright (c) 2013-2018 by the ChenMeng studio
 
-    cm_LCLLibraryPlat
+    cm_LibraryPlat
 
     This is not a complete unit, for testing
 
  **********************************************************************}
 
-unit cm_LCLLibraryPlat;
+unit cm_LibraryPlat;
 
 {$mode objfpc}{$H+}
 
@@ -17,14 +17,18 @@ interface
 uses
   Classes, SysUtils,
   cm_messager,
-  cm_InterfaceRegister, cm_InterfaceLoader,
-  cm_LCL, cm_LCLGlobalSet;
+  cm_InterfaceRegister, cm_InterfaceLoader
+  {$IFDEF LCL},
+  cm_LCL, cm_LCLGlobalSet
+  {$ENDIF};
 
 procedure SetDefaultMessageHandler(AHandler: ICMMessageHandler);
 //
 procedure InitLibraryPlat(AInterfaceRegister: ICMInterfaceRegister);
 procedure FetchInterfaceRegisterDefaultMessageHandler;
+{$IFDEF LCL}
 procedure AddLCLGlobalSetToLCLManager;
+{$ENDIF}
 
 
 var
@@ -41,7 +45,9 @@ procedure InitLibraryPlat(AInterfaceRegister: ICMInterfaceRegister);
 begin
   InterfaceRegister := AInterfaceRegister;
   FetchInterfaceRegisterDefaultMessageHandler;
+  {$IFDEF LCL}
   AddLCLGlobalSetToLCLManager;
+  {$ENDIF}
 end;
 
 procedure FetchInterfaceRegisterDefaultMessageHandler;
@@ -55,6 +61,7 @@ begin
     end;
 end;
 
+{$IFDEF LCL}
 procedure AddLCLGlobalSetToLCLManager;
 var
   lclManager: ICMLCLManager;
@@ -65,10 +72,7 @@ begin
         lclManager.AddLCLGlobalSet(TLCLGlobalSet.Create);
     end;
 end;
-
-
-initialization
-
+{$ENDIF}
 
 finalization
   InterfaceRegister := nil;
