@@ -69,6 +69,7 @@ begin
   FMessageHandler := TCMLogMessageHandler.Create(FLogger);
   SetDefaultMessageHandler(FMessageHandler);
   Self.Messager.AddMessageHandler(FMessageHandler);
+  DefaultMessagerName := 'MPOS';
   //2、初始化工具
   FInitialize := TPOSInitialize.Create(Application);
   FInitialize.POSSystemObject.Log := FLogger;

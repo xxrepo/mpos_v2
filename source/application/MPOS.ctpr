@@ -35,7 +35,7 @@
         <PackageName Value="adLCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="56">
+    <Units Count="57">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -289,8 +289,11 @@
       <Unit55>
         <Filename Value="..\kit\CMSDK\cm_Plat.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="cm_LibraryPlat"/>
       </Unit55>
+      <Unit56>
+        <Filename Value="..\kit\CMSDK\solutions\cm_PlatInitialize.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit56>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

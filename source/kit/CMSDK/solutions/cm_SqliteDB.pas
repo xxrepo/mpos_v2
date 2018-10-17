@@ -264,7 +264,8 @@ begin
   try
     sqlite3dyn.SQLiteDefaultLibrary := RepairLibraryFileExt(RepairFilePath(ALibraryName), True);
   finally
-    reset;
+    if FIsSet then
+      reset;
   end;
 end;
 

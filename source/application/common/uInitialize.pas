@@ -9,7 +9,7 @@ uses
   cm_messager, cm_DOM, cm_XML, cm_dialogs,
   cm_parameter, cm_ParameterUtils,
   cm_theme, cm_ThemeUtils,
-  cm_Plat, cm_LCLUtils,
+  cm_Plat, cm_PlatInitialize, cm_LCLUtils,
   uApp,
   uSystem, uSystemUtils;
 
@@ -145,19 +145,18 @@ var
 begin
   Result := False;
   //
-  Messager.Info('开始初始化LCL管理器...');
-  manager := InitLCLManager;
+  Messager.Info('开始初始化LCL套件...');
+  cm_PlatInitialize.InitLCLSuite;
+  //
+  manager := cm_PlatInitialize.GetLCLManager;
   Messager.Debug('设置主LCL消息盒...');
   manager.GetMainLCLGlobalSet.SetMessageBoxFunction(@MessageBoxFunc);
   Messager.Debug('设置主错误处理事件...');
   manager.ApplicationExceptionEvent := @HandleExceptionEvent;
   //
-  Messager.Info('开始初始化LCL组件构造工具...');
-  generator := InitLCLGenerator;
+  Messager.Info('开始注册组件:TDateTimePicker...');
+  generator := cm_PlatInitialize.GetLCLGenerator;
   generator.RegisterClass('TDateTimePicker', TDateTimePicker);
-  //
-  Messager.Info('开始初始化LCL属性读写器...');
-  InitLCLPropertyReaderWriter;
   //
   Result := True;
 end;
