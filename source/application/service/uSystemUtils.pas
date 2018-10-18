@@ -42,8 +42,7 @@ type
   end;
 
 
-const
-  VersionStr: string = '0.0.2 alpha';
+
 
 implementation
 

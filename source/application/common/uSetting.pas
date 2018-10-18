@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Controls, Forms, ExtCtrls,
   cm_messager,
-  uApp, uFormMenu;
+  uSystem, uFormMenu;
 
 
 type

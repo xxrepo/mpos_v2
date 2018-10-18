@@ -23,7 +23,7 @@ uses
 type
 
   { ILCLGlobalSet
-    // LCL 的一些全局变量获取的声明。
+    // LCL 常用全局数据获取的声明。
   }
   ILCLGlobalSet = interface(ICMBase)
     ['{46FAB2C6-A6A4-4E95-9AFC-B37B431166ED}']
@@ -44,19 +44,32 @@ type
     procedure SetMessageBoxFunction(AValue: TMessageBoxFunction);
   end;
 
-  ICMLCLManager = interface(ICMBase)
-    ['{93E3B642-2846-4FA3-8F48-61D44CD5ED7C}']
+  { ICMLCLGlobalManager
+    // LCL 全局数据管理器�a�
+  }
+  ICMLCLGlobalManager = interface(ICMBase)
+    ['{38F96762-4D07-4609-8A9F-4EFEDD020A6D}']
     function SetMainLCLGlobalSet(ASet: ILCLGlobalSet): Boolean;
     function GetMainLCLGlobalSet: ILCLGlobalSet;
     function AddLCLGlobalSet(ASet: ILCLGlobalSet): Boolean;
     function RemoveLCLGlobalSet(ASet: ILCLGlobalSet): Boolean;
   end;
 
-  ICMLCLWidgetSet = interface(ICMBase)
-    ['{E5C003F1-3FB7-42EC-AFA7-2D7B42F73876}']
-    procedure ThreadSynchronize(AThread: TThread; AMethod: TThreadMethod);
-    procedure ThreadQueue(AThread: TThread; AMethod: TThreadMethod);
+  { ICMLCLGenerator
+    // LCL 产生器
+    //    在实际中可能并不能直接使用比 TControl 更原始的类型，但其下属性难免不会有更原始的类型，故在
+    //这里也提供后两方法。
+  }
+
+  ICMLCLGenerator = interface(ICMBase)
+    ['{AB724EDE-A5A1-4994-A728-E5B001E6D6C0}']
+    function NewComponent(const AClassName: string; AOwner: TComponent): TComponent;
+    function GetComponentClass(const AClassName: string): TComponentClass;
+    function NewPersistent(const AClassName: string): TPersistent;
+    function GetPersistentClass(const AClassName: string): TPersistentClass;
   end;
+
+  { ICMLCLPropertyReaderWriter }
 
   ICMLCLPropertyReaderWriter = interface(ICMBase)
     ['{DB9F9229-C965-4910-9F70-9B538C0C965F}']
@@ -102,15 +115,14 @@ type
     procedure SetRawInterfaceProp(Instance: TObject; const PropName: string; const Value: Pointer);
   end;
 
-
-  ICMLCLGenerator = interface(ICMBase)
-    ['{AB724EDE-A5A1-4994-A728-E5B001E6D6C0}']
-    function NewComponent(const AClassName: string; AOwner: TComponent): TComponent;
-    function GetComponentClass(const AClassName: string): TComponentClass;
-    function NewPersistent(const AClassName: string): TPersistent;
-    function GetPersistentClass(const AClassName: string): TPersistentClass;
+  { ICMLCLWidgetSet
+    // LCL 工具集。
+  }
+  ICMLCLWidgetSet = interface(ICMBase)
+    ['{E5C003F1-3FB7-42EC-AFA7-2D7B42F73876}']
+    procedure ThreadSynchronize(AThread: TThread; AMethod: TThreadMethod);
+    procedure ThreadQueue(AThread: TThread; AMethod: TThreadMethod);
   end;
-
 
 
 implementation

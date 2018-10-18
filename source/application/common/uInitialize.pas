@@ -6,38 +6,52 @@ interface
 
 uses
   Classes, SysUtils, Forms, Dialogs, DateTimePicker,
-  cm_messager, cm_DOM, cm_XML, cm_dialogs,
+  cm_interfaces, cm_messager, cm_DOM, cm_XML, cm_dialogs, cm_logutils, cm_SimpleMessage,
   cm_parameter, cm_ParameterUtils,
   cm_theme, cm_ThemeUtils,
   cm_Plat, cm_PlatInitialize, cm_LCLUtils,
-  uApp,
-  uSystem, uSystemUtils;
+  uSystem;
 
 type
 
   { TPOSInitialize }
 
-  TPOSInitialize = class(TCMMessageableComponent)
+  TPOSInitialize = class(TCMMessageableComponent, IAppSystem)
   private
-    FPOSSystem: TPOSSystem;
+    FLogger: TCMJointFileLogger;
+    FMessageHandler: ICMMessageHandler;
+    FParameter: ICMParameter;
+    //
     FParameterLoader: ICMParameterLoader;
     FThemeUtil: TCMThemeUtil;
     FExceptMsgBox: TCMMsgBox;
     procedure HandleExceptionEvent(Sender: TObject; E: Exception);
   public
     constructor Create(AOwner: TComponent); override;
+    property MessageHandler: ICMMessageHandler read FMessageHandler;
+
+    //
     property ThemeUtil: TCMThemeUtil read FThemeUtil;
-    property POSSystemObject: TPOSSystem read FPOSSystem;
   public
+    function InitDBMessageHandler: Boolean;
     function InitLCLOperate: Boolean;
     function InitParameter: Boolean;
     function InitTheme: Boolean;
+  public //IAppSystem
+    function GetVersion: string;
+    function IsTestMode: Boolean;
+    function GetStartTime: TDateTime;
+    function GetLoginTime: TDateTime;
+    function GetMsgBox: TCMMsgBox;
+    function GetParameter: ICMParameter;
+    function GetLog: ICMLog;
+    function GetWorkRect: TRect;
   end;
 
 
 implementation
 
-uses uDialogs, LazFileUtils;
+uses LazFileUtils, uDialogs, uConstant;
 
 function MessageBoxFunc(Text, Caption :PChar; Flags: Longint): Integer;
 begin
@@ -51,19 +65,34 @@ end;
 constructor TPOSInitialize.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FPOSSystem := nil;
+  //1、日志
+  FLogger := TCMJointFileLogger.Create(Application);
+  FLogger.FilePath := LogPath;
+  FLogger.FileNamePrefix := LogFileNamePrefix;
+  FLogger.Info('============================================================');
+  //2、默认信息处理
+  FMessageHandler := TCMLogMessageHandler.Create(FLogger);
+  cm_PlatInitialize.InitPlat(FMessageHandler);
+  Self.Messager.AddMessageHandler(FMessageHandler);
+  DefaultMessagerName := 'MPOS';
+  //
   FParameterLoader := nil;
   FExceptMsgBox := nil;
 
-  (*** 是基本的初始化操作，如其他构建所需的一些依赖 ***)
+  //------------------------------------------------------------------------------------------------
+  //以下是其他构建所需的一些依赖
+  //------------------------------------------------------------------------------------------------
 
-  //1、IThemeable 需要集合: IThemeableSet
+  //1、主窗体紧接之后创建，需要IThemeable；IThemeable 需要集合 IThemeableSet。
   FThemeUtil := TCMThemeUtil.Create;
   TThemeableManager.GetInstance.AddThemeableSet(FThemeUtil);
-  //2、InterfaceRegister、AppSystem
-  uApp.InterfaceRegister := cm_Plat.InterfaceRegister;
-  FPOSSystem := TPOSSystem.Create;
-  InterfaceRegister.PutInterface('IAppSystem', IAppSystem, FPOSSystem);
+  //2、AppSystem
+  InterfaceRegister.PutInterface('IAppSystem', IAppSystem, Self);
+end;
+
+function TPOSInitialize.InitDBMessageHandler: Boolean;
+begin
+  Result := InterfaceRegister.PutInterface('数据库信息处理器', ICMMessageHandler, TCMLogMessageHandler.Create(FLogger), DBMessageHandlerCode) >= 0;
 end;
 
 function TPOSInitialize.InitParameter: Boolean;
@@ -78,8 +107,8 @@ var
 begin
   Result := False;
   Messager.Info('开始初始化参数工具...');
-  paramObj := TCMParameter.Create(nil, 'root', '');
-  FPOSSystem.Parameter := paramObj;
+  FParameter := TCMParameter.Create(nil, 'root', '');
+  FParameter := paramObj;
   FParameterLoader := paramObj.ParameterSet as ICMParameterLoader;
   InterfaceRegister.PutInterface('ICMParameterLoader', ICMParameterLoader, FParameterLoader);
   //
@@ -97,7 +126,7 @@ begin
         node.Free;
       end;
     Messager.Info('开始加载配置的XML文件参数...');
-    xmlConfigParameter := FPOSSystem.GetParameter.Get(XMLConfigParameterName);
+    xmlConfigParameter := FParameter.Get(XMLConfigParameterName);
     if not xmlConfigParameter.IsNull then
       begin
         for i:=0 to xmlConfigParameter.ItemCount-1 do
@@ -140,15 +169,15 @@ end;
 
 function TPOSInitialize.InitLCLOperate: Boolean;
 var
-  manager: TCMLCLManager;
+  manager: TCMLCLGlobalManager;
   generator: TCMLCLGenerator;
 begin
   Result := False;
   //
   Messager.Info('开始初始化LCL套件...');
-  cm_PlatInitialize.InitLCLSuite;
+  //cm_PlatInitialize.InitLCLSuite;
   //
-  manager := cm_PlatInitialize.GetLCLManager;
+  manager := cm_PlatInitialize.GetLCLGlobalManager;
   Messager.Debug('设置主LCL消息盒...');
   manager.GetMainLCLGlobalSet.SetMessageBoxFunction(@MessageBoxFunc);
   Messager.Debug('设置主错误处理事件...');
@@ -197,7 +226,7 @@ begin
                 //加入配置参数
                 FParameterLoader.LoadParameters(themesParameter, node.ChildNodes[i]);
                 //构建主题
-                theme := TCMTheme.Create(themeName, themeTitle, FPOSSystem.Parameter.Get('themes').Get(themeName));
+                theme := TCMTheme.Create(themeName, themeTitle, FParameter.Get('themes').Get(themeName));
                 //加入控制器
                 FThemeUtil.AddTheme(theme);
               end;
@@ -207,6 +236,49 @@ begin
   finally
     ns.Free;
   end;
+end;
+
+function TPOSInitialize.GetVersion: string;
+begin
+  Result := VersionStr;
+end;
+
+function TPOSInitialize.IsTestMode: Boolean;
+begin
+  Result := False;
+  {$IFDEF Test}
+  Result := True;
+  {$ENDIF}
+end;
+
+function TPOSInitialize.GetStartTime: TDateTime;
+begin
+
+end;
+
+function TPOSInitialize.GetLoginTime: TDateTime;
+begin
+
+end;
+
+function TPOSInitialize.GetMsgBox: TCMMsgBox;
+begin
+
+end;
+
+function TPOSInitialize.GetParameter: ICMParameter;
+begin
+  Result := FParameter;
+end;
+
+function TPOSInitialize.GetLog: ICMLog;
+begin
+  Result := FLogger;
+end;
+
+function TPOSInitialize.GetWorkRect: TRect;
+begin
+
 end;
 
 

@@ -6,16 +6,8 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_interfaces, cm_parameter, cm_dialogs;
-
-
-const
-  //日志应是最先初始化的，以常量出现
-  LogPath: string = 'log/';
-  LogFileNamePrefix: string = 'mpos_';
-  DefaultConfigFileName: string = 'config/mpos.xml';
-  ThemeConfigFileName: string = 'config/themes.xml';
-  XMLConfigParameterName: string = 'mpos.configFiles';
+  cm_interfaces, cm_parameter, cm_dialogs,
+  cm_Plat;
 
 type
 
@@ -31,8 +23,31 @@ type
     function GetWorkRect: TRect;
   end;
 
+const
+  VersionStr: string = '0.1.0 alpha';
+
+function AppSystem: IAppSystem;
+procedure NilAppSystem;
 
 implementation
+
+var
+  _appSystem: IAppSystem = nil;
+
+function AppSystem: IAppSystem;
+begin
+  Result := nil;
+  if Assigned(_appSystem) then
+    Result := _appSystem
+  else if Assigned(InterfaceRegister) then
+    InterfaceRegister.OutInterface(IAppSystem, Result);
+end;
+
+procedure NilAppSystem;
+begin
+  _appSystem := nil;
+end;
+
 
 end.
 

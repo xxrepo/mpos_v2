@@ -2,13 +2,13 @@
     This file is part of the CM SDK.
     Copyright (c) 2013-2018 by the ChenMeng studio
 
-    cm_PlatBase
+    cm_SimpleMessage
 
     This is not a complete unit, for testing
 
  **********************************************************************}
 
-unit cm_PlatBase;
+unit cm_SimpleMessage;
 
 {$mode objfpc}{$H+}
 

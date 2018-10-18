@@ -7,8 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, Graphics,
   cm_theme, cm_controlutils, cm_parameter, cm_messager,
-  uFrame,
-  uApp;
+  uFrame, uSystem;
 
 type
 

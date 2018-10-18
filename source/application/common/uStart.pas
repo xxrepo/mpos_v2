@@ -6,9 +6,9 @@ interface
 
 uses
   Classes, SysUtils, Forms,
-  cm_messager, cm_logutils, cm_InterfaceLoader,
-  cm_PlatBase, cm_Plat,
-  uConstant, uSystem, uApp,
+  cm_messager, cm_InterfaceLoader,
+  cm_Plat,
+  uConstant, uSystem,
   uInitialize,
   uFormLoading,
   uDB, uDAO;
@@ -19,8 +19,6 @@ type
 
   TPOSStart = class(TCMMessageableComponent)
   private
-    FLogger: TCMJointFileLogger;
-    FMessageHandler: ICMMessageHandler;
     FInitialize: TPOSInitialize;
     FLastPosition: Integer;
     procedure SetLoadMsg(const AMsg: string);
@@ -61,19 +59,11 @@ end;
 
 procedure TPOSStart.Init;
 begin
-  //1、日志和默认信息处理
-  FLogger := TCMJointFileLogger.Create(Application);
-  FLogger.FilePath := LogPath;
-  FLogger.FileNamePrefix := LogFileNamePrefix;
-  FLogger.Info('============================================================');
-  FMessageHandler := TCMLogMessageHandler.Create(FLogger);
-  SetDefaultMessageHandler(FMessageHandler);
-  Self.Messager.AddMessageHandler(FMessageHandler);
-  DefaultMessagerName := 'MPOS';
-  //2、初始化工具
+  //1、初始化工具
   FInitialize := TPOSInitialize.Create(Application);
-  FInitialize.POSSystemObject.Log := FLogger;
-  //3、其他
+  //2、因为自己在初始化之前，所在要设置 MessageHandler;
+  Self.Messager.AddMessageHandler(cm_messager.TCMMessageManager.DefaultHandler);
+  //3、打开加载画面
   Messager.Debug('创建加载画面...');
   LoadingForm := TLoadingForm.Create(Application);
   LoadingForm.Show;
@@ -107,12 +97,12 @@ begin
   //
   {$IFDEF Windows}
   SetLoadMsg('开始记录按键信息...');
-  FInitialize.POSSystemObject.StartRecordKeyDown;
+  //FInitialize.POSSystemObject.StartRecordKeyDown;
   {$ENDIF}
 
   //
   SetLoadMsg('开始数据库信息处理器...');
-  InterfaceRegister.PutInterface('数据库信息处理器', ICMMessageHandler, TCMLogMessageHandler.Create(FLogger), DBMessageHandlerCode);
+  FInitialize.InitDBMessageHandler;
 
   //bin 程序运行需要的依赖文件
   SetLoadMsg('开始加载基本服务...');

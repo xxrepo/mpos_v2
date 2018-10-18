@@ -6,9 +6,8 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_interfaces, cm_messager,
-  uDB, uDBUtils,
-  uApp;
+  cm_interfaces, cm_messager, cm_Plat,
+  uDB, uDBUtils;
 
 type
 
@@ -109,8 +108,8 @@ constructor TPOSDAOFactory.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   if TPOSDAOFactory.FStatement = nil then
-    if Assigned(uApp.InterfaceRegister) then
-      uApp.InterfaceRegister.OutInterface(IPOSStatement, TPOSDAOFactory.FStatement);
+    if Assigned(InterfaceRegister) then
+      InterfaceRegister.OutInterface(IPOSStatement, TPOSDAOFactory.FStatement);
   FDBHelper := TPOSDBHelper.Create(Self);
   FDBHelper.Statement := TPOSDAOFactory.FStatement;
 end;

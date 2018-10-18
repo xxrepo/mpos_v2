@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   LCLType, StdCtrls, ComCtrls,
-  uForm, cm_theme, uConmponents, uApp, uSystem,
+  cm_Plat,
+  uForm, cm_theme, uConmponents, uSystem,
   uTest, uFormService, uFormPopupService,
   uStart, uFormSetting,
   uSetting,

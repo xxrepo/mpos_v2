@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Contnrs, Graphics, Types, Dialogs,
   cm_interfaces,
   uFrame, cm_theme,
-  uApp, uSale, uSaleDTO;
+  uSale, uSaleDTO;
 
 type
 

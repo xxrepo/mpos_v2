@@ -1,13 +1,3 @@
-{
-    This file is part of the CM SDK.
-    Copyright (c) 2013-2018 by the ChenMeng studio
-
-    cm_LCLGlobalSet
-
-    This is not a complete unit, for testing
-
- **********************************************************************}
-
 unit cm_LCLGlobalSet;
 
 {$mode objfpc}{$H+}
@@ -15,16 +5,13 @@ unit cm_LCLGlobalSet;
 interface
 
 uses
-  Classes, SysUtils,
-  Forms, CustApp, InterfaceBase, ActnList, ClipBrd, Controls,
-  cm_interfaces,
-  cm_LCL;
+  Classes, SysUtils, Forms, CustApp, InterfaceBase, ActnList, ClipBrd, Controls,
+  cm_interfaces, cm_LCL;
 
 type
+  { TCMLCLGlobalSet }
 
-  { TLCLGlobalSet }
-
-  TLCLGlobalSet = class(TCMBase, ILCLGlobalSet)
+  TCMLCLGlobalSet = class(TCMBase, ILCLGlobalSet)
   public
     function GetApplication: TApplication;
     function GetCustomApplication: TCustomApplication;
@@ -45,79 +32,79 @@ type
 
 implementation
 
-{ TLCLGlobalSet }
+{ TCMLCLGlobalSet }
 
-function TLCLGlobalSet.GetApplication: TApplication;
+function TCMLCLGlobalSet.GetApplication: TApplication;
 begin
   Result := Forms.Application;
 end;
 
-function TLCLGlobalSet.GetCustomApplication: TCustomApplication;
+function TCMLCLGlobalSet.GetCustomApplication: TCustomApplication;
 begin
   Result := CustApp.CustomApplication;
 end;
 
-function TLCLGlobalSet.GetScreen: TScreen;
+function TCMLCLGlobalSet.GetScreen: TScreen;
 begin
   Result := Forms.Screen;
 end;
 
-function TLCLGlobalSet.GetWidgetSet: TWidgetSet;
+function TCMLCLGlobalSet.GetWidgetSet: TWidgetSet;
 begin
   Result := InterfaceBase.WidgetSet;
 end;
 
-function TLCLGlobalSet.GetApplicationActionComponent: TComponent;
+function TCMLCLGlobalSet.GetApplicationActionComponent: TComponent;
 begin
   Result := ActnList.ApplicationActionComponent;
 end;
 
-function TLCLGlobalSet.GetClipboard: TClipboard;
+function TCMLCLGlobalSet.GetClipboard: TClipboard;
 begin
   Result := ClipBrd.Clipboard;
 end;
 
-function TLCLGlobalSet.GetDragManager: TDragManager;
+function TCMLCLGlobalSet.GetDragManager: TDragManager;
 begin
   Result := Controls.DragManager;
 end;
 
-function TLCLGlobalSet.GetExceptionObject: TExceptObject;
+function TCMLCLGlobalSet.GetExceptionObject: TExceptObject;
 begin
   Result := Forms.ExceptionObject;
 end;
 
-function TLCLGlobalSet.GetMouse: TMouse;
+function TCMLCLGlobalSet.GetMouse: TMouse;
 begin
   Result := Controls.Mouse;
 end;
 
-function TLCLGlobalSet.GetMainThreadID: TThreadID;
+function TCMLCLGlobalSet.GetMainThreadID: TThreadID;
 begin
   Result := Classes.MainThreadID;
 end;
 
-function TLCLGlobalSet.GetGlobalNameSpace: IReadWriteSync;
+function TCMLCLGlobalSet.GetGlobalNameSpace: IReadWriteSync;
 begin
   Result := Classes.GlobalNameSpace;
 end;
 
-function TLCLGlobalSet.GetRequireDerivedFormResource: Boolean;
+function TCMLCLGlobalSet.GetRequireDerivedFormResource: Boolean;
 begin
   Result := Forms.RequireDerivedFormResource;
 end;
 
-procedure TLCLGlobalSet.SetRequireDerivedFormResource(AValue: Boolean);
+procedure TCMLCLGlobalSet.SetRequireDerivedFormResource(AValue: Boolean);
 begin
   Forms.RequireDerivedFormResource := AValue;
 end;
 
-function TLCLGlobalSet.GetMessageBoxFunction: TMessageBoxFunction;
+function TCMLCLGlobalSet.GetMessageBoxFunction: TMessageBoxFunction;
 begin
   Result := Forms.MessageBoxFunction;
 end;
 
-procedure TLCLGlobalSet.SetMessageBoxFunction(AValue: TMessageBoxFunction);
+procedure TCMLCLGlobalSet.SetMessageBoxFunction(AValue: TMessageBoxFunction);
 begin
   Forms.MessageBoxFunction := AValue;
 end;

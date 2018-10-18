@@ -35,7 +35,7 @@
         <PackageName Value="adLCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="57">
+    <Units Count="55">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -96,204 +96,196 @@
         <IsPartOfProject Value="True"/>
       </Unit13>
       <Unit14>
-        <Filename Value="..\kit\CMSDK\cm_LCLGlobalSet.pp"/>
+        <Filename Value="..\kit\CMSDK\cm_logutils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit14>
       <Unit15>
-        <Filename Value="..\kit\CMSDK\cm_logutils.pas"/>
+        <Filename Value="..\kit\CMSDK\cm_messager.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit15>
       <Unit16>
-        <Filename Value="..\kit\CMSDK\cm_messager.pas"/>
+        <Filename Value="..\kit\CMSDK\cm_parameter.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit16>
       <Unit17>
-        <Filename Value="..\kit\CMSDK\cm_parameter.pas"/>
+        <Filename Value="..\kit\CMSDK\cm_sysutils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit17>
       <Unit18>
-        <Filename Value="..\kit\CMSDK\cm_sysutils.pas"/>
+        <Filename Value="..\kit\CMSDK\cm_theme.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit18>
       <Unit19>
-        <Filename Value="..\kit\CMSDK\cm_theme.pas"/>
+        <Filename Value="..\kit\CMSDK\cm_XML.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit19>
       <Unit20>
-        <Filename Value="..\kit\CMSDK\cm_XML.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_InterfaceLoaderImpl.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit20>
       <Unit21>
-        <Filename Value="..\kit\CMSDK\solutions\cm_InterfaceLoaderImpl.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_InterfaceRegisterImpl.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit21>
       <Unit22>
-        <Filename Value="..\kit\CMSDK\solutions\cm_InterfaceRegisterImpl.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_LCLUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit22>
       <Unit23>
-        <Filename Value="..\kit\CMSDK\solutions\cm_LCLUtils.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit23>
       <Unit24>
-        <Filename Value="..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_ThemeUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit24>
       <Unit25>
-        <Filename Value="..\kit\CMSDK\solutions\cm_ThemeUtils.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit25>
-      <Unit26>
         <Filename Value="form\uFormLoading.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="LoadingForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit26>
-      <Unit27>
+      </Unit25>
+      <Unit26>
         <Filename Value="form\uFormMain.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="..\public\uConmponents.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit27>
       <Unit28>
-        <Filename Value="..\public\uConmponents.pas"/>
+        <Filename Value="..\public\uConstant.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit28>
       <Unit29>
-        <Filename Value="..\public\uConstant.pas"/>
+        <Filename Value="..\public\uDialogs.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit29>
       <Unit30>
-        <Filename Value="..\public\uDialogs.pas"/>
+        <Filename Value="..\public\uService.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit30>
       <Unit31>
-        <Filename Value="..\public\uApp.pas"/>
+        <Filename Value="..\public\uSystem.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit31>
       <Unit32>
-        <Filename Value="..\public\uService.pas"/>
+        <Filename Value="common\uInitialize.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit32>
       <Unit33>
-        <Filename Value="..\public\uSystem.pas"/>
+        <Filename Value="common\uStart.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit33>
       <Unit34>
-        <Filename Value="common\uInitialize.pas"/>
+        <Filename Value="service\uSystemUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit34>
       <Unit35>
-        <Filename Value="common\uStart.pas"/>
+        <Filename Value="..\service\uTest.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit35>
       <Unit36>
-        <Filename Value="service\uSystemUtils.pas"/>
+        <Filename Value="..\public\uDB.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit36>
       <Unit37>
-        <Filename Value="..\service\uTest.pas"/>
+        <Filename Value="..\public\uDAO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit37>
       <Unit38>
-        <Filename Value="..\public\uDB.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit38>
-      <Unit39>
-        <Filename Value="..\public\uDAO.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit39>
-      <Unit40>
-        <Filename Value="..\kit\CMSDK\cm_LCLPropertyReaderWriter.pp"/>
-        <IsPartOfProject Value="True"/>
-      </Unit40>
-      <Unit41>
         <Filename Value="..\public\form\uFrame.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="POSFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
-      </Unit41>
-      <Unit42>
+      </Unit38>
+      <Unit39>
         <Filename Value="..\public\form\uFormService.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ServiceForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit42>
-      <Unit43>
+      </Unit39>
+      <Unit40>
         <Filename Value="..\public\form\uFormPopupService.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="PopupServiceForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit43>
-      <Unit44>
+      </Unit40>
+      <Unit41>
         <Filename Value="form\uFormSetting.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SettingForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit44>
-      <Unit45>
+      </Unit41>
+      <Unit42>
         <Filename Value="..\kit\CMSDK\extension\cm_ThemeControls.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit45>
-      <Unit46>
+      </Unit42>
+      <Unit43>
         <Filename Value="..\public\uDBUtils.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit46>
-      <Unit47>
+      </Unit43>
+      <Unit44>
         <Filename Value="..\public\form\uFormMenu.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="MenuForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit47>
-      <Unit48>
+      </Unit44>
+      <Unit45>
         <Filename Value="common\uSetting.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit48>
-      <Unit49>
+      </Unit45>
+      <Unit46>
         <Filename Value="form\uFrameSale.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SaleFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="..\service\uSale.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="..\public\uMenus.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="service\uMenuUtils.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit49>
       <Unit50>
-        <Filename Value="..\service\uSale.pas"/>
+        <Filename Value="..\service\uSaleDTO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit50>
       <Unit51>
-        <Filename Value="..\public\uMenus.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit51>
-      <Unit52>
-        <Filename Value="service\uMenuUtils.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit52>
-      <Unit53>
-        <Filename Value="..\service\uSaleDTO.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit53>
-      <Unit54>
         <Filename Value="form\uFrameNavigator.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="NavigatorFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
-      </Unit54>
-      <Unit55>
+      </Unit51>
+      <Unit52>
         <Filename Value="..\kit\CMSDK\cm_Plat.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit55>
-      <Unit56>
+      </Unit52>
+      <Unit53>
         <Filename Value="..\kit\CMSDK\solutions\cm_PlatInitialize.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit56>
+      </Unit53>
+      <Unit54>
+        <Filename Value="..\kit\CMSDK\cm_LCLGlobalSet.pp"/>
+        <IsPartOfProject Value="True"/>
+      </Unit54>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
