@@ -137,6 +137,7 @@ begin
   {$ENDIF}
   InterfaceRegister.PutInterface('默认接口加载器', ICMInterfaceLoader, ICMInterfaceLoader(aLoader));
   {$IFDEF LCL}
+  //TODO分开初始化
   InitLCLManager;
   InitLCLGenerator;
   InitLCLPropertyReaderWriter;

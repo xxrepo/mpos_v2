@@ -5,25 +5,31 @@ unit uFormLoading;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls,
-  uSystem;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls, ExtCtrls,
+  cm_messager, uSystem;
 
 type
 
   { TLoadingForm }
 
   TLoadingForm = class(TForm)
+    Image1: TImage;
     LabelMsg2: TLabel;
     LabelRight: TLabel;
-    LabelTitle: TLabel;
+    LabelAppName: TLabel;
+    Lab_Version: TLabel;
     LabelMsg: TLabel;
-    ProgressBar: TProgressBar;
+    PanelProgressBar: TPanel;
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
-    { private declarations }
+    FCreateTime: TDateTime;
+    FDev: Double;
+    FLastPosition: Integer;
+    procedure SetProgressBar(APosition: Integer);
   public
-    { public declarations }
-    procedure Step(const AMsg: string; APosition: Integer);
+    procedure SetLoadMsg(const AMsg: string); overload;
+    procedure SetLoadMsg(const AMsg: string; APosition: Integer); overload;
   end;
 
 var
@@ -34,25 +40,59 @@ resourceString
 
 implementation
 
+uses DateUtils, uVersion;
+
 {$R *.frm}
 
 { TLoadingForm }
 
 procedure TLoadingForm.FormCreate(Sender: TObject);
 begin
+  FCreateTime := now;
   if not AppSystem.IsTestMode then
     Self.FormStyle := fsStayOnTop;
-  LabelMsg.Caption := '';
-  LabelMsg2.Caption := '';
+  LabelMsg.Caption := '.';
+  LabelMsg2.Caption := '.';
   LabelRight.Caption := RightStr;
+  Lab_Version.Caption := 'v' + VersionStr;
 end;
 
-procedure TLoadingForm.Step(const AMsg: string; APosition: Integer);
+procedure TLoadingForm.FormShow(Sender: TObject);
 begin
-  ProgressBar.Position := APosition;
+  FLastPosition := 0;
+  PanelProgressBar.Top := LabelMsg.Top + LabelMsg.Height + 2;
+  PanelProgressBar.Width := 0;
+  FDev := (Self.Width - 16) / 100;
+end;
+
+procedure TLoadingForm.SetProgressBar(APosition: Integer);
+begin
+  PanelProgressBar.Width := Round(FDev * APosition);
+end;
+
+procedure TLoadingForm.SetLoadMsg(const AMsg: string);
+begin
+  FLastPosition := FLastPosition + 1;
+  SetLoadMsg(AMsg, FLastPosition);
+end;
+
+procedure TLoadingForm.SetLoadMsg(const AMsg: string; APosition: Integer);
+begin
+  FLastPosition := APosition;
+  SetProgressBar(FLastPosition);
   LabelMsg2.Caption := LabelMsg.Caption;
   LabelMsg.Caption := AMsg;
+  DefaultMessager.Debug('设置加载信息: [pos:%.2d msg:%s]', [FLastPosition, AMsg]);
+  //Sleep(300);
   Application.ProcessMessages;
+  if APosition >= 100 then
+    begin
+      if DateUtils.SecondsBetween(now, FCreateTime) <= 2 then
+        begin
+          Application.ProcessMessages;
+          Sleep(400);
+        end;
+    end;
 end;
 
 end.

@@ -23,8 +23,17 @@ type
     function GetWorkRect: TRect;
   end;
 
-const
-  VersionStr: string = '0.1.0 alpha';
+  ISystemEvent = interface(ICMEvent)
+    ['{BBEE1CF6-5658-45B7-883C-34D04AA050E9}']
+    function GetSystem: IAppSystem;
+  end;
+
+  ISystemListener = interface(ICMListener)
+    ['{F28C402D-EE0B-43C5-A834-0CCA0568B11B}']
+    procedure Loaded(e: ISystemEvent);
+    procedure Logined(e: ISystemEvent);
+    procedure Showed(e: ISystemEvent);
+  end;
 
 function AppSystem: IAppSystem;
 procedure NilAppSystem;
@@ -37,10 +46,9 @@ var
 function AppSystem: IAppSystem;
 begin
   Result := nil;
-  if Assigned(_appSystem) then
-    Result := _appSystem
-  else if Assigned(InterfaceRegister) then
-    InterfaceRegister.OutInterface(IAppSystem, Result);
+  if not Assigned(_appSystem) and Assigned(InterfaceRegister) then
+    InterfaceRegister.OutInterface(IAppSystem, _appSystem);
+  Result := _appSystem;
 end;
 
 procedure NilAppSystem;

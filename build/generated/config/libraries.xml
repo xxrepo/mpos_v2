@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<libraries>
+  <sale filename="lib32/mpos_bss.dll">
+    <test>hello</test>
+  </sale>
+</libraries>

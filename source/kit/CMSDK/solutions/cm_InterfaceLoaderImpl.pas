@@ -166,7 +166,7 @@ procedure TCMInterfaceLoader.LoadByConfig(const AConfigFileName: string);
 var
   xml: TCMDOMNodeStreamer;
   node, libNode, propertyNode: TCMDOMNode;
-  cfgPath, libFileName: string;
+  libFileName: string;
   properties: TStrings;
 begin
   if not FileExistsUTF8(AConfigFileName) then
@@ -192,8 +192,8 @@ begin
     end;
     //
     Messager.Debug('开始加载:%s 配置的库...', [AConfigFileName]);
-    cfgPath := ExtractFilePath(AConfigFileName);
     properties := TStringList.Create;
+    properties.NameValueSeparator := '=';
     try
       libNode := node.FirstChild;
       while Assigned(libNode) do
@@ -205,7 +205,7 @@ begin
             end
           else
             begin
-              libFileName := cfgPath + RepairLibraryFileExt(libFileName, True);
+              libFileName := RepairLibraryFileExt(libFileName, True);
               if FileExistsUTF8(libFileName) then
                 begin
                   properties.Clear;
@@ -213,10 +213,8 @@ begin
                   while Assigned(propertyNode) do
                     begin
                       properties.Add(propertyNode.Name + properties.NameValueSeparator + propertyNode.Text);
-                      //
                       propertyNode := propertyNode.NextSibling;
                     end;
-                  //
                   Self.LoadFile(libFileName, properties);
                 end
               else
@@ -224,12 +222,12 @@ begin
                   Messager.Error('配置中的filename:%s 不存在.', [libFileName]);
                 end
             end;
-          //
           libNode := libNode.NextSibling;
         end;
      finally
        properties.Free;
      end;
+     node.Free;
   finally
     xml.Free;
   end;

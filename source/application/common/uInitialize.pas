@@ -5,12 +5,13 @@ unit uInitialize;
 interface
 
 uses
-  Classes, SysUtils, Forms, Dialogs, DateTimePicker,
-  cm_interfaces, cm_messager, cm_DOM, cm_XML, cm_dialogs, cm_logutils, cm_SimpleMessage,
+  Classes, SysUtils, Controls, Forms, DateTimePicker,
+  cm_interfaces, cm_DOM, cm_XML, cm_dialogs, cm_logutils,
+  cm_messager, cm_SimpleMessage,
   cm_parameter, cm_ParameterUtils,
   cm_theme, cm_ThemeUtils,
   cm_Plat, cm_PlatInitialize, cm_LCLUtils,
-  uSystem;
+  uSystem, uFormLoading;
 
 type
 
@@ -21,22 +22,26 @@ type
     FLogger: TCMJointFileLogger;
     FMessageHandler: ICMMessageHandler;
     FParameter: ICMParameter;
+    FStartTime, FLoginTime: TDateTime;
+    FMsgBox: TCMMsgBox;
+    FWorkRectControl: TControl;
     //
     FParameterLoader: ICMParameterLoader;
     FThemeUtil: TCMThemeUtil;
     FExceptMsgBox: TCMMsgBox;
     procedure HandleExceptionEvent(Sender: TObject; E: Exception);
+    procedure AppKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   public
     constructor Create(AOwner: TComponent); override;
     property MessageHandler: ICMMessageHandler read FMessageHandler;
-
-    //
-    property ThemeUtil: TCMThemeUtil read FThemeUtil;
+    property WorkRectControl: TControl write FWorkRectControl;
+    procedure StartRecordKeyDown;
   public
-    function InitDBMessageHandler: Boolean;
-    function InitLCLOperate: Boolean;
+    function InitHeadmost: Boolean;
     function InitParameter: Boolean;
+    function InitLCLOperate: Boolean;
     function InitTheme: Boolean;
+    function InitDBMessageHandler: Boolean;
   public //IAppSystem
     function GetVersion: string;
     function IsTestMode: Boolean;
@@ -46,15 +51,17 @@ type
     function GetParameter: ICMParameter;
     function GetLog: ICMLog;
     function GetWorkRect: TRect;
+  public
+    procedure Init;
   end;
-
 
 implementation
 
-uses LazFileUtils, uDialogs, uConstant;
+uses LazFileUtils, cm_controlutils, uDialogs, uConstant, uVersion;
 
 function MessageBoxFunc(Text, Caption :PChar; Flags: Longint): Integer;
 begin
+  //TODO 同步问题
   if AppSystem.GetMsgBox.Visible then
     AppSystem.GetMsgBox.Close;
   Result := AppSystem.GetMsgBox.MessageBox(Text, Caption, Flags)
@@ -69,15 +76,17 @@ begin
   FLogger := TCMJointFileLogger.Create(Application);
   FLogger.FilePath := LogPath;
   FLogger.FileNamePrefix := LogFileNamePrefix;
-  FLogger.Info('============================================================');
+  FLogger.Info(Format('=============================================== [%s] ====', [ParamStr(0)]));
   //2、默认信息处理
   FMessageHandler := TCMLogMessageHandler.Create(FLogger);
   cm_PlatInitialize.InitPlat(FMessageHandler);
   Self.Messager.AddMessageHandler(FMessageHandler);
   DefaultMessagerName := 'MPOS';
-  //
+  //3、初始值
   FParameterLoader := nil;
   FExceptMsgBox := nil;
+  FStartTime := now;
+  FWorkRectControl := nil;
 
   //------------------------------------------------------------------------------------------------
   //以下是其他构建所需的一些依赖
@@ -90,9 +99,13 @@ begin
   InterfaceRegister.PutInterface('IAppSystem', IAppSystem, Self);
 end;
 
-function TPOSInitialize.InitDBMessageHandler: Boolean;
+function TPOSInitialize.InitHeadmost: Boolean;
 begin
-  Result := InterfaceRegister.PutInterface('数据库信息处理器', ICMMessageHandler, TCMLogMessageHandler.Create(FLogger), DBMessageHandlerCode) >= 0;
+  Result := False;
+  Messager.Info('开始初始化基础工具...');
+  //这时初始化因为要设置主题
+  FMsgBox := TPOSMsgBox.Create(Application);
+  Result := True;
 end;
 
 function TPOSInitialize.InitParameter: Boolean;
@@ -107,7 +120,7 @@ var
 begin
   Result := False;
   Messager.Info('开始初始化参数工具...');
-  FParameter := TCMParameter.Create(nil, 'root', '');
+  paramObj := TCMParameter.Create(nil, 'root', '');
   FParameter := paramObj;
   FParameterLoader := paramObj.ParameterSet as ICMParameterLoader;
   InterfaceRegister.PutInterface('ICMParameterLoader', ICMParameterLoader, FParameterLoader);
@@ -149,22 +162,7 @@ begin
   finally
     ns.Free;
   end;
-  //
   Result := True;
-end;
-
-//private
-procedure TPOSInitialize.HandleExceptionEvent(Sender: TObject; E: Exception);
-var
-  es: string;
-begin
-  if not Assigned(FExceptMsgBox) then
-    FExceptMsgBox := TPOSMsgBox.Create(Application);
-  if FExceptMsgBox.Visible then
-    FExceptMsgBox.Close;
-  es := '系统错误:' + E.ClassName + #10#10'错误信息:' + E.Message;
-  Messager.Error('FExceptMsgBox行将显示:' + es);
-  FExceptMsgBox.ShowMessage(es);
 end;
 
 function TPOSInitialize.InitLCLOperate: Boolean;
@@ -216,7 +214,6 @@ begin
         //寄存主题控制器
         InterfaceRegister.PutInterface(IThemeableSet, IThemeableSet(FThemeUtil));
         InterfaceRegister.PutInterface(IThemeController, IThemeController(FThemeUtil));
-        //
         for i:=0 to node.ChildCount-1 do
           begin
             if node.ChildNodes[i].Name = 'theme' then
@@ -231,12 +228,60 @@ begin
                 FThemeUtil.AddTheme(theme);
               end;
           end;
+        //
+        LoadingForm.SetLoadMsg('开始设置默认主题...');
+        FThemeUtil.SetFirstTheme;
         Result := True;
       end;
   finally
     ns.Free;
   end;
 end;
+
+function TPOSInitialize.InitDBMessageHandler: Boolean;
+begin
+  Result := InterfaceRegister.PutInterface('数据库信息处理器', ICMMessageHandler, TCMLogMessageHandler.Create(FLogger), DBMessageHandlerCode) >= 0;
+end;
+
+//private
+procedure TPOSInitialize.HandleExceptionEvent(Sender: TObject; E: Exception);
+var
+  es: string;
+begin
+  if not Assigned(FExceptMsgBox) then
+    FExceptMsgBox := TPOSMsgBox.Create(Application);
+  if FExceptMsgBox.Visible then
+    FExceptMsgBox.Close;
+  es := '系统错误:' + E.ClassName + #10#10'错误信息:' + E.Message;
+  Messager.Error('FExceptMsgBox行将显示:' + es);
+  FExceptMsgBox.ShowMessage(es);
+end;
+
+procedure TPOSInitialize.AppKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  ds: string;
+  cri: IInterfaceComponentReference;
+begin
+  ds := 'KeyDown:';
+  if Assigned(Sender) then
+    begin
+      if Supports(Sender, IInterfaceComponentReference, cri) then
+        begin
+          ds := ds + cri.GetComponent.Name;
+        end;
+      ds := ds + '[' + Sender.UnitName + '.' + Sender.ClassName + ']';
+    end;
+  Messager.Debug('%s:%s', [ds, GetKeyCodeCHName(Key)]);
+end;
+
+//仅 Widdows 有效
+procedure TPOSInitialize.StartRecordKeyDown;
+begin
+  Messager.Info('开始记录按键信息...');
+  Application.AddOnKeyDownHandler(@AppKeyDown);
+end;
+
+//---- 以下接口实现 --------------------------------------------------------------------------------
 
 function TPOSInitialize.GetVersion: string;
 begin
@@ -253,17 +298,17 @@ end;
 
 function TPOSInitialize.GetStartTime: TDateTime;
 begin
-
+  Result := FStartTime;
 end;
 
 function TPOSInitialize.GetLoginTime: TDateTime;
 begin
-
+  Result := FLoginTime;
 end;
 
 function TPOSInitialize.GetMsgBox: TCMMsgBox;
 begin
-
+  Result := FMsgBox;
 end;
 
 function TPOSInitialize.GetParameter: ICMParameter;
@@ -278,7 +323,18 @@ end;
 
 function TPOSInitialize.GetWorkRect: TRect;
 begin
+  if Assigned(FWorkRectControl) then
+    Result := FWorkRectControl.BoundsRect
+  else
+    Result := Screen.DesktopRect;
+end;
 
+procedure TPOSInitialize.Init;
+begin
+  Messager.Debug('创建加载画面...');
+  LoadingForm := TLoadingForm.Create(Application);
+  LoadingForm.Show;
+  LoadingForm.SetLoadMsg('系统开始启动...', 2);
 end;
 
 

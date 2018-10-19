@@ -9,7 +9,7 @@ uses
   LCLType, StdCtrls, ComCtrls,
   cm_Plat,
   uForm, cm_theme, uConmponents, uSystem,
-  uTest, uFormService, uFormPopupService,
+  uFormService, uFormPopupService,
   uStart, uFormSetting,
   uSetting,
   uDAO,
@@ -22,7 +22,7 @@ type
 
   TMainForm = class(TPOSForm)
     Panel1: TPanel;
-    Panel2: TPanel;
+    PanelTest: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
     Panel5: TPanel;
@@ -38,7 +38,6 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
-    procedure Panel2Click(Sender: TObject);
     procedure Panel3Click(Sender: TObject);
     procedure Panel4Click(Sender: TObject);
     procedure Panel5Click(Sender: TObject);
@@ -90,8 +89,6 @@ begin
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
-var
-  workRect: TRect;
 begin
   Self.Left := 0;
   Self.Top := 0;
@@ -107,14 +104,12 @@ begin
       //
       if AppSystem.IsTestMode then
         begin
-          Self.Width := 1024;
+          PanelTest.Visible := True;
+          Self.Width := 1024 + Panel1.Width;
           Self.Height := 768;
         end;
-      workRect := PanelWork.BoundsRect;
-
-      workRect.Width := workRect.Width - 12;
-
-      POSStart.SetWorkRect(workRect);
+      //
+      POSStart.SetWorkRectControl(PanelWork);
     end;
   POSStart.AfterLogin;
 
@@ -131,26 +126,6 @@ var
 begin
   InterfaceRegister.OutInterface(IThemeController, ic);
   ic.SwitchTheme('sweet');
-end;
-
-procedure TMainForm.Panel2Click(Sender: TObject);
-var
-  it: ITest;
-begin
-  if InterfaceRegister.OutInterface(ITest, it) then
-    begin
-      try
-        //it.Test;
-        //it.Test2;
-        it.Test3;
-      except
-        on e: Exception do
-          begin
-            ShowMessage('Panel2Click ex:' + e.ClassName);
-            //Application.ShowException(e);
-          end;
-      end;
-    end;
 end;
 
 procedure TMainForm.Panel3Click(Sender: TObject);
@@ -232,7 +207,6 @@ begin
   PanelBottom.Color := ATheme.GetParameter.Get('footer.color').AsInteger;
   //
   Panel1.Color := ATheme.GetParameter.Get('color1').AsInteger;
-  Panel2.Color := ATheme.GetParameter.Get('color2').AsInteger;
   Panel3.Color := ATheme.GetParameter.Get('color3').AsInteger;
   Panel4.Color := ATheme.GetParameter.Get('color4').AsInteger;
 end;

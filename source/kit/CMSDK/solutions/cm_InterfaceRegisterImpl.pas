@@ -276,7 +276,7 @@ begin
     end;
     if Result >= 0 then
       begin
-        Messager.Debug('Put << ' + str);
+        Messager.Custom('Put << ' + str);
       end
     else
       begin
@@ -324,7 +324,7 @@ begin
                 begin
                   Result := aCell.Intf.QueryInterface(AIID, theIntf) = S_OK;
                   if Result then
-                    Messager.Debug('Out >> ' + aCell.ToString)
+                    Messager.Custom('Out >> ' + aCell.ToString)
                   else
                     Messager.Warning('Out failure. Not support ' + aCell.ToString);
                 end
