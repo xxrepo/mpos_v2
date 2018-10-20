@@ -76,7 +76,6 @@ __recovery/
 *.vsd
 *.db
 *.doc
-*.docx
 *.psd
 lib/
 *.log
