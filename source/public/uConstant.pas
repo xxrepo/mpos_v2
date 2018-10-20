@@ -18,6 +18,7 @@ const
   //parameter name
   MessageLevelParameterName: string = 'mpos.messageLevel';
   IcoParameterName: string = 'mpos.resources.ico';
+  LogoParameterName: string = 'mpos.resources.logo';
   XMLConfigParameterName: string = 'mpos.configFiles';
   //
   ModulesPath: string = 'mods' + PathDelim;

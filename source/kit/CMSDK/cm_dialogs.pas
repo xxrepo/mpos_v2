@@ -21,7 +21,16 @@ uses
 
 type
 
-  TCMMsgBar = class(TCustomPanel)
+  IMsgBar = interface
+    ['{4A3D21D0-7929-49B8-B401-1F99F5C14675}']
+    procedure ShowInfo(const Fmt: string; const Args: array of const);
+    procedure ShowError(const Fmt: string; const Args: array of const);
+    procedure ShowMessage(AEventType: TEventType; const AMsg: string); overload;
+  end;
+
+  { TCMMsgBar }
+
+  TCMMsgBar = class(TCustomPanel, IMsgBar)
   private
     FMsgLabel: TLabel;
     FPrefix: string;
@@ -30,10 +39,11 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure ShowInfo(const AMsg: string); overload;
-    procedure ShowInfo(const AFmtMsg: string; const Args: array of const); overload;
+    procedure ShowInfo(const Fmt: string; const Args: array of const); overload;
     procedure ShowError(const AMsg: string); overload;
-    procedure ShowError(const AFmtMsg: string; const Args: array of const); overload;
-    procedure ShowMsg(const AMsg: string; AFontColor, ABKColor: TColor); overload;
+    procedure ShowError(const Fmt: string; const Args: array of const); overload;
+    procedure ShowMessage(AEventType: TEventType; const AMsg: string); overload;
+    procedure ShowMessage(const AMsg: string; AFontColor, ABackgroundColor: TColor); overload;
     property Prefix: string read FPrefix write FPrefix;
   end;
 
@@ -175,7 +185,14 @@ type
     function MessageBox(const AText, ACaption: string; AFlags: Longint=MB_OK): Integer; virtual;
   end;
 
-  TCMMsgBox = class(TCMBaseMsgBox)
+  IMsgBox = interface
+    ['{637ECDF7-86EF-4C4B-83B0-C88BD061ABD5}']
+    procedure ShowMessage(const AMsg: string);
+    function MessageBox(const AText, ACaption: string; AFlags: Longint=MB_OK): Integer;
+    function InputBox(const ACaption, APrompt, ADefault: string): string;
+  end;
+
+  TCMMsgBox = class(TCMBaseMsgBox, IMsgBox)
   private
     FInputEdt: TEdit;
     FInputText: string;
@@ -235,13 +252,6 @@ begin
   Self.Hide;
 end;
 
-procedure TCMMsgBar.ShowMsg(const AMsg: string; AFontColor, ABKColor: TColor);
-begin
-  Self.Color := ABKColor;
-  Self.Font.Color := AFontColor;
-  toShowMsg(AMsg);
-end;
-
 procedure TCMMsgBar.toShowMsg(const AMsg: string);
 var
   extra: Integer;
@@ -266,22 +276,39 @@ end;
 
 procedure TCMMsgBar.ShowInfo(const AMsg: string);
 begin
-  showMsg(AMsg, clYellow, clGreen);
+  ShowMessage(AMsg, clYellow, clGreen);
 end;
 
-procedure TCMMsgBar.ShowInfo(const AFmtMsg: string; const Args: array of const);
+procedure TCMMsgBar.ShowInfo(const Fmt: string; const Args: array of const);
 begin
-  ShowInfo(Format(AFmtMsg, Args));
+  ShowInfo(Format(Fmt, Args));
 end;
 
 procedure TCMMsgBar.ShowError(const AMsg: string);
 begin
-  showMsg(AMsg, clYellow, clRed);
+  ShowMessage(AMsg, clYellow, clRed);
 end;
 
-procedure TCMMsgBar.ShowError(const AFmtMsg: string; const Args: array of const);
+procedure TCMMsgBar.ShowError(const Fmt: string; const Args: array of const);
 begin
-  ShowError(Format(AFmtMsg, Args));
+  ShowError(Format(Fmt, Args));
+end;
+
+procedure TCMMsgBar.ShowMessage(AEventType: TEventType; const AMsg: string);
+begin
+  case AEventType of
+  etInfo: ShowInfo(AMsg);
+  etError: ShowError(AMsg);
+  etWarning: ShowMessage(AMsg, clRed, clYellow);
+  else ShowMessage(AMsg, clBlack, clWhite);
+  end;
+end;
+
+procedure TCMMsgBar.ShowMessage(const AMsg: string; AFontColor, ABackgroundColor: TColor);
+begin
+  Self.Color := ABackgroundColor;
+  Self.Font.Color := AFontColor;
+  toShowMsg(AMsg);
 end;
 
 {TCMBaseMsgBoard}
@@ -936,8 +963,8 @@ function TCMBaseMsgBox.MessageBox(const AText, ACaption: string; AFlags: Longint
 begin
   FMsgBoard.Title := ACaption;
   FMsgBoard.ClearButton;
-  FMsgBoard.ClearMsg;
-  FMsgBoard.AddMsg(AText);
+  if AText <> '' then
+    FMsgBoard.AddMsg(AText);
   //
   if (AFlags and MB_OKCANCEL) = MB_OKCANCEL then
     begin
@@ -1036,6 +1063,7 @@ function TCMMsgBox.InputBox(const ACaption, APrompt, ADefault: string): string;
 begin
   Result := ADefault;
   FInputEdt := TEdit.Create(Self);
+  FInputEdt.Font := FMsgBoard.DefaultMsgFont;
   FInputEdt.Text := ADefault;
   FMsgBoard.AddMsg(APrompt);
   FMsgBoard.RegisterMsgAreaFocusControl(FInputEdt);

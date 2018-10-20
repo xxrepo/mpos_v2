@@ -8,7 +8,7 @@ uses
   {$ENDIF}
   Interfaces, // this includes the adLCL widgetset
   Forms,
-  uFormMain, uStart, uMenus, uMenuUtils, uFrameNavigator, cm_PlatInitialize, cm_LCLGlobalSet, uVersion;
+  uInitialize, uFormMain, uFrameTest;
 
 {$R *.res}
 
@@ -16,9 +16,9 @@ begin
   RequireDerivedFormResource := True;
   Application.Scaled := True;
   Application.Initialize;
-  POSStart.Init;
+  POSInitialize.Init;
   Application.CreateForm(TMainForm, MainForm);
-  POSStart.Start;
+  POSInitialize.Start;
   Application.Run;
 end.
 

@@ -7,28 +7,20 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   LCLType, StdCtrls, ComCtrls,
-  cm_Plat,
-  uForm, cm_theme, uConmponents, uSystem,
-  uFormService, uFormPopupService,
-  uStart, uFormSetting,
-  uSetting,
-  uDAO,
-  uFrameSale, uSale, uSaleDTO,
-  uFrameNavigator;
+  cm_theme, cm_Plat,
+  uForm, uConmponents,
+  uSale, uFrameSale,
+  uFrameNavigator, uFrameTest,
+  uDAO, uSystem, uInitialize;
 
 type
 
   { TMainForm }
 
   TMainForm = class(TPOSForm)
-    Panel1: TPanel;
-    PanelTest: TPanel;
-    Panel3: TPanel;
-    Panel4: TPanel;
-    Panel5: TPanel;
-    Panel6: TPanel;
-    Panel7: TPanel;
     PanelWork: TPanel;
+    PanelTest: TPanel;
+    PanelService: TPanel;
     PanelRightHint: TPanel;
     PanelRight: TPanel;
     PanelClient: TPanel;
@@ -37,18 +29,13 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
-    procedure Panel1Click(Sender: TObject);
-    procedure Panel3Click(Sender: TObject);
-    procedure Panel4Click(Sender: TObject);
-    procedure Panel5Click(Sender: TObject);
-    procedure Panel6Click(Sender: TObject);
-    procedure Panel7Click(Sender: TObject);
     procedure PanelRightHintDblClick(Sender: TObject);
   private
     FPOSTitlePanel: TPOSTitlePanel;
     FHasSet: Boolean;
     FSaleFrame: TSaleFrame;
     FNavigatorFrame: TNavigatorFrame;
+    FTestFrame: TTestFrame;
   public
     procedure SetTheme(ATheme: ITheme); override;
   end;
@@ -57,6 +44,8 @@ var
   MainForm: TMainForm;
 
 implementation
+
+uses uConstant;
 
 {$R *.frm}
 
@@ -73,13 +62,15 @@ begin
   FSaleFrame := TSaleFrame.Create(Self);
   FSaleFrame.Parent := PanelClient;
   FSaleFrame.Align := alClient;
-
   InterfaceRegister.PutInterface('ISaleBoard', ISaleBoard, FSaleFrame);
-
   //
   FNavigatorFrame := TNavigatorFrame.Create(Self);
   FNavigatorFrame.Parent := PanelRight;
   FNavigatorFrame.Align := alClient;
+  //
+  FTestFrame := TTestFrame.Create(Self);
+  FTestFrame.Parent := PanelTest;
+  FTestFrame.Align := alClient;
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -98,97 +89,23 @@ begin
         begin
           FPOSTitlePanel.SetTitle('');
           FPOSTitlePanel.SetVersion('v' + AppSystem.GetVersion);
-          FPOSTitlePanel.SetImage(AppSystem.GetParameter.Get('mpos.resources.logo').AsString);
+          FPOSTitlePanel.SetImage(AppSystem.GetParameter.Get(LogoParameterName).AsString);
           FHasSet := True;
         end;
       //
       if AppSystem.IsTestMode then
         begin
           PanelTest.Visible := True;
-          Self.Width := 1024 + Panel1.Width;
+          PanelTest.Width := 240;
+          Self.Width := 1024 + PanelTest.Width;
           Self.Height := 768;
         end;
       //
-      POSStart.SetWorkRectControl(PanelWork);
+      POSInitialize.WorkRectControl := PanelService;
     end;
-  POSStart.AfterLogin;
-
-
+  POSInitialize.AfterLogin;
   FNavigatorFrame.LoadConfig;
-
-  //test
   PanelRightHint.Width := 12;
-end;
-
-procedure TMainForm.Panel1Click(Sender: TObject);
-var
-  ic: IThemeController;
-begin
-  InterfaceRegister.OutInterface(IThemeController, ic);
-  ic.SwitchTheme('sweet');
-end;
-
-procedure TMainForm.Panel3Click(Sender: TObject);
-var
-  f: TServiceForm;
-begin
-  f := TSettingForm.Create(Self);
-  f.BorderStyle := bsNone;
-  f.BoundsRect := AppSystem.GetWorkRect;
-
-
-
-  f.ShowModal;
-end;
-
-procedure TMainForm.Panel4Click(Sender: TObject);
-var
-  f: TPopupServiceForm;
-begin
-  f := TPopupServiceForm.Create(Self);
-  f.BorderStyle := bsNone;
-  f.Position := poScreenCenter;
-  f.ShowModal;
-end;
-
-procedure TMainForm.Panel5Click(Sender: TObject);
-var
-  s: TPOSSetting;
-begin
-  s := TPOSSetting.Create(Self);
-  s.MenuForm.ShowModal;
-end;
-
-procedure TMainForm.Panel6Click(Sender: TObject);
-var
-  vo: TShowItem;
-  vos: TShowItemList;
-  i: Integer;
-begin
-  vos := TShowItemList.Create(False);
-  for i:=0 to 800 do
-    begin
-      vo := TShowItem.Create;
-      vo.Name := '椰树椰子汁 1000ml/罐';
-      vo.BarCode := '632014412014';
-      vo.Price := 6.98;
-      vo.Quantity := i;
-      vos.Add(vo.UUID, vo);
-    end;
-  FSaleFrame.SetShowItemList(vos);
-  vos.Free;
-end;
-
-procedure TMainForm.Panel7Click(Sender: TObject);
-var
-  vo: TShowItem;
-begin
-  vo := TShowItem.Create;
-  vo.Name := '椰树椰子汁 1000ml/罐';
-  vo.BarCode := '632014412014';
-  vo.Price := 6.98;
-  vo.Quantity := Random(88);
-  FSaleFrame.AddShowItem(vo);
 end;
 
 procedure TMainForm.PanelRightHintDblClick(Sender: TObject);
@@ -205,10 +122,6 @@ begin
   PanelClient.Color := ATheme.GetParameter.Get('panelColor').AsInteger;
   PanelRight.Color := PanelClient.Color;
   PanelBottom.Color := ATheme.GetParameter.Get('footer.color').AsInteger;
-  //
-  Panel1.Color := ATheme.GetParameter.Get('color1').AsInteger;
-  Panel3.Color := ATheme.GetParameter.Get('color3').AsInteger;
-  Panel4.Color := ATheme.GetParameter.Get('color4').AsInteger;
 end;
 
 end.

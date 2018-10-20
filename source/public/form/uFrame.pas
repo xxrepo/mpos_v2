@@ -48,7 +48,8 @@ end;
 procedure TPOSFrame.SetTheme(ATheme: ITheme);
 begin
   FTheme := ATheme;
-  Self.Color := ATheme.GetParameter.Get('boardColor').AsInteger;
+  //应由 frame 的载体决定，下行注释
+  //Self.Color := ATheme.GetParameter.Get('boardColor').AsInteger;
   Self.Font.Size := ATheme.GetParameter.Get('defaultFont').Get('size').AsInteger;
   Self.Font.Name := ATheme.GetParameter.Get('defaultFont').Get('name').AsString;
 end;

@@ -1,0 +1,149 @@
+inherited MainForm: TMainForm
+  Left = 86
+  Height = 448
+  Top = 86
+  Width = 1039
+  BorderStyle = bsNone
+  Caption = 'MainForm'
+  ClientHeight = 448
+  ClientWidth = 1039
+  Color = clWhite
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  OnShow = FormShow
+  Position = poScreenCenter
+  WindowState = wsMaximized
+  object PanelBottom: TPanel[0]
+    Left = 0
+    Height = 30
+    Top = 418
+    Width = 1039
+    Align = alBottom
+    BevelOuter = bvNone
+    Color = 3678006
+    ParentColor = False
+    TabOrder = 0
+  end
+  object PanelTop: TPanel[1]
+    Left = 0
+    Height = 52
+    Top = 0
+    Width = 1039
+    Align = alTop
+    BevelOuter = bvNone
+    Color = 12577023
+    ParentColor = False
+    TabOrder = 1
+  end
+  object PanelWork: TPanel[2]
+    Left = 0
+    Height = 362
+    Top = 54
+    Width = 614
+    Align = alClient
+    BorderSpacing.Top = 2
+    BorderSpacing.Bottom = 2
+    BevelOuter = bvNone
+    ClientHeight = 362
+    ClientWidth = 614
+    TabOrder = 2
+    object PanelRight: TPanel
+      Left = 450
+      Height = 362
+      Top = 0
+      Width = 164
+      Align = alRight
+      BorderSpacing.Left = 2
+      BevelOuter = bvNone
+      ParentColor = False
+      TabOrder = 0
+    end
+    object PanelClient: TPanel
+      Left = 0
+      Height = 362
+      Top = 0
+      Width = 448
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+    end
+  end
+  object PanelRightHint: TPanel[3]
+    Left = 616
+    Height = 366
+    Top = 52
+    Width = 200
+    Align = alRight
+    BorderSpacing.Left = 2
+    BevelOuter = bvNone
+    ClientHeight = 366
+    ClientWidth = 200
+    ParentColor = False
+    TabOrder = 3
+    OnDblClick = PanelRightHintDblClick
+    object Panel1: TPanel
+      Left = 16
+      Height = 40
+      Top = 8
+      Width = 60
+      Caption = 'Panel1'
+      TabOrder = 0
+      OnClick = Panel1Click
+    end
+    object Panel3: TPanel
+      Left = 16
+      Height = 40
+      Top = 56
+      Width = 60
+      Caption = 'Panel3'
+      TabOrder = 1
+      OnClick = Panel3Click
+    end
+    object Panel4: TPanel
+      Left = 88
+      Height = 40
+      Top = 56
+      Width = 60
+      Caption = 'Panel4'
+      TabOrder = 2
+      OnClick = Panel4Click
+    end
+    object Panel5: TPanel
+      Left = 16
+      Height = 50
+      Top = 112
+      Width = 98
+      Caption = 'Panel5'
+      TabOrder = 3
+      OnClick = Panel5Click
+    end
+    object Panel6: TPanel
+      Left = 8
+      Height = 24
+      Top = 216
+      Width = 82
+      Caption = 'Panel6'
+      TabOrder = 4
+      OnClick = Panel6Click
+    end
+    object Panel7: TPanel
+      Left = 8
+      Height = 26
+      Top = 184
+      Width = 82
+      Caption = 'Panel7'
+      TabOrder = 5
+      OnClick = Panel7Click
+    end
+  end
+  object PanelTest: TPanel[4]
+    Left = 816
+    Height = 366
+    Top = 52
+    Width = 223
+    Align = alRight
+    TabOrder = 4
+    Visible = False
+  end
+end

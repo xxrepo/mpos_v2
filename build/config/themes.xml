@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 主题列表，修改时应修改每一个主题的对应位置  -->
+<themes>
+    <!-- 第一个主题  -->
+	<theme name='lavender' title="薰衣草">
+	    <!-- 基本的 -->
+		<boardColor>$ffffff</boardColor>
+		<panelColor>$fbd5dd</panelColor>
+		<defaultFont>
+		    <color>0</color>
+			<size>11</size>
+			<name>宋体</name>
+		</defaultFont>
+
+		<!-- 头 -->
+		<header>
+		    <color>$d88e9c</color>
+			<titleFont>
+				<color>0</color>
+				<size>22</size>
+				<name>黑体</name>
+			</titleFont>
+		</header>
+
+		<!-- 底 -->
+		<footer>
+		    <color>$1f0d1f</color>
+		</footer>
+
+		<!-- 广告 -->
+		<banner/>
+
+		<!-- 销售 -->
+		<sale>
+		    <labelScanColor>$EEA935</labelScanColor>
+		</sale>
+
+		<!-- 右侧导航 -->
+		<navigator>
+			<topColor>$ebc5cd</topColor>
+		    <bottomColor>$ebc5cd</bottomColor>
+		</navigator>		
+	    
+		<!-- 业务窗口 -->
+		<service>
+			<titleColor>$e99fad</titleColor>
+			<titleFont>
+				<color>0</color>
+				<size>14</size>
+				<name>黑体</name>
+			</titleFont>
+			<buttonBarColor>$e99fad</buttonBarColor>
+		</service>
+		
+		<!-- 弹出窗口 -->
+		<popup>
+		    <titleColor>$e99fad</titleColor>
+			<titleFont>
+				<color>0</color>
+				<size>18</size>
+				<name>黑体</name>
+			</titleFont>
+			<backgroundColor>$fbd5dd</backgroundColor>
+			<defaultFont>
+				<color>0</color>
+				<size>12</size>
+				<name>宋体</name>
+			</defaultFont>
+		    <selectedButtonFontColor>$944a58</selectedButtonFontColor>
+		</popup>
+
+		<!-- 其他 -->
+		<color1>$cfc76c</color1>
+		<color2>$748de3</color2>
+		<color3>$e7bf66</color3>
+		<color4>$dddddd</color4>
+	</theme>
+
+	<!-- 第二个主题  -->
+	<theme name='sweet' title="甜蜜">
+	    <!-- 基本的 -->
+		<boardColor>$ffffff</boardColor>
+		<panelColor>$fbd5ed</panelColor>
+		<defaultFont>
+		    <color>0</color>
+			<size>11</size>
+			<name>宋体</name>
+		</defaultFont>
+
+		<!-- 头 -->
+		<header>
+		    <color>$d88eac</color>
+			<titleFont>
+				<color>0</color>
+				<size>22</size>
+				<name>黑体</name>
+			</titleFont>
+		</header>
+
+		<!-- 底 -->
+		<footer>
+		    <color>$1f0d2f</color>
+		</footer>
+
+		<!-- 广告 -->
+		<banner/>
+
+		<!-- 销售 -->
+		<sale>
+		    <labelScanColor>$EEA945</labelScanColor>
+		</sale>
+
+		<!-- 右侧导航 -->
+		<navigator>
+			<topColor>$ebc5dd</topColor>
+		    <bottomColor>$ebc5dd</bottomColor>
+		</navigator>		
+	    
+		<!-- 业务窗口 -->
+		<service>
+			<titleColor>$e99fbd</titleColor>
+			<titleFont>
+				<color>0</color>
+				<size>14</size>
+				<name>黑体</name>
+			</titleFont>
+			<buttonBarColor>$e99fbd</buttonBarColor>
+		</service>
+		
+		<!-- 弹出窗口 -->
+		<popup>
+		    <titleColor>$e99fbd</titleColor>
+			<titleFont>
+				<color>0</color>
+				<size>18</size>
+				<name>黑体</name>
+			</titleFont>
+			<backgroundColor>$fbd5ed</backgroundColor>
+			<defaultFont>
+				<color>0</color>
+				<size>12</size>
+				<name>宋体</name>
+			</defaultFont>
+		    <selectedButtonFontColor>$944a68</selectedButtonFontColor>
+		</popup>
+	</theme>
+</themes>

@@ -72,7 +72,8 @@ end;
 
 procedure TLoadingForm.SetLoadMsg(const AMsg: string);
 begin
-  FLastPosition := FLastPosition + 1;
+  if FLastPosition + 1 > FLastPosition then
+    FLastPosition := FLastPosition + 1;
   SetLoadMsg(AMsg, FLastPosition);
 end;
 
