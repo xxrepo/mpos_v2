@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="13">
+      <Unit0>
+        <Filename Value="mpos_pay.ppr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="7"/>
+        <CursorPos X="24" Y="29"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="..\..\kit\CMSDK\cm_InterfaceLoader.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\..\kit\CMSDK\cm_InterfaceRegister.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\kit\CMSDK\cm_interfaces.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="23"/>
+        <CursorPos X="20" Y="37"/>
+        <UsageCount Value="20"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\..\kit\CMSDK\cm_messager.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="226"/>
+        <CursorPos X="48" Y="240"/>
+        <UsageCount Value="20"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\..\kit\CMSDK\cm_parameter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\..\kit\CMSDK\cm_Plat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\..\kit\CMSDK\cm_sysutils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="5"/>
+        <CursorPos X="40" Y="16"/>
+        <UsageCount Value="20"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="39"/>
+        <CursorPos X="57" Y="35"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="..\..\service\uPay.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="86"/>
+        <CursorPos X="63" Y="101"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="uPayCenter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="150"/>
+        <CursorPos X="55" Y="165"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="uCashPay.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="45"/>
+        <CursorPos X="56" Y="48"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit12>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="34" Column="50" TopLine="10"/>
+      </Position1>
+      <Position2>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="6" Column="38"/>
+      </Position2>
+      <Position3>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="36" Column="6" TopLine="19"/>
+      </Position3>
+      <Position4>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="37" Column="6" TopLine="19"/>
+      </Position4>
+      <Position5>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="38" Column="6" TopLine="19"/>
+      </Position5>
+      <Position6>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="39" Column="6" TopLine="19"/>
+      </Position6>
+      <Position7>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="40" Column="6" TopLine="19"/>
+      </Position7>
+      <Position8>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="45" Column="19" TopLine="28"/>
+      </Position8>
+      <Position9>
+        <Filename Value="uCashPay.pas"/>
+        <Caret Line="36" Column="26" TopLine="21"/>
+      </Position9>
+      <Position10>
+        <Filename Value="uCashPay.pas"/>
+        <Caret Line="16" Column="41" TopLine="5"/>
+      </Position10>
+      <Position11>
+        <Filename Value="uCashPay.pas"/>
+        <Caret Line="19" Column="17" TopLine="5"/>
+      </Position11>
+      <Position12>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="4" Column="75"/>
+      </Position12>
+      <Position13>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="29" Column="76" TopLine="11"/>
+      </Position13>
+      <Position14>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="30" Column="100" TopLine="11"/>
+      </Position14>
+      <Position15>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="31" Column="60" TopLine="11"/>
+      </Position15>
+      <Position16>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="72" Column="36" TopLine="61"/>
+      </Position16>
+      <Position17>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="44" Column="29" TopLine="26"/>
+      </Position17>
+      <Position18>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="67" Column="5" TopLine="54"/>
+      </Position18>
+      <Position19>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="59" Column="37" TopLine="49"/>
+      </Position19>
+      <Position20>
+        <Filename Value="..\..\public\uPayUtils.pas"/>
+        <Caret Line="44" Column="60" TopLine="30"/>
+      </Position20>
+      <Position21>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="111" Column="5" TopLine="90"/>
+      </Position21>
+      <Position22>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="110" Column="20" TopLine="89"/>
+      </Position22>
+      <Position23>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="215" Column="40" TopLine="202"/>
+      </Position23>
+      <Position24>
+        <Filename Value="uCashPay.pas"/>
+        <Caret Line="65" Column="17" TopLine="41"/>
+      </Position24>
+      <Position25>
+        <Filename Value="mpos_pay.ppr"/>
+        <Caret Line="11" Column="42" TopLine="5"/>
+      </Position25>
+      <Position26>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="231" Column="29" TopLine="219"/>
+      </Position26>
+      <Position27>
+        <Filename Value="uCashPay.pas"/>
+        <Caret Line="9" Column="12"/>
+      </Position27>
+      <Position28>
+        <Filename Value="uCashPay.pas"/>
+        <Caret Line="17" Column="27"/>
+      </Position28>
+      <Position29>
+        <Filename Value="uCashPay.pas"/>
+        <Caret Line="11" Column="61"/>
+      </Position29>
+      <Position30>
+        <Filename Value="uPayCenter.pas"/>
+        <Caret Line="229" Column="8" TopLine="218"/>
+      </Position30>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

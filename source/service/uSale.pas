@@ -74,7 +74,7 @@ type
   private
     FHandlers: TInterfaceList;
   protected
-    function DoBeforeHandle(ABill: TSaleBill): Boolean; virtual; abstract;
+    function DoBeforeHandle(ABill: TSaleBill): Boolean; virtual;
     function DoAfterHandle(ABill: TSaleBill): Boolean; virtual;
   public
     constructor Create;
@@ -99,6 +99,11 @@ begin
   inherited Destroy;
 end;
 
+function TSaleHandler.DoBeforeHandle(ABill: TSaleBill): Boolean;
+begin
+  Result := True;
+end;
+
 function TSaleHandler.DoAfterHandle(ABill: TSaleBill): Boolean;
 begin
   Result := True;
@@ -109,6 +114,7 @@ var
   i: Integer;
 begin
   Result := DoBeforeHandle(ABill);
+
   for i:=0 to FHandlers.Count-1 do
     begin
       Result := ISaleHandler(FHandlers[i]).Handle(ABill) and Result;

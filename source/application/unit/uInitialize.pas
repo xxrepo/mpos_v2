@@ -24,19 +24,26 @@ type
     FMessageHandler: ICMMessageHandler;
     FParameter: ICMParameter;
     FStartTime, FLoginTime: TDateTime;
+    FMsgBar: ICMMsgBar;
     FMsgBox: TCMMsgBox;
-    FWorkRectControl: TControl;
+    FWorkRectControl, FServiceRectControl: TControl;
+    FSystemListenerList: TInterfaceList;
     //
     FParameterLoader: ICMParameterLoader;
     FThemeUtil: TCMThemeUtil;
     FExceptMsgBox: TCMMsgBox;
     procedure HandleExceptionEvent(Sender: TObject; E: Exception);
     procedure AppKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure LibLoading(Sender: TObject; const TheFileName: string);
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     property MessageHandler: ICMMessageHandler read FMessageHandler;
+    property MsgBar: ICMMsgBar write FMsgBar;
     property WorkRectControl: TControl write FWorkRectControl;
+    property ServiceRectControl: TControl write FServiceRectControl;
     procedure StartRecordKeyDown;
+    procedure NotifySystem(const AEventName: string);
   public
     function InitHeadmost: Boolean;
     function InitParameter: Boolean;
@@ -48,14 +55,16 @@ type
     function IsTestMode: Boolean;
     function GetStartTime: TDateTime;
     function GetLoginTime: TDateTime;
-    function GetMsgBox: TCMMsgBox;
     function GetParameter: ICMParameter;
+    function GetMsgBar: ICMMsgBar;
+    function GetMsgBox: ICMMsgBox;
     function GetLog: ICMLog;
     function GetWorkRect: TRect;
+    function GetServiceRect: TRect;
+    procedure AddSystemListener(l: ISystemListener);
   public
     procedure Init;
     procedure Start;
-    procedure AfterLogin;
   end;
 
 var
@@ -63,13 +72,13 @@ var
 
 implementation
 
-uses LazFileUtils, TypInfo, cm_controlutils, uDialogs, uConstant, uVersion;
+uses LazFileUtils, TypInfo, cm_controlutils, uDialogs, uConstant, uVersion, uSystemUtils;
 
 function MessageBoxFunc(Text, Caption :PChar; Flags: Longint): Integer;
 begin
   //TODO 同步问题
-  if AppSystem.GetMsgBox.Visible then
-    AppSystem.GetMsgBox.Close;
+  if POSInitialize.FMsgBox.Visible then
+    POSInitialize.FMsgBox.Close;
   Result := AppSystem.GetMsgBox.MessageBox(Text, Caption, Flags)
 end;
 
@@ -92,7 +101,10 @@ begin
   FParameterLoader := nil;
   FExceptMsgBox := nil;
   FStartTime := now;
+  FMsgBar := nil;
   FWorkRectControl := nil;
+  FServiceRectControl := nil;
+  FSystemListenerList := TInterfaceList.Create;
 
   //------------------------------------------------------------------------------------------------
   //以下是其他构建所需的一些依赖
@@ -103,6 +115,12 @@ begin
   TThemeableManager.GetInstance.AddThemeableSet(FThemeUtil);
   //2、AppSystem
   InterfaceRegister.PutInterface('IAppSystem', IAppSystem, Self);
+end;
+
+destructor TPOSInitialize.Destroy;
+begin
+  FSystemListenerList.Free;
+  inherited Destroy;
 end;
 
 function TPOSInitialize.InitHeadmost: Boolean;
@@ -178,7 +196,7 @@ var
 begin
   Result := False;
   //
-  Messager.Info('开始初始化LCL套件...');
+  //Messager.Info('开始初始化LCL套件...');
   //cm_PlatInitialize.InitLCLSuite;
   //
   manager := cm_PlatInitialize.GetLCLGlobalManager;
@@ -280,11 +298,34 @@ begin
   Messager.Debug('%s:%s', [ds, GetKeyCodeCHName(Key)]);
 end;
 
+procedure TPOSInitialize.LibLoading(Sender: TObject; const TheFileName: string);
+begin
+  LoadingForm.SetLoadMsg(Format('开始加载 %s ...', [TheFileName]));
+end;
+
 //仅 Widdows 有效
 procedure TPOSInitialize.StartRecordKeyDown;
 begin
   Messager.Info('开始记录按键信息...');
   Application.AddOnKeyDownHandler(@AppKeyDown);
+end;
+
+procedure TPOSInitialize.NotifySystem(const AEventName: string);
+var
+  le: TInterfaceListEnumerator;
+  se: ISystemEvent;
+begin
+  le := FSystemListenerList.GetEnumerator;
+  while le.MoveNext do
+    begin
+      se := TSystemEvent.Create(Self, Self);
+      case AEventName of
+      'Loaded': ISystemListener(le.GetCurrent).Loaded(se);
+      'Logined': ISystemListener(le.GetCurrent).Logined(se);
+      'LoggedOut': ISystemListener(le.GetCurrent).LoggedOut(se);
+      'Closing': ISystemListener(le.GetCurrent).Closing(se);
+      end;
+    end;
 end;
 
 //---- 以下接口实现 --------------------------------------------------------------------------------
@@ -312,14 +353,19 @@ begin
   Result := FLoginTime;
 end;
 
-function TPOSInitialize.GetMsgBox: TCMMsgBox;
-begin
-  Result := FMsgBox;
-end;
-
 function TPOSInitialize.GetParameter: ICMParameter;
 begin
   Result := FParameter;
+end;
+
+function TPOSInitialize.GetMsgBar: ICMMsgBar;
+begin
+  Result := FMsgBar;
+end;
+
+function TPOSInitialize.GetMsgBox: ICMMsgBox;
+begin
+  Result := FMsgBox;
 end;
 
 function TPOSInitialize.GetLog: ICMLog;
@@ -333,6 +379,24 @@ begin
     Result := FWorkRectControl.BoundsRect
   else
     Result := Screen.DesktopRect;
+end;
+
+function TPOSInitialize.GetServiceRect: TRect;
+begin
+  if Assigned(FServiceRectControl) then
+    Result := FServiceRectControl.BoundsRect
+  else
+    Result := Screen.DesktopRect;
+end;
+
+procedure TPOSInitialize.AddSystemListener(l: ISystemListener);
+begin
+  if not Assigned(l) then
+    begin
+      Messager.Error('AddSystemListener() 传入的ISystemListener为空！');
+      Exit;
+    end;
+  FSystemListenerList.Add(l);
 end;
 
 procedure TPOSInitialize.Init;
@@ -388,6 +452,7 @@ begin
   //---- 以下加载 ----------------------------------------------------------------------------------
   LoadingForm.SetLoadMsg('开始加载基本服务...', 50);
   loader := nil;
+  cm_PlatInitialize.GetInterfaceLoader.OnLoading := @LibLoading;
   if InterfaceRegister.OutInterface(ICMInterfaceLoader, loader) then
     loader.LoadByConfig(LibrariesConfigFileName);
   //
@@ -395,15 +460,12 @@ begin
   if Assigned(loader) then
     loader.LoadDirAll(ModulesPath);
   //
-  LoadingForm.SetLoadMsg('加载完成,准备显示主操作界面...', 100);
+  LoadingForm.SetLoadMsg('开始加载完成后工作...', 95);
+  Self.NotifySystem('Loaded');
+  LoadingForm.SetLoadMsg('准备显示主操作界面...', 100);
   LoadingForm.Close;
 end;
 
-procedure TPOSInitialize.AfterLogin;
-begin
-  Messager.Info('AfterLogin()...');
-
-end;
 
 initialization
   POSInitialize := TPOSInitialize.Create(Application);

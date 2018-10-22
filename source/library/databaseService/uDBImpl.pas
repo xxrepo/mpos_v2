@@ -47,8 +47,9 @@ type
     constructor Create(AOwner: TComponent); override;
   end;
 
-  { TPOSDBExtensionMethodPoxy }
-
+  { TPOSDBExtensionMethodPoxy
+    // 这里的实现是复制过来的
+  }
   TPOSDBExtensionMethodPoxy = class(TCMMessageableComponent, IPOSDBExtensionMethod)
   private
     //内存库

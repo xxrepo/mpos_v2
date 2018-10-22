@@ -11,17 +11,7 @@ uses
 
 type
 
-  IAppSystem = interface(ICMBase)
-    ['{81D73F7E-8FBE-4D85-9E58-C787DD18192E}']
-    function GetVersion: string;
-    function IsTestMode: Boolean;
-    function GetStartTime: TDateTime;
-    function GetLoginTime: TDateTime;
-    function GetMsgBox: TCMMsgBox;
-    function GetParameter: ICMParameter;
-    function GetLog: ICMLog;
-    function GetWorkRect: TRect;
-  end;
+  IAppSystem = interface;
 
   ISystemEvent = interface(ICMEvent)
     ['{BBEE1CF6-5658-45B7-883C-34D04AA050E9}']
@@ -32,7 +22,23 @@ type
     ['{F28C402D-EE0B-43C5-A834-0CCA0568B11B}']
     procedure Loaded(e: ISystemEvent);
     procedure Logined(e: ISystemEvent);
-    procedure Showed(e: ISystemEvent);
+    procedure LoggedOut(e: ISystemEvent);
+    procedure Closing(e: ISystemEvent);
+  end;
+
+  IAppSystem = interface(ICMBase)
+    ['{85FDDC79-C8E3-4D7E-BCEB-7A0936078239}']
+    function GetVersion: string;
+    function IsTestMode: Boolean;
+    function GetStartTime: TDateTime;
+    function GetLoginTime: TDateTime;
+    function GetParameter: ICMParameter;
+    function GetMsgBar: ICMMsgBar;
+    function GetMsgBox: ICMMsgBox;
+    function GetLog: ICMLog;
+    function GetWorkRect: TRect;
+    function GetServiceRect: TRect;
+    procedure AddSystemListener(l: ISystemListener);
   end;
 
 function AppSystem: IAppSystem;

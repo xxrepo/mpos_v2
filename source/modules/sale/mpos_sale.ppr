@@ -7,8 +7,7 @@ uses
   cthreads,
   {$ENDIF}
   Classes,
-  Interfaces, Forms,
-  cm_InterfaceLoader, cm_InterfaceRegister, uLibraryAssistant,
+  cm_InterfaceLoader, cm_InterfaceRegister, cm_Plat,
   uSaleExports, uProductPO;
 
 function LoadExport(ARegister: ICMInterfaceRegister; const AInfo: ICMLibInfo): Boolean; stdcall;
@@ -16,7 +15,7 @@ var
   eo: TExports;
 begin
   Result := False;
-  if not LibraryInitialize(ARegister) then
+  if not SetInterfaceRegister(ARegister) then
     Exit;
   //
   eo := TExports.Create;
@@ -28,7 +27,8 @@ end;
 
 function UnloadExport(AStatus: Integer): Boolean; stdcall;
 begin
-  Result := LibraryFinalize;
+  InterfaceRegister := nil;
+  Result := True;
 end;
 
 exports

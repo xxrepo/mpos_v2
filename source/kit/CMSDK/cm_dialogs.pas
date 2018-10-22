@@ -21,19 +21,18 @@ uses
 
 type
 
-  IMsgBar = interface
+  ICMMsgBar = interface
     ['{4A3D21D0-7929-49B8-B401-1F99F5C14675}']
-    procedure ShowInfo(const Fmt: string; const Args: array of const);
-    procedure ShowError(const Fmt: string; const Args: array of const);
     procedure ShowMessage(AEventType: TEventType; const AMsg: string); overload;
   end;
 
   { TCMMsgBar }
 
-  TCMMsgBar = class(TCustomPanel, IMsgBar)
+  TCMMsgBar = class(TCustomPanel, ICMMsgBar)
   private
     FMsgLabel: TLabel;
     FPrefix: string;
+    FInherentHeight: Integer;
   protected
     procedure toShowMsg(const AMsg: string); overload; virtual;
   public
@@ -45,6 +44,7 @@ type
     procedure ShowMessage(AEventType: TEventType; const AMsg: string); overload;
     procedure ShowMessage(const AMsg: string; AFontColor, ABackgroundColor: TColor); overload;
     property Prefix: string read FPrefix write FPrefix;
+    property InherentHeight: Integer read FInherentHeight write FInherentHeight;
   end;
 
   TCMMsgButtonPanel = class(TCustomPanel)
@@ -185,14 +185,14 @@ type
     function MessageBox(const AText, ACaption: string; AFlags: Longint=MB_OK): Integer; virtual;
   end;
 
-  IMsgBox = interface
+  ICMMsgBox = interface
     ['{637ECDF7-86EF-4C4B-83B0-C88BD061ABD5}']
     procedure ShowMessage(const AMsg: string);
     function MessageBox(const AText, ACaption: string; AFlags: Longint=MB_OK): Integer;
     function InputBox(const ACaption, APrompt, ADefault: string): string;
   end;
 
-  TCMMsgBox = class(TCMBaseMsgBox, IMsgBox)
+  TCMMsgBox = class(TCMBaseMsgBox, ICMMsgBox)
   private
     FInputEdt: TEdit;
     FInputText: string;
@@ -226,7 +226,8 @@ begin
   FPrefix := ' ';
   if AOwner is TWinControl then
     Self.Parent := TWinControl(AOwner);
-  Self.Height := 20;
+  FInherentHeight := 20;
+  Self.Height := FInherentHeight;
   Self.Align := alBottom;
   Self.Alignment := taLeftJustify;
   Self.BevelInner := bvNone;
@@ -265,8 +266,8 @@ begin
     extra := Self.BevelWidth + Self.BevelWidth
   else
     extra := 0;
-  if FMsgLabel.Height < 20 - extra  then
-    Self.Height := 20 - extra
+  if FMsgLabel.Height < FInherentHeight - extra  then
+    Self.Height := FInherentHeight - extra
   else
     Self.Height := FMsgLabel.Height + extra;
   //

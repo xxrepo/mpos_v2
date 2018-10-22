@@ -29,7 +29,7 @@ ResourceString
   PlatUninitializedStr = 'Platform is not initialized.';
 
 //用于库中设置 InterfaceRegister 使用
-procedure SetInterfaceRegister(AInterfaceRegister: ICMInterfaceRegister);
+function SetInterfaceRegister(AInterfaceRegister: ICMInterfaceRegister): Boolean;
 
 var
   InterfaceRegister: ICMInterfaceRegister = nil;
@@ -54,8 +54,9 @@ begin
 end;
 {$ENDIF}
 
-procedure SetInterfaceRegister(AInterfaceRegister: ICMInterfaceRegister);
+function SetInterfaceRegister(AInterfaceRegister: ICMInterfaceRegister): Boolean;
 begin
+  Result := False;
   if InterfaceRegister = nil then
     begin
       InterfaceRegister := AInterfaceRegister;
@@ -63,6 +64,7 @@ begin
       {$IFDEF LCL}
       RegisterLCLGlobalSet;
       {$ENDIF}
+      Result := True;
     end;
 end;
 

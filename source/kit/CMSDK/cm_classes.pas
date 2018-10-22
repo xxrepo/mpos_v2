@@ -15,7 +15,7 @@ unit cm_classes;
 interface
 
 uses
-  Classes, SysUtils, cm_interfaces;
+  Classes, SysUtils;
 
 type
 
@@ -23,34 +23,8 @@ type
 
   TEventTypeLevel = (etlAll, etlCustom, etlDebug, etlInfo, etlWarning, etlError, etlOff);
 
-  EIllegalArgumentException = class(Exception);
-
-  { TCMEvent }
-
-  TCMEvent = class(TCMBase, ICMEvent)
-  private
-    FSource: TObject;
-  public
-    constructor Create(ASource: TObject);
-    function GetSource: TObject;
-  end;
-
 implementation
 
-
-{ TCMEvent }
-
-constructor TCMEvent.Create(ASource: TObject);
-begin
-  if FSource = nil then
-    raise EIllegalArgumentException.Create('null source');
-  FSource := ASource;
-end;
-
-function TCMEvent.GetSource: TObject;
-begin
-  Result := FSource;
-end;
 
 end.
 

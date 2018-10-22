@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   LCLType, StdCtrls, ComCtrls,
-  cm_theme, cm_Plat,
+  cm_theme, cm_Plat, cm_dialogs,
   uForm, uConmponents,
   uSale, uFrameSale,
   uFrameNavigator, uFrameTest,
@@ -26,12 +26,15 @@ type
     PanelClient: TPanel;
     PanelBottom: TPanel;
     PanelTop: TPanel;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure PanelRightHintDblClick(Sender: TObject);
   private
     FPOSTitlePanel: TPOSTitlePanel;
+    FMsgBar: TCMMsgBar;
     FHasSet: Boolean;
     FSaleFrame: TSaleFrame;
     FNavigatorFrame: TNavigatorFrame;
@@ -57,6 +60,11 @@ begin
   FPOSTitlePanel.Parent := PanelTop;
   FPOSTitlePanel.Align := alTop;
   PanelTop.Height := FPOSTitlePanel.Height;
+  FMsgBar := TCMMsgBar.Create(PanelBottom);
+  FMsgBar.Align := alTop;
+  FMsgBar.InherentHeight := 14;
+  FMsgBar.Font.Size := 10;
+  POSInitialize.MsgBar := FMsgBar;
   FHasSet := False;
   //
   FSaleFrame := TSaleFrame.Create(Self);
@@ -73,10 +81,21 @@ begin
   FTestFrame.Align := alClient;
 end;
 
+procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  POSInitialize.NotifySystem('Closing');
+end;
+
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
+  FMsgBar.Visible := False;
   if Key = 27 then
     Close;
+end;
+
+procedure TMainForm.FormResize(Sender: TObject);
+begin
+  //FMsgBar.Top := pa;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -101,9 +120,11 @@ begin
           Self.Height := 768;
         end;
       //
-      POSInitialize.WorkRectControl := PanelService;
+      POSInitialize.WorkRectControl := PanelWork;
+      POSInitialize.ServiceRectControl := PanelService;
     end;
-  POSInitialize.AfterLogin;
+  //TODO 登陆
+  POSInitialize.NotifySystem('Logined');
   FNavigatorFrame.LoadConfig;
   PanelRightHint.Width := 12;
 end;
@@ -122,6 +143,8 @@ begin
   PanelClient.Color := ATheme.GetParameter.Get('panelColor').AsInteger;
   PanelRight.Color := PanelClient.Color;
   PanelBottom.Color := ATheme.GetParameter.Get('footer.color').AsInteger;
+  if not ATheme.GetParameter.Get('mainForm').IsNull then
+    PanelRight.Width := ATheme.GetParameter.Get('mainForm.rightWidth').AsInteger;
 end;
 
 end.

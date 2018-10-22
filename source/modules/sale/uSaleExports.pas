@@ -56,6 +56,10 @@ begin
   Messager.Debug('开始向销售业务处理器添加持久化处理器...');
   sh.AddHandler(ISaleHandler(TTestSalePersistant.Create));
 
+  //---------------------------
+  Messager.Debug('开始向销售业务处理器添加结算处理器...');
+  sh.AddHandler(ISaleHandler(TTestSalePay.Create));
+
   Messager.Debug('开始向ISaleBillCenter添加销售单据侦听器...');
   sd.AddListener(tp);
 end;

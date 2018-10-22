@@ -49,6 +49,23 @@ type
     function AsPointer: Pointer;
   end;
 
+  { ICMConstantParameter }
+
+  ICMConstantParameter = interface(ICMParameterData)
+    ['{FB384432-0D08-4204-A8D8-775BE67FCBA1}']
+    function Id: Integer;
+    function ParentId: Integer;
+    function Level: Integer;
+    function Name: string;
+    function Clue: string;
+    function ItemCount: Integer;
+    function ItemIndex(const AName: string): Integer;
+    function GetItem(AIndex: Integer): ICMConstantParameter;
+    procedure RemoveItem(const AName: string);
+    procedure RemoveItems;
+    function Get(const AParameterName: string): ICMConstantParameter;
+  end;
+
   { ICMParameter }
 
   ICMParameter = interface(ICMParameterData)

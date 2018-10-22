@@ -1,7 +1,7 @@
 inherited MainForm: TMainForm
-  Left = 180
+  Left = 368
   Height = 448
-  Top = 180
+  Top = 368
   Width = 1024
   BorderStyle = bsNone
   Caption = 'MainForm'
@@ -9,8 +9,10 @@ inherited MainForm: TMainForm
   ClientWidth = 1024
   Color = clWhite
   KeyPreview = True
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
   WindowState = wsMaximized

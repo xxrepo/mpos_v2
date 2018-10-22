@@ -38,6 +38,8 @@ type
     function GetLoadExportAddress: Pointer;
   end;
 
+  TCMInterfaceLoadEvent = procedure(Sender: TObject; const TheFileName: string) of object;
+
   { TCMInterfaceLoader }
 
   TCMInterfaceLoader = class(TCMMessageableComponent, ICMInterfaceLoader)
@@ -45,6 +47,7 @@ type
     FInterfaceRegister: ICMInterfaceRegister;
     FLoadLibraryExportName: string;
     FUnloadLibraryExportName: string;
+    FLoadingEvent: TCMInterfaceLoadEvent;
   protected
     FInfoList: TInterfaceList;
   public
@@ -53,6 +56,7 @@ type
     property InterfaceRegister: ICMInterfaceRegister read FInterfaceRegister write FInterfaceRegister;
     property LoadLibraryExportName: string read FLoadLibraryExportName write FLoadLibraryExportName;
     property UnloadLibraryExportName: string read FUnloadLibraryExportName write FUnloadLibraryExportName;
+    property OnLoading: TCMInterfaceLoadEvent read FLoadingEvent write FLoadingEvent;
   public
     function LoadFile(const AFileName: string; AProperties: TStrings=nil): Boolean;
     procedure LoadByConfig(const AConfigFileName: string);
@@ -105,6 +109,7 @@ begin
   FInterfaceRegister := ARegister;
   FLoadLibraryExportName := DefaultLoadLibraryExportName;
   FUnloadLibraryExportName := DefaultUnloadLibraryExportName;
+  FLoadingEvent := nil;
 end;
 
 destructor TCMInterfaceLoader.Destroy;
@@ -121,6 +126,8 @@ var
   aLibInfo: TCMLibInfo;
 begin
   Result := False;
+  if Assigned(FLoadingEvent) then
+    FLoadingEvent(Self, AFileName);
   if not Assigned(FInterfaceRegister) then
     begin
       Messager.Error('接口寄存器不存在.', [AFileName]);

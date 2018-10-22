@@ -1,0 +1,45 @@
+library mpos_pay;
+
+{$mode objfpc}{$H+}
+
+uses
+  {$IFDEF UNIX}
+  cthreads,
+  {$ENDIF}
+  Classes, //Interfaces,
+  cm_InterfaceLoader, cm_InterfaceRegister, cm_Plat,
+  uPay, uPayCenter, uCashPay;
+
+function LoadExport(ARegister: ICMInterfaceRegister; const AInfo: ICMLibInfo): Boolean; stdcall;
+var
+  payDeal: TPOSPayDeal;
+  ps: IPayService;
+begin
+  Result := False;
+  if not SetInterfaceRegister(ARegister) then
+    Exit;
+  //1、创建处理对象
+  payDeal := TPOSPayDeal.Create;
+  //2、注入支付中心
+  Result := InterfaceRegister.PutInterface('支付中心', IPayCenter, payDeal) >= 0;
+  //3、注入支付业务寄存器
+  Result := (InterfaceRegister.PutInterface('支付业务寄存器', IPayServiceRegister, payDeal) >= 0) and Result;
+  //4、现金支付业务
+  ps := TPOSCashPay.Create;
+  payDeal.AddService(ps);
+  //
+  Result := True;
+end;
+
+function UnloadExport(AStatus: Integer): Boolean; stdcall;
+begin
+  InterfaceRegister := nil;
+  Result := True;
+end;
+
+exports
+  LoadExport, UnloadExport;
+
+begin
+end.
+

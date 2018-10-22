@@ -1,0 +1,929 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="107">
+      <Unit0>
+        <Filename Value="mpos_authentication.ppr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="12"/>
+        <CursorPos X="43" Y="33"/>
+        <UsageCount Value="208"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="..\..\kit\CMSDK\cm_InterfaceLoader.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="208"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\..\kit\CMSDK\cm_InterfaceRegister.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="208"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\kit\CMSDK\cm_interfaces.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="17"/>
+        <CursorPos X="32" Y="24"/>
+        <UsageCount Value="208"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\..\kit\CMSDK\cm_messager.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="183"/>
+        <CursorPos X="44" Y="221"/>
+        <UsageCount Value="208"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\..\public\uConstant.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="42" Y="15"/>
+        <UsageCount Value="208"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\..\public\uLibraryAssistant.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="31" Y="10"/>
+        <UsageCount Value="208"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\..\public\uSystem.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="10"/>
+        <CursorPos X="145" Y="25"/>
+        <UsageCount Value="208"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\..\kit\CMSDK\platform\cm_LCLLibraryPlat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="208"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\..\service\uSale.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="59"/>
+        <CursorPos X="37" Y="75"/>
+        <UsageCount Value="208"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="..\..\kit\CMSDK\cm_sysutils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="22"/>
+        <CursorPos X="16" Y="36"/>
+        <UsageCount Value="218"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\..\kit\CMSDK\cm_collections.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="29" Y="18"/>
+        <UsageCount Value="200"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="..\..\kit\CMSDK\cm_generics.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="7"/>
+        <UsageCount Value="200"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="uExports.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="7"/>
+        <CursorPos X="128" Y="84"/>
+        <UsageCount Value="212"/>
+        <Loaded Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="..\..\service\uSaleBO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="69"/>
+        <CursorPos X="41" Y="73"/>
+        <UsageCount Value="229"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="..\..\service\uSaleDTO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="16"/>
+        <CursorPos X="62" Y="36"/>
+        <UsageCount Value="229"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="..\..\persistant\uSalePO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="34"/>
+        <CursorPos X="14" Y="19"/>
+        <UsageCount Value="229"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="..\..\persistant\uSaleDAO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="42" Y="17"/>
+        <UsageCount Value="228"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="..\..\public\uDAO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="12"/>
+        <CursorPos X="3" Y="25"/>
+        <UsageCount Value="228"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="..\..\persistant\uAuthority.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="16" Y="11"/>
+        <UsageCount Value="200"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="..\..\persistant\uRole.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="115" Y="10"/>
+        <UsageCount Value="200"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="..\..\persistant\uRoleAuthority.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="127" Y="10"/>
+        <UsageCount Value="200"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="..\..\persistant\uRoleDAO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="32" Y="3"/>
+        <UsageCount Value="200"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="..\..\persistant\uRoleUser.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3"/>
+        <CursorPos X="3" Y="22"/>
+        <UsageCount Value="200"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="..\..\persistant\uUser.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="71" Y="16"/>
+        <UsageCount Value="200"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="..\..\persistant\uUserDAO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="12"/>
+        <CursorPos X="64" Y="16"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="uAuthenticationServiceImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="13"/>
+        <CursorPos X="63" Y="27"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="uUserDAOImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="13"/>
+        <CursorPos X="62" Y="27"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="uRoleDAOImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="101" Y="56"/>
+        <UsageCount Value="200"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="..\..\persistant\uRoleUserDAO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="44" Y="21"/>
+        <UsageCount Value="200"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="..\..\persistant\uRoleAuthorityDAO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="36" Y="18"/>
+        <UsageCount Value="200"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="uRoleAuthorityDAOImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="38"/>
+        <CursorPos X="3" Y="18"/>
+        <UsageCount Value="212"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="uRoleUserDAOImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="34" Y="39"/>
+        <UsageCount Value="212"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="..\..\persistant\uAuthorityDAO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="58" Y="11"/>
+        <UsageCount Value="212"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="uAuthorityDAOImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="25" Y="31"/>
+        <UsageCount Value="212"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="142"/>
+        <CursorPos X="113" Y="155"/>
+        <UsageCount Value="211"/>
+        <Bookmarks Count="1">
+          <Item0 Y="478" ID="1"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="..\..\public\uDB.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="51" Y="10"/>
+        <UsageCount Value="211"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="..\..\public\uDBUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="22"/>
+        <CursorPos X="3" Y="22"/>
+        <UsageCount Value="211"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="uDownloadUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="96"/>
+        <CursorPos X="72" Y="111"/>
+        <UsageCount Value="223"/>
+        <Loaded Value="True"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="uTableStructureService.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="12" Y="11"/>
+        <UsageCount Value="227"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="uTableStructureServiceImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="9"/>
+        <CursorPos X="25" Y="16"/>
+        <UsageCount Value="227"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="..\..\public\form\uForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="POSForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="44"/>
+        <UsageCount Value="224"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="..\..\public\form\uFormService.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2"/>
+        <CursorPos X="3" Y="16"/>
+        <UsageCount Value="220"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="..\..\service\uLoginService.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="11"/>
+        <CursorPos X="76" Y="15"/>
+        <UsageCount Value="212"/>
+        <Loaded Value="True"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="uLoginServiceImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="100"/>
+        <CursorPos X="68" Y="119"/>
+        <UsageCount Value="212"/>
+        <Loaded Value="True"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="..\..\service\uPOS.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="9"/>
+        <CursorPos X="67" Y="33"/>
+        <UsageCount Value="136"/>
+        <Loaded Value="True"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="uCompany.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="14"/>
+        <CursorPos X="11" Y="20"/>
+        <UsageCount Value="90"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="uCompanyDAOImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="74"/>
+        <CursorPos X="48" Y="94"/>
+        <UsageCount Value="90"/>
+        <Loaded Value="True"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1390"/>
+        <CursorPos Y="1404"/>
+        <UsageCount Value="38"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="uSupport.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="30"/>
+        <CursorPos X="135" Y="67"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="..\..\public\uMPOS.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="67" Y="12"/>
+        <UsageCount Value="208"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="..\..\service\uDataInitService.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="19" Y="13"/>
+        <UsageCount Value="212"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="uDataInitServiceImpl.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="66" Y="8"/>
+        <UsageCount Value="212"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="..\..\service\uDataSyncService.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="63" Y="19"/>
+        <UsageCount Value="211"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="uDataSync.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="41"/>
+        <CursorPos X="7" Y="27"/>
+        <UsageCount Value="211"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="..\..\persistant\uDataSyncDAO.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="16"/>
+        <UsageCount Value="237"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="uDataSyncDAOImpl.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="26" Y="12"/>
+        <UsageCount Value="235"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="uPOSSync.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="43"/>
+        <CursorPos X="38" Y="46"/>
+        <UsageCount Value="235"/>
+      </Unit57>
+      <Unit58>
+        <Filename Value="..\..\kit\POSDK\uNetUtils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="126"/>
+        <CursorPos X="86" Y="107"/>
+        <UsageCount Value="235"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="..\..\kit\POSDK\uFileUtils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="520"/>
+        <CursorPos X="41" Y="537"/>
+        <UsageCount Value="224"/>
+      </Unit59>
+      <Unit60>
+        <Filename Value="..\..\kit\POSDK\uVersionUtils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="22"/>
+        <CursorPos X="4" Y="38"/>
+        <UsageCount Value="223"/>
+      </Unit60>
+      <Unit61>
+        <Filename Value="..\..\service\uMultiScreenService.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2"/>
+        <CursorPos X="42" Y="13"/>
+        <UsageCount Value="225"/>
+      </Unit61>
+      <Unit62>
+        <Filename Value="uMultiScreenServiceImpl.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="29"/>
+        <UsageCount Value="225"/>
+      </Unit62>
+      <Unit63>
+        <Filename Value="..\..\public\form\uFrameMPlay.pas"/>
+        <ComponentName Value="MPlayFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="38" Y="20"/>
+        <UsageCount Value="214"/>
+      </Unit63>
+      <Unit64>
+        <Filename Value="..\..\kit\CMSDK\cm_calendar.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="17" Y="17"/>
+        <UsageCount Value="213"/>
+      </Unit64>
+      <Unit65>
+        <Filename Value="..\..\kit\POSDK\uTableUtils.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="45" Y="29"/>
+        <UsageCount Value="44"/>
+      </Unit65>
+      <Unit66>
+        <Filename Value="uRegisterInputListener.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="83" Y="9"/>
+        <UsageCount Value="18"/>
+      </Unit66>
+      <Unit67>
+        <Filename Value="uSaleServicePoxy.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="31"/>
+        <CursorPos X="63" Y="27"/>
+        <UsageCount Value="163"/>
+      </Unit67>
+      <Unit68>
+        <Filename Value="uSaleDeal.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="131"/>
+        <CursorPos X="20" Y="183"/>
+        <UsageCount Value="103"/>
+      </Unit68>
+      <Unit69>
+        <Filename Value="uSaleDAOImpl.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="16"/>
+        <CursorPos X="37" Y="17"/>
+        <UsageCount Value="10"/>
+      </Unit69>
+      <Unit70>
+        <Filename Value="uSalePersistant.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="33"/>
+        <CursorPos X="3" Y="16"/>
+        <UsageCount Value="3"/>
+      </Unit70>
+      <Unit71>
+        <Filename Value="..\..\model\uSaleBoardModel.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="14" Y="7"/>
+        <UsageCount Value="192"/>
+      </Unit71>
+      <Unit72>
+        <Filename Value="..\..\model\uSaleModel.pas"/>
+        <UnitName Value="uSaleDealModel"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="20"/>
+        <UsageCount Value="187"/>
+      </Unit72>
+      <Unit73>
+        <Filename Value="uSaleImpl.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="3" Y="268"/>
+        <UsageCount Value="168"/>
+      </Unit73>
+      <Unit74>
+        <Filename Value="uSalePoxy.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="9"/>
+        <CursorPos X="21" Y="8"/>
+        <UsageCount Value="154"/>
+      </Unit74>
+      <Unit75>
+        <Filename Value="uSaleModelUtils.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="11"/>
+        <UsageCount Value="62"/>
+      </Unit75>
+      <Unit76>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-base\src\contnrs.pp"/>
+        <UnitName Value="Contnrs"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="310"/>
+        <CursorPos X="3" Y="295"/>
+        <UsageCount Value="50"/>
+      </Unit76>
+      <Unit77>
+        <Filename Value="..\..\model\uSaleDealModel.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3"/>
+        <CursorPos X="13" Y="7"/>
+        <UsageCount Value="19"/>
+      </Unit77>
+      <Unit78>
+        <Filename Value="..\..\service\uAuthenticationService.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="127" Y="22"/>
+        <UsageCount Value="17"/>
+      </Unit78>
+      <Unit79>
+        <Filename Value="..\..\service\uRegisterService.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="37" Y="15"/>
+        <UsageCount Value="92"/>
+      </Unit79>
+      <Unit80>
+        <Filename Value="..\..\service\uRemoteService.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="36"/>
+        <CursorPos X="3" Y="18"/>
+        <UsageCount Value="51"/>
+      </Unit80>
+      <Unit81>
+        <Filename Value="..\..\service\PosService.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="536"/>
+        <CursorPos X="60" Y="557"/>
+        <UsageCount Value="21"/>
+      </Unit81>
+      <Unit82>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="192"/>
+        <CursorPos X="29" Y="208"/>
+        <UsageCount Value="1"/>
+      </Unit82>
+      <Unit83>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <UnitName Value="Forms"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="370"/>
+        <CursorPos X="3" Y="416"/>
+        <UsageCount Value="54"/>
+      </Unit83>
+      <Unit84>
+        <Filename Value="C:\codetyphon\typhon\lcl\lclplatformdef.pas"/>
+        <UnitName Value="LCLPlatformDef"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="8"/>
+      </Unit84>
+      <Unit85>
+        <Filename Value="C:\codetyphon\typhon\components\pl_Indy\source\IdVers.inc"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="16" Y="18"/>
+        <UsageCount Value="9"/>
+      </Unit85>
+      <Unit86>
+        <Filename Value="..\..\kit\CMSDK\cm_netutils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="40"/>
+        <CursorPos X="3" Y="16"/>
+        <UsageCount Value="8"/>
+      </Unit86>
+      <Unit87>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\systemh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1377"/>
+        <CursorPos X="56" Y="1315"/>
+        <UsageCount Value="7"/>
+      </Unit87>
+      <Unit88>
+        <Filename Value="..\..\..\..\..\MPos.Dev\Components\MPlayer_For_V6.50\mplayerctrl.pas"/>
+        <UnitName Value="MPlayerCtrl"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="204"/>
+        <CursorPos X="3" Y="218"/>
+        <UsageCount Value="22"/>
+      </Unit88>
+      <Unit89>
+        <Filename Value="..\..\kit\CMSDK\cm_LCL.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="69"/>
+        <CursorPos X="7" Y="94"/>
+        <UsageCount Value="23"/>
+      </Unit89>
+      <Unit90>
+        <Filename Value="C:\codetyphon\typhon\lcl\comctrls.pp"/>
+        <UnitName Value="ComCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="559"/>
+        <CursorPos X="62" Y="575"/>
+        <UsageCount Value="56"/>
+      </Unit90>
+      <Unit91>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <UnitName Value="ExtCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1046"/>
+        <CursorPos X="35" Y="1059"/>
+        <UsageCount Value="25"/>
+      </Unit91>
+      <Unit92>
+        <Filename Value="C:\codetyphon\typhon\lcl\controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2045"/>
+        <CursorPos X="21" Y="2058"/>
+        <UsageCount Value="56"/>
+      </Unit92>
+      <Unit93>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\typinfo.pp"/>
+        <UnitName Value="TypInfo"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="854"/>
+        <UsageCount Value="53"/>
+      </Unit93>
+      <Unit94>
+        <Filename Value="C:\codetyphon\typhon\lcl\lcltype.pp"/>
+        <UnitName Value="LCLType"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="130"/>
+        <CursorPos X="64" Y="151"/>
+        <UsageCount Value="39"/>
+      </Unit94>
+      <Unit95>
+        <Filename Value="..\..\application\form\uFormMain.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="119"/>
+        <CursorPos X="55" Y="135"/>
+        <UsageCount Value="24"/>
+      </Unit95>
+      <Unit96>
+        <Filename Value="..\..\kit\CMSDK\cm_parameter.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="40"/>
+        <CursorPos X="3" Y="54"/>
+        <UsageCount Value="9"/>
+      </Unit96>
+      <Unit97>
+        <Filename Value="C:\codetyphon\typhon\components\BaseUtils\lazfileutils.pas"/>
+        <UnitName Value="LazFileUtils"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="8"/>
+      </Unit97>
+      <Unit98>
+        <Filename Value="..\..\kit\CMSDK\cm_XML.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="19"/>
+        <CursorPos X="3" Y="33"/>
+        <UsageCount Value="9"/>
+      </Unit98>
+      <Unit99>
+        <Filename Value="..\..\kit\CMSDK\cm_DOM.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="84"/>
+        <CursorPos X="47" Y="106"/>
+        <UsageCount Value="8"/>
+      </Unit99>
+      <Unit100>
+        <Filename Value="C:\codetyphon\typhon\lcl\stdctrls.pp"/>
+        <UnitName Value="StdCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="215"/>
+        <CursorPos X="14" Y="441"/>
+        <UsageCount Value="19"/>
+      </Unit100>
+      <Unit101>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\customcombobox.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="671"/>
+        <CursorPos X="3" Y="678"/>
+        <UsageCount Value="10"/>
+      </Unit101>
+      <Unit102>
+        <Filename Value="C:\codetyphon\typhon\lcl\widgetset\wsstdctrls.pp"/>
+        <UnitName Value="WSStdCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="81"/>
+        <CursorPos X="3" Y="97"/>
+        <UsageCount Value="8"/>
+      </Unit102>
+      <Unit103>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\objpas.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="21"/>
+        <CursorPos X="8" Y="35"/>
+        <UsageCount Value="19"/>
+      </Unit103>
+      <Unit104>
+        <Filename Value="C:\codetyphon\typhon\components\pl_Generics\source\generics.collections.pas"/>
+        <UnitName Value="Generics.Collections"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="428"/>
+        <CursorPos X="3" Y="442"/>
+        <UsageCount Value="18"/>
+      </Unit104>
+      <Unit105>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="103"/>
+        <CursorPos X="45" Y="116"/>
+        <UsageCount Value="17"/>
+      </Unit105>
+      <Unit106>
+        <Filename Value="..\..\public\uApp.pas"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="9"/>
+        <CursorPos X="10" Y="23"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit106>
+    </Units>
+    <JumpHistory Count="29" HistoryIndex="28">
+      <Position1>
+        <Filename Value="..\..\public\uSystem.pas"/>
+        <Caret Line="25" Column="145" TopLine="10"/>
+      </Position1>
+      <Position2>
+        <Filename Value="uLoginServiceImpl.pas"/>
+        <Caret Line="119" Column="68" TopLine="100"/>
+      </Position2>
+      <Position3>
+        <Filename Value="uExports.pas"/>
+        <Caret Line="58" Column="47" TopLine="64"/>
+      </Position3>
+      <Position4>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="54" Column="27" TopLine="32"/>
+      </Position4>
+      <Position5>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="95" Column="69" TopLine="79"/>
+      </Position5>
+      <Position6>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="42" Column="15" TopLine="30"/>
+      </Position6>
+      <Position7>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="47" Column="27" TopLine="39"/>
+      </Position7>
+      <Position8>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="89" Column="3" TopLine="83"/>
+      </Position8>
+      <Position9>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="47" Column="15" TopLine="34"/>
+      </Position9>
+      <Position10>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="96" Column="148" TopLine="83"/>
+      </Position10>
+      <Position11>
+        <Filename Value="uExports.pas"/>
+        <Caret Line="84" Column="134" TopLine="7"/>
+      </Position11>
+      <Position12>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="97" Column="33" TopLine="83"/>
+      </Position12>
+      <Position13>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="42" Column="15" TopLine="30"/>
+      </Position13>
+      <Position14>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="336" Column="75" TopLine="323"/>
+      </Position14>
+      <Position15>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="272" Column="45" TopLine="257"/>
+      </Position15>
+      <Position16>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="42" Column="15" TopLine="29"/>
+      </Position16>
+      <Position17>
+        <Filename Value="uSupport.pas"/>
+        <Caret Line="57" Column="57" TopLine="42"/>
+      </Position17>
+      <Position18>
+        <Filename Value="uSupport.pas"/>
+        <Caret Line="58" Column="88" TopLine="42"/>
+      </Position18>
+      <Position19>
+        <Filename Value="..\..\service\uPOS.pas"/>
+        <Caret Line="33" Column="34" TopLine="20"/>
+      </Position19>
+      <Position20>
+        <Filename Value="uSupport.pas"/>
+        <Caret Line="50" Column="48" TopLine="38"/>
+      </Position20>
+      <Position21>
+        <Filename Value="uSupport.pas"/>
+        <Caret Line="54" Column="92" TopLine="38"/>
+      </Position21>
+      <Position22>
+        <Filename Value="..\..\service\uPOS.pas"/>
+        <Caret Line="26" Column="8" TopLine="18"/>
+      </Position22>
+      <Position23>
+        <Filename Value="uSupport.pas"/>
+        <Caret Line="56" Column="48" TopLine="38"/>
+      </Position23>
+      <Position24>
+        <Filename Value="..\..\service\uPOS.pas"/>
+        <Caret Line="39" Column="3" TopLine="25"/>
+      </Position24>
+      <Position25>
+        <Filename Value="uSupport.pas"/>
+        <Caret Line="56" Column="34" TopLine="38"/>
+      </Position25>
+      <Position26>
+        <Filename Value="..\..\service\uPOS.pas"/>
+        <Caret Line="43" TopLine="22"/>
+      </Position26>
+      <Position27>
+        <Filename Value="uDownloadUtils.pas"/>
+        <Caret Line="109" Column="11" TopLine="96"/>
+      </Position27>
+      <Position28>
+        <Filename Value="uDownloadUtils.pas"/>
+        <Caret Line="111" Column="72" TopLine="96"/>
+      </Position28>
+      <Position29>
+        <Filename Value="uRegisterServiceImpl.pas"/>
+        <Caret Line="418" Column="72" TopLine="416"/>
+      </Position29>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="1" ActiveMode="default">
+        <Mode0 Name="default">
+          <local>
+            <HostApplicationFilename Value="D:\SourceCode\NewSrc\MPOS\build\generated\MPOS.exe"/>
+          </local>
+        </Mode0>
+      </Modes>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

@@ -1,0 +1,62 @@
+library mpos_ds;
+
+{$mode objfpc}{$H+}
+
+uses
+  {$IFDEF UNIX}
+  cthreads,
+  {$ENDIF}
+  Classes,
+  cm_messager, cm_InterfaceLoader, cm_InterfaceRegister, cm_Plat,
+  cm_DB, cm_SqliteDB,
+  uConstant, uDB, uDBImpl;
+
+function LoadExport(ARegister: ICMInterfaceRegister; const AInfo: ICMLibInfo): Boolean; stdcall;
+var
+  mh: ICMMessageHandler;
+  con: TCMSQLiteConnection;
+  sta: TPOSStatement;
+begin
+  Result := False;
+  if not SetInterfaceRegister(ARegister) then
+    Exit;
+  //1、取出用于数据库的信息处理器
+  if ARegister.OutInterface(ICMMessageHandler, mh, DBMessageHandlerCode) then
+    mh.SetFormatter(TPOSSQLMessageFormatter.Create);
+  //2、创建 Connection
+  con := TCMSQLiteConnection.Create(nil, mh);
+  if AInfo.GetProperties.IndexOfName('DefaultLibrary') >= 0 then
+    con.DefaultLibrary := AInfo.GetProperties.Values['DefaultLibrary']
+  else
+    con.DefaultLibrary := 'lib32/sqlite3.dll';
+  if AInfo.GetProperties.IndexOfName('DatabaseName') >= 0 then
+    con.DatabaseName := AInfo.GetProperties.Values['DatabaseName']
+  else
+    begin
+      DefaultMessager.Error('没有配置数据库名！');
+      con.DatabaseName := 'data/mpos.db';
+    end;
+  con.SetStatementClass(TPOSStatement);
+  ARegister.PutInterface(ICMSQLiteConnection, con);
+  //3、构建一个默认的 Statement
+  sta := TPOSStatement.Create(nil, mh);
+  sta.Connection := con;
+  ARegister.PutInterface(IPOSStatement, IPOSStatement(sta));
+  //4、IPOSDBExtensionMethod
+  ARegister.PutInterface(IPOSDBExtensionMethod, IPOSDBExtensionMethod(sta));
+  //
+  Result := True;
+end;
+
+function UnloadExport(AStatus: Integer): Boolean; stdcall;
+begin
+  InterfaceRegister := nil;
+  Result := True;
+end;
+
+exports
+  LoadExport, UnloadExport;
+
+begin
+end.
+

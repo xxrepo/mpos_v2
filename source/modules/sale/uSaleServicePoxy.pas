@@ -5,10 +5,10 @@ unit uSaleServicePoxy;
 interface
 
 uses
-  Classes, SysUtils, Forms,
-  cm_sysutils, cm_interfaces,
-  uApp,
-  uSale, uSaleBO, uSaleDAO;
+  Classes, SysUtils,
+  cm_sysutils, cm_interfaces, cm_Plat,
+  uSale, uSaleBO, uSaleDAO,
+  uPay, uPayUtils;
 
 type
 
@@ -38,8 +38,49 @@ type
     procedure BillCleared(ABill: TSaleBill);
   end;
 
+  { TTestSalePay }
+
+  TTestSalePay = class(TSaleHandler)
+  private
+    FIsPayed: Boolean;
+    FPC: IPayCenter;
+  protected
+    constructor Create;
+    function DoBeforeHandle(ABill: TSaleBill): Boolean; override;
+    function DoAfterHandle(ABill: TSaleBill): Boolean; override;
+  end;
+
 
 implementation
+
+{ TTestSalePay }
+
+constructor TTestSalePay.Create;
+begin
+  inherited Create;
+  FIsPayed := False;
+  FPC := nil;
+end;
+
+function TTestSalePay.DoBeforeHandle(ABill: TSaleBill): Boolean;
+var
+  res: IPayRequest;
+begin
+  Result := False;
+  if Assigned(FPC) or InterfaceRegister.OutInterface(IPayCenter, FPC) then
+    begin
+      Messager.Info('要支付了哦！！！');
+      res := TGenericPayRequest.Create(ABill.UUID, ABill.SumSettlementAmount);
+      Messager.Info('要支付了哦222！！！');
+      FIsPayed := FPC.Pay(res);
+      Result := True;
+    end;
+end;
+
+function TTestSalePay.DoAfterHandle(ABill: TSaleBill): Boolean;
+begin
+  Result := FIsPayed;
+end;
 
 { TTestSaleService }
 

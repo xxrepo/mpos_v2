@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils,
-  uApp, uSale, uSaleBO, uSalePO,
+  cm_Plat,
+  uSale, uSaleBO, uSalePO,
   uDAO, uSaleDAO;
 
 type

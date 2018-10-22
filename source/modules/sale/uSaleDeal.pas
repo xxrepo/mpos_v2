@@ -12,11 +12,9 @@ unit uSaleDeal;
 interface
 
 uses
-  Classes, SysUtils, Forms, Dialogs,
-  cm_interfaces, cm_messager,
-  uSale,
-  uSaleDTO, uSaleBO,
-  uApp;
+  Classes, SysUtils,
+  cm_interfaces, cm_messager, cm_Plat,
+  uSale, uSaleDTO, uSaleBO;
 
 type
 

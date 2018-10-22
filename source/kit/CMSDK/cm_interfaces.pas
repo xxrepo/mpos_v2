@@ -81,14 +81,29 @@ type
     procedure Error(const AMsg: string; Ex: Exception);
   end;
 
-  { IListener } //A tagging interface that all event listener interfaces must extend.
-
+  { IListener
+    //A  tagging interface that all event listener interfaces must extend.
+  }
   ICMListener = interface(ICMBase)
     ['{E167DECC-876B-4A66-851B-C72415FFB49C}']
   end;
 
+  { ICMEvent
+    // 所有事件状态对象都将从其拓展的根接口。
+  }
   ICMEvent = interface(ICMBase)
     ['{A08AEE7C-6C02-4F1B-8CB3-97C52350D687}']
+    function GetSource: TObject;
+  end;
+
+  { TCMEvent
+    // 所有 Event 在构造时都引用了对象 "source"，在逻辑上认为该对象是最初发生有关 Event 的对象。
+  }
+  TCMEvent = class(TCMBase, ICMEvent)
+  private
+    FSource: TObject;
+  public
+    constructor Create(ASource: TObject); virtual;
     function GetSource: TObject;
   end;
 
@@ -162,6 +177,21 @@ end;
 function TCMBaseComponent.GetImplementorName: string;
 begin
   Result := Self.UnitName + '.' + Self.ClassName;
+end;
+
+{ TCMEvent }
+
+constructor TCMEvent.Create(ASource: TObject);
+begin
+  inherited Create;
+  if ASource = nil then
+    raise EArgumentNilException.Create('nil source');
+  FSource := ASource;
+end;
+
+function TCMEvent.GetSource: TObject;
+begin
+  Result := FSource;
 end;
 
 

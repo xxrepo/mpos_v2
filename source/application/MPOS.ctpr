@@ -246,6 +246,7 @@
         <Filename Value="form\uFrameTest.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="TestFrame"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
       </Unit47>
     </Units>

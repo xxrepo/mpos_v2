@@ -3,6 +3,10 @@
 <themes>
     <!-- 第一个主题  -->
 	<theme name='lavender' title="薰衣草">
+	    <mainForm>
+			<rightWidth>164</rightWidth>
+		</mainForm>
+
 	    <!-- 基本的 -->
 		<boardColor>$ffffff</boardColor>
 		<panelColor>$fbd5dd</panelColor>
@@ -78,12 +82,16 @@
 
 	<!-- 第二个主题  -->
 	<theme name='sweet' title="甜蜜">
+	    <mainForm>
+			<rightWidth>174</rightWidth>
+		</mainForm>
+
 	    <!-- 基本的 -->
 		<boardColor>$ffffff</boardColor>
 		<panelColor>$fbd5ed</panelColor>
 		<defaultFont>
 		    <color>0</color>
-			<size>11</size>
+			<size>12</size>
 			<name>宋体</name>
 		</defaultFont>
 
