@@ -17,11 +17,9 @@ unit cm_SqliteDB;
 interface
 
 uses
-  Classes, SysUtils,
-  Sqlite3Conn, sqlite3dyn, //Sqlite3DS,
-  db, sqldb, syncobjs,
-  FileUtil, LazFileUtils,
-  cm_sysutils, cm_messager,
+  Classes, SysUtils, FileUtil, LazFileUtils, DB, SQLDB, syncobjs,
+  Sqlite3Conn, SQLite3Dyn,
+  cm_sysutils, cm_lazutils, cm_messager,
   cm_DB;
 
 type

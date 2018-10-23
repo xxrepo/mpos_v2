@@ -6,7 +6,8 @@
 
     This is not a complete unit, for testing
 
-    20181005  NOTE 1: ADD 子参数重名处理（主要应对 DOM 相同类型子节点，在应用时不建设较多的使用同名参数，这可能遇到意想不到的状况）。
+    20181005  NOTE 1: ADD 子参数重名处理（主要应对 DOM 相同类型子节点，在应用时不建议较多的使用同名参数，这可能遇到意想不到的状况）。
+    20181023  NOTE 2: ADD 不可变参数
 
  **********************************************************************}
 
@@ -245,18 +246,19 @@ type
   { IParameterSet }
 
   ICMParameterSet = interface(ICMParameterLoader)
-    ['{41EBCDD3-175F-4905-B06A-E581973F6B4C}']
+    ['{7130371B-E3B3-4C63-A411-808E54AF754F}']
     function AddCell(ACell: TCMParameterCell): Boolean;
     function RemoveCell(ACell: TCMParameterCell): Boolean;
     function GetCell(const AClue: string): TCMParameterCell;
     function GetParameter(const AClue: string): ICMParameter;
+    function GetConstantParameter(const AClue: string): ICMConstantParameter;
     procedure Lock;
     procedure Unlock;
   end;
 
   { TCMParameterSet }
 
-  TCMParameterSet = class(TCMBase, ICMParameterSet, ICMParameterLoader)
+  TCMParameterSet = class(TCMMessageable, ICMParameterSet, ICMParameterLoader)
   private
     FClueList: TFPHashObjectList;
     FSyncObj: TSynchroObject;
@@ -268,16 +270,17 @@ type
     function RemoveCell(ACell: TCMParameterCell): Boolean;
     function GetCell(const AClue: string): TCMParameterCell;
     function GetParameter(const AClue: string): ICMParameter;
+    function GetConstantParameter(const AClue: string): ICMConstantParameter;
     procedure Lock;
     procedure Unlock;
   public
-    function LoadParameters(ABase: ICMParameter; ADataSet: TDataSet): Integer;  overload;
-    function LoadParameters(ABase: ICMParameter; ANode: TCMDOMNode): Integer;  overload;
+    function LoadParameters(ABase: ICMParameterBase; ADataSet: TDataSet): Integer;  overload;
+    function LoadParameters(ABase: ICMParameterBase; ANode: TCMDOMNode): Integer;  overload;
   end;
 
-  { TCMParameter }
+  { TCMParameterBase }
 
-  TCMParameter = class(TCMBase, ICMParameter)
+  TCMParameterBase = class(TCMBase, ICMParameterBase)
   private
     FId: Integer;
     FParentId: Integer;
@@ -290,19 +293,18 @@ type
     procedure AddChildCell(ACell: TCMParameterCell);
   protected
     constructor Create(AParameterSet: ICMParameterSet; ACell: TCMParameterCell);
-    function ReData(AData: ICMParameterData): ICMParameter; virtual;
   public
-    constructor CreateNew(AParent: TCMParameter; const AName: string; AData: ICMParameterData); virtual;
-    constructor Create(AParent: TCMParameter; const AName: string; AValue: Boolean);
-    constructor Create(AParent: TCMParameter; const AName: string; AValue: TDateTime);
-    constructor Create(AParent: TCMParameter; const AName: string; AValue: Currency);
-    constructor Create(AParent: TCMParameter; const AName: string; AValue: Double);
-    constructor Create(AParent: TCMParameter; const AName: string; AValue: Integer);
-    constructor Create(AParent: TCMParameter; const AName: string; AValue: Int64);
-    constructor Create(AParent: TCMParameter; const AName, AValue: string);
-    constructor Create(AParent: TCMParameter; const AName: string; AValue: TObject);
-    constructor Create(AParent: TCMParameter; const AName: string; AValue: IUnknown);
-    constructor Create(AParent: TCMParameter; const AName: string; AValue: Pointer);
+    constructor CreateNew(AParent: TCMParameterBase; const AName: string; AData: ICMParameterData); virtual;
+    constructor Create(AParent: TCMParameterBase; const AName: string; AValue: Boolean);
+    constructor Create(AParent: TCMParameterBase; const AName: string; AValue: TDateTime);
+    constructor Create(AParent: TCMParameterBase; const AName: string; AValue: Currency);
+    constructor Create(AParent: TCMParameterBase; const AName: string; AValue: Double);
+    constructor Create(AParent: TCMParameterBase; const AName: string; AValue: Integer);
+    constructor Create(AParent: TCMParameterBase; const AName: string; AValue: Int64);
+    constructor Create(AParent: TCMParameterBase; const AName, AValue: string);
+    constructor Create(AParent: TCMParameterBase; const AName: string; AValue: TObject);
+    constructor Create(AParent: TCMParameterBase; const AName: string; AValue: IUnknown);
+    constructor Create(AParent: TCMParameterBase; const AName: string; AValue: Pointer);
     destructor Destroy; override;
     property ParameterSet: ICMParameterSet read FParameterSet;
   public
@@ -313,11 +315,9 @@ type
     function Clue: string;
     function ItemCount: Integer;
     function ItemIndex(const AName: string): Integer;
-    function GetItem(AIndex: Integer): ICMParameter;
     procedure RemoveItem(const AName: string);
     procedure RemoveItems;
-    function Get(const AParameterName: string): ICMParameter;
-  public //ICMParameterData
+  public
     procedure Clear;
     function DataType: TParameterDataType;
     function IsNull: Boolean;
@@ -331,6 +331,16 @@ type
     function AsObject: TObject;
     function AsInterface: IUnknown;
     function AsPointer: Pointer;
+  end;
+
+  { TCMParameter }
+
+  TCMParameter = class(TCMParameterBase, ICMParameter)
+  protected
+    function ReData(AData: ICMParameterData): ICMParameter; virtual;
+  public
+    function GetItem(AIndex: Integer): ICMParameter;
+    function Get(const AParameterName: string): ICMParameter;
   public
     function AddBoolean(const AName: string; AValue: Boolean): ICMParameter;
     function AddDateTime(const AName: string; AValue: TDateTime): ICMParameter;
@@ -353,6 +363,14 @@ type
     function ReObject(AValue: TObject): ICMParameter;
     function ReInterface(AValue: IUnknown): ICMParameter;
     function RePointer(AValue: Pointer): ICMParameter;
+  end;
+
+  { TCMConstantParameter }
+
+  TCMConstantParameter = class(TCMParameterBase, ICMConstantParameter)
+  public
+    function GetItem(AIndex: Integer): ICMConstantParameter;
+    function Get(const AParameterName: string): ICMConstantParameter;
   end;
 
   TCMParameterDataCell = class
@@ -970,6 +988,7 @@ end;
 
 constructor TCMParameterSet.Create;
 begin
+  inherited Create;
   FClueList := TFPHashObjectList.Create(False);
   FSyncObj := TSynchroObject.Create;
 end;
@@ -1006,6 +1025,16 @@ begin
   end;
 end;
 
+function TCMParameterSet.GetConstantParameter(const AClue: string): ICMConstantParameter;
+begin
+  Self.Lock;
+  try
+    Result := TCMConstantParameter.Create(Self, Self.GetCell(AClue));
+  finally
+    Self.Unlock;
+  end;
+end;
+
 procedure TCMParameterSet.Lock;
 begin
   FSyncObj.Acquire;
@@ -1016,7 +1045,7 @@ begin
   FSyncObj.Release;
 end;
 
-function TCMParameterSet.LoadParameters(ABase: ICMParameter; ADataSet: TDataSet): Integer;
+function TCMParameterSet.LoadParameters(ABase: ICMParameterBase; ADataSet: TDataSet): Integer;
 var
   exist: Boolean;
   minParentId: Integer;
@@ -1060,6 +1089,7 @@ begin
                 raise EParameterError.CreateFmt(SInvalidBaseParameter, [ABase.Clue]);
                 Exit;
               end;
+            Messager.Custom('check base [id:%d,clue:%s]', [ABase.Id, ABase.Clue]);
           end;
         //找出最小 parentId
         minParentId := AutoParameterIdStart;
@@ -1071,6 +1101,7 @@ begin
               minParentId := parentId;
             ADataSet.Next;
           end;
+        Messager.Custom('find [minParentId:%d]', [minParentId]);
         //记录
         recList := TFPHashObjectList.Create(False);
         rootList := TFPHashObjectList.Create(False);
@@ -1081,6 +1112,8 @@ begin
             parentId := ADataSet.FieldByName('parentId').AsInteger;
             name := ADataSet.FieldByName('name').AsString;
             value := ADataSet.FieldByName('value').AsString;
+            //
+            Messager.Custom('load [id:%d,'#9'parentId:%d,'#9'name:%s,'#9'value:%s]', [id, parentId, name, value]);
             //
             if parentId = minParentId then
               begin
@@ -1108,7 +1141,7 @@ begin
     end;
 end;
 
-function TCMParameterSet.LoadParameters(ABase: ICMParameter; ANode: TCMDOMNode): Integer;
+function TCMParameterSet.LoadParameters(ABase: ICMParameterBase; ANode: TCMDOMNode): Integer;
 var
   name, value: string;
   rootCell: TCMParameterCell;
@@ -1159,9 +1192,9 @@ begin
     end;
 end;
 
-{ TCMParameter }
+{ TCMParameterBase }
 
-constructor TCMParameter.Create(AParameterSet: ICMParameterSet; ACell: TCMParameterCell);
+constructor TCMParameterBase.Create(AParameterSet: ICMParameterSet; ACell: TCMParameterCell);
 const
   varName1: string = 'AParameterSet';
   varName2: string = 'ACell.Data';
@@ -1190,7 +1223,7 @@ begin
     end;
 end;
 
-constructor TCMParameter.CreateNew(AParent: TCMParameter; const AName: string; AData: ICMParameterData);
+constructor TCMParameterBase.CreateNew(AParent: TCMParameterBase; const AName: string; AData: ICMParameterData);
 var
   exist: Boolean;
   cell: TCMParameterCell;
@@ -1231,57 +1264,57 @@ begin
   end;
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName: string; AValue: Boolean);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName: string; AValue: Boolean);
 begin
   Self.CreateNew(AParent, AName, TCMBooleanParameterData.Create(AValue));
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName: string; AValue: TDateTime);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName: string; AValue: TDateTime);
 begin
   Self.CreateNew(AParent, AName, TCMDateTimeParameterData.Create(AValue));
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName: string; AValue: Currency);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName: string; AValue: Currency);
 begin
   Self.CreateNew(AParent, AName, TCMCurrencyParameterData.Create(AValue));
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName: string; AValue: Double);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName: string; AValue: Double);
 begin
   Self.CreateNew(AParent, AName, TCMFloatParameterData.Create(AValue));
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName: string; AValue: Integer);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName: string; AValue: Integer);
 begin
   Self.CreateNew(AParent, AName, TCMIntegerParameterData.Create(AValue));
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName: string; AValue: Int64);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName: string; AValue: Int64);
 begin
   Self.CreateNew(AParent, AName, TCMLargeIntParameterData.Create(AValue));
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName, AValue: string);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName, AValue: string);
 begin
   Self.CreateNew(AParent, AName, TCMStringParameterData.Create(AValue));
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName: string; AValue: TObject);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName: string; AValue: TObject);
 begin
   Self.CreateNew(AParent, AName, TCMObjectParameterData.Create(AValue));
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName: string; AValue: IUnknown);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName: string; AValue: IUnknown);
 begin
   Self.CreateNew(AParent, AName, TCMInterfaceParameterData.Create(AValue));
 end;
 
-constructor TCMParameter.Create(AParent: TCMParameter; const AName: string; AValue: Pointer);
+constructor TCMParameterBase.Create(AParent: TCMParameterBase; const AName: string; AValue: Pointer);
 begin
   Self.CreateNew(AParent, AName, TCMPointerParameterData.Create(AValue));
 end;
 
-destructor TCMParameter.Destroy;
+destructor TCMParameterBase.Destroy;
 begin
   if ParentId = -1 then
     RemoveItems;
@@ -1290,13 +1323,13 @@ begin
 end;
 
 //private
-function TCMParameter.GetSelfCell: TCMParameterCell;
+function TCMParameterBase.GetSelfCell: TCMParameterCell;
 begin
   Result := FParameterSet.GetCell(FClue);
 end;
 
 //private
-procedure TCMParameter.RemoveChildCell(ACell: TCMParameterCell);
+procedure TCMParameterBase.RemoveChildCell(ACell: TCMParameterCell);
 var
   i: Integer;
   tempCell: TCMParameterCell;
@@ -1314,7 +1347,7 @@ begin
 end;
 
 //private
-procedure TCMParameter.AddChildCell(ACell: TCMParameterCell);
+procedure TCMParameterBase.AddChildCell(ACell: TCMParameterCell);
 var
   selfCell: TCMParameterCell;
 begin
@@ -1323,32 +1356,32 @@ begin
     selfCell.AddChildCell(ACell);
 end;
 
-function TCMParameter.Id: Integer;
+function TCMParameterBase.Id: Integer;
 begin
   Result := FId;
 end;
 
-function TCMParameter.ParentId: Integer;
+function TCMParameterBase.ParentId: Integer;
 begin
   Result := FParentId;
 end;
 
-function TCMParameter.Level: Integer;
+function TCMParameterBase.Level: Integer;
 begin
   Result := FLevel;
 end;
 
-function TCMParameter.Name: string;
+function TCMParameterBase.Name: string;
 begin
   Result := FName;
 end;
 
-function TCMParameter.Clue: string;
+function TCMParameterBase.Clue: string;
 begin
   Result := FClue;
 end;
 
-function TCMParameter.ItemCount: Integer;
+function TCMParameterBase.ItemCount: Integer;
 var
   cell: TCMParameterCell;
 begin
@@ -1363,7 +1396,7 @@ begin
   end;
 end;
 
-function TCMParameter.ItemIndex(const AName: string): Integer;
+function TCMParameterBase.ItemIndex(const AName: string): Integer;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1398,7 +1431,7 @@ begin
   end;
 end;
 
-procedure TCMParameter.RemoveItem(const AName: string);
+procedure TCMParameterBase.RemoveItem(const AName: string);
 var
   selfCell, tempCell: TCMParameterCell;
 begin
@@ -1415,7 +1448,7 @@ begin
   end;
 end;
 
-procedure TCMParameter.RemoveItems;
+procedure TCMParameterBase.RemoveItems;
 begin
   FParameterSet.Lock;
   try
@@ -1430,7 +1463,7 @@ begin
   Result := FParameterSet.GetParameter(Format('%s.%s', [FClue, AParameterName]));
 end;
 
-procedure TCMParameter.Clear;
+procedure TCMParameterBase.Clear;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1451,7 +1484,7 @@ begin
   end;
 end;
 
-function TCMParameter.DataType: TParameterDataType;
+function TCMParameterBase.DataType: TParameterDataType;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1473,7 +1506,7 @@ begin
   end;
 end;
 
-function TCMParameter.IsNull: Boolean;
+function TCMParameterBase.IsNull: Boolean;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1495,7 +1528,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsBoolean: Boolean;
+function TCMParameterBase.AsBoolean: Boolean;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1517,7 +1550,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsDateTime: TDateTime;
+function TCMParameterBase.AsDateTime: TDateTime;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1539,7 +1572,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsCurrency: Currency;
+function TCMParameterBase.AsCurrency: Currency;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1561,7 +1594,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsFloat: Double;
+function TCMParameterBase.AsFloat: Double;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1583,7 +1616,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsInteger: Integer;
+function TCMParameterBase.AsInteger: Integer;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1605,7 +1638,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsLargeInt: Int64;
+function TCMParameterBase.AsLargeInt: Int64;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1627,7 +1660,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsString: string;
+function TCMParameterBase.AsString: string;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1649,7 +1682,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsObject: TObject;
+function TCMParameterBase.AsObject: TObject;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1671,7 +1704,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsInterface: IUnknown;
+function TCMParameterBase.AsInterface: IUnknown;
 var
   selfCell: TCMParameterCell;
 begin
@@ -1693,7 +1726,7 @@ begin
   end;
 end;
 
-function TCMParameter.AsPointer: Pointer;
+function TCMParameterBase.AsPointer: Pointer;
 var
   selfCell: TCMParameterCell;
 begin
@@ -2024,6 +2057,33 @@ end;
 function TCMParameterDataList.SetPointer(const AName: string; AValue: Pointer): ICMParameterData;
 begin
   Result := SetData(AName, TCMPointerParameterData.Create(AValue));
+end;
+
+{ TCMConstantParameter }
+
+function TCMConstantParameter.GetItem(AIndex: Integer): ICMConstantParameter;
+var
+  selfCell, subCell: TCMParameterCell;
+begin
+  Result := nil;
+  subCell := nil;
+  FParameterSet.Lock;
+  try
+    selfCell := GetSelfCell;
+    if Assigned(selfCell) then
+      begin
+        if AIndex < selfCell.Children.Count then
+          subCell := TCMParameterCell(selfCell.Children[AIndex]);
+      end;
+    Result := TCMConstantParameter.Create(FParameterSet, subCell);
+  finally
+    FParameterSet.Unlock;
+  end;
+end;
+
+function TCMConstantParameter.Get(const AParameterName: string): ICMConstantParameter;
+begin
+  Result := FParameterSet.GetConstantParameter(Format('%s.%s', [FClue, AParameterName]));
 end;
 
 

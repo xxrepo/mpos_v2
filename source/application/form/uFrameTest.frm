@@ -41,13 +41,4 @@ object TestFrame: TTestFrame
     TabOrder = 2
     OnClick = Panel1Click
   end
-  object Panel2: TPanel
-    Left = 48
-    Height = 50
-    Top = 122
-    Width = 170
-    Caption = 'Panel2'
-    TabOrder = 3
-    OnClick = Panel2Click
-  end
 end

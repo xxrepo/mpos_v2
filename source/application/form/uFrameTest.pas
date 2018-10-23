@@ -16,11 +16,9 @@ type
 
   TTestFrame = class(TFrame)
     Panel1: TPanel;
-    Panel2: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
     procedure Panel1Click(Sender: TObject);
-    procedure Panel2Click(Sender: TObject);
     procedure Panel6Click(Sender: TObject);
     procedure Panel7Click(Sender: TObject);
   private
@@ -52,12 +50,6 @@ begin
       else if tnl.Count > 0 then
         ic.SwitchTheme(tnl[0]);
     end;
-end;
-
-procedure TTestFrame.Panel2Click(Sender: TObject);
-begin
-  Application.MessageBox( PChar(AppSystem.GetMsgBox.InputBox('cap', 'pro', 'def')), 'haha');
-
 end;
 
 procedure TTestFrame.Panel6Click(Sender: TObject);

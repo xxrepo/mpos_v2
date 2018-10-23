@@ -4,11 +4,12 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="10">
+    <Units Count="14">
       <Unit0>
         <Filename Value="mpos_ds.ppr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
+        <TopLine Value="10"/>
         <CursorPos X="57" Y="40"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
@@ -62,9 +63,8 @@
         <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <WindowIndex Value="-1"/>
-        <TopLine Value="-1"/>
-        <CursorPos X="-1" Y="-1"/>
+        <TopLine Value="16"/>
+        <CursorPos X="60" Y="20"/>
         <UsageCount Value="20"/>
       </Unit6>
       <Unit7>
@@ -92,8 +92,35 @@
         <CursorPos X="15" Y="19"/>
         <UsageCount Value="10"/>
       </Unit9>
+      <Unit10>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\sqlite\src\sqlite3dyn.pp"/>
+        <UnitName Value="SQLite3Dyn"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="16"/>
+        <UsageCount Value="10"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-db\src\sqldb\sqldb.pp"/>
+        <UnitName Value="SQLDB"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="11" Y="15"/>
+        <UsageCount Value="10"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-base\src\syncobjs.pp"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="C:\codetyphon\typhon\components\BaseUtils\translations.pas"/>
+        <UnitName Value="Translations"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1108"/>
+        <CursorPos X="36" Y="1129"/>
+        <UsageCount Value="10"/>
+      </Unit13>
     </Units>
-    <JumpHistory Count="7" HistoryIndex="6">
+    <JumpHistory Count="9" HistoryIndex="8">
       <Position1>
         <Filename Value="mpos_ds.ppr"/>
         <Caret Line="12" Column="8"/>
@@ -122,6 +149,14 @@
         <Filename Value="mpos_ds.ppr"/>
         <Caret Line="32" Column="21" TopLine="10"/>
       </Position7>
+      <Position8>
+        <Filename Value="mpos_ds.ppr"/>
+        <Caret Line="40" Column="57"/>
+      </Position8>
+      <Position9>
+        <Filename Value="mpos_ds.ppr"/>
+        <Caret Line="40" Column="57" TopLine="10"/>
+      </Position9>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

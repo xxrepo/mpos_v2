@@ -15,17 +15,15 @@ unit cm_sysutils;
 interface
 
 uses
-  Classes, SysUtils, StrUtils, DateUtils,
-  LazFileUtils,
-  LazUTF8;
+  Classes, SysUtils, StrUtils, DateUtils;
 
   function RepairLibraryFileExt(const fileName: string; checkPrefix: Boolean=False): string;
-  function RepairPathDelim(const APath: string): string; //纠正分隔符。另参见:ForcePathDelims()
+  function RepairPathDelim(const APath: string): string; //纠正分隔符。另引用laz可参见: ForcePathDelims()
   function PathDelimToSlash(const APath: string): string; //分隔符切换成反斜杠
   function RepairPath(const APath: string): string;
-  function RepairUTF8Path(const AUTF8Path: string): string;
+  //function RepairUTF8Path(const AUTF8Path: string): string; //show cm_lazutils
   function RepairFilePath(const AFileName: string): string;
-  function RepairFileUTF8Path(const AUFT8FileName: string): string;
+  //function RepairFileUTF8Path(const AUFT8FileName: string): string; //show cm_lazutils
   function RepairSpacePath(const APath: string): string; //路径存在空格时
   //Just at the beginning and end
   function QuotedCHStr(const AStr: string): string;
@@ -143,37 +141,9 @@ begin
   Result := path;
 end;
 
-function RepairUTF8Path(const AUTF8Path: string): string;
-var
-  path: string;
-begin
-  Result := AUTF8Path;
-  path := RepairPathDelim(AUTF8Path);
-  {$IFDEF UNIX}
-  if (LeftStr(path, 1) <> PathDelim) and (LeftStr(path, 2) <> '..') then
-    path := ExtractFilePath(SysToUTF8(paramStr(0))) + path;
-  {$ELSE}
-  if (Copy(path, 2, 1) <> ':') and (LeftStr(path, 2) <> '..') then
-    begin
-      if LeftStr(path, 1) = PathDelim then
-        path := ExtractFileDir(SysToUTF8(paramStr(0))) + path
-      else
-        path := ExtractFilePath(SysToUTF8(paramStr(0))) + path;
-    end;
-  {$ENDIF}
-  if RightStr(path, 1) <> PathDelim then
-    path := path + PathDelim;
-  Result := path;
-end;
-
 function RepairFilePath(const AFileName: string): string;
 begin
   Result := RepairPath(ExtractFilePath(AFileName)) + ExtractFileName(AFileName);
-end;
-
-function RepairFileUTF8Path(const AUFT8FileName: string): string;
-begin
-  Result := RepairUTF8Path(ExtractFilePath(AUFT8FileName)) + ExtractFileName(AUFT8FileName);
 end;
 
 function RepairSpacePath(const APath: string): string;

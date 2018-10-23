@@ -7,13 +7,20 @@ uses
   cthreads,
   {$ENDIF}
   Classes,
-  cm_InterfaceLoader, cm_InterfaceRegister, cm_Plat;
+  cm_InterfaceLoader, cm_InterfaceRegister, cm_Plat,
+  uDatabaseParameter;
 
 function LoadExport(ARegister: ICMInterfaceRegister; const AInfo: ICMLibInfo): Boolean; stdcall;
+var
+  dbp: TDatabaseParameter;
 begin
   Result := False;
   if not SetInterfaceRegister(ARegister) then
     Exit;
+  //数据库参数
+  dbp := TDatabaseParameter.Create;
+  dbp.Load;
+  dbp.Free;
   //
   Result := True;
 end;

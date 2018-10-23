@@ -49,10 +49,8 @@ type
     function AsPointer: Pointer;
   end;
 
-  { ICMConstantParameter }
-
-  ICMConstantParameter = interface(ICMParameterData)
-    ['{FB384432-0D08-4204-A8D8-775BE67FCBA1}']
+  ICMParameterBase = interface(ICMParameterData)
+    ['{E0979BE5-D362-4713-8B1F-014BFB988B7A}']
     function Id: Integer;
     function ParentId: Integer;
     function Level: Integer;
@@ -60,26 +58,18 @@ type
     function Clue: string;
     function ItemCount: Integer;
     function ItemIndex(const AName: string): Integer;
-    function GetItem(AIndex: Integer): ICMConstantParameter;
+    //function GetItem(AIndex: Integer): ???;
     procedure RemoveItem(const AName: string);
     procedure RemoveItems;
-    function Get(const AParameterName: string): ICMConstantParameter;
+    //function Get(const AParameterName: string): ???;
   end;
+
 
   { ICMParameter }
 
-  ICMParameter = interface(ICMParameterData)
-    ['{00D5E38D-9A00-4AC3-8C3C-24F25689B95B}']
-    function Id: Integer;
-    function ParentId: Integer;
-    function Level: Integer;
-    function Name: string;
-    function Clue: string;
-    function ItemCount: Integer;
-    function ItemIndex(const AName: string): Integer;
+  ICMParameter = interface(ICMParameterBase)
+    ['{C90FF4F2-6C86-47D9-9284-393E0365F74A}']
     function GetItem(AIndex: Integer): ICMParameter;
-    procedure RemoveItem(const AName: string);
-    procedure RemoveItems;
     function Get(const AParameterName: string): ICMParameter;
     //
     function AddBoolean(const AName: string; AValue: Boolean): ICMParameter;
@@ -105,12 +95,20 @@ type
     function RePointer(AValue: Pointer): ICMParameter;
   end;
 
+  { ICMConstantParameter }
+
+  ICMConstantParameter = interface(ICMParameterBase)
+    ['{5DF7BA32-397A-4052-83F3-7400B61B3EB9}']
+    function GetItem(AIndex: Integer): ICMConstantParameter;
+    function Get(const AParameterName: string): ICMConstantParameter;
+  end;
+
   { ICMParameterLoader }
 
   ICMParameterLoader = interface(ICMBase)
-    ['{D6D7FCEF-349E-46E6-8050-32808EFCF89F}']
-    function LoadParameters(ABase: ICMParameter; ADataSet: TDataSet): Integer; overload; //约定参数 id 为增序, id 不大于 80'000'000. dataset 以 id 正排序
-    function LoadParameters(ABase: ICMParameter; ANode: TCMDOMNode): Integer; overload;
+    ['{303616E0-8789-432F-BFC1-307AA51FACE4}']
+    function LoadParameters(ABase: ICMParameterBase; ADataSet: TDataSet): Integer; overload; //约定参数 id 为增序, id 不大于 80'000'000. dataset 以 id 正排序
+    function LoadParameters(ABase: ICMParameterBase; ANode: TCMDOMNode): Integer; overload;
   end;
 
   { ICMConstantParameterDataList }

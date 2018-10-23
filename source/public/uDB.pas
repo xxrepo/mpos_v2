@@ -5,7 +5,7 @@ unit uDB;
 interface
 
 uses
-  Classes, SysUtils, db,
+  Classes, SysUtils, DB,
   cm_DB;
 
 type

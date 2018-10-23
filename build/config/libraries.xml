@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <libraries>
-	<BaseServiceSet filename="lib32/mpos_bss.dll"/>
-
 	<DatabaseService filename="lib32/mpos_ds.dll">
 	    <DefaultLibrary>lib32/sqlite3.dll</DefaultLibrary>
 	    <DatabaseName>data/mpos.db</DatabaseName>
 	</DatabaseService>
+
+	<BaseServiceSet filename="lib32/mpos_bss.dll"/>
+
+
 </libraries>

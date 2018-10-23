@@ -16,15 +16,32 @@ unit cm_dialogs;
 interface
 
 uses
-  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Graphics, Forms, contnrs,
-  LCLType;
+  Classes, SysUtils
+  {$IFDEF LCL},Controls, StdCtrls, ExtCtrls, Graphics, Forms, LCLType, contnrs{$ENDIF}
+  ;
 
 type
 
+  { ICMMsgBar
+    // 信息提示条。
+  }
   ICMMsgBar = interface
     ['{4A3D21D0-7929-49B8-B401-1F99F5C14675}']
     procedure ShowMessage(AEventType: TEventType; const AMsg: string); overload;
   end;
+
+  { ICMMsgBox
+    // 信息提示框，遵循 Application.MessageBox() 规范。
+    // MB_OK = 0
+  }
+  ICMMsgBox = interface
+    ['{637ECDF7-86EF-4C4B-83B0-C88BD061ABD5}']
+    procedure ShowMessage(const AMsg: string);
+    function MessageBox(const AText, ACaption: string; AFlags: Longint=0): Integer;
+    function InputBox(const ACaption, APrompt, ADefault: string): string;
+  end;
+
+  {$IFDEF LCL}
 
   { TCMMsgBar }
 
@@ -185,13 +202,6 @@ type
     function MessageBox(const AText, ACaption: string; AFlags: Longint=MB_OK): Integer; virtual;
   end;
 
-  ICMMsgBox = interface
-    ['{637ECDF7-86EF-4C4B-83B0-C88BD061ABD5}']
-    procedure ShowMessage(const AMsg: string);
-    function MessageBox(const AText, ACaption: string; AFlags: Longint=MB_OK): Integer;
-    function InputBox(const ACaption, APrompt, ADefault: string): string;
-  end;
-
   TCMMsgBox = class(TCMBaseMsgBox, ICMMsgBox)
   private
     FInputEdt: TEdit;
@@ -208,6 +218,8 @@ type
     function InputBox(const ACaption, APrompt, ADefault: string): string; virtual;
   end;
 
+  {$ENDIF}
+
 
 const
   DefaultBoardHeight: Integer = 220;
@@ -216,6 +228,8 @@ const
   DefaultButtonWidth: Integer = 120;
 
 implementation
+
+{$IFDEF LCL}
 
 {TCMMsgBar}
 
@@ -1073,7 +1087,7 @@ begin
     Result := FInputText;
 end;
 
-
+{$ENDIF}
 
 
 

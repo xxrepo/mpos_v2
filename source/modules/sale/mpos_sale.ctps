@@ -8,6 +8,7 @@
       <Unit0>
         <Filename Value="mpos_sale.ppr"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="10"/>
         <CursorPos X="13" Y="22"/>
         <UsageCount Value="208"/>
@@ -94,7 +95,6 @@
       <Unit11>
         <Filename Value="uSaleServicePoxy.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <TopLine Value="58"/>
         <CursorPos X="35" Y="74"/>

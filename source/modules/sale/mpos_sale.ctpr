@@ -25,13 +25,10 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <RequiredPackages Count="2">
+    <RequiredPackages Count="1">
       <Item1>
-        <PackageName Value="bs_Utils"/>
-      </Item1>
-      <Item2>
         <PackageName Value="pl_generics"/>
-      </Item2>
+      </Item1>
     </RequiredPackages>
     <Units Count="26">
       <Unit0>
