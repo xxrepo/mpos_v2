@@ -39,8 +39,10 @@ uses
   function EncodeHexString(const AStr: string): string;
   function DecodeHexString(const Hexs: string): string;
 
-  function GetDefFmtDateTimeStr(const ADateTime: TDateTime): string;
-  function GetDayTimeInteger(const ADateTime: TDateTime): Integer;
+  function DefFmtDateTimeStr(const ADateTime: TDateTime): string;
+  function DefFmtDateTimeShowStr(const ADateTime: TDateTime): string;
+  function DefFmtCurrStr(const ACurrency: Currency): string;
+  function DayDateTimeInteger(const ADateTime: TDateTime): Integer;
   function CreateGUIDStr: string;
 
   function LeftFillChar(const Str: string; Len: Integer; FillChar: Char): string;
@@ -292,12 +294,22 @@ begin
    Result := Result;
 end;
 
-function GetDefFmtDateTimeStr(const ADateTime: TDateTime): string;
+function DefFmtDateTimeStr(const ADateTime: TDateTime): string;
 begin
   Result := FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', ADateTime, CMFormatSettings);
 end;
 
-function GetDayTimeInteger(const ADateTime: TDateTime): Integer;
+function DefFmtDateTimeShowStr(const ADateTime: TDateTime): string;
+begin
+  Result := FormatDateTime('yyyy-mm-dd hh:nn:ss', ADateTime, CMFormatSettings);
+end;
+
+function DefFmtCurrStr(const ACurrency: Currency): string;
+begin
+  Result := FormatCurr('0.00', ACurrency, CMFormatSettings);
+end;
+
+function DayDateTimeInteger(const ADateTime: TDateTime): Integer;
 begin
   Result := HourOf(ADateTime) * 10000000 + MinuteOf(ADateTime) * 100000 + SecondOf(ADateTime) * 1000 + MilliSecondOf(ADateTime);
 end;

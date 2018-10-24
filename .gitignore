@@ -73,7 +73,6 @@ __recovery/
 *.o
 *.ppu
 *.rsj
-*.vsd
 *.db
 *.doc
 *.psd

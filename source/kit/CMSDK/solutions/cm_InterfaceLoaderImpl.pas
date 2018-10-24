@@ -272,7 +272,7 @@ begin
   except
     on e: Exception do
       begin
-        Messager.Error('加载路径:%s 下的库文件时出错. %s %s', [ADirPath], e);
+        Messager.Error('加载路径:%s 下的库文件时出错. ', [ADirPath], e);
         Exit;
       end;
   end;
