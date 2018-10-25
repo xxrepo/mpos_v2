@@ -46,7 +46,7 @@ var
   aLCLGenerator: TCMLCLGenerator = nil;
   aLCLPropertyReaderWriter: TCMLCLPropertyReaderWriter = nil;
 
-procedure InitLCLManager;
+procedure InitLCLGlobalManager;
 var
   lclgs: TCMLCLGlobalSet;
 begin
@@ -138,7 +138,7 @@ begin
   InterfaceRegister.PutInterface('默认接口加载器', ICMInterfaceLoader, ICMInterfaceLoader(aLoader));
   {$IFDEF LCL}
   //TODO 分开初始化
-  InitLCLManager;
+  InitLCLGlobalManager;
   InitLCLGenerator;
   InitLCLPropertyReaderWriter;
   {$ENDIF}

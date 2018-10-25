@@ -450,17 +450,17 @@ begin
   StartRecordKeyDown;
   {$ENDIF}
   //---- 以下加载 ----------------------------------------------------------------------------------
-  LoadingForm.SetLoadMsg('开始加载基本服务...', 50);
+  LoadingForm.SetLoadMsg('开始加载支撑模块...', 40);
   loader := nil;
   cm_PlatInitialize.GetInterfaceLoader.OnLoading := @LibLoading;
   if InterfaceRegister.OutInterface(ICMInterfaceLoader, loader) then
     loader.LoadByConfig(LibrariesConfigFileName);
   //
-  LoadingForm.SetLoadMsg('开始加载业务...', 70);
+  LoadingForm.SetLoadMsg('开始加载业务模块...', 60);
   if Assigned(loader) then
     loader.LoadDirAll(ModulesPath);
   //
-  LoadingForm.SetLoadMsg('开始加载完成后工作...', 95);
+  LoadingForm.SetLoadMsg('开始加载完成后工作...', 90);
   Self.NotifySystem('Loaded');
   LoadingForm.SetLoadMsg('准备显示主操作界面...', 100);
   LoadingForm.Close;
