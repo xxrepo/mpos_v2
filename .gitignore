@@ -74,7 +74,6 @@ __recovery/
 *.ppu
 *.rsj
 *.db
-*.doc
 *.psd
 lib/
 *.log
