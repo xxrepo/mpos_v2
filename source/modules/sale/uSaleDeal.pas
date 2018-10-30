@@ -14,7 +14,7 @@ interface
 uses
   Classes, SysUtils,
   cm_interfaces, cm_messager, cm_Plat,
-  uSale, uSaleDTO, uSaleBO;
+  uSale, uSaleDTO, uSaleDAO, uSaleBO, uProductPO;
 
 type
 
@@ -87,6 +87,8 @@ type
   procedure SetDTOByVO(AVO: TShowItem; ACommodity: TSaleCommodity);
 
 implementation
+
+uses uSystem;
 
 procedure OutVOByDTO(ACommodity: TSaleCommodity; out VO: TShowItem);
 begin
@@ -409,18 +411,40 @@ end;
 procedure TSaleDeal.Inputted(const ACode: string);
 var
   commodity: TSaleCommodity;
+  //
+  productSelectBoard: IProductSelectBoard;
+  prodDAO: IProductDAO;
+  list: TProductList;
+  prod: TProduct;
 begin
   Messager.Info('InputCode(%s)...', [ACode]);
-  //
-  commodity := TSaleCommodity.Create;
-  commodity.Name := '椰树椰子汁 2000ml/罐';
-  commodity.BarCode := '632' + ACode;
-  commodity.Price := 10.68;
-  commodity.SettlementPrice := 10.68;
-  commodity.Quantity := 2;
-  //
-  GetCurrBill.AddCommodity(commodity);
-  commodity.Free;
+  if InterfaceRegister.OutInterface(IProductDAO, prodDAO) then
+    if InterfaceRegister.OutInterface(IProductSelectBoard, productSelectBoard) then
+      begin
+
+
+        list := prodDAO.FindByInputCode(ACode);
+        if list.Count > 0 then
+          begin
+            prod := productSelectBoard.ToSelect(list);
+            if Assigned(prod) then
+              begin
+                //
+                commodity := TSaleCommodity.Create;
+                commodity.Name := prod.ProductName;
+                commodity.BarCode := prod.BarCode;
+                commodity.Price := prod.RetailPrice;
+                commodity.SettlementPrice := prod.RetailPrice;
+                commodity.Quantity := 1;
+                //
+                GetCurrBill.AddCommodity(commodity);
+                commodity.Free;
+              end
+            else
+              FSaleBoard.PromptMessage(etError, '选定的商品不存在！');
+          end;
+        list.Free;
+      end;
 end;
 
 procedure TSaleDeal.Settle;
@@ -431,12 +455,21 @@ begin
       if GetCurrBill.CommodityCount < 1 then
         begin
           FSaleBoard.PromptMessage(etError, '请先输入商品！');
+          Exit;
         end;
+
       if Assigned(FSaleHandler) or InterfaceRegister.OutInterface(ISaleHandler, FSaleHandler) then
         begin
           Messager.Info('handler.......................');
-          FSaleHandler.Handle(GetCurrBill);
+          if Not FSaleHandler.Handle(GetCurrBill) then
+            Begin
+              Messager.Error('销售处理失败！');
+              Exit;
+            end;
+
         end;
+
+
       Messager.Info('handle over.');
       //FSaleBoard 须在前
       FSaleBoard.Clear;

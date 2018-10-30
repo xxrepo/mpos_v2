@@ -8,7 +8,7 @@ uses
   {$ENDIF}
   Classes,
   cm_InterfaceLoader, cm_InterfaceRegister, cm_Plat,
-  uSaleExports, uProductPO;
+  uSaleExports;
 
 function LoadExport(ARegister: ICMInterfaceRegister; const AInfo: ICMLibInfo): Boolean; stdcall;
 var

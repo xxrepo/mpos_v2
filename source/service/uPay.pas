@@ -37,10 +37,8 @@ type
     // 支付中心完成支付的响应
   }
   IPayResponse = interface(ICMBase)
-    ['{560B6F9A-B912-48E2-ABFD-F9D94715E371}']
+    ['{6CF6CA56-9325-4F36-B1C9-55DFFC396C31}']
     function GetPayUUID: string;  //本次支付的唯一编码
-    function GetPayCode: string;  //支付方式编号
-    function GetPayType: Byte;    //支付类型，不记帐应大于等于100
     function GetPayAmount: Currency;
     function GetPayRemark: string;   //备注信息
     function GetPayMsg: ICMConstantParameterDataList; //其他支付相关信息
@@ -87,7 +85,7 @@ type
     function GetPayType: Byte; //支付类型，不记帐应大于等于100
     function GetPayAmount: Currency;
     function GetPayRemark: string;
-    function GetPayMsg: ICMConstantParameterDataList;
+    //function GetPayMsg: ICMConstantParameterDataList;
   end;
 
   { TPayServiceResponseList }
@@ -95,15 +93,18 @@ type
   TPayServiceResponseList = class(TThreadList<IPayServiceResponse>)
   public
     function GetSumPayAmount: Currency;
+    //TODO
+    //function GetPayMsg: ICMConstantParameterDataList;
   end;
 
   { IPayService
     // 支付业务，由各支付提供者实现
   }
   IPayService = interface(ICMBase)
-    ['{531A216C-E389-4408-A5AE-6D0C81337D58}']
+    ['{7273DCBD-BC5F-487A-8A5C-DFC48A6DDBD3}']
     function GetName: string;
-    function ToPay(APayServiceRequest: IPayServiceRequest; out thePayServiceResponse: IPayServiceResponse): Boolean;
+    //因为 theResponseList 不是自动进行生命周期管理的接口，故返回 True 时务必要手动释放。
+    function ToPay(ARequest: IPayServiceRequest; out theResponseList: TPayServiceResponseList): Boolean;
     function ToQueryPay(const AServicePayUUID: string): IPayServiceResponse;
   end;
 
@@ -131,8 +132,7 @@ begin
   try
     for i:=0 to list.Count-1 do
       begin
-        if list[i].GetPayType < 100 then
-          Result := Result + list[i].GetPayAmount;
+        Result := Result + list[i].GetPayAmount;
       end;
   finally
     UnlockList;

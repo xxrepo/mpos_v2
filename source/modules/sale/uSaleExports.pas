@@ -8,7 +8,7 @@ uses
   Classes, SysUtils,
   cm_messager, cm_InterfaceRegister,
   uDAO,
-  uSale, uSaleDAO, uSaleDAOImpl,
+  uSale, uSaleDAO, uSaleDAOImpl, uProductDAOImpl,
   uSaleDeal, uSaleServicePoxy, uSalePersistant;
 
 type
@@ -31,6 +31,7 @@ var
   sb: ISaleBoard;
   sh: ISaleHandler;
   tp: TTestPromotion;
+  prodDAO: IProductDAO;
 begin
   Messager.Debug('开始加载销售业务...');
   //BillCenter
@@ -41,6 +42,12 @@ begin
     ARegister.PutInterface('ISaleDAO', ISaleDAO, dao)
   else
     Messager.Error('销售DAO实例化失败！');
+  //DAO
+  if TPOSDAOFactory.GetInstance.OutDAO(TProductDAO, IProductDAO, prodDAO) then
+    ARegister.PutInterface('IProductDAO', IProductDAO, prodDAO)
+  else
+    Messager.Error('销售ProductDAO实例化失败！');
+
   //
   Messager.Debug('开始向销售面板添加侦听器...');
   if ARegister.OutInterface(ISaleBoard, sb) then

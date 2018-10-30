@@ -64,16 +64,16 @@ inherited MainForm: TMainForm
       Left = 0
       Height = 362
       Top = 54
-      Width = 822
+      Width = 742
       Align = alClient
       BorderSpacing.Top = 2
       BorderSpacing.Bottom = 2
       BevelOuter = bvNone
       ClientHeight = 362
-      ClientWidth = 822
+      ClientWidth = 742
       TabOrder = 2
       object PanelRight: TPanel
-        Left = 658
+        Left = 578
         Height = 362
         Top = 0
         Width = 164
@@ -87,17 +87,17 @@ inherited MainForm: TMainForm
         Left = 0
         Height = 362
         Top = 0
-        Width = 656
+        Width = 576
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
       end
     end
     object PanelRightHint: TPanel
-      Left = 824
+      Left = 744
       Height = 366
       Top = 52
-      Width = 200
+      Width = 280
       Align = alRight
       BorderSpacing.Left = 2
       BevelOuter = bvNone

@@ -28,6 +28,9 @@ begin
   ps := TPOSCashPay.Create;
   payDeal.AddService(ps);
   //
+
+  Result := (InterfaceRegister.PutInterface('支付业务寄存器', IPayServiceRegister, payDeal) >= 0) and Result;
+
   Result := True;
 end;
 

@@ -70,15 +70,6 @@ type
     FReturnValue: Integer;
   public
     property KeyCode: Word read FKeyCode write FKeyCode;
-    //IDOK = 1;     ID_OK = IDOK;
-    //IDCANCEL = 2; ID_CANCEL = IDCANCEL;
-    //IDABORT = 3;  ID_ABORT = IDABORT;
-    //IDRETRY = 4;  ID_RETRY = IDRETRY;
-    //IDIGNORE = 5; ID_IGNORE = IDIGNORE;
-    //IDYES = 6;    ID_YES = IDYES;
-    //IDNO = 7;     ID_NO = IDNO;
-    //IDCLOSE = 8;  ID_CLOSE = IDCLOSE;
-    //IDHELP = 9;   ID_HELP = IDHELP;
     property ReturnValue: Integer read FReturnValue write FReturnValue;
   end;
 
@@ -218,6 +209,25 @@ type
     function InputBox(const ACaption, APrompt, ADefault: string): string; virtual;
   end;
 
+  {$ELSE}
+  //没有使用 LCL 时无法知晓 LCLType 的定义
+const
+  MB_OK = $00000000;
+  MB_OKCANCEL = $00000001;
+  MB_ABORTRETRYIGNORE = $00000002;
+  MB_YESNOCANCEL = $00000003;
+  MB_YESNO = $00000004;
+  MB_RETRYCANCEL = $00000005;
+  //
+  IDOK = 1;     ID_OK = IDOK;
+  IDCANCEL = 2; ID_CANCEL = IDCANCEL;
+  IDABORT = 3;  ID_ABORT = IDABORT;
+  IDRETRY = 4;  ID_RETRY = IDRETRY;
+  IDIGNORE = 5; ID_IGNORE = IDIGNORE;
+  IDYES = 6;    ID_YES = IDYES;
+  IDNO = 7;     ID_NO = IDNO;
+  IDCLOSE = 8;  ID_CLOSE = IDCLOSE;
+  IDHELP = 9;   ID_HELP = IDHELP;
   {$ENDIF}
 
 
@@ -968,12 +978,6 @@ begin
     end;
 end;
 
-//MB_OK = $00000000;
-//MB_OKCANCEL = $00000001;
-//MB_ABORTRETRYIGNORE = $00000002;
-//MB_YESNOCANCEL = $00000003;
-//MB_YESNO = $00000004;
-//MB_RETRYCANCEL = $00000005;
 function TCMBaseMsgBox.MessageBox(const AText, ACaption: string; AFlags: Longint=MB_OK): Integer;
 begin
   FMsgBoard.Title := ACaption;
@@ -983,7 +987,7 @@ begin
   //
   if (AFlags and MB_OKCANCEL) = MB_OKCANCEL then
     begin
-      FMsgBoard.AddButton('确定 [Entert]', 13, IDOK);
+      FMsgBoard.AddButton('确定 [Enter]', 13, IDOK);
       FMsgBoard.AddButton('取消 [Esc]', 27, IDCANCEL);
     end
   else if (AFlags and MB_ABORTRETRYIGNORE) = MB_ABORTRETRYIGNORE then
@@ -1010,10 +1014,10 @@ begin
     end
   else if (AFlags and MB_OK) = MB_OK then
     begin
-      FMsgBoard.AddButton('确定 [Entert]', 13, IDOK);
+      FMsgBoard.AddButton('确定 [Enter]', 13, IDOK);
     end
   else
-    {%H-}FMsgBoard.AddButton('确定 [Entert]', 13, IDOK);
+    {%H-}FMsgBoard.AddButton('确定 [Enter]', 13, IDOK);
   //
   boxModalBefore;
   try

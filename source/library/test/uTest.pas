@@ -27,7 +27,7 @@ implementation
 
 constructor TTest.Create;
 begin
-  FMessager := TCMMessageManager.GetInstance.GetMessager(Self);
+
 end;
 
 destructor TTest.Destroy;
@@ -37,8 +37,11 @@ begin
 end;
 
 procedure TTest.test;
+var
+  messager: TCMMessager;
 begin
-  FMessager.Info('hello world');
+  messager := TCMMessageManager.GetInstance.GetMessager('test');
+  messager.Info('hello world');
 end;
 
 end.

@@ -43,7 +43,7 @@ type
   TTestSalePay = class(TSaleHandler)
   private
     FIsPayed: Boolean;
-    FPC: IPayCenter;
+    FPayCenter: IPayCenter;
   protected
     constructor Create;
     function DoBeforeHandle(ABill: TSaleBill): Boolean; override;
@@ -59,22 +59,37 @@ constructor TTestSalePay.Create;
 begin
   inherited Create;
   FIsPayed := False;
-  FPC := nil;
+  FPayCenter := nil;
 end;
 
 function TTestSalePay.DoBeforeHandle(ABill: TSaleBill): Boolean;
 var
   res: IPayRequest;
+  resList: TPayResponseList;
+  SaleBoard: ISaleBoard;
 begin
   Result := False;
-  if Assigned(FPC) or InterfaceRegister.OutInterface(IPayCenter, FPC) then
+  try
+  if Assigned(FPayCenter) or InterfaceRegister.OutInterface(IPayCenter, FPayCenter) then
     begin
-      Messager.Info('要支付了哦！！！');
+      Messager.Info('创建支付请求：...');
       res := TGenericPayRequest.Create(ABill.UUID, ABill.SumSettlementAmount);
-      Messager.Info('要支付了哦222！！！');
-      FIsPayed := FPC.Pay(res);
-      Result := True;
+      Messager.Info('发起支付请求：...');
+      FIsPayed := FPayCenter.Pay(res);
+
+      if not FIsPayed then
+        if InterfaceRegister.OutInterface(ISaleBoard, SaleBoard) then
+            SaleBoard.PromptMessage(etError, '没有完成支付!');
+
+      resList := FPayCenter.QueryOrder(ABill.UUID);
+      Messager.Info('RealAmount: %.2f %.2f',[resList.GetSumPayAmount, ABill.SumSettlementAmount]);
+      if resList.GetSumPayAmount = ABill.SumSettlementAmount then
+         Result := True;
     end;
+  except
+    on e: Exception do
+      Messager.Error('DoBeforeHandle: %s %s', [e.ClassName, e.Message]);
+  end;
 end;
 
 function TTestSalePay.DoAfterHandle(ABill: TSaleBill): Boolean;

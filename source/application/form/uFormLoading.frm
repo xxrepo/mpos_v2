@@ -1,7 +1,7 @@
 object LoadingForm: TLoadingForm
-  Left = 308
+  Left = 249
   Height = 300
-  Top = 186
+  Top = 206
   Width = 460
   BorderStyle = bsNone
   Caption = 'LoadingForm'

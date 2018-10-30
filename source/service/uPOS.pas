@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils,
   cm_parameter,
-  uApp;
+  uSystem,
+  cm_Plat;
 
 const
   //系统参数节点

@@ -4,12 +4,10 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="47">
+    <Units Count="51">
       <Unit0>
         <Filename Value="mpos_sale.ppr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="10"/>
         <CursorPos X="13" Y="22"/>
         <UsageCount Value="208"/>
         <Loaded Value="True"/>
@@ -113,9 +111,10 @@
       <Unit13>
         <Filename Value="uSaleExports.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="41"/>
-        <CursorPos X="57" Y="52"/>
+        <TopLine Value="29"/>
+        <CursorPos X="85" Y="53"/>
         <UsageCount Value="141"/>
         <Loaded Value="True"/>
       </Unit13>
@@ -136,78 +135,82 @@
         <UsageCount Value="50"/>
       </Unit15>
       <Unit16>
-        <Filename Value="..\..\persistant\uSalePO.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="40"/>
-        <CursorPos X="13" Y="48"/>
-        <UsageCount Value="50"/>
-      </Unit16>
-      <Unit17>
-        <Filename Value="..\..\persistant\uSaleDAO.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="42" Y="17"/>
-        <UsageCount Value="49"/>
-      </Unit17>
-      <Unit18>
         <Filename Value="..\..\public\uDAO.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="14"/>
         <CursorPos X="3" Y="25"/>
         <UsageCount Value="49"/>
-      </Unit18>
-      <Unit19>
+      </Unit16>
+      <Unit17>
         <Filename Value="uSaleDAOImpl.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos X="37" Y="17"/>
         <UsageCount Value="38"/>
-      </Unit19>
-      <Unit20>
+      </Unit17>
+      <Unit18>
         <Filename Value="uSalePersistant.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="4"/>
         <CursorPos X="20" Y="18"/>
         <UsageCount Value="31"/>
         <Loaded Value="True"/>
-      </Unit20>
-      <Unit21>
-        <Filename Value="..\..\persistant\uProductPO.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="86"/>
-        <CursorPos X="55" Y="23"/>
-        <UsageCount Value="21"/>
-      </Unit21>
-      <Unit22>
+      </Unit18>
+      <Unit19>
         <Filename Value="..\..\kit\CMSDK\cm_Plat.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="30" Y="32"/>
         <UsageCount Value="20"/>
-      </Unit22>
-      <Unit23>
+      </Unit19>
+      <Unit20>
         <Filename Value="..\..\service\uPay.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="46"/>
         <CursorPos X="13" Y="59"/>
         <UsageCount Value="20"/>
-      </Unit23>
-      <Unit24>
+      </Unit20>
+      <Unit21>
         <Filename Value="..\..\public\uPayUtils.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="25"/>
         <CursorPos X="54" Y="17"/>
         <UsageCount Value="20"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="..\..\persistent\uProductPO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="..\..\persistent\uSaleDAO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
       </Unit24>
       <Unit25>
-        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Filename Value="..\..\persistent\uSalePO.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
@@ -216,150 +219,175 @@
         <UsageCount Value="20"/>
       </Unit25>
       <Unit26>
+        <Filename Value="uProductDAOImpl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="20"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="..\..\persistant\uSalePO.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="40"/>
+        <CursorPos X="13" Y="48"/>
+        <UsageCount Value="50"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="..\..\persistant\uSaleDAO.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="42" Y="17"/>
+        <UsageCount Value="49"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="..\..\persistant\uProductPO.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="86"/>
+        <CursorPos X="55" Y="23"/>
+        <UsageCount Value="21"/>
+      </Unit29>
+      <Unit30>
         <Filename Value="..\..\public\uLibraryAssistant.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="12"/>
         <CursorPos X="27" Y="18"/>
         <UsageCount Value="208"/>
-      </Unit26>
-      <Unit27>
+      </Unit30>
+      <Unit31>
         <Filename Value="..\..\public\uApp.pas"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
         <UsageCount Value="20"/>
-      </Unit27>
-      <Unit28>
+      </Unit31>
+      <Unit32>
         <Filename Value="..\..\kit\CMSDK\cm_LibraryPlat.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <UsageCount Value="20"/>
-      </Unit28>
-      <Unit29>
+      </Unit32>
+      <Unit33>
         <Filename Value="..\..\kit\CMSDK\platform\cm_LCLLibraryPlat.pas"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
         <UsageCount Value="208"/>
-      </Unit29>
-      <Unit30>
+      </Unit33>
+      <Unit34>
         <Filename Value="..\..\public\uMPOS.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="59" Y="18"/>
         <UsageCount Value="208"/>
-      </Unit30>
-      <Unit31>
+      </Unit34>
+      <Unit35>
         <Filename Value="..\..\model\uSaleBoardModel.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="14" Y="7"/>
         <UsageCount Value="229"/>
-      </Unit31>
-      <Unit32>
+      </Unit35>
+      <Unit36>
         <Filename Value="..\..\model\uSaleModel.pas"/>
         <UnitName Value="uSaleDealModel"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="20"/>
         <UsageCount Value="224"/>
-      </Unit32>
-      <Unit33>
+      </Unit36>
+      <Unit37>
         <Filename Value="uExports.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="26"/>
         <CursorPos X="54" Y="43"/>
         <UsageCount Value="26"/>
-      </Unit33>
-      <Unit34>
+      </Unit37>
+      <Unit38>
         <Filename Value="uSaleImpl.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="268"/>
         <UsageCount Value="205"/>
-      </Unit34>
-      <Unit35>
+      </Unit38>
+      <Unit39>
         <Filename Value="uSalePoxy.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="21" Y="8"/>
         <UsageCount Value="191"/>
-      </Unit35>
-      <Unit36>
+      </Unit39>
+      <Unit40>
         <Filename Value="uSaleModelUtils.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="11"/>
         <UsageCount Value="99"/>
-      </Unit36>
-      <Unit37>
+      </Unit40>
+      <Unit41>
         <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-base\src\contnrs.pp"/>
         <UnitName Value="Contnrs"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="310"/>
         <CursorPos X="3" Y="295"/>
         <UsageCount Value="87"/>
-      </Unit37>
-      <Unit38>
+      </Unit41>
+      <Unit42>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="421"/>
         <CursorPos X="3" Y="426"/>
         <UsageCount Value="8"/>
-      </Unit38>
-      <Unit39>
+      </Unit42>
+      <Unit43>
         <Filename Value="C:\codetyphon\typhon\components\pl_Generics\source\generics.collections.pas"/>
         <UnitName Value="Generics.Collections"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="254"/>
         <CursorPos X="3" Y="244"/>
         <UsageCount Value="7"/>
-      </Unit39>
-      <Unit40>
+      </Unit43>
+      <Unit44>
         <Filename Value="..\..\model\uSaleDealModel.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos X="13" Y="7"/>
         <UsageCount Value="56"/>
-      </Unit40>
-      <Unit41>
+      </Unit44>
+      <Unit45>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\osutilsh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="44"/>
         <CursorPos X="13" Y="62"/>
         <UsageCount Value="25"/>
-      </Unit41>
-      <Unit42>
+      </Unit45>
+      <Unit46>
         <Filename Value="..\..\kit\CMSDK\cm_DBUtils.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="34"/>
         <CursorPos X="3" Y="16"/>
         <UsageCount Value="12"/>
-      </Unit42>
-      <Unit43>
+      </Unit46>
+      <Unit47>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\sysstrh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="192"/>
         <CursorPos X="19" Y="206"/>
         <UsageCount Value="9"/>
-      </Unit43>
-      <Unit44>
+      </Unit47>
+      <Unit48>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\sysstr.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1855"/>
         <CursorPos X="32" Y="1859"/>
         <UsageCount Value="9"/>
-      </Unit44>
-      <Unit45>
+      </Unit48>
+      <Unit49>
         <Filename Value="..\..\public\uDB.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <UsageCount Value="9"/>
-      </Unit45>
-      <Unit46>
+      </Unit49>
+      <Unit50>
         <Filename Value="..\..\public\uDBUtils.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="24"/>
         <CursorPos X="21" Y="31"/>
         <UsageCount Value="10"/>
-      </Unit46>
+      </Unit50>
     </Units>
     <JumpHistory Count="18" HistoryIndex="17">
       <Position1>

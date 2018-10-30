@@ -76,4 +76,5 @@ __recovery/
 *.db
 lib/
 *.log
+*.psd
 backups/

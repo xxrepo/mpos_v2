@@ -115,7 +115,7 @@ begin
       if AppSystem.IsTestMode then
         begin
           PanelTest.Visible := True;
-          PanelTest.Width := 240;
+          PanelTest.Width := 280;
           Self.Width := 1024 + PanelTest.Width;
           Self.Height := 768;
         end;

@@ -2004,7 +2004,7 @@ begin
     sUNIT_NAME,
     'PosServiceSoap',
     'TRANSPORT_Address',
-    'http://192.168.0.115:8988/PosService.asmx'
+    'http://192.168.111.115:8988/PosService.asmx'
     );
   mm.SetServiceCustomData(
     sUNIT_NAME,

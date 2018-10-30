@@ -28,11 +28,11 @@ type
   end;
 
 Resourcestring
-  SaveOrderSQLFmt = 'insert into saleOrder(UUID,sumSettlementAmount,sellerID,settlementTime,remark)'
+  SaveOrderSQLFmt = 'insert into tbSaleOrder(UUID,sumSettlementAmount,sellerID,settlementTime,remark)'
                   + ' values(%s,%s,%s,%s,%s);';
-  SaveDetailSQLFmt = 'insert into saleDetail(UUID,orderUUID,GID,commodityName,settlementPrice,quantity,settlementAmount,remark)'
+  SaveDetailSQLFmt = 'insert into tbSaleDetail(UUID,orderUUID,GID,commodityName,settlementPrice,quantity,settlementAmount,remark)'
                                + ' values(%s,%s,%d,%s,%s,%s,%s,%s);';
-  ExistOrderSQLFmt = 'select 1 from saleOrder where UUID=%s;';
+  ExistOrderSQLFmt = 'select 1 from tbSaleOrder where UUID=%s;';
 
 
 implementation
