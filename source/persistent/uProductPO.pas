@@ -1,29 +1,29 @@
 unit uProductPO;
 
-{$mode objfpc}{$H+}
+{$mode delphi}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, Generics.Collections;
 
 type
 
   TSimpleTbShopProduct = class(TPersistent)
   private
     FBarCode: string;
-    FGID: Integer;
-    FIsBigPack: Boolean;
-    FIsDisp: Word;
+    FGID: integer;
+    FIsBigPack: boolean;
+    FIsDisp: word;
     FMemberPrice: string;
-    FPrcType: Word;
+    FPrcType: word;
     FProductCode: string;
-    FProductID: Integer;
+    FProductID: integer;
     FProductName: string;
     FPy: string;
-    FRelativeQty: Integer;
+    FRelativeQty: integer;
     FRemark: string;
-    FRetailPrice: Currency;
+    FRetailPrice: currency;
     //FShortCode: string;
     FShortName: string;
     FSortCode: string;
@@ -32,9 +32,9 @@ type
     FSPProductID: string;
     FStatus: string;
     FUnit: string;
-    FUpdateState: Integer;
+    FUpdateState: integer;
   published
-    property GID: Integer read FGID write FGID;
+    property GID: integer read FGID write FGID;
     property ProductCode: string read FProductCode write FProductCode;
     property ProductName: string read FProductName write FProductName;
     property ShortName: string read FShortName write FShortName;
@@ -42,37 +42,38 @@ type
     property BarCode: string read FBarCode write FBarCode;
     property SPEC: string read FSPEC write FSPEC;
     property Unit_: string read FUnit write FUnit;
-    property RetailPrice: Currency read FRetailPrice write FRetailPrice;
+    property RetailPrice: currency read FRetailPrice write FRetailPrice;
     property Remark: string read FRemark write FRemark;
     property Status: string read FStatus write FStatus;
-    property PrcType: Word read FPrcType write FPrcType;
-    property ProductID: Integer read FProductID write FProductID;
+    property PrcType: word read FPrcType write FPrcType;
+    property ProductID: integer read FProductID write FProductID;
     property MemberPrice: string read FMemberPrice write FMemberPrice;
-    property IsBigPack: Boolean read FIsBigPack write FIsBigPack;
-    property IsDisp: Word read FIsDisp write FIsDisp;
+    property IsBigPack: boolean read FIsBigPack write FIsBigPack;
+    property IsDisp: word read FIsDisp write FIsDisp;
     property SPProductID: string read FSPProductID write FSPProductID;
-    property RelativeQty: Integer read FRelativeQty write FRelativeQty;
+    property RelativeQty: integer read FRelativeQty write FRelativeQty;
     property Py: string read FPy write FPy;
-    property UpdateState: Integer read FUpdateState write FUpdateState;
+    property UpdateState: integer read FUpdateState write FUpdateState;
   end;
 
-  { TTbShopProduct }
+  { TProduct }
 
-  TTbShopProduct = class(TPersistent)
+  TProduct = class(TPersistent)
   private
     FBarCode: string;
-    FGID: Integer;
-    FIsBigPack: Boolean;
-    FIsDisp: Word;
-    FMemberPrice: string;
-    FPrcType: Word;
+    FGID: integer;
+    FIsBigPack: boolean;
+    FIsDisp: word;
+    FIsLtd: word;
+    FMemberPrice: currency;
+    FPrcType: word;
     FProductCode: string;
-    FProductID: Integer;
+    FProductID: integer;
     FProductName: string;
     FPy: string;
-    FRelativeQty: Integer;
+    FRelativeQty: integer;
     FRemark: string;
-    FRetailPrice: Currency;
+    FRetailPrice: currency;
     FShortCode: string;
     FShortName: string;
     FSortCode: string;
@@ -81,9 +82,9 @@ type
     FSPProductID: string;
     FStatus: string;
     FUnit: string;
-    FUpdateState: Integer;
+    FUpdateState: integer;
   published
-    property GID: Integer read FGID write FGID;
+    property GID: integer read FGID write FGID;
     property ProductCode: string read FProductCode write FProductCode;
     property ShortCode: string read FShortCode write FShortCode;
     property ProductName: string read FProductName write FProductName;
@@ -93,19 +94,22 @@ type
     property BarCode: string read FBarCode write FBarCode;
     property SPEC: string read FSPEC write FSPEC;
     property Unit_: string read FUnit write FUnit;
-    property RetailPrice: Currency read FRetailPrice write FRetailPrice;
+    property RetailPrice: currency read FRetailPrice write FRetailPrice;
     property Remark: string read FRemark write FRemark;
     property Status: string read FStatus write FStatus;
-    property PrcType: Word read FPrcType write FPrcType;
-    property ProductID: Integer read FProductID write FProductID;
-    property MemberPrice: string read FMemberPrice write FMemberPrice;
-    property IsBigPack: Boolean read FIsBigPack write FIsBigPack;
-    property IsDisp: Word read FIsDisp write FIsDisp;
+    property PrcType: word read FPrcType write FPrcType;
+    property ProductID: integer read FProductID write FProductID;
+    property MemberPrice: currency read FMemberPrice write FMemberPrice;
+    property IsBigPack: boolean read FIsBigPack write FIsBigPack;
+    property IsDisp: word read FIsDisp write FIsDisp;
+    property IsLtd: word read FIsLtd write FIsLtd;
     property SPProductID: string read FSPProductID write FSPProductID;
-    property RelativeQty: Integer read FRelativeQty write FRelativeQty;
+    property RelativeQty: integer read FRelativeQty write FRelativeQty;
     property Py: string read FPy write FPy;
-    property UpdateState: Integer read FUpdateState write FUpdateState;
+    property UpdateState: integer read FUpdateState write FUpdateState;
   end;
+
+  TProductList = class(TObjectList<TProduct>);
 
 implementation
 
