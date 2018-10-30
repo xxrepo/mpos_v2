@@ -19,6 +19,16 @@ type
     function Next(out theIID: TGUID; out theIntf): Boolean; overload;
   end;
 
+  ICMInterfaceRegisterEvent = interface(ICMEvent)
+    ['{5122621A-43F9-40EA-BB30-D47236F2EB57}']
+    function GetDescription: string;
+  end;
+
+  ICMInterfaceRegisterListener = interface(ICMListener)
+    ['{EF41F64D-5472-4ED2-B322-470561041A01}']
+    procedure Putting(e: ICMInterfaceRegisterEvent);
+  end;
+
   ICMInterfaceRegister = interface(ICMBase)
     ['{5FA35DFF-5227-4B60-B8D4-7BDD6453FF18}']
     function PutInterface(const ADescription: string; const AIID: TGUID; const AIntf: IUnknown; const ACode: string=''): Integer; overload;
