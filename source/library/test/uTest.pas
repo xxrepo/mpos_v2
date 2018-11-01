@@ -6,18 +6,15 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_messager;
+  cm_messager,
+  uSystem;
 
 type
 
   { TTest }
 
-  TTest = class
-  private
-    FMessager: TCMMessager;
+  TTest = class(TCMMessageable)
   public
-    constructor Create;
-    destructor Destroy; override;
     procedure test;
   end;
 
@@ -25,23 +22,21 @@ implementation
 
 { TTest }
 
-constructor TTest.Create;
-begin
-
-end;
-
-destructor TTest.Destroy;
-begin
-  FMessager.Free;
-  inherited Destroy;
-end;
-
 procedure TTest.test;
-var
-  messager: TCMMessager;
 begin
-  messager := TCMMessageManager.GetInstance.GetMessager('test');
-  messager.Info('hello world');
+  // 获得“value”
+  AppSystem.GetParameter.Get('test.name').AsString;
+  // 获得“123”
+  AppSystem.GetParameter.Get('test.myName').AsString;
+  // 获得能转换的类型值，否则为默认值
+  AppSystem.GetParameter.Get('test.myName').AsInteger;
+  // 获得“hello world”
+  AppSystem.GetParameter.Get('test.name2.desc').AsString;
+  // 与上等效
+  AppSystem.GetParameter.Get('test.name2').Get('desc').AsString;
+  // 获得“”，不存在的节点获得默认值，可以通过调用IsNull判断是否存在，
+  //调用DataType获得数据类型
+  AppSystem.GetParameter.Get('test.haha').AsString;
 end;
 
 end.

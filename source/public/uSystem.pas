@@ -27,18 +27,17 @@ type
   end;
 
   IAppSystem = interface(ICMBase)
-    ['{85FDDC79-C8E3-4D7E-BCEB-7A0936078239}']
-    function GetVersion: string;
+    ['{0D16D9B0-C131-4A14-B14A-E55FB2EFE41D}']
+    function GetVersion: string;           //系统版本
     function IsTestMode: Boolean;
-    function GetStartTime: TDateTime;
-    function GetLoginTime: TDateTime;
-    function GetParameter: ICMParameter;
-    function GetMsgBar: ICMMsgBar;
-    function GetMsgBox: ICMMsgBox;
-    function GetLog: ICMLog;
-    function GetWorkRect: TRect;
-    function GetServiceRect: TRect;
-    procedure AddSystemListener(l: ISystemListener);
+    function GetStartTime: TDateTime;      //启动时间
+    function GetParameter: ICMParameter;   //配置参数
+    function GetMsgBar: ICMMsgBar;         //消息显示条
+    function GetMsgBox: ICMMsgBox;         //消息显示框
+    function GetLog: ICMLog;               //系统日志
+    function GetWorkRect: TRect;           //系统在屏幕工作区域
+    function GetServiceRect: TRect;        //分配给业务在屏幕的工作区域
+    procedure AddSystemListener(l: ISystemListener);  //添加指定的系统侦听器
   end;
 
 function AppSystem: IAppSystem;

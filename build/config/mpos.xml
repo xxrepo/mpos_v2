@@ -6,7 +6,9 @@
 		<logo>resource/logo.png</logo>
 	</resources>  
 	<configFiles>	 
-		 <f>config/navigator.xml</f>
-		 <f>config/test.xml</f>
+		 <navigator>config/navigator.xml</navigator>
+		 <test>config/test.xml</test>
 	</configFiles>
+
 </mpos>
+

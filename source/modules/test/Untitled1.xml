@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test>
+    <!-- 参数名：name；参数值：value-->
+	<name>value</name>
+
+	<!-- 参数名：myName；参数值：myValue-->
+	<name name="myName">123</name>
+
+	<name2>
+		<desc>hello world</desc>
+	</name2>
+</test>
+
+
+

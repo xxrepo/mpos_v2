@@ -28,7 +28,7 @@ type
 
   ICMParameterBaseData = interface(ICMBase)
     ['{0BB761D1-25DC-47BD-9711-1367DDCA931C}']
-    procedure Clear;
+    procedure Clear;  //TODO考虑不可变的情形
     function DataType: TParameterDataType;
     function IsNull: Boolean;
     function AsBoolean: Boolean;

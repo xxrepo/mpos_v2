@@ -19,14 +19,22 @@ type
     function Next(out theIID: TGUID; out theIntf): Boolean; overload;
   end;
 
+  { ICMInterfaceRegisterEvent
+    // 表示接口寄存器事件
+  }
   ICMInterfaceRegisterEvent = interface(ICMEvent)
     ['{5122621A-43F9-40EA-BB30-D47236F2EB57}']
     function GetDescription: string;
+    function GetIID: TGUID;
+    function GetIntf: IUnknown;
+    function GetCode: string;
   end;
 
   ICMInterfaceRegisterListener = interface(ICMListener)
     ['{EF41F64D-5472-4ED2-B322-470561041A01}']
     procedure Putting(e: ICMInterfaceRegisterEvent);
+    procedure Outting(e: ICMInterfaceRegisterEvent);
+    procedure Cutting(e: ICMInterfaceRegisterEvent);
   end;
 
   ICMInterfaceRegister = interface(ICMBase)

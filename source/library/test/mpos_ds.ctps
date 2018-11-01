@@ -4,13 +4,13 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="17">
+    <Units Count="21">
       <Unit0>
         <Filename Value="mpos_ds.ppr"/>
         <IsPartOfProject Value="True"/>
         <TopLine Value="24"/>
         <CursorPos X="48" Y="42"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,7 +20,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\..\kit\CMSDK\cm_InterfaceRegister.pas"/>
@@ -29,7 +29,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\..\kit\CMSDK\cm_Plat.pas"/>
@@ -38,7 +38,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
       </Unit3>
       <Unit4>
         <Filename Value="uDBImpl.pas"/>
@@ -46,7 +46,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="19"/>
         <CursorPos X="4" Y="52"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -56,7 +56,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
@@ -64,7 +64,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos X="60" Y="20"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\..\kit\CMSDK\cm_DB.pas"/>
@@ -73,7 +73,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\..\public\uDB.pas"/>
@@ -82,16 +82,15 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
       </Unit8>
       <Unit9>
         <Filename Value="uTest.pas"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="21"/>
-        <CursorPos X="44" Y="38"/>
-        <UsageCount Value="20"/>
+        <CursorPos X="31" Y="25"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
       </Unit9>
       <Unit10>
@@ -130,22 +129,55 @@
       </Unit14>
       <Unit15>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\objpash.inc"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="8"/>
         <TopLine Value="294"/>
         <CursorPos X="39" Y="308"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\..\kit\CMSDK\cm_messager.pas"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="191"/>
-        <CursorPos X="65" Y="210"/>
-        <UsageCount Value="10"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="248"/>
+        <CursorPos X="44" Y="246"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit16>
+      <Unit17>
+        <Filename Value="..\..\public\uSystem.pas"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="28"/>
+        <CursorPos X="19" Y="44"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="..\..\kit\CMSDK\cm_parameter.pas"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="18"/>
+        <CursorPos X="45" Y="31"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="100"/>
+        <CursorPos X="16" Y="120"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="..\..\kit\CMSDK\cm_theme.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="49"/>
+        <CursorPos X="53" Y="44"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit20>
     </Units>
-    <JumpHistory Count="12" HistoryIndex="11">
+    <JumpHistory Count="25" HistoryIndex="23">
       <Position1>
         <Filename Value="mpos_ds.ppr"/>
         <Caret Line="12" Column="8"/>
@@ -194,6 +226,58 @@
         <Filename Value="uTest.pas"/>
         <Caret Line="9" Column="11"/>
       </Position12>
+      <Position13>
+        <Filename Value="uTest.pas"/>
+        <Caret Line="18" Column="15" TopLine="4"/>
+      </Position13>
+      <Position14>
+        <Filename Value="uTest.pas"/>
+        <Caret Line="10" Column="8" TopLine="4"/>
+      </Position14>
+      <Position15>
+        <Filename Value="uTest.pas"/>
+        <Caret Line="27" Column="28" TopLine="7"/>
+      </Position15>
+      <Position16>
+        <Filename Value="..\..\kit\CMSDK\cm_parameter.pas"/>
+        <Caret Line="52" Column="39" TopLine="50"/>
+      </Position16>
+      <Position17>
+        <Filename Value="..\..\kit\CMSDK\cm_parameter.pas"/>
+        <Caret Line="45" Column="46" TopLine="25"/>
+      </Position17>
+      <Position18>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Caret Line="15" Column="41" TopLine="28"/>
+      </Position18>
+      <Position19>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Caret Line="35" Column="20" TopLine="28"/>
+      </Position19>
+      <Position20>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Caret Line="63" Column="20" TopLine="49"/>
+      </Position20>
+      <Position21>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Caret Line="78" Column="20" TopLine="64"/>
+      </Position21>
+      <Position22>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Caret Line="92" Column="20" TopLine="69"/>
+      </Position22>
+      <Position23>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Caret Line="104" Column="20" TopLine="81"/>
+      </Position23>
+      <Position24>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Caret Line="120" Column="16" TopLine="100"/>
+      </Position24>
+      <Position25>
+        <Filename Value="..\..\kit\CMSDK\solutions\cm_ParameterUtils.pas"/>
+        <Caret Line="661" Column="3" TopLine="659"/>
+      </Position25>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
