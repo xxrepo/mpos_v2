@@ -24,7 +24,10 @@ implementation
 
 procedure THelloWorld.Test;
 begin
-  Messager.Info('hello world');
+  Messager.Debug('Test()...');
+  // Do something you need to do.
+
+  Messager.Debug('Test().');
 end;
 
 procedure THelloWorld.UseTest;
