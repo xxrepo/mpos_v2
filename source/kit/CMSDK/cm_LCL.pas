@@ -23,7 +23,7 @@ uses
 type
 
   { ILCLGlobalSet
-    // LCL 常用全局数据获取的声明。
+    // LCL 常用全局数据获取的声明�
   }
   ILCLGlobalSet = interface(ICMBase)
     ['{46FAB2C6-A6A4-4E95-9AFC-B37B431166ED}']
@@ -45,7 +45,7 @@ type
   end;
 
   { ICMLCLGlobalManager
-    // LCL 全局数据管理器�a�
+    // LCL 全局数据管理器�
   }
   ICMLCLGlobalManager = interface(ICMBase)
     ['{38F96762-4D07-4609-8A9F-4EFEDD020A6D}']
@@ -56,9 +56,9 @@ type
   end;
 
   { ICMLCLGenerator
-    // LCL 产生器
-    //    在实际中可能并不能直接使用比 TControl 更原始的类型，但其下属性难免不会有更原始的类型，故在
-    //这里也提供后两方法。
+    // LCL 产生�
+    //    在实际中參�并不能直接使用比 TControl 更原始的类型，但其下属�难免不会有更原�的类型，故在
+    //这里也提供后两方法�
   }
 
   ICMLCLGenerator = interface(ICMBase)
@@ -116,7 +116,7 @@ type
   end;
 
   { ICMLCLWidgetSet
-    // LCL 工具集。
+    // LCL 工具集�
   }
   ICMLCLWidgetSet = interface(ICMBase)
     ['{E5C003F1-3FB7-42EC-AFA7-2D7B42F73876}']

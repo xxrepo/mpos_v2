@@ -8,8 +8,7 @@
       <Unit0>
         <Filename Value="test.ppr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <CursorPos X="61" Y="7"/>
+        <CursorPos X="20" Y="26"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -35,21 +34,22 @@
         <Filename Value="uTest.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="23" Y="19"/>
+        <CursorPos X="12" Y="26"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
         <Filename Value="uHelloWorld.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="3"/>
-        <CursorPos X="11" Y="29"/>
+        <TopLine Value="17"/>
+        <CursorPos X="35" Y="35"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit4>
     </Units>
-    <JumpHistory Count="3" HistoryIndex="2">
+    <JumpHistory Count="6" HistoryIndex="5">
       <Position1>
         <Filename Value="test.ppr"/>
         <Caret Line="15" Column="5"/>
@@ -62,6 +62,18 @@
         <Filename Value="test.ppr"/>
         <Caret Line="21" Column="91" TopLine="4"/>
       </Position3>
+      <Position4>
+        <Filename Value="uHelloWorld.pas"/>
+        <Caret Line="18" Column="19" TopLine="3"/>
+      </Position4>
+      <Position5>
+        <Filename Value="uHelloWorld.pas"/>
+        <Caret Line="27" Column="20" TopLine="9"/>
+      </Position5>
+      <Position6>
+        <Filename Value="uHelloWorld.pas"/>
+        <Caret Line="38" Column="20" TopLine="17"/>
+      </Position6>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

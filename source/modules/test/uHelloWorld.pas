@@ -23,6 +23,8 @@ implementation
 { THelloWorld }
 
 procedure THelloWorld.Test;
+var
+  c: TComponent;
 begin
   Messager.Debug('Test()...');
   // Do something you need to do.
@@ -31,11 +33,11 @@ begin
 end;
 
 procedure THelloWorld.UseTest;
-var
-  test: ITest;
+//var
+//  test: ITest;
 begin
-  if InterfaceRegister.OutInterface(ITest, test) then
-    test.Test;
+  //if InterfaceRegister.OutInterface(ITest, test) then
+  //  test.Test;
 end;
 
 end.
