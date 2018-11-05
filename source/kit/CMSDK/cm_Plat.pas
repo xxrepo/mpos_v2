@@ -28,10 +28,11 @@ type
 ResourceString
   PlatUninitializedStr = 'Platform is not initialized.';
 
-//用于库中设置 InterfaceRegister 使用
+// 用于库中设置 InterfaceRegister 使用
 function SetInterfaceRegister(AInterfaceRegister: ICMInterfaceRegister): Boolean;
 
 var
+  // 系统唯一全局变量
   InterfaceRegister: ICMInterfaceRegister = nil;
 
 implementation

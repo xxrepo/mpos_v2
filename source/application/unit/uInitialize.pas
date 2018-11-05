@@ -91,11 +91,11 @@ begin
   FLogger := TCMJointFileLogger.Create(Application);
   FLogger.FilePath := LogPath;
   FLogger.FileNamePrefix := LogFileNamePrefix;
-  FLogger.Info(Format('=============================================== [%s] ====', [ParamStr(0)]));
+  FLogger.Info('=================================================================================');
+  FLogger.Info(Format('--- [%s] [%s] ---', [ParamStr(0), VersionStr]));
   //2、默认信息处理
   FMessageHandler := TCMLogMessageHandler.Create(FLogger);
   cm_PlatInitialize.InitPlat(FMessageHandler);
-  Self.Messager.AddMessageHandler(FMessageHandler);
   DefaultMessagerName := 'MPOS';
   //3、初始值
   FParameterLoader := nil;

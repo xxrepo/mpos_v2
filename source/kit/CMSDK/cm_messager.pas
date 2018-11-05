@@ -15,7 +15,7 @@ unit cm_messager;
 interface
 
 uses
-  Classes, SysUtils, contnrs,
+  Classes, SysUtils, Contnrs,
   cm_classes, cm_interfaces;
 
 type
@@ -200,12 +200,15 @@ type
     class var FDefaultHandler: ICMMessageHandler;
   private
     FMessagerList: TFPHashObjectList;
+    FLock: TRTLCriticalSection;
+    FNoneHandlerList: TList;
     //{$WARNINGS OFF}
     constructor Create; //Please do not use this constructor
+    class procedure SetDefaultHandler(AValue: ICMMessageHandler); static;
   public
     destructor Destroy; override;
     class function GetInstance: TCMMessageManager;
-    class property DefaultHandler: ICMMessageHandler read FDefaultHandler write FDefaultHandler;
+    class property DefaultHandler: ICMMessageHandler read FDefaultHandler write SetDefaultHandler;
     procedure AddMessager(AMessager: TCMMessager);
     function GetMessager(const ABundleName: string): TCMMessager; overload;
     function GetMessager(const ABundleName: string; AHandler: ICMMessageHandler): TCMMessager; overload;
@@ -345,11 +348,30 @@ end;
 constructor TCMMessageManager.Create;
 begin
   FMessagerList := TFPHashObjectList.Create(True);
+  InitCriticalSection(FLock);
+  FNoneHandlerList := TList.Create;
+end;
+
+class procedure TCMMessageManager.SetDefaultHandler(AValue: ICMMessageHandler);
+var
+  i: Integer;
+  notList: TList;
+begin
+  FDefaultHandler := AValue;
+  notList := TCMMessageManager.GetInstance.FNoneHandlerList;
+  if notList.Count > 0 then
+    begin
+      for i:=0 to notList.Count-1 do
+        TCMMessager(notList[i]).AddMessageHandler(FDefaultHandler);
+      notList.Clear;
+    end;
 end;
 
 destructor TCMMessageManager.Destroy;
 begin
   FMessagerList.Free;
+  DoneCriticalSection(FLock);
+  FNoneHandlerList.Free;
   inherited Destroy;
 end;
 
@@ -364,17 +386,32 @@ end;
 procedure TCMMessageManager.AddMessager(AMessager: TCMMessager);
 begin
   if Assigned(AMessager) then
-    FMessagerList.Add(AMessager.BundleName, AMessager);
+    begin
+      EnterCriticalSection(FLock);
+      try
+        FMessagerList.Add(AMessager.BundleName, AMessager);
+      finally
+        LeaveCriticalSection(FLock);
+      end;
+    end;
 end;
 
 function TCMMessageManager.GetMessager(const ABundleName: string): TCMMessager;
 begin
   Result := GetMessager(ABundleName, TCMMessageManager.FDefaultHandler);
+  if (not Assigned(TCMMessageManager.FDefaultHandler)) and Assigned(Result) then
+    FNoneHandlerList.Add(Result);
 end;
 
 function TCMMessageManager.GetMessager(const ABundleName: string; AHandler: ICMMessageHandler): TCMMessager;
 begin
-  Result := TCMMessager(FMessagerList.Find(ABundleName));
+  Result := nil;
+  EnterCriticalSection(FLock);
+  try
+    Result := TCMMessager(FMessagerList.Find(ABundleName));
+  finally
+    LeaveCriticalSection(FLock);
+  end;
   if not Assigned(Result) then
     Result := TCMMessager.Create(ABundleName + 'Messager');
   Result.BundleName := ABundleName;
@@ -402,9 +439,14 @@ procedure TCMMessageManager.ReleaseMessager(const ABundleName: string);
 var
   er: TCMMessager;
 begin
-  er := TCMMessager(FMessagerList.Find(ABundleName));
-  if not Assigned(er) then
-    FreeAndNil(er);
+  EnterCriticalSection(FLock);
+  try
+    er := TCMMessager(FMessagerList.Find(ABundleName));
+    if not Assigned(er) then
+      FreeAndNil(er);
+  finally
+    LeaveCriticalSection(FLock);
+  end;
 end;
 
 procedure TCMMessageManager.Reset;
@@ -412,12 +454,17 @@ var
   i: Integer;
   er: TCMMessager;
 begin
-  for i:=0 to FMessagerList.Count-1 do
-    begin
-      er := TCMMessager(FMessagerList[i]);
-      if Assigned(er) then
-        er.RemoveAllMessageHandler;
-    end;
+  EnterCriticalSection(FLock);
+  try
+    for i:=0 to FMessagerList.Count-1 do
+      begin
+        er := TCMMessager(FMessagerList[i]);
+        if Assigned(er) then
+          er.RemoveAllMessageHandler;
+      end;
+  finally
+    LeaveCriticalSection(FLock);
+  end;
 end;
 
 { TCMMessageable }
@@ -554,7 +601,7 @@ procedure TCMMessager.AddMessageHandler(AHandler: ICMMessageHandler);
 begin
   if Assigned(AHandler) then
     begin
-      tempHandler := AHandler; //解决handler以局部变量创建的问题
+      tempHandler := AHandler; //解决handler以局部变量创建时引用计数的问题
       FHandlerList.Add(tempHandler);
     end;
 end;

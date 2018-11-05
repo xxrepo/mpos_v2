@@ -5,7 +5,7 @@ unit uFrameTest;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls,
+  Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics,
   cm_theme, cm_Plat,
   uSale, uSaleDTO,
   uSystem;
@@ -20,11 +20,15 @@ type
     edtTermUUID: TEdit;
     Panel1: TPanel;
     Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
     Panel5: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
     procedure Panel1Click(Sender: TObject);
     procedure Panel2Click(Sender: TObject);
+    procedure Panel3Click(Sender: TObject);
+    procedure Panel4Click(Sender: TObject);
     procedure Panel5Click(Sender: TObject);
     procedure Panel6Click(Sender: TObject);
     procedure Panel7Click(Sender: TObject);
@@ -37,7 +41,7 @@ type
 implementation
 
 uses
-  uDBInitialize, cm_messager, uPOS;
+  uDBInitialize, cm_messager, uPOS, cm_AWClasses;
 
 {$R *.frm}
 
@@ -75,6 +79,29 @@ begin
   begin
     DBInit.DBInitialize;
   end;
+end;
+
+var
+  f: TAWForm;
+
+procedure TTestFrame.Panel3Click(Sender: TObject);
+begin
+  f := TAWForm.Create;
+
+  //Self.Name := ;
+  //Self.Controls[];
+
+  f.Color := clBlue;
+  f.Left := 100;
+  f.Top := 100;
+  f.Width := 600;
+
+  AppSystem.GetMsgBox.ShowMessage(IntToStr( f.ShowModal ));
+end;
+
+procedure TTestFrame.Panel4Click(Sender: TObject);
+begin
+  f.Color := clBlue;
 end;
 
 procedure TTestFrame.Panel5Click(Sender: TObject);

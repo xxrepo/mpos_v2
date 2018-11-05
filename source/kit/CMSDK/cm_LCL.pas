@@ -56,9 +56,9 @@ type
   end;
 
   { ICMLCLGenerator
-    // LCL 产生�
-    //    在实际中參�并不能直接使用比 TControl 更原始的类型，但其下属�难免不会有更原�的类型，故在
-    //这里也提供后两方法�
+    // LCL 产生器
+    //    在实际中參数并不能直接使用比 TControl 更原始的类型，但其下属难免不会有更原始的类型，故在
+    //这里也提供后两方法
   }
 
   ICMLCLGenerator = interface(ICMBase)
@@ -76,7 +76,7 @@ type
     function  GetOrdProp(Instance: TObject; const PropName: string): Int64;
     procedure SetOrdProp(Instance: TObject; const PropName: string; Value: Int64);
     function  GetEnumProp(Instance: TObject; const PropName: string): string;
-    procedure SetEnumProp(Instance: TObject; const PropName: string;const Value: string);
+    procedure SetEnumProp(Instance: TObject; const PropName: string; const Value: string);
     function  GetSetProp(Instance: TObject; const PropName: string): string;
     procedure SetSetProp(Instance: TObject; const PropName: string; const Value: string);
     function  GetStrProp(Instance: TObject; const PropName: string): string;

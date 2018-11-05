@@ -85,4 +85,22 @@ object TestFrame: TTestFrame
     TabOrder = 7
     OnClick = Panel5Click
   end
+  object Panel3: TPanel
+    Left = 8
+    Height = 24
+    Top = 160
+    Width = 124
+    Caption = 'Panel3'
+    TabOrder = 8
+    OnClick = Panel3Click
+  end
+  object Panel4: TPanel
+    Left = 8
+    Height = 24
+    Top = 192
+    Width = 124
+    Caption = 'Panel4'
+    TabOrder = 9
+    OnClick = Panel4Click
+  end
 end
