@@ -24,12 +24,11 @@ begin
   Result := InterfaceRegister.PutInterface('支付中心', IPayCenter, payDeal) >= 0;
   //3、注入支付业务寄存器
   Result := (InterfaceRegister.PutInterface('支付业务寄存器', IPayServiceRegister, payDeal) >= 0) and Result;
-  //4、现金支付业务
+   //5、现金支付业务
+
   ps := TPOSCashPay.Create;
   payDeal.AddService(ps);
   //
-
-  Result := (InterfaceRegister.PutInterface('支付业务寄存器', IPayServiceRegister, payDeal) >= 0) and Result;
 
   Result := True;
 end;

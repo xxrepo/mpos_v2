@@ -35,7 +35,7 @@
         <PackageName Value="adLCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="51">
+    <Units Count="55">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -166,101 +166,119 @@
         <IsPartOfProject Value="True"/>
       </Unit29>
       <Unit30>
-        <Filename Value="..\public\uService.pas"/>
+        <Filename Value="..\public\uSystem.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit30>
       <Unit31>
-        <Filename Value="..\public\uSystem.pas"/>
+        <Filename Value="..\public\uDB.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit31>
       <Unit32>
-        <Filename Value="..\public\uDB.pas"/>
+        <Filename Value="..\public\uDAO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit32>
       <Unit33>
-        <Filename Value="..\public\uDAO.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit33>
-      <Unit34>
         <Filename Value="..\public\form\uFrame.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="POSFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="..\kit\CMSDK\extension\cm_ThemeControls.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit34>
       <Unit35>
-        <Filename Value="..\kit\CMSDK\extension\cm_ThemeControls.pas"/>
+        <Filename Value="..\public\uDBUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit35>
       <Unit36>
-        <Filename Value="..\public\uDBUtils.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit36>
-      <Unit37>
         <Filename Value="form\uFrameSale.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SaleFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="..\service\uSale.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit37>
       <Unit38>
-        <Filename Value="..\service\uSale.pas"/>
+        <Filename Value="..\public\uMenus.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit38>
       <Unit39>
-        <Filename Value="..\public\uMenus.pas"/>
+        <Filename Value="..\service\uSaleDTO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit39>
       <Unit40>
-        <Filename Value="..\service\uSaleDTO.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit40>
-      <Unit41>
         <Filename Value="form\uFrameNavigator.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="NavigatorFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="..\kit\CMSDK\cm_Plat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="cm_plat"/>
       </Unit41>
       <Unit42>
-        <Filename Value="..\kit\CMSDK\cm_Plat.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_PlatInitialize.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit42>
       <Unit43>
-        <Filename Value="..\kit\CMSDK\solutions\cm_PlatInitialize.pas"/>
+        <Filename Value="..\kit\CMSDK\cm_LCLGlobalSet.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit43>
       <Unit44>
-        <Filename Value="..\kit\CMSDK\cm_LCLGlobalSet.pp"/>
+        <Filename Value="unit\uInitialize.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit44>
       <Unit45>
-        <Filename Value="unit\uInitialize.pas"/>
+        <Filename Value="unit\uVersion.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit45>
       <Unit46>
-        <Filename Value="unit\uVersion.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit46>
-      <Unit47>
         <Filename Value="form\uFrameTest.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="TestFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit47>
       <Unit48>
-        <Filename Value="..\kit\CMSDK\awt\cm_WProxy.pas"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AProxy.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit48>
       <Unit49>
-        <Filename Value="..\kit\CMSDK\awt\cm_AWClasses.pas"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AToolkit.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit49>
       <Unit50>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
+        <Filename Value="..\persistent\uProductPO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit50>
+      <Unit51>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTEvent.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTEventAdapter.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="..\kit\CMSDK\cm_Type.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="cm_type"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="..\kit\CMSDK\solutions\cm_TypeUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit54>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -272,7 +290,7 @@
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
       <Libraries Value="$(CTDir)"/>
-      <OtherUnitFiles Value="..\public\form;..\kit\CMSDK;..\kit\CMSDK\solutions;form;..\public;..\service;..\kit\CMSDK\extension;unit;..\kit\CMSDK\awt"/>
+      <OtherUnitFiles Value="..\public\form;..\kit\CMSDK;..\kit\CMSDK\solutions;form;..\public;..\service;..\kit\CMSDK\extension;unit;..\kit\CMSDK\awt;..\kit\CMSDK\awt\solutions;..\persistent"/>
       <UnitOutputDirectory Value="lib"/>
     </SearchPaths>
     <Linking>

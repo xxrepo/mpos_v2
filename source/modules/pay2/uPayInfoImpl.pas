@@ -19,7 +19,12 @@ type
     function savePayInfo(APayInfoPO: TPayInfoPO): boolean;
     function getPayInfo(const AServiceUUID: string): TPayInfoPO;
     function getPayInfoList(const AAssignUUID: string): TPayInfoPOList;
+    function GetPaidDataSet(const AOrderUUID: string): TDataSet;
   end;
+
+Resourcestring
+  GetPaidSQL = 'select b.serviceCode,a.amount,a.remark from tbPayInfo a left join tbPayAssign b on(a.assignUUID=b.assignUUID) '
+             + ' left join tbPayRecord c on(b.payUUID=c.payUUID) where c.orderUUID=%s;';
 
 implementation
 
@@ -100,6 +105,11 @@ begin
     end;
     ds.Free;
   end;
+end;
+
+function TPayInfoDAO.GetPaidDataSet(const AOrderUUID: string): TDataSet;
+begin
+  Result := GetDBHelper.Query(GetPaidSQL, [QuotedStr(AOrderUUID)]);
 end;
 
 

@@ -5,8 +5,7 @@ unit uPayDAO;
 interface
 
 uses
-  Classes, SysUtils,
-  cm_Interfaces,
+  Classes, SysUtils, DB,
   uPayPO, uDAO;
 
 type
@@ -43,6 +42,7 @@ type
     function SavePayInfo(APayInfoPO: TPayInfoPO): boolean;
     function GetPayInfo(const AServiceUUID: string): TPayInfoPO;
     function GetPayInfoList(const AAssignUUID: string): TPayInfoPOList;
+    function GetPaidDataSet(const AOrderUUID: string): TDataSet;
   end;
 
   IPayTypeDAO = interface(IPOSDAO)

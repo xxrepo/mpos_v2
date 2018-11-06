@@ -8,7 +8,7 @@ uses
   {$ENDIF}
   Interfaces, // this includes the adLCL widgetset
   Forms,
-  uInitialize, uFormMain, cm_WProxy, cm_AWClasses, cm_awt;
+  uInitialize, uFormMain, cm_type, cm_TypeUtils;
 
 {$R *.res}
 

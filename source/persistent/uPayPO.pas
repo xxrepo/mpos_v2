@@ -99,6 +99,32 @@ type
     property Remark: string read FRemark write FRemark;
   end;
 
+  {TPayTypePO}
+  //TPayTypePO = class(TPersistent, IPayTypeInfo)
+  //private
+  //  FAllowRefund: boolean;
+  //  FCaption: string;
+  //  FCode: string;
+  //  FConfigInfo: string;
+  //  FIsDefault: boolean;
+  //  FIsEnabled: boolean;
+  //  FIsSingle: boolean;
+  //  FName: string;
+  //  FRemark: string;
+  //  FSeqNo: integer;
+  //public
+  //  property Code: string read FCode write FCode;
+  //  property Name: string read FName write FName;
+  //  property Caption: string read FCaption write FCaption;
+  //  property SeqNo: integer read FSeqNo write FSeqNo;
+  //  property IsEnabled: boolean read FIsEnabled write FIsEnabled;
+  //  property IsSingle: boolean read FIsSingle write FIsSingle;
+  //  property IsDefault: boolean read FIsDefault write FIsDefault;
+  //  property AllowRefund: boolean read FAllowRefund write FAllowRefund;
+  //  property ConfigInfo: string read FConfigInfo write FConfigInfo;
+  //  property Remark: string read FRemark write FRemark;
+  //end;
+
   TPayTypePOList = class(TThreadList<TPayTypePO>);
 
 

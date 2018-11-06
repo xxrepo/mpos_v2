@@ -19,15 +19,15 @@ type
   TGenericPayRequest = class(TCMBase, IPayRequest)
   private
     FOrderUUID: string;
-    FPayAmount: Currency;
+    FPayAmount: currency;
     FPayParameter: ICMParameterDataList;
   public
-    constructor Create(const AOrderUUID: string; APayAmount: Currency);
+    constructor Create(const AOrderUUID: string; APayAmount: currency);
     destructor Destroy; override;
     property PayParameter: ICMParameterDataList read FPayParameter;
   public
     function GetOrderUUID: string;
-    function GetPayAmount: Currency;
+    function GetOrderAmount: currency;
     function GetPayParameter: ICMConstantParameterDataList;
   end;
 
@@ -36,28 +36,67 @@ type
   TPayServiceResponse = class(TCMBase, IPayServiceResponse)
   private
     FServicePayUUID: string;
-    FPayType: Byte;
-    FPayAmount: Currency;
+    FPayType: byte;
+    FPayAmount: currency;
     FPayRemark: string;
     FPayMsg: ICMConstantParameterDataList;
   public
-    constructor Create(const AServicePayUUID: string; AType: Byte; AAmount: Currency);
-    property PayAmount: Currency write FPayAmount;
+    constructor Create(const AServicePayUUID: string; AType: byte; AAmount: currency);
+    property PayAmount: currency write FPayAmount;
     property PayRemark: string write FPayRemark;
     property PayMsg: ICMConstantParameterDataList write FPayMsg;
   public //IPayServiceResponse
     function GetServicePayUUID: string;
-    function GetPayType: Byte;
-    function GetPayAmount: Currency;
+    function GetPayType: byte;
+    function GetPayAmount: currency;
     function GetPayRemark: string;
     function GetPayMsg: ICMConstantParameterDataList;
   end;
 
+
+  { TPayTypeInfo }
+
+  TPayTypeInfo = class(TCMBase, IPayTypeInfo)
+  private
+    FPayCode: string;
+    FPayName: string;
+  public
+    constructor Create(const APayCode: string; const APayName: string);
+    destructor Destroy; override;
+  public
+    function GetPayCode: string;
+    function GetPayName: string;
+  end;
+
+
 implementation
+
+{ TPayTypeInfo }
+
+constructor TPayTypeInfo.Create(const APayCode: string; const APayName: string);
+begin
+  FPayCode := APayCode;
+  FPayName := APayName;
+end;
+
+destructor TPayTypeInfo.Destroy;
+begin
+  inherited Destroy;
+end;
+
+function TPayTypeInfo.GetPayCode: string;
+begin
+  Result := FPayCode;
+end;
+
+function TPayTypeInfo.GetPayName: string;
+begin
+  Result := FPayName;
+end;
 
 { TPayServiceResponse }
 
-constructor TPayServiceResponse.Create(const AServicePayUUID: string; AType: Byte; AAmount: Currency);
+constructor TPayServiceResponse.Create(const AServicePayUUID: string; AType: byte; AAmount: currency);
 begin
   inherited Create;
   FServicePayUUID := AServicePayUUID;
@@ -72,12 +111,12 @@ begin
   Result := FServicePayUUID;
 end;
 
-function TPayServiceResponse.GetPayType: Byte;
+function TPayServiceResponse.GetPayType: byte;
 begin
   Result := FPayType;
 end;
 
-function TPayServiceResponse.GetPayAmount: Currency;
+function TPayServiceResponse.GetPayAmount: currency;
 begin
   Result := FPayAmount;
 end;
@@ -94,7 +133,7 @@ end;
 
 { TGenericPayRequest }
 
-constructor TGenericPayRequest.Create(const AOrderUUID: string; APayAmount: Currency);
+constructor TGenericPayRequest.Create(const AOrderUUID: string; APayAmount: currency);
 begin
   inherited Create;
   FOrderUUID := AOrderUUID;
@@ -113,7 +152,7 @@ begin
   Result := FOrderUUID;
 end;
 
-function TGenericPayRequest.GetPayAmount: Currency;
+function TGenericPayRequest.GetOrderAmount: currency;
 begin
   Result := FPayAmount;
 end;

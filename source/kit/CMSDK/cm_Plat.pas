@@ -2,13 +2,13 @@
     This file is part of the CM SDK.
     Copyright (c) 2013-2018 by the ChenMeng studio
 
-    cm_Plat
+    cm_plat
 
     This is not a complete unit, for testing
 
  **********************************************************************}
 
-unit cm_Plat;
+unit cm_plat;
 
 {$mode objfpc}{$H+}
 

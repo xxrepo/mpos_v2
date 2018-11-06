@@ -7,64 +7,68 @@ interface
 uses
   Classes, SysUtils,
   cm_interfaces, cm_messager,
-  uSaleDTO, uSaleBO;
-
+  uSaleDTO, uSaleBO, uProductPO;
 
 type
 
 
-  { ISaleBoard } //销售面板，可对其进行的操作
+  { ISaleBoard }//销售面板，可对其进行的操作
 
   ISaleBoard = interface(ICMBase)
     ['{2497D987-DF1D-4B1F-BDC1-DBC3045E52AA}']
-    function AddShowItem(AVO: TShowItem): Boolean;
-    function DeleteShowItem(const AUUID: string): Boolean;
-    function UpdateShowItem(AVO: TShowItem): Boolean;
-    function SetShowItemList(AVOs: TShowItemList): Boolean;
-    function Clear: Boolean;
+    function AddShowItem(AVO: TShowItem): boolean;
+    function DeleteShowItem(const AUUID: string): boolean;
+    function UpdateShowItem(AVO: TShowItem): boolean;
+    function SetShowItemList(AVOs: TShowItemList): boolean;
+    function Clear: boolean;
     procedure AddListener(AListener: ICMListener);
     procedure PromptMessage(et: TEventType; const msg: string);
   end;
 
-  { ISaleBoardListener } //用于接收销售操作的侦听器接口
+  IProductSelectBoard = interface(ICMBase)
+    ['{2C77D8E1-E4E5-434D-9328-57F5EDD5E9F0}']
+    function ToSelect(list: TProductList): TProduct;
+  end;
+
+  { ISaleBoardListener }//用于接收销售操作的侦听器接口
 
   ISaleBoardListener = interface(ICMListener)
     ['{AC40A1E7-1132-41EB-89BD-438A19F4B2E2}']
-    procedure Deleting(const AUUID: string; var CanDelete: Boolean);
-    procedure Updating(AVO: TShowItem; var CanUpdate: Boolean);
+    procedure Deleting(const AUUID: string; var CanDelete: boolean);
+    procedure Updating(AVO: TShowItem; var CanUpdate: boolean);
     procedure Cleared;
     procedure Inputted(const ACode: string);
     procedure Settle;  //结算
   end;
 
-  { ISaleBillCenter } //销售单据中心，统一管理以方便处理（对象跨库类型不等和生命周期等问题） TODO
+  { ISaleBillCenter }//销售单据中心，统一管理以方便处理（对象跨库类型不等和生命周期等问题） TODO
   ISaleBillCenter = interface(ICMBase)
     ['{5CC442C5-7166-43B2-8CD9-F502032E8742}']
     function GetCurrBill: TSaleBill;
-    function NewBill: Boolean;
+    function NewBill: boolean;
     procedure AddListener(AListener: ICMListener);
     //function GetShowItemList: TShowItemList;
   end;
 
-  { ICurrSaleBillListener } //当前销售单据侦听器
+  { ICurrSaleBillListener }//当前销售单据侦听器
 
   ISaleBillListener = interface(ICMListener)
     ['{5C5E5312-B747-4D79-B9F3-60763EBB5419}']
     procedure BillCreated(ABill: TSaleBill);
-    procedure CommodityAdding(ABill: TSaleBill; ACommodity: TSaleCommodity; var CanAdd: Boolean);
+    procedure CommodityAdding(ABill: TSaleBill; ACommodity: TSaleCommodity; var CanAdd: boolean);
     procedure CommodityAdded(ABill: TSaleBill; ACommodity: TSaleCommodity);
-    procedure CommodityRemoving(ABill: TSaleBill; ACommodity: TSaleCommodity; var CanDelete: Boolean);
+    procedure CommodityRemoving(ABill: TSaleBill; ACommodity: TSaleCommodity; var CanDelete: boolean);
     procedure CommodityRemoved(ABill: TSaleBill; ACommodity: TSaleCommodity);
-    procedure CommodityUpdating(ABill: TSaleBill; ACommodity: TSaleCommodity; var CanUpdate: Boolean);
+    procedure CommodityUpdating(ABill: TSaleBill; ACommodity: TSaleCommodity; var CanUpdate: boolean);
     procedure CommodityUpdated(ABill: TSaleBill; ACommodity: TSaleCommodity);
     procedure BillCleared(ABill: TSaleBill);
   end;
 
-  { ISaleHandler } //销售处理接口
+  { ISaleHandler }//销售处理接口
 
   ISaleHandler = interface(ICMBase)
-    ['{3ED1039D-36B7-4F88-82C4-F4DFD29D41D8}']
-    function Handle(ABill: TSaleBill): Boolean;
+    ['{1FA20EBA-6923-42C2-AEBD-C8775C54E29C}']
+    function Handle(ABill: TSaleBill): boolean;
     procedure AddHandler(AHandler: ISaleHandler);
   end;
 
@@ -74,12 +78,12 @@ type
   private
     FHandlers: TInterfaceList;
   protected
-    function DoBeforeHandle(ABill: TSaleBill): Boolean; virtual;
-    function DoAfterHandle(ABill: TSaleBill): Boolean; virtual;
+    function DoBeforeHandle(ABill: TSaleBill): boolean; virtual;
+    function DoAfterHandle(ABill: TSaleBill): boolean; virtual;
   public
     constructor Create;
     destructor Destroy; override;
-    function Handle(ABill: TSaleBill): Boolean;
+    function Handle(ABill: TSaleBill): boolean;
     procedure AddHandler(AHandler: ISaleHandler);
   end;
 
@@ -99,39 +103,46 @@ begin
   inherited Destroy;
 end;
 
-function TSaleHandler.DoBeforeHandle(ABill: TSaleBill): Boolean;
+function TSaleHandler.DoBeforeHandle(ABill: TSaleBill): boolean;
 begin
   Result := True;
 end;
 
-function TSaleHandler.DoAfterHandle(ABill: TSaleBill): Boolean;
+function TSaleHandler.DoAfterHandle(ABill: TSaleBill): boolean;
 begin
   Result := True;
 end;
 
-function TSaleHandler.Handle(ABill: TSaleBill): Boolean;
+function TSaleHandler.Handle(ABill: TSaleBill): boolean;
 var
-  i: Integer;
+  i: integer;
 begin
   Result := DoBeforeHandle(ABill);
 
-  for i:=0 to FHandlers.Count-1 do
+  for i := 0 to FHandlers.Count - 1 do
+  begin
+    if not ISaleHandler(FHandlers[i]).Handle(ABill) then
     begin
-      Result := ISaleHandler(FHandlers[i]).Handle(ABill) and Result;
+      Messager.Debug('Handler[%d]: False...', [i]);
+      Result := False;
+      Exit;
     end;
-  Result := DoAfterHandle(ABill) and Result;
+    Messager.Debug('Handler[%d]: True...', [i]);
+  end;
+  Result := DoAfterHandle(ABill);
 end;
 
 procedure TSaleHandler.AddHandler(AHandler: ISaleHandler);
 begin
   if Supports(AHandler, ISaleHandler) then
-    begin
-      Messager.Debug('AddHandler:[%s]...', [AHandler.GetImplementorName]);
-      FHandlers.Add(AHandler);
-    end;
+  begin
+    Messager.Debug('AddHandler:[%s]...', [AHandler.GetImplementorName]);
+    FHandlers.Add(AHandler);
+  end;
 end;
 
 
 end.
+
 
 

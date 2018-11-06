@@ -29,11 +29,16 @@ var
   ds: TDataSet;
 begin
   Result := False;
-  ds := GetDBHelper.Query(SQLFmt, [QuotedStr(APayCode)]);
-  if Assigned(ds) then
-  begin
-    Result := not ds.IsEmpty;
-    ds.Free;
+  try
+    ds := GetDBHelper.Query(SQLFmt, [QuotedStr(APayCode)]);
+    if Assigned(ds) then
+    begin
+      Result := not ds.IsEmpty;
+      ds.Free;
+    end;
+  except
+    on e: Exception do
+      Messager.Error('existPayType: ', e)
   end;
 end;
 
@@ -45,60 +50,68 @@ var
   payType: TPayTypePO;
 begin
   Result := nil;
-  ds := GetDBHelper.Query(SQLFmt, [QuotedStr(APayCode)]);
-  if Assigned(ds) then
-  begin
-    if (not ds.IsEmpty) then
+  try
+    ds := GetDBHelper.Query(SQLFmt, [QuotedStr(APayCode)]);
+    if Assigned(ds) then
     begin
-      payType := TPayTypePO.Create;
-      payType.Code := ds.FieldByName('Code').AsString;
-      payType.Name := ds.FieldByName('Name').AsString;
-      payType.SeqNo := ds.FieldByName('Code').AsInteger;
-      payType.Caption := ds.FieldByName('Caption').AsString;
-      payType.ConfigInfo := ds.FieldByName('Code').AsString;
+      if (not ds.IsEmpty) then
+      begin
+        payType := TPayTypePO.Create;
+        payType.Code := ds.FieldByName('PayCode').AsString;
+        payType.Name := ds.FieldByName('PayName').AsString;
+        payType.SeqNo := ds.FieldByName('SeqNo').AsInteger;
 
-      payType.AllowRefund := ds.FieldByName('payUUID').AsBoolean;
-      payType.IsDefault := ds.FieldByName('IsDefault').AsBoolean;
-      payType.IsEnabled := ds.FieldByName('IsEnabled').AsBoolean;
-      payType.IsSingle := ds.FieldByName('IsSingle').AsBoolean;
+        payType.AllowRefund := ds.FieldByName('AllowRefund').AsBoolean;
+        payType.IsDefault := ds.FieldByName('IsDefault').AsBoolean;
+        payType.IsEnabled := ds.FieldByName('IsEnabled').AsBoolean;
+        payType.IsSingle := ds.FieldByName('IsSingle').AsBoolean;
+        payType.ConfigInfo := ds.FieldByName('ConfigInfo').AsString;
 
-      payType.Remark := ds.FieldByName('remark').AsString;
-      Result := payType;
+        payType.Remark := ds.FieldByName('remark').AsString;
+        Result := payType;
+      end;
+      ds.Free;
     end;
-    ds.Free;
+  except
+    on e: Exception do
+      Messager.Error('getPayType: ', e)
   end;
 end;
 
 function TPayTypeDAO.getPayTypeList(): TPayTypePOList;
 const
-  SQLFmt = 'SELECT * FROM tbPosPayMode COLLATE NOCASE;';
+  SQLFmt = 'SELECT * FROM tbPosPayMode;';
 var
   ds: TDataSet;
   payType: TPayTypePO;
 begin
   Result := TPayTypePOList.Create;
-  ds := GetDBHelper.Query(SQLFmt);
-  if Assigned(ds) then
-  begin
-    while (not ds.EOF) do
+  try
+    ds := GetDBHelper.Query(SQLFmt);
+    if Assigned(ds) then
     begin
-      payType := TPayTypePO.Create;
-      payType.Code := ds.FieldByName('Code').AsString;
-      payType.Name := ds.FieldByName('Name').AsString;
-      payType.SeqNo := ds.FieldByName('Code').AsInteger;
-      payType.Caption := ds.FieldByName('Caption').AsString;
-      payType.ConfigInfo := ds.FieldByName('Code').AsString;
+      while (not ds.EOF) do
+      begin
+        payType := TPayTypePO.Create;
+        payType.Code := ds.FieldByName('PayCode').AsString;
+        payType.Name := ds.FieldByName('PayName').AsString;
+        payType.SeqNo := ds.FieldByName('SeqNo').AsInteger;
 
-      payType.AllowRefund := ds.FieldByName('payUUID').AsBoolean;
-      payType.IsDefault := ds.FieldByName('IsDefault').AsBoolean;
-      payType.IsEnabled := ds.FieldByName('IsEnabled').AsBoolean;
-      payType.IsSingle := ds.FieldByName('IsSingle').AsBoolean;
+        payType.AllowRefund := ds.FieldByName('AllowRefund').AsBoolean;
+        payType.IsDefault := ds.FieldByName('IsDefault').AsBoolean;
+        payType.IsEnabled := ds.FieldByName('IsEnabled').AsBoolean;
+        payType.IsSingle := ds.FieldByName('IsSingle').AsBoolean;
+        payType.ConfigInfo := ds.FieldByName('ConfigInfo').AsString;
 
-      payType.Remark := ds.FieldByName('remark').AsString;
-      Result.Add(payType);
-      ds.Next;
+        payType.Remark := ds.FieldByName('remark').AsString;
+        Result.Add(payType);
+        ds.Next;
+      end;
+      ds.Free;
     end;
-    ds.Free;
+  except
+    on e: Exception do
+      Messager.Error('getPayTypeList: ', e)
   end;
 
 end;

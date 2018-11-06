@@ -1,4 +1,4 @@
-unit uCashPay;
+unit uPOSPayCash;
 
 {$mode objfpc}{$H+}
 
@@ -7,13 +7,18 @@ interface
 uses
   Classes, SysUtils,
   cm_messager, cm_sysutils, cm_Plat,
-  uPay, uPayUtils, uSystem;
+  uPay, uPayUtils, uSystem,
+  uDAO, uCashPayPO, uCashPayDAO, uCashPayDAOImpl;
 
 type
 
   { TPOSCashPay }
 
   TPOSCashPay = class(TCMMessageable, IPayService)
+  private
+    FPayRequestCashDAO: ICashPayRecordDAO;
+  public
+    constructor Create;
   public
     function GetName: string;
     function ToPay(ARequest: IPayServiceRequest; out theResponseList: TPayServiceResponseList): boolean;
@@ -26,6 +31,11 @@ const
 implementation
 
 { TPOSCashPay }
+
+constructor TPOSCashPay.Create;
+begin
+  FPayRequestCashDAO := TPOSDAOFactory.GetInstance.GetDAOObject(TCashPayRecordDAO);
+end;
 
 function TPOSCashPay.GetName: string;
 begin
@@ -40,11 +50,25 @@ var
   payAmount, realAmount, returnAmount: currency;
   rspObj, rspObj2: TPayServiceResponse;
   PayBoard: IPayBoard;
+
+  APayRecord: TPayRecordCash;
 begin
   Result := False;
 
   payAmount := ARequest.GetPayAmount;
   Messager.Debug('CashPay: %.2f...', [payAmount]);
+
+
+  APayRecord := TPayRecordCash.Create;
+  APayRecord.UUID := CreateGUIDStr;
+  APayRecord.AssignUUID:= ARequest.GetPayUUID;
+  APayRecord.Amount:=ARequest.GetPayAmount;
+  if not FPayRequestCashDAO.Save(APayRecord) then
+  begin
+      Messager.Debug('xxxx...', [payAmount]);
+
+    Exit;
+  end;
 
   s := AppSystem.GetMsgBox.InputBox('实收现金', Format('NeedAmount: %.2f', [payAmount]), DefFmtCurrStr(payAmount));
 
@@ -57,7 +81,6 @@ begin
     rspObj.PayRemark := '输入金额不正确.';
     Exit;
   end;
-
   Messager.Debug('1111111111111');
   if (realAmount = 0) then
   begin
@@ -67,7 +90,6 @@ begin
     rspObj.PayRemark := '实收金额不能为零.';
     Exit;
   end;
-
   Messager.Debug('2222222222');
   returnAmount := realAmount - payAmount;
   if (returnAmount > 100) then
@@ -78,12 +100,10 @@ begin
     rspObj.PayRemark := '找零金额不可以大于100.';
     Exit;
   end;
-
   Messager.Debug('33333333');
   payType := 1;
   servicePayUUID := CreateGUIDStr;
   rspObj := TPayServiceResponse.Create(servicePayUUID, payType, realAmount);
-
 
   if (returnAmount > 0) then
   begin
@@ -91,8 +111,6 @@ begin
     servicePayUUID := CreateGUIDStr;
     rspObj2 := TPayServiceResponse.Create(servicePayUUID, payType, -returnAmount);
   end;
-
-
   Messager.Debug('44444');
   theResponseList := TPayServiceResponseList.Create;
   Messager.Debug('44444a');

@@ -8,7 +8,8 @@ uses
   Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics,
   cm_theme, cm_Plat,
   uSale, uSaleDTO,
-  uSystem;
+  uSystem,
+  cm_AWTEvent;
 
 type
 
@@ -18,6 +19,7 @@ type
     edtShopCode: TEdit;
     edtTermCode: TEdit;
     edtTermUUID: TEdit;
+    Label1: TLabel;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
@@ -25,6 +27,7 @@ type
     Panel5: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
+    Panel8: TPanel;
     procedure Panel1Click(Sender: TObject);
     procedure Panel2Click(Sender: TObject);
     procedure Panel3Click(Sender: TObject);
@@ -38,12 +41,32 @@ type
     constructor Create(TheOwner: TComponent); override;
   end;
 
+  { TTestKeyLi }
+
+  TTestKeyLi = class(TKeyAdapter)
+  public
+    procedure KeyPressed(e: IKeyEvent); override;
+    procedure KeyReleased(e: IKeyEvent); override;
+  end;
+
 implementation
 
 uses
-  uDBInitialize, cm_messager, uPOS, cm_AWClasses;
+  uDBInitialize, cm_messager, uPOS, cm_awt;
 
 {$R *.frm}
+
+{ TTestKeyLi }
+
+procedure TTestKeyLi.KeyPressed(e: IKeyEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etInfo, 'input:' + e.GetKeyChar);
+end;
+
+procedure TTestKeyLi.KeyReleased(e: IKeyEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etError, 'input:' + e.GetKeyChar);
+end;
 
 { TTestFrame }
 constructor TTestFrame.Create(TheOwner: TComponent);
@@ -82,21 +105,49 @@ begin
 end;
 
 var
-  f: TAWForm;
+  f: TAForm;
+  e: TAEdit;
+  p: TAPanel;
 
 procedure TTestFrame.Panel3Click(Sender: TObject);
 begin
-  f := TAWForm.Create;
+  f := TAForm.Create;
 
   //Self.Name := ;
   //Self.Controls[];
+  //Self.Owner;
+  //TEdit.Text := ;
+  //TEdit.Parent;
+  //TEdit.OnKeyDown := ;
+  //TPanel
+
+  AppSystem.GetMsgBar.ShowMessage(etInfo, Self.FindComponent('Label1').Name);
 
   f.Color := clBlue;
   f.Left := 100;
   f.Top := 100;
   f.Width := 600;
+  f.Caption := 'haha';
 
-  AppSystem.GetMsgBox.ShowMessage(IntToStr( f.ShowModal ));
+  e := TAEdit.Create;
+  e.Top := 20;
+  e.Left := 80;
+  e.Width := 200;
+  e.Text := 'hello world';
+  e.Parent := f;
+  e.Clear;
+
+  p := TAPanel.Create;
+  p.Parent := f;
+  p.Width := 400;
+  p.Color := clYellow;
+
+  e.Parent := p;
+
+  e.AddKeyListener(TTestKeyLi.Create);
+
+  f.ShowModal;
+  //AppSystem.GetMsgBox.ShowMessage(IntToStr( f.ShowModal ));
 end;
 
 procedure TTestFrame.Panel4Click(Sender: TObject);

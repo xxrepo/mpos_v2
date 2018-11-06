@@ -103,4 +103,22 @@ object TestFrame: TTestFrame
     TabOrder = 9
     OnClick = Panel4Click
   end
+  object Panel8: TPanel
+    Left = 44
+    Height = 129
+    Top = 263
+    Width = 194
+    Caption = 'Panel8'
+    ClientHeight = 129
+    ClientWidth = 194
+    TabOrder = 10
+    object Label1: TLabel
+      Left = 43
+      Height = 12
+      Top = 82
+      Width = 36
+      Caption = 'Label1'
+      ParentColor = False
+    end
+  end
 end

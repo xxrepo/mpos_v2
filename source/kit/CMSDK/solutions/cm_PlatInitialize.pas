@@ -24,6 +24,7 @@ uses
   {$IFDEF LCL}
   Forms, Controls, StdCtrls, ExtCtrls, Graphics, Grids, Menus, ColorBox, DBGrids, ComCtrls,
   cm_LCL, cm_LCLUtils, cm_LCLGlobalSet,
+  cm_type, cm_TypeUtils,
   {$ENDIF}
   cm_messager, cm_Plat;
 

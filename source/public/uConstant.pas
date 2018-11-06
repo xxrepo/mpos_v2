@@ -25,6 +25,9 @@ const
   //数据库 MessageHandler 的代号
   DBMessageHandlerCode: string = 'DB';
 
+  //数据库参数接口代号
+  DBParameterInterfaceCode: string = 'DBParameter';
+
 implementation
 
 end.

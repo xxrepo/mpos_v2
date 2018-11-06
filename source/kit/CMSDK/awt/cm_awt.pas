@@ -5,101 +5,397 @@ unit cm_awt;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils,
+  cm_AWTEvent;
 
 type
 
-  TAWColor = -$7FFFFFFF-1..$7FFFFFFF;
+  { TColor、TCaption 定义是依赖 LCL 的。}
 
-  TAWMessage = class
-  private
-    FMsg: string;
-    FRInt: Integer;
-  public
-    property Msg: string read FMsg write FMsg;
-    property RInt: Integer read FRInt write FRInt;
-  end;
+  TAColor = -$7FFFFFFF-1..$7FFFFFFF;
+  TACaption = type String;
 
-  { TWPObject
-    // 窗口代理对象
+  TAWinControl = class;
+
+  { IAComponentPeer
+    // The peer interface for . This is the top level peer interface for widgets and defines the
+    // bulk of methods for AWT component peers. Most component peers have to implement this
+    // interface (via one of the subinterfaces).
+    // <br/>
+    // The peer interfaces are intended only for use in porting the AWT. They are not intended for
+    // use by application developers, and developers should not implement peers nor invoke any of
+    // the peer methods directly on the peer instances.
   }
 
-  TWPObject = class
-  public
-    procedure AWMessage(var Message: TAWMessage); virtual;
+  IAPeer = interface
+    ['{1ED8E4BF-2896-4971-8485-FA93466075FD}']
+    function GetDelegate: TObject;
   end;
 
-  { TAWObject
-    // 抽象窗口对象
-  }
+  IAComponentPeer = interface(IAPeer)
+    ['{F5955633-8025-47AE-87EB-A53E240AC20C}']
+    function GetName: TComponentName;
+    procedure SetName(AValue: TComponentName);
+    function GetTag: PtrInt;
+    procedure SetTag(AValue: PtrInt);
+  end;
 
-  TAWObject = class
+  IAControlPeer = interface(IAComponentPeer)
+    ['{3EFC4422-89E2-4997-AE84-911B0B7E4017}']
+    function GetText: TACaption;
+    procedure SetText(AValue: TACaption);
+    function GetColor: TAColor;
+    procedure SetColor(AValue: TAColor);
+    function GetHeight: Integer;
+    procedure SetHeight(AValue: Integer);
+    function GetLeft: Integer;
+    procedure SetLeft(AValue: Integer);
+    function GetTop: Integer;
+    procedure SetTop(AValue: Integer);
+    function GetWidth: Integer;
+    procedure SetWidth(AValue: Integer);
+    function GetParent: TAWinControl;
+    procedure SetParent(AValue: TAWinControl);
+  end;
+
+  IAWinControlPeer = interface(IAControlPeer)
+    ['{F34E9CA5-AFE6-4AA0-8D35-FD81DC1A6956}']
+    function CanFocus: Boolean;
+    function CanSetFocus: Boolean;
+    procedure SetFocus;
+    procedure AddKeyListener(l: IKeyListener);
+  end;
+
+  IACustomControlPeer = interface(IAWinControlPeer)
+    ['{78B50173-8CA7-4176-A6BD-404570BDD6DE}']
+    //property Canvas: TCanvas read FCanvas write FCanvas;
+    //property OnPaint: TNotifyEvent read FOnPaint write FOnPaint;
+  end;
+
+  IAPanelPeer = interface(IACustomControlPeer)
+    ['{4BA1BB04-559F-46AF-BD05-D5CB2D2DA227}']
+
+  end;
+
+  IAEditPeer = interface(IAWinControlPeer)
+    ['{3A9FCF75-9370-4F05-B737-B5A08266C40F}']
+    procedure Clear;
+    procedure SelectAll;
+  end;
+
+  IAFormPeer = interface(IAWinControlPeer)
+    ['{5A8A620E-272E-4724-B339-282802CE878E}']
+    function ShowModal: Integer;
+  end;
+
+  TAObject = class
+  end;
+
+  { TAComponent }
+
+  TAComponent = class(TAObject)
   private
-    FPeer: TWPObject;
-  protected
-    property WPObject: TWPObject read FPeer write FPeer;
-    function GetWPInteger(const APropertyName: string): Integer;
-    procedure SetWPInteger(const APropertyName: string; AValue: Integer);
-    //procedure firePropertyChange(String propertyName, Object oldValue, Object newValue);
+    FPeer: IAComponentPeer;
+  public
+    destructor Destroy; override;
+    function GetPeer: IAComponentPeer;
+  private
+    function GetName: TComponentName;
+    procedure SetName(AValue: TComponentName);
+    function GetTag: PtrInt;
+    procedure SetTag(AValue: PtrInt);
+  public
+    property Name: TComponentName read GetName write SetName;
+    property Tag: PtrInt read GetTag write SetTag;
+  end;
+
+  { TAControl }
+
+  TAControl = class abstract(TAComponent)
+  public
+    function GetPeer: IAControlPeer;
+  private
+    function GetText: TACaption;
+    procedure SetText(AValue: TACaption);
+    function GetColor: TAColor;
+    procedure SetColor(AValue: TAColor);
+    function GetHeight: Integer;
+    procedure SetHeight(AValue: Integer);
+    function GetLeft: Integer;
+    procedure SetLeft(AValue: Integer);
+    function GetTop: Integer;
+    procedure SetTop(AValue: Integer);
+    function GetWidth: Integer;
+    procedure SetWidth(AValue: Integer);
+    function GetParent: TAWinControl;
+    procedure SetParent(AValue: TAWinControl);
+  public
+    property Caption: TACaption read GetText write SetText;
+    property Color: TAColor read GetColor write SetColor;
+    property Left: Integer read GetLeft write SetLeft;
+    property Height: Integer read GetHeight write SetHeight;
+    property Top: Integer read GetTop write SetTop;
+    property Width: Integer read GetWidth write SetWidth;
+    property Parent: TAWinControl read GetParent write SetParent;
+  end;
+
+  { TAWinControl }
+
+  TAWinControl = class abstract(TAControl)
+  public
+    function GetPeer: IAWinControlPeer;
+  public
+    function CanFocus: Boolean;
+    function CanSetFocus: Boolean;
+    procedure SetFocus;
+    procedure AddKeyListener(l: IKeyListener); //添加指定的按键侦听器，以接收发自此 WinControl 的按键事件。
+  end;
+
+  TACustomControl = class(TAWinControl)
+  end;
+
+  { TAPanel }
+
+  TAPanel = class(TACustomControl)
   public
     constructor Create;
-    //property ControlCount: Integer read GetControlCount;
-    //property Controls[Index: Integer]: TControl read GetControl;
+    function GetPeer: IAPanelPeer;
+  public
+
   end;
 
-  TAWObjectClass = class of TAWObject;
+  { TAEdit }
 
-  IAWWidgetSet = interface
+  TAEdit = class(TAWinControl)
+  public
+    constructor Create;
+    function GetPeer: IAEditPeer;
+  public
+    procedure Clear;
+    procedure SelectAll;
+    property Text: TACaption read GetText write SetText;
+  end;
+
+  { TAForm }
+
+  TAForm = class(TAWinControl)
+  public
+    constructor Create;
+    function GetPeer: IAFormPeer;
+  public
+    function ShowModal: Integer;
+  end;
+
+  { IAToolkit
+    // 此接口是所有 Abstract Window Toolkit 实际实现的声明。
+    // Toolkit 的实现被用于将各种组件绑定到特定工具包实现。
+    // <br/>
+    // 大多数应用程序不应直接调用该接口中的任何方法。Toolkit 定义的方法是一种“胶水”，将 awt 中
+    // 与实现无关的类与 peer 中的对应物连接起来。Toolkit 定义的一些方法能直接查询本机操作系统。
+  }
+
+  IAToolkit = interface
     ['{0BD4F0EE-9C6F-4882-A92E-C4B34D866777}']
-    function GetWPObject(const AAWClass: TAWObjectClass): TWPObject;
-  end;
-
-  IAWMessageSender = interface
-    ['{0624BC78-EF7F-4B58-8F3E-63AA706D26B6}']
-    procedure AWMessage(var Message: TAWMessage);
+    function CreatePanel(ATarget: TAPanel): IAPanelPeer;
+    function CreateEdit(ATarget: TAEdit): IAEditPeer;
+    function CreateForm(ATarget: TAForm): IAFormPeer;
   end;
 
 var
-  AWMessageSender: IAWMessageSender;
-  AWWidgetSet: IAWWidgetSet;
+  Toolkit: IAToolkit;
 
 implementation
 
-{ TWPObject }
+{ TAComponent }
 
-procedure TWPObject.AWMessage(var Message: TAWMessage);
+destructor TAComponent.Destroy;
 begin
-  //
+  FPeer := nil;
+  inherited Destroy;
 end;
 
-{ TAWObject }
-
-function TAWObject.GetWPInteger(const APropertyName: string): Integer;
-var
-  m: TAWMessage;
+function TAComponent.GetPeer: IAComponentPeer;
 begin
-  m := TAWMessage.Create;
-  m.Msg := APropertyName;
-  WPObject.AWMessage(m);
-  Result := m.RInt;
-  m.Free;
+  Result := FPeer;
 end;
 
-procedure TAWObject.SetWPInteger(const APropertyName: string; AValue: Integer);
-var
-  m: TAWMessage;
+function TAComponent.GetName: TComponentName;
 begin
-  m := TAWMessage.Create;
-  m.Msg := APropertyName;
-  m.RInt := AValue;
-  WPObject.AWMessage(m);
-  m.Free;
+  Result := FPeer.GetName;
 end;
 
-constructor TAWObject.Create;
+procedure TAComponent.SetName(AValue: TComponentName);
 begin
-  FPeer := AWWidgetSet.GetWPObject(TAWObjectClass(Self.ClassType));
+  FPeer.SetName(AValue);
 end;
+
+function TAComponent.GetTag: PtrInt;
+begin
+  Result := FPeer.GetTag;
+end;
+
+procedure TAComponent.SetTag(AValue: PtrInt);
+begin
+  FPeer.SetTag(AValue);
+end;
+
+{ TAControl }
+
+function TAControl.GetPeer: IAControlPeer;
+begin
+  FPeer.QueryInterface(IAControlPeer, Result);
+end;
+
+function TAControl.GetText: TACaption;
+begin
+  Result := GetPeer.GetText;
+end;
+
+procedure TAControl.SetText(AValue: TACaption);
+begin
+  GetPeer.SetText(AValue);
+end;
+
+function TAControl.GetColor: TAColor;
+begin
+  Result := GetPeer.GetColor;
+end;
+
+procedure TAControl.SetColor(AValue: TAColor);
+begin
+  GetPeer.SetColor(AValue);
+end;
+
+function TAControl.GetHeight: Integer;
+begin
+  Result := GetPeer.GetHeight;
+end;
+
+procedure TAControl.SetHeight(AValue: Integer);
+begin
+  GetPeer.SetHeight(AValue);
+end;
+
+function TAControl.GetLeft: Integer;
+begin
+  Result := GetPeer.GetLeft;
+end;
+
+procedure TAControl.SetLeft(AValue: Integer);
+begin
+  GetPeer.SetLeft(AValue);
+end;
+
+function TAControl.GetTop: Integer;
+begin
+  Result := GetPeer.GetTop;
+end;
+
+procedure TAControl.SetTop(AValue: Integer);
+begin
+  GetPeer.SetTop(AValue);
+end;
+
+function TAControl.GetWidth: Integer;
+begin
+  Result := GetPeer.GetWidth;
+end;
+
+procedure TAControl.SetWidth(AValue: Integer);
+begin
+  GetPeer.SetWidth(AValue);
+end;
+
+function TAControl.GetParent: TAWinControl;
+begin
+  Result := GetPeer.GetParent;
+end;
+
+procedure TAControl.SetParent(AValue: TAWinControl);
+begin
+  GetPeer.SetParent(AValue);
+end;
+
+{ TAWinControl }
+
+function TAWinControl.GetPeer: IAWinControlPeer;
+begin
+  FPeer.QueryInterface(IAWinControlPeer, Result);
+end;
+
+function TAWinControl.CanFocus: Boolean;
+begin
+  Result := GetPeer.CanFocus;
+end;
+
+function TAWinControl.CanSetFocus: Boolean;
+begin
+  Result := GetPeer.CanSetFocus;
+end;
+
+procedure TAWinControl.SetFocus;
+begin
+  GetPeer.SetFocus;
+end;
+
+procedure TAWinControl.AddKeyListener(l: IKeyListener);
+begin
+  GetPeer.AddKeyListener(l);
+end;
+
+{ TAPanel }
+
+constructor TAPanel.Create;
+begin
+  FPeer := Toolkit.CreatePanel(Self);
+end;
+
+function TAPanel.GetPeer: IAPanelPeer;
+begin
+  FPeer.QueryInterface(IAPanelPeer, Result);
+end;
+
+{ TAEdit }
+
+constructor TAEdit.Create;
+begin
+  FPeer := Toolkit.CreateEdit(Self);
+end;
+
+function TAEdit.GetPeer: IAEditPeer;
+begin
+  FPeer.QueryInterface(IAEditPeer, Result);
+end;
+
+procedure TAEdit.Clear;
+begin
+  GetPeer.Clear;
+end;
+
+procedure TAEdit.SelectAll;
+begin
+  GetPeer.SelectAll;
+end;
+
+{ TAForm }
+
+constructor TAForm.Create;
+begin
+  FPeer := Toolkit.CreateForm(Self);
+end;
+
+function TAForm.GetPeer: IAFormPeer;
+begin
+  FPeer.QueryInterface(IAFormPeer, Result);
+end;
+
+function TAForm.ShowModal: Integer;
+begin
+  Result := IAFormPeer(FPeer).ShowModal;
+end;
+
+
+
 
 
 end.

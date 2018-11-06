@@ -12,7 +12,8 @@ uses
   cm_parameter, cm_ParameterUtils,
   cm_theme, cm_ThemeUtils,
   cm_Plat, cm_PlatInitialize, cm_LCLUtils,
-  uSystem, uFormLoading;
+  uSystem, uFormLoading,
+  cm_TypeUtils;
 
 type
 

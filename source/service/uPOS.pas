@@ -42,11 +42,24 @@ const
   POS_Service_FileService_DataPacket: string = 'DataPacket';//'ftp://ftpuser:myj@123456@mposftp.myj.com.cn:6002';
   POS_Service_FileService_UploadFile: string = 'UploadFile';//'ftp://ftpUpload:mpos@123456@mposftp.myj.com.cn:6002';
 
+
+  POS_Device_CashBox: string = 'CustScreen';
+  POS_Device_CashBoxEnable: string = 'CustScreen.Enable';
+  POS_Device_CustScreen: string = 'CustScreen';
+  POS_Device_CustScreenEnable: string = 'CustScreen.Enable';
+  POS_Device_MultiScreen: string = 'CustScreen';
+  POS_Device_MultiScreenEnable: string = 'CustScreen.Enable';
+  POS_Device_Electronic: string = 'Electronic';
+  POS_Device_ElectronicEnable: string = 'Electronic.Enable';
+
+
+
 type
 
   ISupport = interface
-    ['{231F7F25-E5CE-4FCE-B7E7-93C8BCAE8C3B}']
-    function GetParameter: ICMParameter;
+    ['{A853BB48-0E94-4460-811C-EFFDF61F99E3}']
+    function GetRunParameter: ICMParameter;  //run
+    function GetDBParameter: ICMConstantParameter;
   end;
 
 function POSSupport: ISupport;
