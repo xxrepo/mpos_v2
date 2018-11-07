@@ -35,7 +35,7 @@
         <PackageName Value="adLCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="55">
+    <Units Count="56">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -279,6 +279,10 @@
         <Filename Value="..\kit\CMSDK\solutions\cm_TypeUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit54>
+      <Unit55>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.pp"/>
+        <IsPartOfProject Value="True"/>
+      </Unit55>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

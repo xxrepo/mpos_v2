@@ -20,24 +20,24 @@ uses
 
 type
 
-  { ICMLCLGenerator
+  { ICMObjectGenerator
     // LCL 产生器
     //    在实际中參数并不能直接使用比 TControl 更原始的类型，但其下属难免不会有更原始的类型，故在
     //这里也提供后两方法
   }
 
-  ICMLCLGenerator = interface(ICMBase)
-    ['{FF3825EC-05BB-4B51-A827-5601F3FE8176}']
+  ICMObjectGenerator = interface(ICMBase)
+    ['{01E97410-3288-4551-BFDE-5485DE8F09D3}']
     function NewComponent(const AClassName: string; AOwner: TComponent): TComponent;
     function GetComponentClass(const AClassName: string): TComponentClass;
     function NewObject(const AClassName: string): TObject;
     function GetClass(const AClassName: string): TClass;
   end;
 
-  { ICMLCLPropertyReaderWriter }
+  { ICMObjectPropertyReaderWriter }
 
-  ICMLCLPropertyReaderWriter = interface(ICMBase)
-    ['{DB9F9229-C965-4910-9F70-9B538C0C965F}']
+  ICMObjectPropertyReaderWriter = interface(ICMBase)
+    ['{4719167B-AADD-48B9-8E21-C11A02320722}']
     function  GetOrdProp(Instance: TObject; const PropName: string): Int64;
     procedure SetOrdProp(Instance: TObject; const PropName: string; Value: Int64);
     function  GetEnumProp(Instance: TObject; const PropName: string): string;

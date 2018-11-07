@@ -38,8 +38,6 @@ type
   { TAControlPeer }
 
   TAControlPeer = class(TAComponentPeer, IAControlPeer)
-  private
-    FParent: TAWinControl;
   public
     constructor Create(AOwner: TComponent); override;
     function GetDelegate: TControl;
@@ -56,7 +54,6 @@ type
     procedure SetTop(AValue: Integer);
     function GetWidth: Integer;
     procedure SetWidth(AValue: Integer);
-    function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
   end;
 
@@ -163,7 +160,6 @@ end;
 constructor TAControlPeer.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FParent := nil;
 end;
 
 function TAControlPeer.GetDelegate: TControl;
@@ -231,11 +227,6 @@ begin
   GetDelegate.Width := AValue;
 end;
 
-function TAControlPeer.GetParent: TAWinControl;
-begin
-  Result := FParent;
-end;
-
 procedure TAControlPeer.SetParent(AValue: TAWinControl);
 var
   parent: TObject;
@@ -244,7 +235,6 @@ begin
   if parent is TWinControl then
     begin
       GetDelegate.Parent := TWinControl(parent);
-      FParent := AValue;
     end;
 end;
 

@@ -54,7 +54,6 @@ type
     procedure SetTop(AValue: Integer);
     function GetWidth: Integer;
     procedure SetWidth(AValue: Integer);
-    function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
   end;
 
@@ -96,8 +95,19 @@ type
   TAComponent = class(TAObject)
   private
     FPeer: IAComponentPeer;
+    FOwner: TAComponent;
+    FComponents: TFPList;
+    function GetComponent(AIndex: Integer): TAComponent;
+    function GetComponentCount: Integer;
   public
+    constructor Create(AOwner: TAComponent); virtual;
     destructor Destroy; override;
+    procedure DestroyComponents;
+    procedure InsertComponent(AComponent: TAComponent);
+    procedure RemoveComponent(AComponent: TAComponent);
+    property Components[AIndex: Integer]: TAComponent read GetComponent;
+    property ComponentCount: Integer read GetComponentCount;
+    property Owner: TAComponent read FOwner;
     function GetPeer: IAComponentPeer;
   private
     function GetName: TComponentName;
@@ -112,7 +122,10 @@ type
   { TAControl }
 
   TAControl = class abstract(TAComponent)
+  private
+    FParent: TAWinControl;
   public
+    constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAControlPeer;
   private
     function GetText: TACaption;
@@ -142,7 +155,17 @@ type
   { TAWinControl }
 
   TAWinControl = class abstract(TAControl)
+  private
+    FControls: TFPList;    // the child controls
+    function GetControl(AIndex: Integer): TAControl;
+    function GetControlCount: Integer;
   public
+    constructor Create(AOwner: TAComponent); override;
+    destructor Destroy; override;
+    procedure InsertControl(AControl: TAControl);
+    procedure RemoveControl(AControl: TAControl);
+    property ControlCount: Integer read GetControlCount;
+    property Controls[AIndex: Integer]: TAControl read GetControl;
     function GetPeer: IAWinControlPeer;
   public
     function CanFocus: Boolean;
@@ -158,7 +181,7 @@ type
 
   TAPanel = class(TACustomControl)
   public
-    constructor Create;
+    constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAPanelPeer;
   public
 
@@ -168,7 +191,7 @@ type
 
   TAEdit = class(TAWinControl)
   public
-    constructor Create;
+    constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAEditPeer;
   public
     procedure Clear;
@@ -180,7 +203,7 @@ type
 
   TAForm = class(TAWinControl)
   public
-    constructor Create;
+    constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAFormPeer;
   public
     function ShowModal: Integer;
@@ -208,10 +231,72 @@ implementation
 
 { TAComponent }
 
+function TAComponent.GetComponent(AIndex: Integer): TAComponent;
+begin
+  if not Assigned(FComponents) then
+    Result := nil
+  else
+    Result := TAComponent(FComponents.Items[AIndex]);
+end;
+
+function TAComponent.GetComponentCount: Integer;
+begin
+  if not Assigned(FComponents) then
+    Result := 0
+  else
+    Result := FComponents.Count;
+end;
+
+constructor TAComponent.Create(AOwner: TAComponent);
+begin
+  inherited Create;
+  FOwner := nil;
+  FComponents := nil;
+  if Assigned(AOwner) then
+    AOwner.InsertComponent(Self);
+end;
+
 destructor TAComponent.Destroy;
 begin
+  DestroyComponents;
+  if FOwner <> nil then
+    FOwner.RemoveComponent(Self);
   FPeer := nil;
   inherited Destroy;
+end;
+
+procedure TAComponent.DestroyComponents;
+var
+  acomponent: TAComponent;
+begin
+  while Assigned(FComponents) do
+    begin
+      aComponent := TAComponent(FComponents.Last);
+      RemoveComponent(aComponent);
+      aComponent.Destroy;
+    end;
+end;
+
+procedure TAComponent.InsertComponent(AComponent: TAComponent);
+begin
+  if not Assigned(FComponents) then
+    FComponents := TFPList.Create;
+  FComponents.Add(AComponent);
+  AComponent.FOwner := Self;
+end;
+
+procedure TAComponent.RemoveComponent(AComponent: TAComponent);
+begin
+  AComponent.FOwner := nil;
+  if Assigned(FComponents) then
+    begin
+      FComponents.Remove(AComponent);
+      if FComponents.Count = 0 then
+        begin
+          FComponents.Free;
+          FComponents := nil;
+        end;
+    end;
 end;
 
 function TAComponent.GetPeer: IAComponentPeer;
@@ -240,6 +325,12 @@ begin
 end;
 
 { TAControl }
+
+constructor TAControl.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FParent := nil;
+end;
 
 function TAControl.GetPeer: IAControlPeer;
 begin
@@ -308,15 +399,65 @@ end;
 
 function TAControl.GetParent: TAWinControl;
 begin
-  Result := GetPeer.GetParent;
+  Result := FParent;
 end;
 
 procedure TAControl.SetParent(AValue: TAWinControl);
 begin
+  if FParent = AValue then
+    Exit;
   GetPeer.SetParent(AValue);
+  if FParent <> nil then
+    FParent.RemoveControl(Self);
+  if AValue <> nil then
+    AValue.InsertControl(Self);
+  FParent := AValue;
 end;
 
 { TAWinControl }
+
+function TAWinControl.GetControl(AIndex: Integer): TAControl;
+begin
+  Result := TAControl(FControls[AIndex]);
+end;
+
+function TAWinControl.GetControlCount: Integer;
+begin
+  if FControls <> nil then
+    Result := FControls.Count
+  else
+    Result := 0;
+end;
+
+constructor TAWinControl.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FControls := TFPList.Create;
+end;
+
+destructor TAWinControl.Destroy;
+var
+  c: TAControl;
+begin
+  while FControls.Count > 0 do
+    begin
+      c := TAControl(FControls.Last);
+      RemoveControl(c);
+    end;
+  inherited Destroy;
+end;
+
+procedure TAWinControl.InsertControl(AControl: TAControl);
+begin
+  FControls.Add(AControl);
+  AControl.FParent := Self;
+end;
+
+procedure TAWinControl.RemoveControl(AControl: TAControl);
+begin
+  FControls.Remove(AControl);
+  AControl.FParent := nil;
+end;
 
 function TAWinControl.GetPeer: IAWinControlPeer;
 begin
@@ -345,8 +486,9 @@ end;
 
 { TAPanel }
 
-constructor TAPanel.Create;
+constructor TAPanel.Create(AOwner: TAComponent);
 begin
+  inherited Create(AOwner);
   FPeer := Toolkit.CreatePanel(Self);
 end;
 
@@ -357,8 +499,9 @@ end;
 
 { TAEdit }
 
-constructor TAEdit.Create;
+constructor TAEdit.Create(AOwner: TAComponent);
 begin
+  inherited Create(AOwner);
   FPeer := Toolkit.CreateEdit(Self);
 end;
 
@@ -379,8 +522,9 @@ end;
 
 { TAForm }
 
-constructor TAForm.Create;
+constructor TAForm.Create(AOwner: TAComponent);
 begin
+  inherited Create(AOwner);
   FPeer := Toolkit.CreateForm(Self);
 end;
 

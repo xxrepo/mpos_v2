@@ -16,8 +16,7 @@ interface
 
 uses
   Classes, SysUtils, Forms,
-  cm_interfaces, cm_messager,
-  cm_LCL;
+  cm_messager, cm_LCL;
 
 type
 

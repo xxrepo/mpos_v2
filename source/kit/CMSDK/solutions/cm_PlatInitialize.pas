@@ -33,7 +33,7 @@ procedure InitPlat(AHandler: ICMMessageHandler);
 function GetInterfaceLoader: TCMInterfaceLoader;
 {$IFDEF LCL}
 function GetLCLGlobalManager: TCMLCLGlobalManager;
-function GetLCLGenerator: TCMLCLGenerator;
+function GetObjectGenerator: TCMObjectGenerator;
 {$ENDIF}
 
 implementation
@@ -44,8 +44,8 @@ var
 
 {$IFDEF LCL}
   aLCLManager: TCMLCLGlobalManager = nil;
-  aLCLGenerator: TCMLCLGenerator = nil;
-  aLCLPropertyReaderWriter: TCMLCLPropertyReaderWriter = nil;
+  aObjectGenerator: TCMObjectGenerator = nil;
+  aObjectPropertyReaderWriter: TCMObjectPropertyReaderWriter = nil;
 
 procedure InitLCLGlobalManager;
 var
@@ -61,62 +61,62 @@ begin
     end;
 end;
 
-function InitLCLGenerator: TCMLCLGenerator;
+function InitObjectGenerator: TCMObjectGenerator;
 begin
   Result := nil;
   DefaultMessager.Info('开始初始化LCL组件构造工具...');
-  if not Assigned(aLCLGenerator) then
+  if not Assigned(aObjectGenerator) then
     begin
-      aLCLGenerator := TCMLCLGenerator.Create;
-      InterfaceRegister.PutInterface('ICMLCLGenerator', ICMLCLGenerator, aLCLGenerator);
+      aObjectGenerator := TCMObjectGenerator.Create;
+      InterfaceRegister.PutInterface('ICMObjectGenerator', ICMObjectGenerator, aObjectGenerator);
+      aObjectGenerator.RegisterClass('TPersistent', TPersistent);
+      aObjectGenerator.RegisterClass('TFont', TFont);
+      //
+      aObjectGenerator.RegisterClass('TComponent', TComponent);
+      aObjectGenerator.RegisterClass('TControl', TControl);
+      aObjectGenerator.RegisterClass('TWinControl', TWinControl);
+      aObjectGenerator.RegisterClass('TCustomEdit', TCustomEdit);
+      aObjectGenerator.RegisterClass('TCustomGrid', TCustomGrid);
+      //
+      aObjectGenerator.RegisterClass('TForm', TForm);
+      aObjectGenerator.RegisterClass('TMainMenu', TMainMenu);
+      aObjectGenerator.RegisterClass('TButton', TButton);
+      aObjectGenerator.RegisterClass('TLabel', TLabel);
+      aObjectGenerator.RegisterClass('TEdit', TEdit);
+      aObjectGenerator.RegisterClass('TMemo', TMemo);
+      aObjectGenerator.RegisterClass('TCheckBox', TCheckBox);
+      aObjectGenerator.RegisterClass('TRadioButton', TRadioButton);
+      aObjectGenerator.RegisterClass('TListBox', TListBox);
+      aObjectGenerator.RegisterClass('TComboBox', TComboBox);
+      aObjectGenerator.RegisterClass('TPanel', TPanel);
+      aObjectGenerator.RegisterClass('TFrame', TFrame);
+      aObjectGenerator.RegisterClass('TImage', TImage);
+      aObjectGenerator.RegisterClass('TBevel', TBevel);
+      aObjectGenerator.RegisterClass('TSplitter', TSplitter);
+      aObjectGenerator.RegisterClass('TScrollBox', TScrollBox);
+      aObjectGenerator.RegisterClass('TStringGrid', TStringGrid);
+      aObjectGenerator.RegisterClass('TDrawGrid', TDrawGrid);
+      aObjectGenerator.RegisterClass('TColorBox', TColorBox);
+      aObjectGenerator.RegisterClass('TProgressBar', TProgressBar);
+      aObjectGenerator.RegisterClass('TTreeView', TTreeView);
+      aObjectGenerator.RegisterClass('TPageControl', TPageControl);
+      //aObjectGenerator.RegisterClass('TDateTimePicker', TDateTimePicker);   //Need additional reference the package
+      aObjectGenerator.RegisterClass('TTimer', TTimer);
+      aObjectGenerator.RegisterClass('TDBGrid', TDBGrid);
     end;
-  Result := aLCLGenerator;
-  aLCLGenerator.RegisterClass('TPersistent', TPersistent);
-  aLCLGenerator.RegisterClass('TFont', TFont);
-  //
-  aLCLGenerator.RegisterClass('TComponent', TComponent);
-  aLCLGenerator.RegisterClass('TControl', TControl);
-  aLCLGenerator.RegisterClass('TWinControl', TWinControl);
-  aLCLGenerator.RegisterClass('TCustomEdit', TCustomEdit);
-  aLCLGenerator.RegisterClass('TCustomGrid', TCustomGrid);
-  //
-  aLCLGenerator.RegisterClass('TForm', TForm);
-  aLCLGenerator.RegisterClass('TMainMenu', TMainMenu);
-  aLCLGenerator.RegisterClass('TButton', TButton);
-  aLCLGenerator.RegisterClass('TLabel', TLabel);
-  aLCLGenerator.RegisterClass('TEdit', TEdit);
-  aLCLGenerator.RegisterClass('TMemo', TMemo);
-  aLCLGenerator.RegisterClass('TCheckBox', TCheckBox);
-  aLCLGenerator.RegisterClass('TRadioButton', TRadioButton);
-  aLCLGenerator.RegisterClass('TListBox', TListBox);
-  aLCLGenerator.RegisterClass('TComboBox', TComboBox);
-  aLCLGenerator.RegisterClass('TPanel', TPanel);
-  aLCLGenerator.RegisterClass('TFrame', TFrame);
-  aLCLGenerator.RegisterClass('TImage', TImage);
-  aLCLGenerator.RegisterClass('TBevel', TBevel);
-  aLCLGenerator.RegisterClass('TSplitter', TSplitter);
-  aLCLGenerator.RegisterClass('TScrollBox', TScrollBox);
-  aLCLGenerator.RegisterClass('TStringGrid', TStringGrid);
-  aLCLGenerator.RegisterClass('TDrawGrid', TDrawGrid);
-  aLCLGenerator.RegisterClass('TColorBox', TColorBox);
-  aLCLGenerator.RegisterClass('TProgressBar', TProgressBar);
-  aLCLGenerator.RegisterClass('TTreeView', TTreeView);
-  aLCLGenerator.RegisterClass('TPageControl', TPageControl);
-  //aLCLGenerator.RegisterClass('TDateTimePicker', TDateTimePicker);   //Need additional reference the package
-  aLCLGenerator.RegisterClass('TTimer', TTimer);
-  aLCLGenerator.RegisterClass('TDBGrid', TDBGrid);
+  Result := aObjectGenerator;
 end;
 
-function InitLCLPropertyReaderWriter: TCMLCLPropertyReaderWriter;
+function InitObjectPropertyReaderWriter: TCMObjectPropertyReaderWriter;
 begin
   Result := nil;
   DefaultMessager.Info('开始初始化LCL属性读写器...');
-  if not Assigned(aLCLPropertyReaderWriter) then
+  if not Assigned(aObjectPropertyReaderWriter) then
     begin
-      aLCLPropertyReaderWriter := TCMLCLPropertyReaderWriter.Create;
-      InterfaceRegister.PutInterface('ICMLCLPropertyReaderWriter', ICMLCLPropertyReaderWriter, aLCLPropertyReaderWriter);
+      aObjectPropertyReaderWriter := TCMObjectPropertyReaderWriter.Create;
+      InterfaceRegister.PutInterface('ICMObjectPropertyReaderWriter', ICMObjectPropertyReaderWriter, aObjectPropertyReaderWriter);
     end;
-  Result := aLCLPropertyReaderWriter;
+  Result := aObjectPropertyReaderWriter;
 end;
 
 {$ENDIF}
@@ -140,8 +140,8 @@ begin
   {$IFDEF LCL}
   //TODO 分开初始化
   InitLCLGlobalManager;
-  InitLCLGenerator;
-  InitLCLPropertyReaderWriter;
+  InitObjectGenerator;
+  InitObjectPropertyReaderWriter;
   {$ENDIF}
 end;
 
@@ -163,12 +163,12 @@ begin
   Result := aLCLManager;
 end;
 
-function GetLCLGenerator: TCMLCLGenerator;
+function GetObjectGenerator: TCMObjectGenerator;
 begin
   Result := nil;
   if not Assigned(InterfaceRegister) then
     EPlatException.Create(PlatUninitializedStr);
-  Result := aLCLGenerator;
+  Result := aObjectGenerator;
 end;
 
 {$ENDIF}

@@ -110,8 +110,10 @@ var
   p: TAPanel;
 
 procedure TTestFrame.Panel3Click(Sender: TObject);
+var
+  i: Integer;
 begin
-  f := TAForm.Create;
+  f := TAForm.Create(nil);
 
   //Self.Name := ;
   //Self.Controls[];
@@ -120,6 +122,8 @@ begin
   //TEdit.Parent;
   //TEdit.OnKeyDown := ;
   //TPanel
+  //Self.ControlCount;
+  //Self.Parent;
 
   AppSystem.GetMsgBar.ShowMessage(etInfo, Self.FindComponent('Label1').Name);
 
@@ -129,7 +133,7 @@ begin
   f.Width := 600;
   f.Caption := 'haha';
 
-  e := TAEdit.Create;
+  e := TAEdit.Create(f);
   e.Top := 20;
   e.Left := 80;
   e.Width := 200;
@@ -137,7 +141,7 @@ begin
   e.Parent := f;
   e.Clear;
 
-  p := TAPanel.Create;
+  p := TAPanel.Create(f);
   p.Parent := f;
   p.Width := 400;
   p.Color := clYellow;
@@ -148,6 +152,11 @@ begin
 
   f.ShowModal;
   //AppSystem.GetMsgBox.ShowMessage(IntToStr( f.ShowModal ));
+
+  for i:=0 to f.ControlCount-1 do
+    begin
+      DefaultMessager.Info(f.Controls[i].Name);
+    end;
 end;
 
 procedure TTestFrame.Panel4Click(Sender: TObject);

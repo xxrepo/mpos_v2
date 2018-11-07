@@ -193,7 +193,7 @@ end;
 function TPOSInitialize.InitLCLOperate: Boolean;
 var
   manager: TCMLCLGlobalManager;
-  generator: TCMLCLGenerator;
+  generator: TCMObjectGenerator;
 begin
   Result := False;
   //
@@ -207,7 +207,7 @@ begin
   manager.ApplicationExceptionEvent := @HandleExceptionEvent;
   //
   Messager.Info('开始注册组件:TDateTimePicker...');
-  generator := cm_PlatInitialize.GetLCLGenerator;
+  generator := cm_PlatInitialize.GetObjectGenerator;
   generator.RegisterClass('TDateTimePicker', TDateTimePicker);
   //
   Result := True;

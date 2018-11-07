@@ -11,9 +11,9 @@ uses
 
 type
 
-  { TCMLCLGenerator }
+  { TCMObjectGenerator }
 
-  TCMLCLGenerator = class(TCMBase, ICMLCLGenerator)
+  TCMObjectGenerator = class(TCMBase, ICMObjectGenerator)
   private
     FClassList: TFPHashList;
   public
@@ -27,9 +27,9 @@ type
     function GetClass(const AClassName: string): TClass;
   end;
 
-  { TCMLCLPropertyReaderWriter }
+  { TCMObjectPropertyReaderWriter }
 
-  TCMLCLPropertyReaderWriter = class(TCMMessageable, ICMLCLPropertyReaderWriter)
+  TCMObjectPropertyReaderWriter = class(TCMMessageable, ICMObjectPropertyReaderWriter)
   public
     function  GetOrdProp(Instance: TObject; const PropName: string): Int64;
     procedure SetOrdProp(Instance: TObject; const PropName: string; Value: Int64);
@@ -75,25 +75,25 @@ type
 
 implementation
 
-{ TCMLCLGenerator }
+{ TCMObjectGenerator }
 
-constructor TCMLCLGenerator.Create;
+constructor TCMObjectGenerator.Create;
 begin
   inherited Create;
   FClassList := TFPHashList.Create;
 end;
 
-destructor TCMLCLGenerator.Destroy;
+destructor TCMObjectGenerator.Destroy;
 begin
   inherited Destroy;
 end;
 
-function TCMLCLGenerator.RegisterClass(const AClassName: string; AClass: TClass): Boolean;
+function TCMObjectGenerator.RegisterClass(const AClassName: string; AClass: TClass): Boolean;
 begin
   Result := FClassList.Add(AClassName, AClass) >= 0;
 end;
 
-function TCMLCLGenerator.NewComponent(const AClassName: string; AOwner: TComponent): TComponent;
+function TCMObjectGenerator.NewComponent(const AClassName: string; AOwner: TComponent): TComponent;
 var
   pclass: TPersistentClass;
 begin
@@ -104,7 +104,7 @@ begin
       Result := TComponentClass(pclass).Create(AOwner);
 end;
 
-function TCMLCLGenerator.GetComponentClass(const AClassName: string): TComponentClass;
+function TCMObjectGenerator.GetComponentClass(const AClassName: string): TComponentClass;
 var
   pclass: TPersistentClass;
 begin
@@ -115,7 +115,7 @@ begin
       Result := TComponentClass(pclass);
 end;
 
-function TCMLCLGenerator.NewObject(const AClassName: string): TObject;
+function TCMObjectGenerator.NewObject(const AClassName: string): TObject;
 var
   pclass: TClass;
 begin
@@ -125,7 +125,7 @@ begin
     Result := TObject(pclass).Create;
 end;
 
-function TCMLCLGenerator.GetClass(const AClassName: string): TClass;
+function TCMObjectGenerator.GetClass(const AClassName: string): TClass;
 var
   pclass: TClass;
 begin
@@ -135,177 +135,177 @@ begin
     Result := TClass(pclass);
 end;
 
-{ TCMLCLPropertyReaderWriter }
+{ TCMObjectPropertyReaderWriter }
 
-function TCMLCLPropertyReaderWriter.GetOrdProp(Instance: TObject; const PropName: string): Int64;
+function TCMObjectPropertyReaderWriter.GetOrdProp(Instance: TObject; const PropName: string): Int64;
 begin
   Messager.Debug('GetOrdProp()...');
   Result := TypInfo.GetOrdProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetOrdProp(Instance: TObject; const PropName: string; Value: Int64);
+procedure TCMObjectPropertyReaderWriter.SetOrdProp(Instance: TObject; const PropName: string; Value: Int64);
 begin
   Messager.Debug('SetOrdProp()...');
   TypInfo.SetOrdProp(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetEnumProp(Instance: TObject; const PropName: string): string;
+function TCMObjectPropertyReaderWriter.GetEnumProp(Instance: TObject; const PropName: string): string;
 begin
   Messager.Debug('GetEnumProp()...');
   Result := TypInfo.GetEnumProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetEnumProp(Instance: TObject; const PropName: string; const Value: string);
+procedure TCMObjectPropertyReaderWriter.SetEnumProp(Instance: TObject; const PropName: string; const Value: string);
 begin
   Messager.Debug('SetEnumProp()...');
   TypInfo.SetEnumProp(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetSetProp(Instance: TObject; const PropName: string): string;
+function TCMObjectPropertyReaderWriter.GetSetProp(Instance: TObject; const PropName: string): string;
 begin
   Messager.Debug('GetSetProp()...');
   Result := TypInfo.GetSetProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetSetProp(Instance: TObject; const PropName: string; const Value: string);
+procedure TCMObjectPropertyReaderWriter.SetSetProp(Instance: TObject; const PropName: string; const Value: string);
 begin
   Messager.Debug('SetSetProp()...');
   TypInfo.SetSetProp(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetStrProp(Instance: TObject; const PropName: string): string;
+function TCMObjectPropertyReaderWriter.GetStrProp(Instance: TObject; const PropName: string): string;
 begin
   Messager.Debug('GetStrProp()...');
   Result := TypInfo.GetStrProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetStrProp(Instance: TObject; const PropName: string; const Value: AnsiString);
+procedure TCMObjectPropertyReaderWriter.SetStrProp(Instance: TObject; const PropName: string; const Value: AnsiString);
 begin
   Messager.Debug('SetStrProp()...');
   TypInfo.SetStrProp(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetWideStrProp(Instance: TObject; const PropName: string): WideString;
+function TCMObjectPropertyReaderWriter.GetWideStrProp(Instance: TObject; const PropName: string): WideString;
 begin
   Result := TypInfo.GetWideStrProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetWideStrProp(Instance: TObject; const PropName: string; const Value: WideString);
+procedure TCMObjectPropertyReaderWriter.SetWideStrProp(Instance: TObject; const PropName: string; const Value: WideString);
 begin
   TypInfo.SetWideStrProp(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetUnicodeStrProp(Instance: TObject; const PropName: string): UnicodeString;
+function TCMObjectPropertyReaderWriter.GetUnicodeStrProp(Instance: TObject; const PropName: string): UnicodeString;
 begin
   Result := TypInfo.GetUnicodeStrProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetUnicodeStrProp(Instance: TObject; const PropName: string; const Value: UnicodeString);
+procedure TCMObjectPropertyReaderWriter.SetUnicodeStrProp(Instance: TObject; const PropName: string; const Value: UnicodeString);
 begin
   TypInfo.SetUnicodeStrProp(Instance, PropName, Value);
 end;
 
 {$IFNDEF FPUNONE}
 
-function TCMLCLPropertyReaderWriter.GetFloatProp(Instance: TObject; const PropName: string): Extended;
+function TCMObjectPropertyReaderWriter.GetFloatProp(Instance: TObject; const PropName: string): Extended;
 begin
   Result := TypInfo.GetFloatProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetFloatProp(Instance: TObject; const PropName: string; Value: Extended);
+procedure TCMObjectPropertyReaderWriter.SetFloatProp(Instance: TObject; const PropName: string; Value: Extended);
 begin
   TypInfo.SetFloatProp(Instance, PropName, Value);
 end;
 
 {$ENDIF}
 
-function TCMLCLPropertyReaderWriter.GetObjectProp(Instance: TObject; const PropName: string): TObject;
+function TCMObjectPropertyReaderWriter.GetObjectProp(Instance: TObject; const PropName: string): TObject;
 begin
   Result := TypInfo.GetObjectProp(Instance, PropName);
 end;
 
-function TCMLCLPropertyReaderWriter.GetObjectProp(Instance: TObject; const PropName: string; MinClass: TClass): TObject;
+function TCMObjectPropertyReaderWriter.GetObjectProp(Instance: TObject; const PropName: string; MinClass: TClass): TObject;
 begin
   Result := TypInfo.GetObjectProp(Instance, PropName, MinClass);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetObjectProp(Instance: TObject; const PropName: string; Value: TObject);
+procedure TCMObjectPropertyReaderWriter.SetObjectProp(Instance: TObject; const PropName: string; Value: TObject);
 begin
   TypInfo.SetObjectProp(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetObjectPropClass(Instance: TObject; const PropName: string): TClass;
+function TCMObjectPropertyReaderWriter.GetObjectPropClass(Instance: TObject; const PropName: string): TClass;
 begin
   Result := TypInfo.GetObjectPropClass(Instance, PropName);
 end;
 
-function TCMLCLPropertyReaderWriter.GetObjectPropClass(AClass: TClass; const PropName: string): TClass;
+function TCMObjectPropertyReaderWriter.GetObjectPropClass(AClass: TClass; const PropName: string): TClass;
 begin
   Result := TypInfo.GetObjectPropClass(AClass, PropName);
 end;
 
-function TCMLCLPropertyReaderWriter.GetMethodProp(Instance: TObject; const PropName: string): TMethod;
+function TCMObjectPropertyReaderWriter.GetMethodProp(Instance: TObject; const PropName: string): TMethod;
 begin
   Result := TypInfo.GetMethodProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetMethodProp(Instance: TObject; const PropName: string; const Value: TMethod);
+procedure TCMObjectPropertyReaderWriter.SetMethodProp(Instance: TObject; const PropName: string; const Value: TMethod);
 begin
   Messager.Debug('SetMethodProp()...');
   TypInfo.SetMethodProp(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetInt64Prop(Instance: TObject; const PropName: string): Int64;
+function TCMObjectPropertyReaderWriter.GetInt64Prop(Instance: TObject; const PropName: string): Int64;
 begin
   Result := TypInfo.GetInt64Prop(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetInt64Prop(Instance: TObject; const PropName: string; const Value: Int64);
+procedure TCMObjectPropertyReaderWriter.SetInt64Prop(Instance: TObject; const PropName: string; const Value: Int64);
 begin
   TypInfo.SetInt64Prop(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetPropValue(Instance: TObject; const PropName: string): Variant;
+function TCMObjectPropertyReaderWriter.GetPropValue(Instance: TObject; const PropName: string): Variant;
 begin
   Result := TypInfo.GetPropValue(Instance, PropName);
 end;
 
-function TCMLCLPropertyReaderWriter.GetPropValue(Instance: TObject; const PropName: string; PreferStrings: Boolean): Variant;
+function TCMObjectPropertyReaderWriter.GetPropValue(Instance: TObject; const PropName: string; PreferStrings: Boolean): Variant;
 begin
   Result := TypInfo.GetPropValue(Instance, PropName, PreferStrings);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetPropValue(Instance: TObject; const PropName: string; const Value: Variant);
+procedure TCMObjectPropertyReaderWriter.SetPropValue(Instance: TObject; const PropName: string; const Value: Variant);
 begin
   TypInfo.SetPropValue(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetVariantProp(Instance: TObject; const PropName: string): Variant;
+function TCMObjectPropertyReaderWriter.GetVariantProp(Instance: TObject; const PropName: string): Variant;
 begin
   Result := TypInfo.GetVariantProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetVariantProp(Instance: TObject; const PropName: string; const Value: Variant);
+procedure TCMObjectPropertyReaderWriter.SetVariantProp(Instance: TObject; const PropName: string; const Value: Variant);
 begin
   TypInfo.SetVariantProp(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetInterfaceProp(Instance: TObject; const PropName: string): IInterface;
+function TCMObjectPropertyReaderWriter.GetInterfaceProp(Instance: TObject; const PropName: string): IInterface;
 begin
   Result := TypInfo.GetInterfaceProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetInterfaceProp(Instance: TObject; const PropName: string; const Value: IInterface);
+procedure TCMObjectPropertyReaderWriter.SetInterfaceProp(Instance: TObject; const PropName: string; const Value: IInterface);
 begin
   TypInfo.SetInterfaceProp(Instance, PropName, Value);
 end;
 
-function TCMLCLPropertyReaderWriter.GetRawInterfaceProp(Instance: TObject; const PropName: string): Pointer;
+function TCMObjectPropertyReaderWriter.GetRawInterfaceProp(Instance: TObject; const PropName: string): Pointer;
 begin
   Result := TypInfo.GetRawInterfaceProp(Instance, PropName);
 end;
 
-procedure TCMLCLPropertyReaderWriter.SetRawInterfaceProp(Instance: TObject; const PropName: string; const Value: Pointer);
+procedure TCMObjectPropertyReaderWriter.SetRawInterfaceProp(Instance: TObject; const PropName: string; const Value: Pointer);
 begin
   TypInfo.SetRawInterfaceProp(Instance, PropName, Value);
 end;
