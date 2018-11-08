@@ -1,4 +1,4 @@
-unit cm_AWTEventAdapter;
+unit cm_AWTEventUtils;
 
 {$mode delphi}{$H+}
 

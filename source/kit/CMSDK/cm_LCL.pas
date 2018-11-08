@@ -25,7 +25,7 @@ type
     // LCL 常用全局数据获取的声明�
   }
   ILCLGlobalSet = interface(ICMBase)
-    ['{46FAB2C6-A6A4-4E95-9AFC-B37B431166ED}']
+    ['{B8A119F3-000A-447B-84EE-C5E0882F3B10}']
     function GetApplication: TApplication;
     function GetCustomApplication: TCustomApplication;
     function GetScreen: TScreen;
@@ -35,8 +35,6 @@ type
     function GetDragManager: TDragManager;
     function GetExceptionObject: TExceptObject;
     function GetMouse: TMouse;
-    function GetMainThreadID: TThreadID;
-    function GetGlobalNameSpace: IReadWriteSync;
     function GetRequireDerivedFormResource: Boolean;
     procedure SetRequireDerivedFormResource(AValue: Boolean);
     function GetMessageBoxFunction: TMessageBoxFunction;

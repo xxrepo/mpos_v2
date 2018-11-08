@@ -9,6 +9,7 @@ uses
   cm_interfaces, cm_LCL;
 
 type
+
   { TCMLCLGlobalSet }
 
   TCMLCLGlobalSet = class(TCMBase, ILCLGlobalSet)
@@ -22,8 +23,6 @@ type
     function GetDragManager: TDragManager;
     function GetExceptionObject: TExceptObject;
     function GetMouse: TMouse;
-    function GetMainThreadID: TThreadID;
-    function GetGlobalNameSpace: IReadWriteSync;
     function GetRequireDerivedFormResource: Boolean;
     procedure SetRequireDerivedFormResource(AValue: Boolean);
     function GetMessageBoxFunction: TMessageBoxFunction;
@@ -77,16 +76,6 @@ end;
 function TCMLCLGlobalSet.GetMouse: TMouse;
 begin
   Result := Controls.Mouse;
-end;
-
-function TCMLCLGlobalSet.GetMainThreadID: TThreadID;
-begin
-  Result := Classes.MainThreadID;
-end;
-
-function TCMLCLGlobalSet.GetGlobalNameSpace: IReadWriteSync;
-begin
-  Result := Classes.GlobalNameSpace;
 end;
 
 function TCMLCLGlobalSet.GetRequireDerivedFormResource: Boolean;

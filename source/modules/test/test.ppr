@@ -3,8 +3,10 @@ library test;
 {$mode objfpc}{$H+}
 
 uses
-  {$IFDEF UNIX}cthreads,{$ENDIF}
-  Classes, cm_InterfaceRegister, cm_InterfaceLoader, cm_Plat
+  {$IFDEF UNIX}
+  {$IFDEF UseCThreads}cthreads,{$ENDIF}
+  {$ENDIF}
+  Classes, cm_InterfaceRegister, cm_InterfaceLoader, cm_plat
   { you can add units after this / 你可以在这之后增加单元 },
   uTest, uHelloWorld;
 
@@ -17,6 +19,9 @@ begin
   {--------------------------------------------
   这里增加加载库时代码
   ---------------------------------------------}
+
+
+
   //引出测试业务
   Result := InterfaceRegister.PutInterface('测试业务',
                                            ITest, THelloWorld.Create) >= 0;

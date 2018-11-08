@@ -35,7 +35,7 @@
         <PackageName Value="adLCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="56">
+    <Units Count="58">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -247,42 +247,49 @@
         <ResourceBaseClass Value="Frame"/>
       </Unit46>
       <Unit47>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
+        <Filename Value="..\persistent\uProductPO.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit47>
       <Unit48>
-        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AProxy.pas"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTEvent.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit48>
       <Unit49>
-        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AToolkit.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_TypeUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit49>
       <Unit50>
-        <Filename Value="..\persistent\uProductPO.pas"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTBase.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit50>
       <Unit51>
-        <Filename Value="..\kit\CMSDK\awt\cm_AWTEvent.pas"/>
+        <Filename Value="..\service\uTest.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit51>
       <Unit52>
-        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTEventAdapter.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_GlobalSet.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit52>
       <Unit53>
-        <Filename Value="..\kit\CMSDK\cm_Type.pas"/>
+        <Filename Value="..\kit\CMSDK\cm_type.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="cm_type"/>
       </Unit53>
       <Unit54>
-        <Filename Value="..\kit\CMSDK\solutions\cm_TypeUtils.pas"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWT.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit54>
       <Unit55>
-        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.pp"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTEventUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit55>
+      <Unit56>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTBasePeer.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit57>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -294,7 +301,7 @@
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
       <Libraries Value="$(CTDir)"/>
-      <OtherUnitFiles Value="..\public\form;..\kit\CMSDK;..\kit\CMSDK\solutions;form;..\public;..\service;..\kit\CMSDK\extension;unit;..\kit\CMSDK\awt;..\kit\CMSDK\awt\solutions;..\persistent"/>
+      <OtherUnitFiles Value="..\public\form;..\kit\CMSDK;..\kit\CMSDK\solutions;form;..\public;..\service;..\kit\CMSDK\extension;unit;..\kit\CMSDK\awt;..\persistent;..\kit\CMSDK\awt\solutions"/>
       <UnitOutputDirectory Value="lib"/>
     </SearchPaths>
     <Linking>

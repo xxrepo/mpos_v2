@@ -20,6 +20,9 @@ uses
   {$IFDEF LCL}
   cm_LCL, cm_LCLGlobalSet,
   {$ENDIF}
+  {$IFDEF UseAWT}
+  cm_AWT,
+  {$ENDIF}
   cm_InterfaceRegister;
 
 type
@@ -55,6 +58,16 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF UseAWT}
+procedure FetchDefaultToolKit;
+var
+  tk: IAToolkit;
+begin
+  if InterfaceRegister.OutInterface(IAToolkit, tk) then
+    TAWTManager.DefaultToolkit := tk;
+end;
+{$ENDIF}
+
 function SetInterfaceRegister(AInterfaceRegister: ICMInterfaceRegister): Boolean;
 begin
   Result := False;
@@ -64,6 +77,9 @@ begin
       FetchDefaultMessageHandler;
       {$IFDEF LCL}
       RegisterLCLGlobalSet;
+      {$ENDIF}
+      {$IFDEF UseAWT}
+      FetchDefaultToolKit;
       {$ENDIF}
       Result := True;
     end;

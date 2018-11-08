@@ -17,6 +17,7 @@ type
   ITest = interface(ICMBase)
     ['{B9CBE1BF-2E9B-4F39-921B-56A174ADAE3D}']
     procedure Test;
+    procedure Test2;
   end;
 
 

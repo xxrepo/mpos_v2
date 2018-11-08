@@ -1,4 +1,4 @@
-unit cm_awt;
+unit cm_AWT;
 
 {$mode objfpc}{$H+}
 
@@ -6,89 +6,65 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_AWTEvent;
+  cm_AWTBase, cm_AWTEvent;
 
 type
 
-  { TColor、TCaption 定义是依赖 LCL 的。}
-
-  TAColor = -$7FFFFFFF-1..$7FFFFFFF;
-  TACaption = type String;
-
+  // 前置声明
   TAWinControl = class;
+  IAToolkit = interface;
 
-  { IAComponentPeer
-    // The peer interface for . This is the top level peer interface for widgets and defines the
-    // bulk of methods for AWT component peers. Most component peers have to implement this
-    // interface (via one of the subinterfaces).
-    // <br/>
-    // The peer interfaces are intended only for use in porting the AWT. They are not intended for
-    // use by application developers, and developers should not implement peers nor invoke any of
-    // the peer methods directly on the peer instances.
-  }
+  { EAWTException }
 
-  IAPeer = interface
-    ['{1ED8E4BF-2896-4971-8485-FA93466075FD}']
-    function GetDelegate: TObject;
-  end;
+  EAWTException = class(Exception);
 
-  IAComponentPeer = interface(IAPeer)
-    ['{F5955633-8025-47AE-87EB-A53E240AC20C}']
-    function GetName: TComponentName;
-    procedure SetName(AValue: TComponentName);
-    function GetTag: PtrInt;
-    procedure SetTag(AValue: PtrInt);
-  end;
-
-  IAControlPeer = interface(IAComponentPeer)
-    ['{3EFC4422-89E2-4997-AE84-911B0B7E4017}']
-    function GetText: TACaption;
-    procedure SetText(AValue: TACaption);
-    function GetColor: TAColor;
-    procedure SetColor(AValue: TAColor);
-    function GetHeight: Integer;
-    procedure SetHeight(AValue: Integer);
-    function GetLeft: Integer;
-    procedure SetLeft(AValue: Integer);
-    function GetTop: Integer;
-    procedure SetTop(AValue: Integer);
-    function GetWidth: Integer;
-    procedure SetWidth(AValue: Integer);
-    procedure SetParent(AValue: TAWinControl);
-  end;
-
-  IAWinControlPeer = interface(IAControlPeer)
-    ['{F34E9CA5-AFE6-4AA0-8D35-FD81DC1A6956}']
-    function CanFocus: Boolean;
-    function CanSetFocus: Boolean;
-    procedure SetFocus;
-    procedure AddKeyListener(l: IKeyListener);
-  end;
-
-  IACustomControlPeer = interface(IAWinControlPeer)
-    ['{78B50173-8CA7-4176-A6BD-404570BDD6DE}']
-    //property Canvas: TCanvas read FCanvas write FCanvas;
-    //property OnPaint: TNotifyEvent read FOnPaint write FOnPaint;
-  end;
-
-  IAPanelPeer = interface(IACustomControlPeer)
-    ['{4BA1BB04-559F-46AF-BD05-D5CB2D2DA227}']
-
-  end;
-
-  IAEditPeer = interface(IAWinControlPeer)
-    ['{3A9FCF75-9370-4F05-B737-B5A08266C40F}']
-    procedure Clear;
-    procedure SelectAll;
-  end;
-
-  IAFormPeer = interface(IAWinControlPeer)
-    ['{5A8A620E-272E-4724-B339-282802CE878E}']
-    function ShowModal: Integer;
-  end;
+  { TAObject }
 
   TAObject = class
+  public
+    constructor Create;
   end;
+
+  {$I cm_AWTBasePeer.inc}
+
+  { TAFont }
+
+  TAFont = class(TAObject)
+  private
+    FPeer: IAFontPeer;
+    function GetColor: TAColor;
+    function GetHeight: Integer;
+    function GetName: string;
+    function GetSize: Integer;
+    procedure SetColor(AValue: TAColor);
+    procedure SetHeight(AValue: Integer);
+    procedure SetName(AValue: string);
+    procedure SetSize(AValue: Integer);
+  public
+    constructor Create;
+    constructor Create(APeer: IAFontPeer); overload;
+    function GetPeer: IAFontPeer;
+  public
+    property Color: TAColor read GetColor write SetColor;
+    property Height: Integer read GetHeight write SetHeight;
+    property Name: string read GetName write SetName;
+    property Size: Integer read GetSize write SetSize;
+  end;
+
+  { TACanvas }
+
+  TACanvas = class(TAObject)
+  private
+    FPeer: IACanvasPeer;
+  public
+    constructor Create;
+    constructor Create(APeer: IACanvasPeer); overload;
+    function GetPeer: IACanvasPeer;
+  public
+    procedure TextOut(X,Y: Integer; const Text: string);
+  end;
+
+  {$I cm_AWTPeer.inc}
 
   { TAComponent }
 
@@ -132,10 +108,14 @@ type
     procedure SetText(AValue: TACaption);
     function GetColor: TAColor;
     procedure SetColor(AValue: TAColor);
-    function GetHeight: Integer;
-    procedure SetHeight(AValue: Integer);
+    function GetEnabled: Boolean;
+    procedure SetEnabled(AValue: Boolean);
+    function GetFont: TAFont;
+    procedure SetFont(AValue: TAFont);
     function GetLeft: Integer;
     procedure SetLeft(AValue: Integer);
+    function GetHeight: Integer;
+    procedure SetHeight(AValue: Integer);
     function GetTop: Integer;
     procedure SetTop(AValue: Integer);
     function GetWidth: Integer;
@@ -145,11 +125,17 @@ type
   public
     property Caption: TACaption read GetText write SetText;
     property Color: TAColor read GetColor write SetColor;
+    property Enabled: Boolean read GetEnabled write SetEnabled;
+    property Font: TAFont read GetFont write SetFont;
+  public
     property Left: Integer read GetLeft write SetLeft;
     property Height: Integer read GetHeight write SetHeight;
     property Top: Integer read GetTop write SetTop;
     property Width: Integer read GetWidth write SetWidth;
     property Parent: TAWinControl read GetParent write SetParent;
+  end;
+
+  TAGraphicControl = class abstract(TAControl)
   end;
 
   { TAWinControl }
@@ -174,7 +160,26 @@ type
     procedure AddKeyListener(l: IKeyListener); //添加指定的按键侦听器，以接收发自此 WinControl 的按键事件。
   end;
 
+  { TACustomControl }
+
   TACustomControl = class(TAWinControl)
+  private
+    function GetCanvas: TACanvas;
+    procedure SetCanvas(AValue: TACanvas);
+  public
+    function GetPeer: IACustomControlPeer;
+  public
+    property Canvas: TACanvas read GetCanvas write SetCanvas;
+  end;
+
+  { TALabel }
+
+  TALabel = class(TAGraphicControl)
+  public
+    constructor Create(AOwner: TAComponent); override;
+    function GetPeer: IALabelPeer;
+  public
+
   end;
 
   { TAPanel }
@@ -209,25 +214,100 @@ type
     function ShowModal: Integer;
   end;
 
-  { IAToolkit
-    // 此接口是所有 Abstract Window Toolkit 实际实现的声明。
-    // Toolkit 的实现被用于将各种组件绑定到特定工具包实现。
-    // <br/>
-    // 大多数应用程序不应直接调用该接口中的任何方法。Toolkit 定义的方法是一种“胶水”，将 awt 中
-    // 与实现无关的类与 peer 中的对应物连接起来。Toolkit 定义的一些方法能直接查询本机操作系统。
-  }
-
-  IAToolkit = interface
-    ['{0BD4F0EE-9C6F-4882-A92E-C4B34D866777}']
-    function CreatePanel(ATarget: TAPanel): IAPanelPeer;
-    function CreateEdit(ATarget: TAEdit): IAEditPeer;
-    function CreateForm(ATarget: TAForm): IAFormPeer;
-  end;
-
-var
-  Toolkit: IAToolkit;
+  {$I cm_AWTToolkit.inc}
 
 implementation
+
+{ TAObject }
+
+constructor TAObject.Create;
+begin
+  if not Assigned(TAWTManager.DefaultToolkit) then
+    raise EAWTException.Create(NoToolKitError);
+end;
+
+{ TACanvas }
+
+constructor TACanvas.Create;
+begin
+  inherited Create;
+  FPeer := TAWTManager.DefaultToolkit.CreateCanvas(Self);
+end;
+
+constructor TACanvas.Create(APeer: IACanvasPeer);
+begin
+  inherited Create;
+  FPeer := APeer;
+end;
+
+function TACanvas.GetPeer: IACanvasPeer;
+begin
+  Result := FPeer;
+end;
+
+procedure TACanvas.TextOut(X, Y: Integer; const Text: string);
+begin
+  GetPeer.TextOut(X, Y, Text);
+end;
+
+{ TAFont }
+
+function TAFont.GetColor: TAColor;
+begin
+  Result := GetPeer.GetColor;
+end;
+
+function TAFont.GetHeight: Integer;
+begin
+  Result := GetPeer.GetHeight;
+end;
+
+function TAFont.GetName: string;
+begin
+  Result := GetPeer.GetName;
+end;
+
+function TAFont.GetSize: Integer;
+begin
+  Result := GetPeer.GetSize;
+end;
+
+procedure TAFont.SetColor(AValue: TAColor);
+begin
+  GetPeer.SetColor(AValue);
+end;
+
+procedure TAFont.SetHeight(AValue: Integer);
+begin
+  GetPeer.SetHeight(AValue);
+end;
+
+procedure TAFont.SetName(AValue: string);
+begin
+  GetPeer.SetName(AValue);
+end;
+
+procedure TAFont.SetSize(AValue: Integer);
+begin
+  GetPeer.SetSize(AValue);
+end;
+
+constructor TAFont.Create;
+begin
+  inherited Create;
+  FPeer := TAWTManager.DefaultToolkit.CreateFont(Self);
+end;
+
+constructor TAFont.Create(APeer: IAFontPeer);
+begin
+  inherited Create;
+  FPeer := APeer;
+end;
+
+function TAFont.GetPeer: IAFontPeer;
+begin
+  Result := FPeer;
+end;
 
 { TAComponent }
 
@@ -306,22 +386,22 @@ end;
 
 function TAComponent.GetName: TComponentName;
 begin
-  Result := FPeer.GetName;
+  Result := GetPeer.GetName;
 end;
 
 procedure TAComponent.SetName(AValue: TComponentName);
 begin
-  FPeer.SetName(AValue);
+  GetPeer.SetName(AValue);
 end;
 
 function TAComponent.GetTag: PtrInt;
 begin
-  Result := FPeer.GetTag;
+  Result := GetPeer.GetTag;
 end;
 
 procedure TAComponent.SetTag(AValue: PtrInt);
 begin
-  FPeer.SetTag(AValue);
+  GetPeer.SetTag(AValue);
 end;
 
 { TAControl }
@@ -357,14 +437,24 @@ begin
   GetPeer.SetColor(AValue);
 end;
 
-function TAControl.GetHeight: Integer;
+function TAControl.GetEnabled: Boolean;
 begin
-  Result := GetPeer.GetHeight;
+  Result := GetPeer.GetEnabled;
 end;
 
-procedure TAControl.SetHeight(AValue: Integer);
+procedure TAControl.SetEnabled(AValue: Boolean);
 begin
-  GetPeer.SetHeight(AValue);
+  GetPeer.SetEnabled(AValue);
+end;
+
+function TAControl.GetFont: TAFont;
+begin
+  Result := GetPeer.GetFont;
+end;
+
+procedure TAControl.SetFont(AValue: TAFont);
+begin
+  GetPeer.SetFont(AValue);
 end;
 
 function TAControl.GetLeft: Integer;
@@ -375,6 +465,16 @@ end;
 procedure TAControl.SetLeft(AValue: Integer);
 begin
   GetPeer.SetLeft(AValue);
+end;
+
+function TAControl.GetHeight: Integer;
+begin
+  Result := GetPeer.GetHeight;
+end;
+
+procedure TAControl.SetHeight(AValue: Integer);
+begin
+  GetPeer.SetHeight(AValue);
 end;
 
 function TAControl.GetTop: Integer;
@@ -406,7 +506,7 @@ procedure TAControl.SetParent(AValue: TAWinControl);
 begin
   if FParent = AValue then
     Exit;
-  GetPeer.SetParent(AValue);
+  GetPeer.ReParent(AValue.GetPeer);
   if FParent <> nil then
     FParent.RemoveControl(Self);
   if AValue <> nil then
@@ -484,12 +584,42 @@ begin
   GetPeer.AddKeyListener(l);
 end;
 
+{ TACustomControl }
+
+function TACustomControl.GetCanvas: TACanvas;
+begin
+  Result := GetPeer.GetCanvas;
+end;
+
+procedure TACustomControl.SetCanvas(AValue: TACanvas);
+begin
+  GetPeer.SetCanvas(AValue);
+end;
+
+function TACustomControl.GetPeer: IACustomControlPeer;
+begin
+  FPeer.QueryInterface(IACustomControlPeer, Result);
+end;
+
+{ TALabel }
+
+constructor TALabel.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FPeer := TAWTManager.DefaultToolkit.CreateLabel(Self);
+end;
+
+function TALabel.GetPeer: IALabelPeer;
+begin
+  FPeer.QueryInterface(IALabelPeer, Result);
+end;
+
 { TAPanel }
 
 constructor TAPanel.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
-  FPeer := Toolkit.CreatePanel(Self);
+  FPeer := TAWTManager.DefaultToolkit.CreatePanel(Self);
 end;
 
 function TAPanel.GetPeer: IAPanelPeer;
@@ -502,7 +632,7 @@ end;
 constructor TAEdit.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
-  FPeer := Toolkit.CreateEdit(Self);
+  FPeer := TAWTManager.DefaultToolkit.CreateEdit(Self);
 end;
 
 function TAEdit.GetPeer: IAEditPeer;
@@ -525,7 +655,7 @@ end;
 constructor TAForm.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
-  FPeer := Toolkit.CreateForm(Self);
+  FPeer := TAWTManager.DefaultToolkit.CreateForm(Self);
 end;
 
 function TAForm.GetPeer: IAFormPeer;
@@ -538,7 +668,8 @@ begin
   Result := IAFormPeer(FPeer).ShowModal;
 end;
 
-
+initialization
+  TAWTManager.DefaultToolkit := nil;
 
 
 

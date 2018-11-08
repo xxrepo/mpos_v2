@@ -51,6 +51,7 @@ type
     function InitLCLOperate: Boolean;
     function InitTheme: Boolean;
     function InitDBMessageHandler: Boolean;
+    function InitAWT: Boolean;
   public //IAppSystem
     function GetVersion: string;
     function IsTestMode: Boolean;
@@ -73,7 +74,7 @@ var
 
 implementation
 
-uses LazFileUtils, TypInfo, cm_controlutils, uDialogs, uConstant, uVersion, uSystemUtils;
+uses LazFileUtils, TypInfo, cm_controlutils, uDialogs, uConstant, uVersion, uSystemUtils, cm_AWT, cm_AWTProxy;
 
 function MessageBoxFunc(Text, Caption :PChar; Flags: Longint): Integer;
 begin
@@ -268,6 +269,13 @@ begin
   Result := InterfaceRegister.PutInterface('数据库信息处理器', ICMMessageHandler, TCMLogMessageHandler.Create(FLogger), DBMessageHandlerCode) >= 0;
 end;
 
+function TPOSInitialize.InitAWT: Boolean;
+begin
+  Result := False;
+  TAWTManager.DefaultToolkit := TProxyToolkit.Create;
+  Result := InterfaceRegister.PutInterface('IAToolkit', IAToolkit, TAWTManager.DefaultToolkit) >= 0;
+end;
+
 //private
 procedure TPOSInitialize.HandleExceptionEvent(Sender: TObject; E: Exception);
 var
@@ -450,6 +458,10 @@ begin
   LoadingForm.SetLoadMsg('开始启用记录按键...');
   StartRecordKeyDown;
   {$ENDIF}
+  //
+  LoadingForm.SetLoadMsg('开始初始化抽象窗口工具...');
+  InitAWT;
+
   //---- 以下加载 ----------------------------------------------------------------------------------
   LoadingForm.SetLoadMsg('开始加载支撑模块...', 40);
   loader := nil;

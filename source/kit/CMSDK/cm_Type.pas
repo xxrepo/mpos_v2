@@ -20,6 +20,16 @@ uses
 
 type
 
+  { IGlobalSet
+    // 常用全局数据获取的声明
+  }
+  IGlobalSet = interface(ICMBase)
+    ['{9FA77CBB-5892-4121-93BD-E958A93D9C48}']
+    function GetMainThreadID: TThreadID;
+    function GetCurrentThreadVar: TThread;
+    function GetGlobalNameSpace: IReadWriteSync;
+  end;
+
   { ICMObjectGenerator
     // LCL 产生器
     //    在实际中參数并不能直接使用比 TControl 更原始的类型，但其下属难免不会有更原始的类型，故在

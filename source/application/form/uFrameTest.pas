@@ -23,18 +23,18 @@ type
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
-    Panel4: TPanel;
     Panel5: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
     Panel8: TPanel;
+    Panel9: TPanel;
     procedure Panel1Click(Sender: TObject);
     procedure Panel2Click(Sender: TObject);
     procedure Panel3Click(Sender: TObject);
-    procedure Panel4Click(Sender: TObject);
     procedure Panel5Click(Sender: TObject);
     procedure Panel6Click(Sender: TObject);
     procedure Panel7Click(Sender: TObject);
+    procedure Panel9Click(Sender: TObject);
   private
 
   public
@@ -52,21 +52,11 @@ type
 implementation
 
 uses
-  uDBInitialize, cm_messager, uPOS, cm_awt;
+  uDBInitialize, cm_messager, uPOS, cm_awt, uTest;
 
 {$R *.frm}
 
-{ TTestKeyLi }
 
-procedure TTestKeyLi.KeyPressed(e: IKeyEvent);
-begin
-  AppSystem.GetMsgBar.ShowMessage(etInfo, 'input:' + e.GetKeyChar);
-end;
-
-procedure TTestKeyLi.KeyReleased(e: IKeyEvent);
-begin
-  AppSystem.GetMsgBar.ShowMessage(etError, 'input:' + e.GetKeyChar);
-end;
 
 { TTestFrame }
 constructor TTestFrame.Create(TheOwner: TComponent);
@@ -102,66 +92,6 @@ begin
   begin
     DBInit.DBInitialize;
   end;
-end;
-
-var
-  f: TAForm;
-  e: TAEdit;
-  p: TAPanel;
-
-procedure TTestFrame.Panel3Click(Sender: TObject);
-var
-  i: Integer;
-begin
-  f := TAForm.Create(nil);
-
-  //Self.Name := ;
-  //Self.Controls[];
-  //Self.Owner;
-  //TEdit.Text := ;
-  //TEdit.Parent;
-  //TEdit.OnKeyDown := ;
-  //TPanel
-  //Self.ControlCount;
-  //Self.Parent;
-
-  AppSystem.GetMsgBar.ShowMessage(etInfo, Self.FindComponent('Label1').Name);
-
-  f.Color := clBlue;
-  f.Left := 100;
-  f.Top := 100;
-  f.Width := 600;
-  f.Caption := 'haha';
-
-  e := TAEdit.Create(f);
-  e.Top := 20;
-  e.Left := 80;
-  e.Width := 200;
-  e.Text := 'hello world';
-  e.Parent := f;
-  e.Clear;
-
-  p := TAPanel.Create(f);
-  p.Parent := f;
-  p.Width := 400;
-  p.Color := clYellow;
-
-  e.Parent := p;
-
-  e.AddKeyListener(TTestKeyLi.Create);
-
-  f.ShowModal;
-  //AppSystem.GetMsgBox.ShowMessage(IntToStr( f.ShowModal ));
-
-  for i:=0 to f.ControlCount-1 do
-    begin
-      DefaultMessager.Info(f.Controls[i].Name);
-    end;
-end;
-
-procedure TTestFrame.Panel4Click(Sender: TObject);
-begin
-  f.Color := clBlue;
 end;
 
 procedure TTestFrame.Panel5Click(Sender: TObject);
@@ -205,6 +135,106 @@ begin
   vo.Quantity := Random(88);
   if InterfaceRegister.OutInterface(ISaleBoard, sb) then
     sb.AddShowItem(vo);
+end;
+
+
+var
+  f: TAForm;
+  e: TAEdit;
+  p: TAPanel;
+  l: TALabel;
+
+procedure TTestFrame.Panel3Click(Sender: TObject);
+var
+  i: Integer;
+  afont: TAFont;
+begin
+  f := TAForm.Create(nil);
+
+  //Self.Name := ;
+  //Self.Controls[];
+  //Self.Owner;
+  //TEdit.Text := ;
+  //TEdit.Parent;
+  //TEdit.OnKeyDown := ;
+  //TPanel
+  //Self.ControlCount;
+  //Self.Parent;
+
+  AppSystem.GetMsgBar.ShowMessage(etInfo, Self.FindComponent('Label1').Name);
+
+  f.Color := clBlue;
+  f.Left := 100;
+  f.Top := 100;
+  f.Width := 660;
+  f.Caption := 'haha';
+
+  e := TAEdit.Create(f);
+  e.Top := 20;
+  e.Left := 200;
+  e.Width := 200;
+  e.Text := 'hello world';
+  e.Parent := f;
+  e.Clear;
+
+  p := TAPanel.Create(f);
+  p.Parent := f;
+  p.Width := 600;
+  p.Height := 200;
+  p.Color := clGray;
+
+  //e.Parent := p;
+
+  l := TALabel.Create(f);
+  //l.Parent := p;
+  l.Top := 20;
+  l.Caption := '调试 test:';
+  l.Font.Color := clRed;
+  l.Font.Name := '黑体';
+
+  afont := TAFont.Create;
+  afont.Color := clGreen;
+  afont.Size := 20;
+  afont.Name := '黑体';
+
+  //l.Font := afont;
+
+  p.Canvas.TextOut(1, 1, '123');
+
+  e.AddKeyListener(TTestKeyLi.Create);
+
+  f.ShowModal;
+  //AppSystem.GetMsgBox.ShowMessage(IntToStr( f.ShowModal ));
+
+  for i:=0 to f.ControlCount-1 do
+    begin
+      DefaultMessager.Info(f.Controls[i].Name);
+    end;
+end;
+
+procedure TTestFrame.Panel9Click(Sender: TObject);
+var
+  test: ITest;
+begin
+  if InterfaceRegister.OutInterface(ITest, test) then
+    test.Test;
+
+  //Panel1.Canvas;
+  //TThread.Synchronize();
+  //Self.Font;
+end;
+
+{ TTestKeyLi }
+
+procedure TTestKeyLi.KeyPressed(e: IKeyEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etInfo, 'input:' + e.GetKeyChar);
+  p.Canvas;//.TextOut(1, 1, '123');
+end;
+
+procedure TTestKeyLi.KeyReleased(e: IKeyEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etError, 'input:' + e.GetKeyChar);
 end;
 
 

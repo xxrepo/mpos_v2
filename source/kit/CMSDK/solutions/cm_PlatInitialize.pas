@@ -26,7 +26,7 @@ uses
   cm_LCL, cm_LCLUtils, cm_LCLGlobalSet,
   cm_type, cm_TypeUtils,
   {$ENDIF}
-  cm_messager, cm_Plat;
+  cm_messager, cm_Plat, cm_GlobalSet;
 
 
 procedure InitPlat(AHandler: ICMMessageHandler);
@@ -140,6 +140,7 @@ begin
   {$IFDEF LCL}
   //TODO 分开初始化
   InitLCLGlobalManager;
+  InterfaceRegister.PutInterface('IGlobalSet', IGlobalSet, IGlobalSet(TCMGlobalSet.Create));
   InitObjectGenerator;
   InitObjectPropertyReaderWriter;
   {$ENDIF}

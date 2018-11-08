@@ -4,11 +4,11 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="125">
+    <Units Count="133">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="7" Y="10"/>
+        <CursorPos X="25" Y="11"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -27,8 +27,7 @@
         <Filename Value="..\kit\CMSDK\cm_classes.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="3"/>
-        <CursorPos X="20" Y="18"/>
+        <CursorPos X="52" Y="15"/>
         <UsageCount Value="200"/>
       </Unit2>
       <Unit3>
@@ -115,8 +114,8 @@
         <Filename Value="..\kit\CMSDK\cm_LCL.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="7"/>
-        <CursorPos X="17" Y="20"/>
+        <TopLine Value="32"/>
+        <CursorPos X="48" Y="46"/>
         <UsageCount Value="200"/>
       </Unit13>
       <Unit14>
@@ -187,7 +186,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
-        <CursorPos X="45" Y="19"/>
+        <CursorPos X="43" Y="21"/>
         <UsageCount Value="200"/>
       </Unit22>
       <Unit23>
@@ -360,24 +359,24 @@
         <Filename Value="..\kit\CMSDK\solutions\cm_PlatInitialize.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="121"/>
-        <CursorPos X="13" Y="143"/>
+        <TopLine Value="11"/>
+        <CursorPos X="42" Y="17"/>
         <UsageCount Value="232"/>
       </Unit42>
       <Unit43>
         <Filename Value="..\kit\CMSDK\cm_LCLGlobalSet.pp"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="76"/>
-        <CursorPos X="24" Y="84"/>
+        <TopLine Value="67"/>
+        <CursorPos X="48" Y="77"/>
         <UsageCount Value="209"/>
       </Unit43>
       <Unit44>
         <Filename Value="unit\uInitialize.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="197"/>
-        <CursorPos X="56" Y="201"/>
+        <TopLine Value="262"/>
+        <CursorPos X="47" Y="276"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit44>
@@ -394,122 +393,118 @@
         <ComponentName Value="TestFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="136"/>
-        <CursorPos X="22" Y="156"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="215"/>
+        <CursorPos X="14" Y="232"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit46>
       <Unit47>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="14"/>
-        <TopLine Value="432"/>
-        <CursorPos X="3" Y="434"/>
-        <UsageCount Value="150"/>
-        <Loaded Value="True"/>
-      </Unit47>
-      <Unit48>
-        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AProxy.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="16"/>
-        <TopLine Value="274"/>
-        <CursorPos X="10" Y="163"/>
-        <UsageCount Value="36"/>
-        <Loaded Value="True"/>
-      </Unit48>
-      <Unit49>
-        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AToolkit.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="15"/>
-        <TopLine Value="19"/>
-        <CursorPos X="48" Y="19"/>
-        <UsageCount Value="36"/>
-        <Loaded Value="True"/>
-      </Unit49>
-      <Unit50>
         <Filename Value="..\persistent\uProductPO.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="34"/>
-      </Unit50>
-      <Unit51>
+        <UsageCount Value="47"/>
+      </Unit47>
+      <Unit48>
         <Filename Value="..\kit\CMSDK\awt\cm_AWTEvent.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="17"/>
-        <TopLine Value="13"/>
-        <CursorPos X="14" Y="3"/>
-        <UsageCount Value="30"/>
+        <EditorIndex Value="11"/>
+        <TopLine Value="16"/>
+        <CursorPos X="51" Y="5"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
-      </Unit51>
-      <Unit52>
-        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTEventAdapter.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="18"/>
-        <TopLine Value="7"/>
-        <CursorPos X="19" Y="14"/>
-        <UsageCount Value="30"/>
-        <Loaded Value="True"/>
-      </Unit52>
-      <Unit53>
-        <Filename Value="..\kit\CMSDK\cm_Type.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="cm_type"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="32"/>
-        <CursorPos X="34" Y="28"/>
-        <UsageCount Value="27"/>
-      </Unit53>
-      <Unit54>
+      </Unit48>
+      <Unit49>
         <Filename Value="..\kit\CMSDK\solutions\cm_TypeUtils.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="6"/>
-        <CursorPos X="21" Y="16"/>
-        <UsageCount Value="27"/>
+        <TopLine Value="10"/>
+        <CursorPos X="17" Y="26"/>
+        <UsageCount Value="40"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.pp"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="3" Y="13"/>
+        <UsageCount Value="21"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTBase.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="6"/>
+        <CursorPos X="27" Y="15"/>
+        <UsageCount Value="24"/>
+        <Loaded Value="True"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="..\service\uTest.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="20" Y="20"/>
+        <UsageCount Value="192"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="..\kit\CMSDK\solutions\cm_GlobalSet.pp"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="16"/>
+        <CursorPos X="36" Y="33"/>
+        <UsageCount Value="31"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="..\kit\CMSDK\cm_type.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="24"/>
       </Unit54>
       <Unit55>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWT.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="47"/>
+        <CursorPos X="33" Y="56"/>
+        <UsageCount Value="24"/>
+        <Loaded Value="True"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTEventUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="22"/>
+        <UsageCount Value="24"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTEventAdapter.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="46" Y="11"/>
+        <UsageCount Value="20"/>
+      </Unit57>
+      <Unit58>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.inc"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="31"/>
+        <CursorPos X="44" Y="50"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+      </Unit58>
+      <Unit59>
         <Filename Value="..\public\uService.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="56" Y="14"/>
-        <UsageCount Value="198"/>
-      </Unit55>
-      <Unit56>
-        <Filename Value="..\kit\CMSDK\awt\cm_WProxy.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="23"/>
-        <CursorPos X="51" Y="40"/>
-        <UsageCount Value="133"/>
-      </Unit56>
-      <Unit57>
-        <Filename Value="..\kit\CMSDK\awt\cm_AWClasses.pas"/>
-        <EditorIndex Value="-1"/>
-        <UsageCount Value="132"/>
-      </Unit57>
-      <Unit58>
-        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWWidgetSet.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="12"/>
-        <CursorPos X="34" Y="34"/>
-        <UsageCount Value="20"/>
-      </Unit58>
-      <Unit59>
-        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWPeer.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="36" Y="14"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="197"/>
       </Unit59>
       <Unit60>
         <Filename Value="unit\uSystemUtils.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos X="50" Y="16"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit60>
       <Unit61>
         <Filename Value="..\public\form\uFormService.pas"/>
@@ -519,31 +514,23 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="37"/>
         <CursorPos X="43" Y="59"/>
-        <UsageCount Value="237"/>
+        <UsageCount Value="236"/>
       </Unit61>
       <Unit62>
         <Filename Value="common\uInitialize.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="41"/>
         <CursorPos X="33" Y="61"/>
-        <UsageCount Value="181"/>
+        <UsageCount Value="180"/>
       </Unit62>
       <Unit63>
         <Filename Value="common\uStart.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
         <CursorPos X="25" Y="28"/>
-        <UsageCount Value="181"/>
+        <UsageCount Value="180"/>
       </Unit63>
       <Unit64>
-        <Filename Value="..\service\uTest.pas"/>
-        <EditorIndex Value="-1"/>
-        <WindowIndex Value="-1"/>
-        <TopLine Value="-1"/>
-        <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="181"/>
-      </Unit64>
-      <Unit65>
         <Filename Value="..\public\form\uFormPopupService.pas"/>
         <ComponentName Value="PopupServiceForm"/>
         <HasResources Value="True"/>
@@ -551,9 +538,9 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="17"/>
         <CursorPos X="43" Y="40"/>
-        <UsageCount Value="237"/>
-      </Unit65>
-      <Unit66>
+        <UsageCount Value="236"/>
+      </Unit64>
+      <Unit65>
         <Filename Value="form\uFormSetting.pas"/>
         <ComponentName Value="SettingForm"/>
         <HasResources Value="True"/>
@@ -561,86 +548,86 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="47"/>
         <CursorPos X="49" Y="57"/>
-        <UsageCount Value="199"/>
-      </Unit66>
-      <Unit67>
+        <UsageCount Value="198"/>
+      </Unit65>
+      <Unit66>
         <Filename Value="..\public\form\uFormMenu.pas"/>
         <ComponentName Value="MenuForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="71" Y="6"/>
-        <UsageCount Value="234"/>
-      </Unit67>
-      <Unit68>
+        <UsageCount Value="233"/>
+      </Unit66>
+      <Unit67>
         <Filename Value="common\uSetting.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="13"/>
-        <UsageCount Value="233"/>
-      </Unit68>
-      <Unit69>
+        <UsageCount Value="232"/>
+      </Unit67>
+      <Unit68>
         <Filename Value="service\uMenuUtils.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="10"/>
         <CursorPos X="24" Y="24"/>
-        <UsageCount Value="181"/>
-      </Unit69>
-      <Unit70>
+        <UsageCount Value="180"/>
+      </Unit68>
+      <Unit69>
         <Filename Value="uVersion.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="35" Y="8"/>
-        <UsageCount Value="12"/>
-      </Unit70>
-      <Unit71>
+        <UsageCount Value="11"/>
+      </Unit69>
+      <Unit70>
         <Filename Value="service\uSystemUtils.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="41" Y="81"/>
-        <UsageCount Value="180"/>
-      </Unit71>
-      <Unit72>
+        <UsageCount Value="179"/>
+      </Unit70>
+      <Unit71>
         <Filename Value="..\public\uApp.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="60" Y="29"/>
-        <UsageCount Value="180"/>
-      </Unit72>
-      <Unit73>
+        <UsageCount Value="179"/>
+      </Unit71>
+      <Unit72>
         <Filename Value="..\kit\CMSDK\cm_LCLPropertyReaderWriter.pp"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="8"/>
-        <UsageCount Value="188"/>
-      </Unit73>
-      <Unit74>
+        <UsageCount Value="187"/>
+      </Unit72>
+      <Unit73>
         <Filename Value="..\kit\CMSDK\platform\cm_LCLPlat.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos X="55" Y="36"/>
-        <UsageCount Value="175"/>
-      </Unit74>
-      <Unit75>
+        <UsageCount Value="174"/>
+      </Unit73>
+      <Unit74>
         <Filename Value="..\kit\CMSDK\platform\cm_PlatBase.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="12"/>
         <CursorPos X="50" Y="28"/>
-        <UsageCount Value="175"/>
-      </Unit75>
-      <Unit76>
+        <UsageCount Value="174"/>
+      </Unit74>
+      <Unit75>
         <Filename Value="..\model\uSaleBoardModel.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="37"/>
         <CursorPos X="47" Y="53"/>
-        <UsageCount Value="160"/>
-      </Unit76>
-      <Unit77>
+        <UsageCount Value="159"/>
+      </Unit75>
+      <Unit76>
         <Filename Value="..\model\uSaleModel.pas"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="160"/>
-      </Unit77>
-      <Unit78>
+        <UsageCount Value="159"/>
+      </Unit76>
+      <Unit77>
         <Filename Value="..\public\form\uFrameMenu.pas"/>
         <ComponentName Value="Frame1"/>
         <HasResources Value="True"/>
@@ -648,476 +635,544 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="86" Y="20"/>
-        <UsageCount Value="137"/>
-      </Unit78>
-      <Unit79>
-        <Filename Value="..\kit\CMSDK\platform\cm_PlatConstant.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="3" Y="8"/>
-        <UsageCount Value="75"/>
-      </Unit79>
-      <Unit80>
+        <UsageCount Value="136"/>
+      </Unit77>
+      <Unit78>
         <Filename Value="..\kit\CMSDK\solutions\cm_SqliteDB.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="100"/>
         <CursorPos X="21" Y="103"/>
-        <UsageCount Value="77"/>
-      </Unit80>
-      <Unit81>
+        <UsageCount Value="76"/>
+      </Unit78>
+      <Unit79>
         <Filename Value="..\library\baseServiceSet\uDBUtils.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="233"/>
         <CursorPos X="61" Y="255"/>
-        <UsageCount Value="35"/>
-      </Unit81>
-      <Unit82>
+        <UsageCount Value="34"/>
+      </Unit79>
+      <Unit80>
         <Filename Value="..\kit\CMSDK\cm_ThemeControls.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="73" Y="14"/>
-        <UsageCount Value="49"/>
-      </Unit82>
-      <Unit83>
+        <UsageCount Value="48"/>
+      </Unit80>
+      <Unit81>
         <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
         <UnitName Value="Forms"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="2207"/>
-        <CursorPos X="23" Y="2210"/>
-        <UsageCount Value="124"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="331"/>
+        <CursorPos X="16" Y="343"/>
+        <UsageCount Value="123"/>
+        <Loaded Value="True"/>
+      </Unit81>
+      <Unit82>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="421"/>
+        <CursorPos X="25" Y="426"/>
+        <UsageCount Value="27"/>
+      </Unit82>
+      <Unit83>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\control.inc"/>
+        <EditorIndex Value="15"/>
+        <TopLine Value="3429"/>
+        <CursorPos X="16" Y="3432"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit83>
       <Unit84>
-        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
-        <EditorIndex Value="11"/>
-        <TopLine Value="1888"/>
-        <CursorPos X="16" Y="1901"/>
-        <UsageCount Value="22"/>
+        <Filename Value="C:\codetyphon\typhon\lcl\controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="14"/>
+        <TopLine Value="2374"/>
+        <CursorPos X="58" Y="2388"/>
+        <UsageCount Value="82"/>
         <Loaded Value="True"/>
       </Unit84>
       <Unit85>
-        <Filename Value="C:\codetyphon\typhon\lcl\include\control.inc"/>
-        <EditorIndex Value="13"/>
-        <TopLine Value="4356"/>
-        <CursorPos X="45" Y="4374"/>
-        <UsageCount Value="25"/>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <UnitName Value="ExtCtrls"/>
+        <EditorIndex Value="12"/>
+        <TopLine Value="1049"/>
+        <CursorPos X="81" Y="1056"/>
+        <UsageCount Value="33"/>
         <Loaded Value="True"/>
       </Unit85>
       <Unit86>
-        <Filename Value="C:\codetyphon\typhon\lcl\controls.pp"/>
-        <UnitName Value="Controls"/>
-        <EditorIndex Value="7"/>
-        <TopLine Value="2041"/>
-        <CursorPos X="16" Y="2053"/>
-        <UsageCount Value="76"/>
-        <Loaded Value="True"/>
-      </Unit86>
-      <Unit87>
-        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
-        <UnitName Value="ExtCtrls"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="1049"/>
-        <CursorPos X="81" Y="1056"/>
-        <UsageCount Value="27"/>
-        <Loaded Value="True"/>
-      </Unit87>
-      <Unit88>
         <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-base\src\contnrs.pp"/>
         <UnitName Value="Contnrs"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="13" Y="19"/>
-        <UsageCount Value="48"/>
-      </Unit88>
-      <Unit89>
+        <UsageCount Value="47"/>
+      </Unit86>
+      <Unit87>
         <Filename Value="C:\codetyphon\typhon\lcl\include\custompanel.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="142"/>
         <CursorPos X="40" Y="154"/>
-        <UsageCount Value="21"/>
-      </Unit89>
-      <Unit90>
+        <UsageCount Value="20"/>
+      </Unit87>
+      <Unit88>
         <Filename Value="..\kit\CMSDK\cm_LibraryPlat.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <CursorPos X="70" Y="58"/>
-        <UsageCount Value="20"/>
-      </Unit90>
-      <Unit91>
+        <UsageCount Value="19"/>
+      </Unit88>
+      <Unit89>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\threadh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="141"/>
         <CursorPos X="11" Y="155"/>
-        <UsageCount Value="7"/>
-      </Unit91>
-      <Unit92>
+        <UsageCount Value="6"/>
+      </Unit89>
+      <Unit90>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\sysutilh.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="25"/>
-        <CursorPos X="4" Y="39"/>
-        <UsageCount Value="9"/>
-      </Unit92>
-      <Unit93>
+        <TopLine Value="316"/>
+        <CursorPos X="14" Y="330"/>
+        <UsageCount Value="10"/>
+      </Unit90>
+      <Unit91>
         <Filename Value="C:\codetyphon\typhon\lcl\lcltype.pp"/>
         <UnitName Value="LCLType"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="53"/>
         <CursorPos X="34" Y="66"/>
-        <UsageCount Value="10"/>
-      </Unit93>
-      <Unit94>
+        <UsageCount Value="9"/>
+      </Unit91>
+      <Unit92>
         <Filename Value="..\kit\CMSDK\awt\cm_AWTClasses.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="43"/>
         <CursorPos X="33" Y="66"/>
-        <UsageCount Value="11"/>
-      </Unit94>
-      <Unit95>
+        <UsageCount Value="10"/>
+      </Unit92>
+      <Unit93>
         <Filename Value="C:\codetyphon\typhon\lcl\lclclasses.pp"/>
         <UnitName Value="LCLClasses"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="22"/>
         <CursorPos X="42" Y="41"/>
-        <UsageCount Value="15"/>
-        <Loaded Value="True"/>
-      </Unit95>
-      <Unit96>
+        <UsageCount Value="14"/>
+      </Unit93>
+      <Unit94>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\win32\classes.pp"/>
         <UnitName Value="Classes"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos X="6" Y="28"/>
-        <UsageCount Value="1"/>
-      </Unit96>
-      <Unit97>
+        <UsageCount Value="10"/>
+      </Unit94>
+      <Unit95>
         <Filename Value="C:\codetyphon\typhon\lcl\lmessages.pp"/>
         <UnitName Value="LMessages"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="801"/>
         <CursorPos X="51" Y="699"/>
-        <UsageCount Value="19"/>
-      </Unit97>
-      <Unit98>
+        <UsageCount Value="18"/>
+      </Unit95>
+      <Unit96>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\win\wininc\messages.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1323"/>
         <CursorPos X="12" Y="1333"/>
-        <UsageCount Value="9"/>
-      </Unit98>
-      <Unit99>
+        <UsageCount Value="8"/>
+      </Unit96>
+      <Unit97>
         <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-process\src\winall\simpleipc.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="377"/>
         <CursorPos X="46" Y="388"/>
-        <UsageCount Value="8"/>
-      </Unit99>
-      <Unit100>
+        <UsageCount Value="7"/>
+      </Unit97>
+      <Unit98>
         <Filename Value="C:\codetyphon\typhon\lcl\interfaces\win32\interfaces.pp"/>
         <UnitName Value="Interfaces"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
         <CursorPos X="8" Y="34"/>
-        <UsageCount Value="60"/>
-      </Unit100>
-      <Unit101>
+        <UsageCount Value="59"/>
+      </Unit98>
+      <Unit99>
         <Filename Value="C:\codetyphon\typhon\lcl\interfaces\win32\win32int.pp"/>
         <UnitName Value="Win32Int"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="31"/>
         <CursorPos X="19" Y="41"/>
-        <UsageCount Value="9"/>
-      </Unit101>
-      <Unit102>
+        <UsageCount Value="8"/>
+      </Unit99>
+      <Unit100>
         <Filename Value="C:\codetyphon\typhon\lcl\interfacebase.pp"/>
         <UnitName Value="InterfaceBase"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="103"/>
-        <CursorPos X="3" Y="118"/>
-        <UsageCount Value="13"/>
-      </Unit102>
-      <Unit103>
+        <TopLine Value="28"/>
+        <UsageCount Value="12"/>
+      </Unit100>
+      <Unit101>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classes.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="913"/>
-        <CursorPos X="18" Y="916"/>
-        <UsageCount Value="9"/>
-      </Unit103>
-      <Unit104>
+        <TopLine Value="485"/>
+        <CursorPos X="33" Y="501"/>
+        <UsageCount Value="14"/>
+      </Unit101>
+      <Unit102>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\win\sysosh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="19"/>
         <CursorPos X="3" Y="33"/>
-        <UsageCount Value="7"/>
-      </Unit104>
-      <Unit105>
+        <UsageCount Value="6"/>
+      </Unit102>
+      <Unit103>
         <Filename Value="C:\codetyphon\typhon\lcl\include\wincontrol.inc"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="20"/>
         <TopLine Value="6195"/>
         <CursorPos X="3" Y="6201"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="18"/>
         <Loaded Value="True"/>
-      </Unit105>
-      <Unit106>
+      </Unit103>
+      <Unit104>
         <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
         <UnitName Value="Graphics"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1087"/>
-        <CursorPos X="3" Y="966"/>
-        <UsageCount Value="9"/>
-      </Unit106>
-      <Unit107>
+        <EditorIndex Value="17"/>
+        <TopLine Value="1049"/>
+        <CursorPos X="21" Y="1128"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit104>
+      <Unit105>
         <Filename Value="C:\codetyphon\typhon\lcl\graphtype.pp"/>
         <UnitName Value="GraphType"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="23"/>
         <CursorPos X="46" Y="37"/>
-        <UsageCount Value="7"/>
-      </Unit107>
-      <Unit108>
+        <UsageCount Value="6"/>
+      </Unit105>
+      <Unit106>
         <Filename Value="C:\codetyphon\typhon\lcl\include\customform.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="455"/>
         <CursorPos X="29" Y="452"/>
-        <UsageCount Value="11"/>
-      </Unit108>
-      <Unit109>
+        <UsageCount Value="10"/>
+      </Unit106>
+      <Unit107>
         <Filename Value="C:\codetyphon\typhon\lcl\lclstrconsts.pas"/>
         <UnitName Value="LCLStrConsts"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="232"/>
         <CursorPos X="3" Y="250"/>
-        <UsageCount Value="8"/>
-      </Unit109>
-      <Unit110>
+        <UsageCount Value="7"/>
+      </Unit107>
+      <Unit108>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\compon.inc"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="503"/>
         <CursorPos X="8" Y="512"/>
         <UsageCount Value="15"/>
-        <Loaded Value="True"/>
-      </Unit110>
-      <Unit111>
+      </Unit108>
+      <Unit109>
         <Filename Value="C:\codetyphon\typhon\lcl\include\lcl_defines.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="8"/>
-        <UsageCount Value="9"/>
-      </Unit111>
-      <Unit112>
+        <UsageCount Value="8"/>
+      </Unit109>
+      <Unit110>
         <Filename Value="C:\codetyphon\typhon\lcl\include\controlconsts.inc"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="8"/>
-      </Unit112>
-      <Unit113>
+        <UsageCount Value="7"/>
+      </Unit110>
+      <Unit111>
         <Filename Value="C:\codetyphon\typhon\lcl\stdctrls.pp"/>
         <UnitName Value="StdCtrls"/>
-        <EditorIndex Value="6"/>
-        <TopLine Value="929"/>
-        <CursorPos X="18" Y="942"/>
-        <UsageCount Value="16"/>
+        <EditorIndex Value="13"/>
+        <TopLine Value="1558"/>
+        <CursorPos X="15" Y="1570"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
-      </Unit113>
-      <Unit114>
+      </Unit111>
+      <Unit112>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\typinfo.pp"/>
         <UnitName Value="TypInfo"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="45" Y="23"/>
-        <UsageCount Value="9"/>
-      </Unit114>
-      <Unit115>
+        <UsageCount Value="8"/>
+      </Unit112>
+      <Unit113>
         <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-base\src\gettext.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="61"/>
-        <UsageCount Value="9"/>
-      </Unit115>
-      <Unit116>
+        <UsageCount Value="8"/>
+      </Unit113>
+      <Unit114>
         <Filename Value="C:\codetyphon\typhon\components\BaseUtils\lazutf8.pas"/>
         <UnitName Value="LazUTF8"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="9"/>
-      </Unit116>
-      <Unit117>
+        <UsageCount Value="8"/>
+      </Unit114>
+      <Unit115>
         <Filename Value="C:\codetyphon\typhon\lcl\lclversion.pas"/>
         <UnitName Value="LCLVersion"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="35"/>
         <CursorPos X="10" Y="35"/>
-        <UsageCount Value="9"/>
-      </Unit117>
-      <Unit118>
+        <UsageCount Value="8"/>
+      </Unit115>
+      <Unit116>
         <Filename Value="C:\codetyphon\typhon\lcl\widgetset\wsforms.pp"/>
         <UnitName Value="WSForms"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="126"/>
         <CursorPos X="49" Y="140"/>
-        <UsageCount Value="9"/>
-      </Unit118>
-      <Unit119>
+        <UsageCount Value="8"/>
+      </Unit116>
+      <Unit117>
         <Filename Value="C:\codetyphon\typhon\lcl\widgetset\wscontrols.pp"/>
         <UnitName Value="WSControls"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="487"/>
         <CursorPos X="3" Y="476"/>
-        <UsageCount Value="9"/>
-      </Unit119>
-      <Unit120>
+        <UsageCount Value="8"/>
+      </Unit117>
+      <Unit118>
         <Filename Value="C:\codetyphon\typhon\components\BaseUtils\lazversion.pas"/>
         <UnitName Value="LazVersion"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="43" Y="18"/>
-        <UsageCount Value="9"/>
-      </Unit120>
-      <Unit121>
+        <UsageCount Value="8"/>
+      </Unit118>
+      <Unit119>
         <Filename Value="C:\codetyphon\typhon\lcl\lclproc.pas"/>
         <UnitName Value="LCLProc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="8"/>
         <CursorPos X="71" Y="24"/>
-        <UsageCount Value="9"/>
-      </Unit121>
-      <Unit122>
+        <UsageCount Value="8"/>
+      </Unit119>
+      <Unit120>
         <Filename Value="C:\codetyphon\typhon\components\BaseUtils\translations.pas"/>
         <UnitName Value="Translations"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
+        <UsageCount Value="8"/>
+      </Unit120>
+      <Unit121>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\controlsproc.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="56"/>
+        <CursorPos X="11" Y="70"/>
+        <UsageCount Value="10"/>
+      </Unit121>
+      <Unit122>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\systhrdh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="13"/>
+        <CursorPos X="4" Y="16"/>
         <UsageCount Value="9"/>
       </Unit122>
       <Unit123>
-        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.pp"/>
-        <IsPartOfProject Value="True"/>
+        <Filename Value="cm_AWTToolKit.inc"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="16"/>
-        <UsageCount Value="26"/>
+        <TopLine Value="15"/>
+        <CursorPos X="3" Y="40"/>
+        <UsageCount Value="25"/>
       </Unit123>
       <Unit124>
-        <Filename Value="C:\codetyphon\typhon\lcl\include\controlsproc.inc"/>
-        <EditorIndex Value="9"/>
-        <TopLine Value="56"/>
-        <CursorPos X="11" Y="70"/>
-        <UsageCount Value="11"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="547"/>
+        <CursorPos X="18" Y="558"/>
+        <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit124>
+      <Unit125>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTToolkit.inc"/>
+        <EditorIndex Value="7"/>
+        <CursorPos X="68" Y="15"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit125>
+      <Unit126>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\fcl-image\src\fpcanvas.pp"/>
+        <UnitName Value="FPCanvas"/>
+        <EditorIndex Value="19"/>
+        <TopLine Value="334"/>
+        <CursorPos X="24" Y="373"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit126>
+      <Unit127>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTBasePeer.inc"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="9"/>
+        <CursorPos X="58" Y="32"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+      </Unit127>
+      <Unit128>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\sysutils.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="156"/>
+        <CursorPos X="9" Y="160"/>
+        <UsageCount Value="10"/>
+      </Unit128>
+      <Unit129>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\font.inc"/>
+        <EditorIndex Value="16"/>
+        <TopLine Value="910"/>
+        <CursorPos X="19" Y="922"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit129>
+      <Unit130>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\objpash.inc"/>
+        <EditorIndex Value="21"/>
+        <TopLine Value="243"/>
+        <CursorPos X="121" Y="243"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit130>
+      <Unit131>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\objpas.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1007"/>
+        <CursorPos X="11" Y="1009"/>
+        <UsageCount Value="10"/>
+      </Unit131>
+      <Unit132>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\canvas.inc"/>
+        <EditorIndex Value="18"/>
+        <TopLine Value="1344"/>
+        <CursorPos X="3" Y="1354"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit132>
     </Units>
     <OtherDefines Count="1">
       <Define0 Value="Test"/>
     </OtherDefines>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="412" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWT.pas"/>
+        <Caret Line="599" Column="30" TopLine="589"/>
       </Position1>
       <Position2>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="413" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWT.pas"/>
+        <Caret Line="167" Column="18" TopLine="156"/>
       </Position2>
       <Position3>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="409" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWT.pas"/>
+        <Caret Line="595" Column="32" TopLine="585"/>
       </Position3>
       <Position4>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="410" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWT.pas"/>
+        <Caret Line="167" Column="20" TopLine="155"/>
       </Position4>
       <Position5>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="412" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.inc"/>
+        <Caret Line="43" Column="53" TopLine="31"/>
       </Position5>
       <Position6>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="413" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.inc"/>
+        <Caret Line="49" Column="6" TopLine="31"/>
       </Position6>
       <Position7>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="409" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.inc"/>
+        <Caret Line="50" Column="44" TopLine="31"/>
       </Position7>
       <Position8>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="410" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="85" Column="20" TopLine="77"/>
       </Position8>
       <Position9>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="412" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="136" Column="22" TopLine="119"/>
       </Position9>
       <Position10>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="453" Column="37" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="147" Column="20" TopLine="122"/>
       </Position10>
       <Position11>
-        <Filename Value="form\uFrameTest.pas"/>
-        <Caret Line="141" TopLine="123"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="542" Column="38" TopLine="529"/>
       </Position11>
       <Position12>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="409" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="95" Column="18" TopLine="84"/>
       </Position12>
       <Position13>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="410" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="373" Column="32" TopLine="369"/>
       </Position13>
       <Position14>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="412" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="139" Column="20" TopLine="129"/>
       </Position14>
       <Position15>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="413" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="542" Column="36" TopLine="533"/>
       </Position15>
       <Position16>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="414" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="138" Column="20" TopLine="122"/>
       </Position16>
       <Position17>
-        <Filename Value="form\uFrameTest.pas"/>
-        <Caret Line="142" TopLine="123"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="548" Column="39" TopLine="540"/>
       </Position17>
       <Position18>
-        <Filename Value="form\uFrameTest.pas"/>
-        <Caret Line="144" TopLine="123"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="96" Column="18" TopLine="81"/>
       </Position18>
       <Position19>
-        <Filename Value="form\uFrameTest.pas"/>
-        <Caret Line="145" TopLine="123"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="387" Column="34" TopLine="381"/>
       </Position19>
       <Position20>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="409" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="141" Column="19" TopLine="127"/>
       </Position20>
       <Position21>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="410" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="562" Column="76" TopLine="546"/>
       </Position21>
       <Position22>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="412" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="555" Column="40" TopLine="541"/>
       </Position22>
       <Position23>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="413" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="60" Column="27" TopLine="41"/>
       </Position23>
       <Position24>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="414" TopLine="392"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="552" Column="67" TopLine="544"/>
       </Position24>
       <Position25>
-        <Filename Value="form\uFrameTest.pas"/>
-        <Caret Line="146" TopLine="124"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="556" Column="26" TopLine="542"/>
       </Position25>
       <Position26>
-        <Filename Value="form\uFrameTest.pas"/>
-        <Caret Line="141" TopLine="139"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="550" Column="14" TopLine="542"/>
       </Position26>
       <Position27>
-        <Filename Value="form\uFrameTest.pas"/>
-        <Caret Line="156" Column="22" TopLine="139"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="556" Column="10" TopLine="539"/>
       </Position27>
       <Position28>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="161" Column="25" TopLine="154"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="554" TopLine="548"/>
       </Position28>
       <Position29>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="427" Column="20" TopLine="424"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="555" TopLine="548"/>
       </Position29>
       <Position30>
-        <Filename Value="..\kit\CMSDK\awt\cm_awt.pas"/>
-        <Caret Line="163" Column="21" TopLine="151"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
+        <Caret Line="556" Column="46" TopLine="548"/>
       </Position30>
     </JumpHistory>
     <RunParams>
