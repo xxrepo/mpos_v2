@@ -6,11 +6,16 @@ interface
 
 uses
   Classes, SysUtils,
+  cm_interfaces,
   cm_AWTBase, cm_AWTEvent;
 
 type
 
   // 前置声明
+  TAFont = class;
+  TACustomBitmap = class;
+  TABrush = class;
+  TACanvas = class;
   TAWinControl = class;
   IAToolkit = interface;
 
@@ -18,20 +23,22 @@ type
 
   EAWTException = class(Exception);
 
+  {$I awt_graphicspeer.inc}
+
   { TAObject }
 
-  TAObject = class
+  TAObject = class abstract(TCMBasePersistent)
+  protected
+    FPeer: IAPeer;
   public
     constructor Create;
+    destructor Destroy; override;
   end;
-
-  {$I cm_AWTBasePeer.inc}
 
   { TAFont }
 
   TAFont = class(TAObject)
   private
-    FPeer: IAFontPeer;
     function GetColor: TAColor;
     function GetHeight: Integer;
     function GetName: string;
@@ -51,26 +58,126 @@ type
     property Size: Integer read GetSize write SetSize;
   end;
 
+  { TAGraphic }
+
+  TAGraphic = class abstract(TAObject)
+  private
+    function GetEmpty: Boolean;
+    function GetHeight: Integer;
+    function GetWidth: Integer;
+    procedure SetHeight(AValue: Integer);
+    procedure SetWidth(AValue: Integer);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function GetPeer: IAGraphicPeer;
+  public
+    procedure Clear;
+    procedure LoadFromFile(const AFileName: string);
+    procedure LoadFromStream(AStream: TStream);
+    procedure SaveToFile(const AFileName: string);
+    procedure SaveToStream(AStream: TStream);
+    property Empty: Boolean read GetEmpty;
+    property Height: Integer read GetHeight write SetHeight;
+    property Width: Integer read GetWidth write SetWidth;
+  end;
+
+  { TARasterImage }
+
+  TARasterImage = class abstract(TAGraphic)
+  private
+    function GetCanvas: TACanvas;
+  public
+    function GetPeer: IARasterImagePeer;
+  public
+    procedure FreeImage;
+    property Canvas: TACanvas read GetCanvas;
+  end;
+
+  { TACustomBitmap }
+
+  TACustomBitmap = class(TARasterImage)
+  private
+    function GetMonochrome: Boolean;
+    procedure SetMonochrome(AValue: Boolean);
+  public
+    // 这里映射的是一个抽象类，这个构造方法仅用于取出映射对象多态属性。
+    constructor Create(APeer: IACustomBitmapPeer);
+    function GetPeer: IACustomBitmapPeer;
+  public
+    procedure SetSize(AWidth, AHeight: Integer);
+    property Monochrome: Boolean read GetMonochrome write SetMonochrome;
+  end;
+
+  { TABitmap }
+
+  TABitmap = class(TACustomBitmap)
+  public
+    constructor Create;
+  end;
+
+  { TAJPEGImage }
+
+  TAJPEGImage = class(TACustomBitmap)
+  public
+    constructor Create;
+  end;
+
+  { TAGIFImage }
+
+  TAGIFImage = class(TACustomBitmap)
+  public
+    constructor Create;
+  end;
+
+  { TAPortableNetworkGraphic }
+
+  TAPortableNetworkGraphic = class(TACustomBitmap)
+  public
+    constructor Create;
+  end;
+
+  { TABrush }
+
+  TABrush = class(TAObject)
+  private
+    function GetBitmap: TACustomBitmap;
+    function GetColor: TAColor;
+    procedure SetBitmap(AValue: TACustomBitmap);
+    procedure SetColor(AValue: TAColor);
+  public
+    constructor Create(APeer: IABrushPeer);
+    function GetPeer: IABrushPeer;
+  public
+    property Bitmap: TACustomBitmap read GetBitmap write SetBitmap;
+    property Color: TAColor read GetColor write SetColor;
+  end;
+
   { TACanvas }
 
   TACanvas = class(TAObject)
   private
-    FPeer: IACanvasPeer;
+    function GetBrush: TABrush;
+    function GetFont: TAFont;
+    procedure SetBrush(AValue: TABrush);
+    procedure SetFont(AValue: TAFont);
   public
     constructor Create;
     constructor Create(APeer: IACanvasPeer); overload;
     function GetPeer: IACanvasPeer;
   public
+    procedure FillRect(X1,Y1,X2,Y2: Integer);
     procedure TextOut(X,Y: Integer; const Text: string);
+    property Brush: TABrush read GetBrush write SetBrush;
+    property Font: TAFont read GetFont write SetFont;
   end;
 
-  {$I cm_AWTPeer.inc}
+  {$I awt_controlpeer.inc}
 
   { TAComponent }
 
-  TAComponent = class(TAObject)
+  TAComponent = class abstract(TAObject)
   private
-    FPeer: IAComponentPeer;
     FOwner: TAComponent;
     FComponents: TFPList;
     function GetComponent(AIndex: Integer): TAComponent;
@@ -104,25 +211,32 @@ type
     constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAControlPeer;
   private
-    function GetText: TACaption;
-    procedure SetText(AValue: TACaption);
-    function GetColor: TAColor;
-    procedure SetColor(AValue: TAColor);
-    function GetEnabled: Boolean;
-    procedure SetEnabled(AValue: Boolean);
-    function GetFont: TAFont;
-    procedure SetFont(AValue: TAFont);
-    function GetLeft: Integer;
-    procedure SetLeft(AValue: Integer);
-    function GetHeight: Integer;
-    procedure SetHeight(AValue: Integer);
-    function GetTop: Integer;
-    procedure SetTop(AValue: Integer);
-    function GetWidth: Integer;
-    procedure SetWidth(AValue: Integer);
     function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
+  private
+    function GetAlign: TAAlign;
+    function GetBoundsRect: TRect;
+    function GetColor: TAColor;
+    function GetEnabled: Boolean;
+    function GetFont: TAFont;
+    function GetHeight: Integer;
+    function GetLeft: Integer;
+    function GetText: TACaption;
+    function GetTop: Integer;
+    function GetWidth: Integer;
+    procedure SetAlign(AValue: TAAlign);
+    procedure SetBoundsRect(AValue: TRect);
+    procedure SetColor(AValue: TAColor);
+    procedure SetEnabled(AValue: Boolean);
+    procedure SetFont(AValue: TAFont);
+    procedure SetHeight(AValue: Integer);
+    procedure SetLeft(AValue: Integer);
+    procedure SetText(AValue: TACaption);
+    procedure SetTop(AValue: Integer);
+    procedure SetWidth(AValue: Integer);
   public
+    property Align: TAAlign read GetAlign write SetAlign;
+    property BoundsRect: TRect read GetBoundsRect write SetBoundsRect;
     property Caption: TACaption read GetText write SetText;
     property Color: TAColor read GetColor write SetColor;
     property Enabled: Boolean read GetEnabled write SetEnabled;
@@ -162,13 +276,16 @@ type
 
   { TACustomControl }
 
-  TACustomControl = class(TAWinControl)
+  TACustomControl = class abstract(TAWinControl)
   private
+    function GetBorderStyle: TABorderStyle;
     function GetCanvas: TACanvas;
+    procedure SetBorderStyle(AValue: TABorderStyle);
     procedure SetCanvas(AValue: TACanvas);
   public
     function GetPeer: IACustomControlPeer;
   public
+    property BorderStyle: TABorderStyle read GetBorderStyle write SetBorderStyle; //start at TWinControl
     property Canvas: TACanvas read GetCanvas write SetCanvas;
   end;
 
@@ -207,14 +324,18 @@ type
   { TAForm }
 
   TAForm = class(TAWinControl)
+  private
+    function GetFormBorderStyle: TAFormBorderStyle;
+    procedure SetFormBorderStyle(AValue: TAFormBorderStyle);
   public
     constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAFormPeer;
   public
+    property BorderStyle: TAFormBorderStyle read GetFormBorderStyle write SetFormBorderStyle;
     function ShowModal: Integer;
   end;
 
-  {$I cm_AWTToolkit.inc}
+  {$I awt_toolkit.inc}
 
 implementation
 
@@ -224,30 +345,13 @@ constructor TAObject.Create;
 begin
   if not Assigned(TAWTManager.DefaultToolkit) then
     raise EAWTException.Create(NoToolKitError);
+  FPeer := nil;
 end;
 
-{ TACanvas }
-
-constructor TACanvas.Create;
+destructor TAObject.Destroy;
 begin
-  inherited Create;
-  FPeer := TAWTManager.DefaultToolkit.CreateCanvas(Self);
-end;
-
-constructor TACanvas.Create(APeer: IACanvasPeer);
-begin
-  inherited Create;
-  FPeer := APeer;
-end;
-
-function TACanvas.GetPeer: IACanvasPeer;
-begin
-  Result := FPeer;
-end;
-
-procedure TACanvas.TextOut(X, Y: Integer; const Text: string);
-begin
-  GetPeer.TextOut(X, Y, Text);
+  FPeer := nil;
+  inherited Destroy;
 end;
 
 { TAFont }
@@ -306,7 +410,230 @@ end;
 
 function TAFont.GetPeer: IAFontPeer;
 begin
-  Result := FPeer;
+  FPeer.QueryInterface(IAFontPeer, Result);
+end;
+
+{ TAGraphic }
+
+function TAGraphic.GetEmpty: Boolean;
+begin
+  Result := GetPeer.GetEmpty;
+end;
+
+function TAGraphic.GetHeight: Integer;
+begin
+  Result := GetPeer.GetHeight;
+end;
+
+function TAGraphic.GetWidth: Integer;
+begin
+  Result := GetPeer.GetWidth;
+end;
+
+procedure TAGraphic.SetHeight(AValue: Integer);
+begin
+  GetPeer.SetHeight(AValue);
+end;
+
+procedure TAGraphic.SetWidth(AValue: Integer);
+begin
+  GetPeer.SetWidth(AValue);
+end;
+
+constructor TAGraphic.Create;
+begin
+  FPeer := nil;
+end;
+
+destructor TAGraphic.Destroy;
+begin
+  FPeer := nil;
+  inherited Destroy;
+end;
+
+function TAGraphic.GetPeer: IAGraphicPeer;
+begin
+  FPeer.QueryInterface(IAGraphicPeer, Result);
+end;
+
+procedure TAGraphic.Clear;
+begin
+  GetPeer.Clear;
+end;
+
+procedure TAGraphic.LoadFromFile(const AFilename: string);
+begin
+  GetPeer.LoadFromFile(AFilename);
+end;
+
+procedure TAGraphic.LoadFromStream(AStream: TStream);
+begin
+  GetPeer.LoadFromStream(AStream);
+end;
+
+procedure TAGraphic.SaveToFile(const AFilename: string);
+begin
+  GetPeer.SaveToFile(AFilename);
+end;
+
+procedure TAGraphic.SaveToStream(AStream: TStream);
+begin
+  GetPeer.SaveToStream(AStream);
+end;
+
+{ TARasterImage }
+
+function TARasterImage.GetCanvas: TACanvas;
+begin
+  Result := GetPeer.GetCanvas;
+end;
+
+function TARasterImage.GetPeer: IARasterImagePeer;
+begin
+  FPeer.QueryInterface(IARasterImagePeer, Result);
+end;
+
+procedure TARasterImage.FreeImage;
+begin
+  GetPeer.FreeImage;
+end;
+
+{ TACustomBitmap }
+
+function TACustomBitmap.GetMonochrome: Boolean;
+begin
+  Result := GetPeer.GetMonochrome;
+end;
+
+procedure TACustomBitmap.SetMonochrome(AValue: Boolean);
+begin
+  GetPeer.SetMonochrome(AValue);
+end;
+
+constructor TACustomBitmap.Create(APeer: IACustomBitmapPeer);
+begin
+  inherited Create;
+  FPeer := APeer;
+end;
+
+function TACustomBitmap.GetPeer: IACustomBitmapPeer;
+begin
+  FPeer.QueryInterface(IACustomBitmapPeer, Result);
+end;
+
+procedure TACustomBitmap.SetSize(AWidth, AHeight: Integer);
+begin
+  GetPeer.SetSize(AWidth, AHeight);
+end;
+
+{ TABitmap }
+
+constructor TABitmap.Create;
+begin
+  inherited Create(TAWTManager.DefaultToolkit.CreateCustomBitmap(Self));
+end;
+
+{ TAJPEGImage }
+
+constructor TAJPEGImage.Create;
+begin
+  inherited Create(TAWTManager.DefaultToolkit.CreateCustomBitmap(Self));
+end;
+
+{ TAGIFImage }
+
+constructor TAGIFImage.Create;
+begin
+  inherited Create(TAWTManager.DefaultToolkit.CreateCustomBitmap(Self));
+end;
+
+{ TAPortableNetworkGraphic }
+
+constructor TAPortableNetworkGraphic.Create;
+begin
+  inherited Create(TAWTManager.DefaultToolkit.CreateCustomBitmap(Self));
+end;
+
+{ TABrush }
+
+function TABrush.GetBitmap: TACustomBitmap;
+begin
+  Result := GetPeer.GetBitmap;
+end;
+
+function TABrush.GetColor: TAColor;
+begin
+  Result := GetPeer.GetColor;
+end;
+
+procedure TABrush.SetBitmap(AValue: TACustomBitmap);
+begin
+  GetPeer.SetBitmap(AValue);
+end;
+
+procedure TABrush.SetColor(AValue: TAColor);
+begin
+  GetPeer.SetColor(AValue);
+end;
+
+constructor TABrush.Create(APeer: IABrushPeer);
+begin
+  inherited Create;
+  FPeer := APeer;
+end;
+
+function TABrush.GetPeer: IABrushPeer;
+begin
+  FPeer.QueryInterface(IABrushPeer, Result);
+end;
+
+{ TACanvas }
+
+function TACanvas.GetBrush: TABrush;
+begin
+  Result := GetPeer.GetBrush;
+end;
+
+function TACanvas.GetFont: TAFont;
+begin
+  Result := GetPeer.GetFont;
+end;
+
+procedure TACanvas.SetBrush(AValue: TABrush);
+begin
+  GetPeer.SetBrush(AValue);
+end;
+
+procedure TACanvas.SetFont(AValue: TAFont);
+begin
+  GetPeer.SetFont(AValue);
+end;
+
+constructor TACanvas.Create;
+begin
+  inherited Create;
+  FPeer := TAWTManager.DefaultToolkit.CreateCanvas(Self);
+end;
+
+constructor TACanvas.Create(APeer: IACanvasPeer);
+begin
+  inherited Create;
+  FPeer := APeer;
+end;
+
+function TACanvas.GetPeer: IACanvasPeer;
+begin
+  Result := IACanvasPeer(FPeer);
+end;
+
+procedure TACanvas.FillRect(X1, Y1, X2, Y2: Integer);
+begin
+  GetPeer.FillRect(X1, Y1, X2, Y2);
+end;
+
+procedure TACanvas.TextOut(X, Y: Integer; const Text: string);
+begin
+  GetPeer.TextOut(X, Y, Text);
 end;
 
 { TAComponent }
@@ -381,7 +708,7 @@ end;
 
 function TAComponent.GetPeer: IAComponentPeer;
 begin
-  Result := FPeer;
+  Result := IAComponentPeer(FPeer);
 end;
 
 function TAComponent.GetName: TComponentName;
@@ -417,86 +744,6 @@ begin
   FPeer.QueryInterface(IAControlPeer, Result);
 end;
 
-function TAControl.GetText: TACaption;
-begin
-  Result := GetPeer.GetText;
-end;
-
-procedure TAControl.SetText(AValue: TACaption);
-begin
-  GetPeer.SetText(AValue);
-end;
-
-function TAControl.GetColor: TAColor;
-begin
-  Result := GetPeer.GetColor;
-end;
-
-procedure TAControl.SetColor(AValue: TAColor);
-begin
-  GetPeer.SetColor(AValue);
-end;
-
-function TAControl.GetEnabled: Boolean;
-begin
-  Result := GetPeer.GetEnabled;
-end;
-
-procedure TAControl.SetEnabled(AValue: Boolean);
-begin
-  GetPeer.SetEnabled(AValue);
-end;
-
-function TAControl.GetFont: TAFont;
-begin
-  Result := GetPeer.GetFont;
-end;
-
-procedure TAControl.SetFont(AValue: TAFont);
-begin
-  GetPeer.SetFont(AValue);
-end;
-
-function TAControl.GetLeft: Integer;
-begin
-  Result := GetPeer.GetLeft;
-end;
-
-procedure TAControl.SetLeft(AValue: Integer);
-begin
-  GetPeer.SetLeft(AValue);
-end;
-
-function TAControl.GetHeight: Integer;
-begin
-  Result := GetPeer.GetHeight;
-end;
-
-procedure TAControl.SetHeight(AValue: Integer);
-begin
-  GetPeer.SetHeight(AValue);
-end;
-
-function TAControl.GetTop: Integer;
-begin
-  Result := GetPeer.GetTop;
-end;
-
-procedure TAControl.SetTop(AValue: Integer);
-begin
-  GetPeer.SetTop(AValue);
-end;
-
-function TAControl.GetWidth: Integer;
-begin
-  Result := GetPeer.GetWidth;
-end;
-
-procedure TAControl.SetWidth(AValue: Integer);
-begin
-  GetPeer.SetWidth(AValue);
-end;
-
 function TAControl.GetParent: TAWinControl;
 begin
   Result := FParent;
@@ -512,6 +759,106 @@ begin
   if AValue <> nil then
     AValue.InsertControl(Self);
   FParent := AValue;
+end;
+
+function TAControl.GetWidth: Integer;
+begin
+  Result := GetPeer.GetWidth;
+end;
+
+procedure TAControl.SetWidth(AValue: Integer);
+begin
+  GetPeer.SetWidth(AValue);
+end;
+
+function TAControl.GetBoundsRect: TRect;
+begin
+  Result := GetPeer.GetBoundsRect;
+end;
+
+function TAControl.GetAlign: TAAlign;
+begin
+  Result := GetPeer.GetAlign;
+end;
+
+function TAControl.GetColor: TAColor;
+begin
+  Result := GetPeer.GetColor;
+end;
+
+function TAControl.GetEnabled: Boolean;
+begin
+  Result := GetPeer.GetEnabled;
+end;
+
+function TAControl.GetFont: TAFont;
+begin
+  Result := GetPeer.GetFont;
+end;
+
+function TAControl.GetHeight: Integer;
+begin
+  Result := GetPeer.GetHeight;
+end;
+
+function TAControl.GetLeft: Integer;
+begin
+  Result := GetPeer.GetLeft;
+end;
+
+function TAControl.GetText: TACaption;
+begin
+  Result := GetPeer.GetText;
+end;
+
+function TAControl.GetTop: Integer;
+begin
+  Result := GetPeer.GetTop;
+end;
+
+procedure TAControl.SetAlign(AValue: TAAlign);
+begin
+  GetPeer.SetAlign(AValue);
+end;
+
+procedure TAControl.SetColor(AValue: TAColor);
+begin
+  GetPeer.SetColor(AValue);
+end;
+
+procedure TAControl.SetEnabled(AValue: Boolean);
+begin
+  GetPeer.SetEnabled(AValue);
+end;
+
+procedure TAControl.SetFont(AValue: TAFont);
+begin
+  GetPeer.SetFont(AValue);
+end;
+
+procedure TAControl.SetHeight(AValue: Integer);
+begin
+  GetPeer.SetHeight(AValue);
+end;
+
+procedure TAControl.SetLeft(AValue: Integer);
+begin
+  GetPeer.SetLeft(AValue);
+end;
+
+procedure TAControl.SetText(AValue: TACaption);
+begin
+  GetPeer.SetText(AValue);
+end;
+
+procedure TAControl.SetTop(AValue: Integer);
+begin
+  GetPeer.SetTop(AValue);
+end;
+
+procedure TAControl.SetBoundsRect(AValue: TRect);
+begin
+  GetPeer.SetBoundsRect(AValue);
 end;
 
 { TAWinControl }
@@ -586,9 +933,19 @@ end;
 
 { TACustomControl }
 
+function TACustomControl.GetBorderStyle: TABorderStyle;
+begin
+  Result := GetPeer.GetBorderStyle;
+end;
+
 function TACustomControl.GetCanvas: TACanvas;
 begin
   Result := GetPeer.GetCanvas;
+end;
+
+procedure TACustomControl.SetBorderStyle(AValue: TABorderStyle);
+begin
+  GetPeer.SetBorderStyle(AValue);
 end;
 
 procedure TACustomControl.SetCanvas(AValue: TACanvas);
@@ -651,6 +1008,16 @@ begin
 end;
 
 { TAForm }
+
+function TAForm.GetFormBorderStyle: TAFormBorderStyle;
+begin
+  Result := GetPeer.GetFormBorderStyle;
+end;
+
+procedure TAForm.SetFormBorderStyle(AValue: TAFormBorderStyle);
+begin
+  GetPeer.SetFormBorderStyle(AValue);
+end;
 
 constructor TAForm.Create(AOwner: TAComponent);
 begin

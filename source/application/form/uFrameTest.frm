@@ -95,22 +95,13 @@ object TestFrame: TTestFrame
     OnClick = Panel3Click
   end
   object Panel8: TPanel
-    Left = 44
-    Height = 129
-    Top = 263
-    Width = 194
+    Left = 32
+    Height = 48
+    Top = 312
+    Width = 210
     Caption = 'Panel8'
-    ClientHeight = 129
-    ClientWidth = 194
     TabOrder = 9
-    object Label1: TLabel
-      Left = 43
-      Height = 12
-      Top = 82
-      Width = 36
-      Caption = 'Label1'
-      ParentColor = False
-    end
+    OnClick = Panel8Click
   end
   object Panel9: TPanel
     Left = 144
@@ -120,5 +111,14 @@ object TestFrame: TTestFrame
     Caption = 'Panel9'
     TabOrder = 10
     OnClick = Panel9Click
+  end
+  object Panel4: TPanel
+    Left = 8
+    Height = 34
+    Top = 192
+    Width = 126
+    Caption = 'aform test'
+    TabOrder = 11
+    OnClick = Panel4Click
   end
 end

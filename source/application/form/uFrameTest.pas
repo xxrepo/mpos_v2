@@ -9,7 +9,8 @@ uses
   cm_theme, cm_Plat,
   uSale, uSaleDTO,
   uSystem,
-  cm_AWTEvent;
+  cm_AWTEvent, cm_AWTBase,
+  uAForm;
 
 type
 
@@ -19,10 +20,10 @@ type
     edtShopCode: TEdit;
     edtTermCode: TEdit;
     edtTermUUID: TEdit;
-    Label1: TLabel;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
+    Panel4: TPanel;
     Panel5: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
@@ -31,9 +32,11 @@ type
     procedure Panel1Click(Sender: TObject);
     procedure Panel2Click(Sender: TObject);
     procedure Panel3Click(Sender: TObject);
+    procedure Panel4Click(Sender: TObject);
     procedure Panel5Click(Sender: TObject);
     procedure Panel6Click(Sender: TObject);
     procedure Panel7Click(Sender: TObject);
+    procedure Panel8Click(Sender: TObject);
     procedure Panel9Click(Sender: TObject);
   private
 
@@ -137,6 +140,13 @@ begin
     sb.AddShowItem(vo);
 end;
 
+procedure TTestFrame.Panel8Click(Sender: TObject);
+begin
+  Panel8.Canvas.Brush.Bitmap := TBitmap.Create;
+  Panel8.Canvas.Brush.Bitmap.LoadFromFile('d:/a.bmp');
+  Panel8.Canvas.FillRect(11,11,111,111);
+end;
+
 
 var
   f: TAForm;
@@ -150,16 +160,6 @@ var
   afont: TAFont;
 begin
   f := TAForm.Create(nil);
-
-  //Self.Name := ;
-  //Self.Controls[];
-  //Self.Owner;
-  //TEdit.Text := ;
-  //TEdit.Parent;
-  //TEdit.OnKeyDown := ;
-  //TPanel
-  //Self.ControlCount;
-  //Self.Parent;
 
   AppSystem.GetMsgBar.ShowMessage(etInfo, Self.FindComponent('Label1').Name);
 
@@ -183,10 +183,10 @@ begin
   p.Height := 200;
   p.Color := clGray;
 
-  //e.Parent := p;
+  e.Parent := p;
 
   l := TALabel.Create(f);
-  //l.Parent := p;
+  l.Parent := p;
   l.Top := 20;
   l.Caption := '调试 test:';
   l.Font.Color := clRed;
@@ -204,12 +204,23 @@ begin
   e.AddKeyListener(TTestKeyLi.Create);
 
   f.ShowModal;
-  //AppSystem.GetMsgBox.ShowMessage(IntToStr( f.ShowModal ));
 
   for i:=0 to f.ControlCount-1 do
     begin
       DefaultMessager.Info(f.Controls[i].Name);
     end;
+end;
+
+procedure TTestFrame.Panel4Click(Sender: TObject);
+var
+  f: TAPOSForm;
+begin
+  f := TAPOSForm.Create(nil);
+  f.SetTitle('你好，世界！');
+  f.BoundsRect := AppSystem.GetServiceRect;
+  f.BorderStyle := TAFormBorderStyle.bsNone;
+  f.ShowModal;
+
 end;
 
 procedure TTestFrame.Panel9Click(Sender: TObject);
@@ -218,18 +229,28 @@ var
 begin
   if InterfaceRegister.OutInterface(ITest, test) then
     test.Test;
-
-  //Panel1.Canvas;
-  //TThread.Synchronize();
-  //Self.Font;
+  //
+  //Panel1.BorderStyle := ;
+  //TForm.BorderStyle := ;
 end;
 
 { TTestKeyLi }
 
 procedure TTestKeyLi.KeyPressed(e: IKeyEvent);
+var
+  b: TACustomBitmap;
 begin
   AppSystem.GetMsgBar.ShowMessage(etInfo, 'input:' + e.GetKeyChar);
-  p.Canvas;//.TextOut(1, 1, '123');
+  p.Canvas.Font.Color := clRed;
+  p.Canvas.Font.Size := 20;
+  p.Canvas.TextOut(1, 1, '123');
+
+  p.Canvas.Brush.Color := clYellow;
+
+  b := TABitmap.Create;
+  p.Canvas.Brush.Bitmap := b;
+  p.Canvas.Brush.Bitmap.LoadFromFile('d:/a.bmp');
+  p.Canvas.FillRect(33,33,222,222);
 end;
 
 procedure TTestKeyLi.KeyReleased(e: IKeyEvent);

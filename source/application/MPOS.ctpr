@@ -35,7 +35,7 @@
         <PackageName Value="adLCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="58">
+    <Units Count="61">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -283,13 +283,25 @@
         <IsPartOfProject Value="True"/>
       </Unit55>
       <Unit56>
-        <Filename Value="..\kit\CMSDK\awt\cm_AWTPeer.inc"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\graphics_proxy.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit56>
       <Unit57>
-        <Filename Value="..\kit\CMSDK\awt\cm_AWTBasePeer.inc"/>
+        <Filename Value="..\kit\CMSDK\awt\awt_toolkit.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit57>
+      <Unit58>
+        <Filename Value="..\kit\CMSDK\awt\awt_controlpeer.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="..\kit\CMSDK\awt\awt_graphicspeer.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit59>
+      <Unit60>
+        <Filename Value="..\public\aform\uAForm.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit60>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -299,9 +311,9 @@
       <Filename Value="../../build/MPOS"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir)"/>
+      <IncludeFiles Value="$(ProjOutDir);..\kit\CMSDK\awt"/>
       <Libraries Value="$(CTDir)"/>
-      <OtherUnitFiles Value="..\public\form;..\kit\CMSDK;..\kit\CMSDK\solutions;form;..\public;..\service;..\kit\CMSDK\extension;unit;..\kit\CMSDK\awt;..\persistent;..\kit\CMSDK\awt\solutions"/>
+      <OtherUnitFiles Value="..\public\form;..\kit\CMSDK;..\kit\CMSDK\solutions;form;..\public;..\service;..\kit\CMSDK\extension;unit;..\kit\CMSDK\awt;..\persistent;..\kit\CMSDK\awt\solutions;..\public\aform"/>
       <UnitOutputDirectory Value="lib"/>
     </SearchPaths>
     <Linking>

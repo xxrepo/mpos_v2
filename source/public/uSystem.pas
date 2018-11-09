@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils,
   cm_interfaces, cm_parameter, cm_dialogs,
-  cm_Plat;
+  cm_plat;
 
 type
 

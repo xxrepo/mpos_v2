@@ -26,10 +26,13 @@ type
   { TProxyPeer }
 
   TProxyPeer = class(TCMBase, IAPeer)
+  private
+    FIsSelfCreateDelegate: Boolean;
   protected
     FDelegateObj: TObject;
   public
     constructor Create;
+    destructor Destroy; override;
   public
     function GetDelegate: TObject;
   end;
@@ -52,14 +55,83 @@ type
     procedure SetSize(AValue: Integer);
   end;
 
+  { TProxyGraphicPeer }
+
+  TProxyGraphicPeer = class abstract(TProxyPeer, IAGraphicPeer)
+  public
+    function GetDelegate: TGraphic;
+  public
+    function GetEmpty: Boolean;
+    function GetHeight: Integer;
+    function GetWidth: Integer;
+    procedure SetHeight(AValue: Integer);
+    procedure SetWidth(AValue: Integer);
+    procedure Clear;
+    procedure LoadFromFile(const AFileName: string);
+    procedure LoadFromStream(AStream: TStream);
+    procedure SaveToFile(const AFileName: string);
+    procedure SaveToStream(AStream: TStream);
+  end;
+
+  { TProxyRasterImagePeer }
+
+  TProxyRasterImagePeer = class abstract(TProxyGraphicPeer, IARasterImagePeer)
+  private
+    FCanvas: TACanvas;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function GetDelegate: TRasterImage;
+  public
+    function GetCanvas: TACanvas;
+    procedure FreeImage;
+  end;
+
+  { TProxyCustomBitmapPeer }
+
+  TProxyCustomBitmapPeer = class(TProxyRasterImagePeer, IACustomBitmapPeer)
+  public
+    constructor Create(TheDelegate: TCustomBitmap);
+    function GetDelegate: TCustomBitmap;
+  public
+    function GetMonochrome: Boolean;
+    procedure SetMonochrome(AValue: Boolean);
+    procedure SetSize(AWidth, AHeight: Integer);
+  end;
+
+  { TProxyBrushPeer }
+
+  TProxyBrushPeer = class(TProxyPeer, IABrushPeer)
+  private
+    FCustomBitmap: TACustomBitmap;
+  public
+    constructor Create(TheDelegate: TBrush);
+    destructor Destroy; override;
+    function GetDelegate: TBrush;
+  public
+    function GetBitmap: TACustomBitmap;
+    function GetColor: TAColor;
+    procedure SetBitmap(AValue: TACustomBitmap);
+    procedure SetColor(AValue: TAColor);
+  end;
+
   { TProxyCanvasPeer }
 
   TProxyCanvasPeer = class(TProxyPeer, IACanvasPeer)
+  private
+    FBrush: TABrush;
+    FFont: TAFont;
   public
     constructor Create;
     constructor Create(TheDelegate: TCanvas); overload;
+    destructor Destroy; override;
     function GetDelegate: TCanvas;
   public
+    function GetBrush: TABrush;
+    function GetFont: TAFont;
+    procedure SetBrush(AValue: TABrush);
+    procedure SetFont(AValue: TAFont);
+    procedure FillRect(X1,Y1,X2,Y2: Integer);
     procedure TextOut(X,Y: Integer; const Text: string);
   end;
 
@@ -86,22 +158,27 @@ type
     destructor Destroy; override;
     function GetDelegate: TControl;
   public
-    function GetText: TACaption;
-    procedure SetText(AValue: TACaption);
+    function GetAlign: TAAlign;
+    function GetBoundsRect: TRect;
     function GetColor: TAColor;
-    procedure SetColor(AValue: TAColor);
     function GetEnabled: Boolean;
-    procedure SetEnabled(AValue: Boolean);
     function GetFont: TAFont;
-    procedure SetFont(AValue: TAFont);
-    function GetLeft: Integer;
-    procedure SetLeft(AValue: Integer);
     function GetHeight: Integer;
-    procedure SetHeight(AValue: Integer);
+    function GetLeft: Integer;
+    function GetText: TACaption;
     function GetTop: Integer;
-    procedure SetTop(AValue: Integer);
     function GetWidth: Integer;
+    procedure SetAlign(AValue: TAAlign);
+    procedure SetBoundsRect(AValue: TRect);
+    procedure SetColor(AValue: TAColor);
+    procedure SetEnabled(AValue: Boolean);
+    procedure SetFont(AValue: TAFont);
+    procedure SetHeight(AValue: Integer);
+    procedure SetLeft(AValue: Integer);
+    procedure SetText(AValue: TACaption);
+    procedure SetTop(AValue: Integer);
     procedure SetWidth(AValue: Integer);
+    //
     procedure ReParent(AValue: IAWinControlPeer);
   end;
 
@@ -137,7 +214,9 @@ type
     destructor Destroy; override;
     function GetDelegate: TCustomControl;
   public
+    function GetBorderStyle: TABorderStyle;
     function GetCanvas: TACanvas;
+    procedure SetBorderStyle(AValue: TABorderStyle);
     procedure SetCanvas(AValue: TACanvas);
   end;
 
@@ -175,6 +254,8 @@ type
     constructor Create(AOwner: TComponent); override;
     function GetDelegate: TForm;
   public
+    function GetFormBorderStyle: TAFormBorderStyle;
+    procedure SetFormBorderStyle(AValue: TAFormBorderStyle);
     function ShowModal: Integer;
   end;
 
@@ -182,6 +263,7 @@ type
 
   TProxyToolkit = class(TCMMessageable, IAToolkit)
   public
+    function CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
     function CreateCanvas(ATarget: TACanvas): IACanvasPeer;
     function CreateFont(ATarget: TAFont): IAFontPeer;
     //
@@ -194,99 +276,28 @@ type
 
 implementation
 
+uses FPImage;
+
+{$i graphics_proxy.inc}
+
 { TProxyPeer }
 
 constructor TProxyPeer.Create;
 begin
+  FIsSelfCreateDelegate := False;
   FDelegateObj := nil;
+end;
+
+destructor TProxyPeer.Destroy;
+begin
+  if FIsSelfCreateDelegate and Assigned(FDelegateObj) then
+    FDelegateObj.Free;
+  inherited Destroy;
 end;
 
 function TProxyPeer.GetDelegate: TObject;
 begin
   Result := FDelegateObj;
-end;
-
-{ TProxyFontPeer }
-
-constructor TProxyFontPeer.Create;
-begin
-  inherited Create;
-  FDelegateObj := TFont.Create;
-end;
-
-constructor TProxyFontPeer.Create(TheDelegate: TFont);
-begin
-  inherited Create;
-  FDelegateObj := TheDelegate;
-end;
-
-function TProxyFontPeer.GetDelegate: TFont;
-begin
-  Result := TFont(FDelegateObj);
-end;
-
-function TProxyFontPeer.GetColor: TAColor;
-begin
-  Result := GetDelegate.Color;
-end;
-
-function TProxyFontPeer.GetHeight: Integer;
-begin
-  Result := GetDelegate.Height;
-end;
-
-function TProxyFontPeer.GetName: string;
-begin
-  Result := GetDelegate.Name;
-end;
-
-function TProxyFontPeer.GetSize: Integer;
-begin
-  Result := GetDelegate.Size;
-end;
-
-procedure TProxyFontPeer.SetColor(AValue: TAColor);
-begin
-  GetDelegate.Color := AValue;
-end;
-
-procedure TProxyFontPeer.SetHeight(AValue: Integer);
-begin
-  GetDelegate.Height := AValue;
-end;
-
-procedure TProxyFontPeer.SetName(AValue: string);
-begin
-  GetDelegate.Name := AValue;
-end;
-
-procedure TProxyFontPeer.SetSize(AValue: Integer);
-begin
-  GetDelegate.Size := AValue;
-end;
-
-{ TProxyCanvasPeer }
-
-constructor TProxyCanvasPeer.Create;
-begin
-  inherited Create;
-  FDelegateObj := TCanvas.Create;
-end;
-
-constructor TProxyCanvasPeer.Create(TheDelegate: TCanvas);
-begin
-  inherited Create;
-  FDelegateObj := TheDelegate;
-end;
-
-function TProxyCanvasPeer.GetDelegate: TCanvas;
-begin
-  Result := TCanvas(FDelegateObj);
-end;
-
-procedure TProxyCanvasPeer.TextOut(X, Y: Integer; const Text: string);
-begin
-  GetDelegate.TextOut(X, Y, Text);
 end;
 
 { TProxyComponentPeer }
@@ -339,6 +350,16 @@ end;
 function TProxyControlPeer.GetDelegate: TControl;
 begin
   Result := TControl(FDelegateObj);
+end;
+
+function TProxyControlPeer.GetAlign: TAAlign;
+begin
+  Result := TAAlign(GetDelegate.Align);
+end;
+
+function TProxyControlPeer.GetBoundsRect: TRect;
+begin
+  Result := GetDelegate.BoundsRect;
 end;
 
 function TProxyControlPeer.GetText: TACaption;
@@ -428,6 +449,16 @@ end;
 function TProxyControlPeer.GetWidth: Integer;
 begin
   Result := GetDelegate.Width;
+end;
+
+procedure TProxyControlPeer.SetAlign(AValue: TAAlign);
+begin
+  GetDelegate.Align := TAlign(AValue);
+end;
+
+procedure TProxyControlPeer.SetBoundsRect(AValue: TRect);
+begin
+  GetDelegate.BoundsRect := AValue;
 end;
 
 procedure TProxyControlPeer.SetWidth(AValue: Integer);
@@ -545,6 +576,11 @@ begin
   Result := TCustomControl(FDelegateObj);
 end;
 
+function TProxyCustomControlPeer.GetBorderStyle: TABorderStyle;
+begin
+  Result := TABorderStyle(GetDelegate.BorderStyle);
+end;
+
 function TProxyCustomControlPeer.GetCanvas: TACanvas;
 var
   cp: IACanvasPeer;
@@ -552,25 +588,26 @@ begin
   Result := nil;
   if not Assigned(FCanvas) then
     begin
-      GetDelegate.Canvas.Brush.Color := clRed;
-      GetDelegate.Canvas.Font.Color := clBlue;
-      GetDelegate.Canvas.FillRect(1,1,300,300);
-      //ShowMessage(GetDelegate.ClassName);
       cp := TProxyCanvasPeer.Create(GetDelegate.Canvas);
       FCanvas := TACanvas.Create(cp);
     end;
   Result := FCanvas;
 end;
 
+procedure TProxyCustomControlPeer.SetBorderStyle(AValue: TABorderStyle);
+begin
+  GetDelegate.BorderStyle := TBorderStyle(AValue);
+end;
+
 procedure TProxyCustomControlPeer.SetCanvas(AValue: TACanvas);
 begin
   if FCanvas = AValue then
     Exit;
-  //if Assigned(FCanvas) then
-  //  FreeAndNil(FCanvas);
-  //FCanvas := TACanvas.Create(AValue.GetPeer);
-  //if FCanvas.GetPeer.GetDelegate is TCanvas then
-  //  GetDelegate.Canvas := TCanvas(FCanvas.GetPeer.GetDelegate);
+  if Assigned(FCanvas) then
+    FreeAndNil(FCanvas);
+  FCanvas := TACanvas.Create(AValue.GetPeer);
+  if FCanvas.GetPeer.GetDelegate is TCanvas then
+    GetDelegate.Canvas := TCanvas(FCanvas.GetPeer.GetDelegate);
 end;
 
 { TProxyLabelPeer }
@@ -632,12 +669,51 @@ begin
   Result := TForm(FDelegateObj);
 end;
 
+function TProxyFormPeer.GetFormBorderStyle: TAFormBorderStyle;
+begin
+  Result := TAFormBorderStyle(GetDelegate.BorderStyle);
+end;
+
+procedure TProxyFormPeer.SetFormBorderStyle(AValue: TAFormBorderStyle);
+begin
+  GetDelegate.BorderStyle := TFormBorderStyle(AValue);
+end;
+
 function TProxyFormPeer.ShowModal: Integer;
 begin
   Result := GetDelegate.ShowModal;
 end;
 
 { TProxyToolkit }
+
+type
+
+  // TGIFImage 未实现抽象方法，为消除警告，声明此私有类型
+  TGIFImageEx = class(TGIFImage)
+  protected
+    class function GetWriterClass: TFPCustomImageWriterClass; override;
+  end;
+  class function TGIFImageEx.GetWriterClass: TFPCustomImageWriterClass;
+  begin
+    Result := nil;
+  end;
+
+function TProxyToolkit.CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
+var
+  classStr: string;
+begin
+  Result := nil;
+  // 无法判断类型信息
+  classStr := Format('%s.%s', [ATarget.UnitName, ATarget.ClassName]);
+  if classStr = 'cm_AWT.TABitmap' then
+    Result := TProxyCustomBitmapPeer.Create(TBitmap.Create)
+  else if classStr = 'cm_AWT.TAJPEGImage' then
+    Result := TProxyCustomBitmapPeer.Create(TJPEGImage.Create)
+  else if classStr = 'cm_AWT.TAGIFImage' then
+    Result := TProxyCustomBitmapPeer.Create(TGIFImageEx.Create)
+  else if classStr = 'cm_AWT.TAPortableNetworkGraphic' then
+    Result := TProxyCustomBitmapPeer.Create(TPortableNetworkGraphic.Create);
+end;
 
 function TProxyToolkit.CreateCanvas(ATarget: TACanvas): IACanvasPeer;
 begin

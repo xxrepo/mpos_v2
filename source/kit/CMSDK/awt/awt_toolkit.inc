@@ -12,6 +12,7 @@
 
   IAToolkit = interface
     ['{39A81EE2-2BBF-48D4-8389-2085F826707A}']
+    function CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
     function CreateCanvas(ATarget: TACanvas): IACanvasPeer;
     function CreateFont(ATarget: TAFont): IAFontPeer;
     //

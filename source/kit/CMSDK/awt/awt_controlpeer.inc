@@ -12,22 +12,27 @@
 
   IAControlPeer = interface(IAComponentPeer)
     ['{E1192DCA-5D61-4D56-AB24-0D3CA216FE54}']
-    function GetText: TACaption;
-    procedure SetText(AValue: TACaption);
+    function GetAlign: TAAlign;
+    function GetBoundsRect: TRect;
     function GetColor: TAColor;
-    procedure SetColor(AValue: TAColor);
     function GetEnabled: Boolean;
-    procedure SetEnabled(AValue: Boolean);
     function GetFont: TAFont;
-    procedure SetFont(AValue: TAFont);
-    function GetLeft: Integer;
-    procedure SetLeft(AValue: Integer);
     function GetHeight: Integer;
-    procedure SetHeight(AValue: Integer);
+    function GetLeft: Integer;
+    function GetText: TACaption;
     function GetTop: Integer;
-    procedure SetTop(AValue: Integer);
     function GetWidth: Integer;
+    procedure SetAlign(AValue: TAAlign);
+    procedure SetBoundsRect(AValue: TRect);
+    procedure SetColor(AValue: TAColor);
+    procedure SetEnabled(AValue: Boolean);
+    procedure SetFont(AValue: TAFont);
+    procedure SetHeight(AValue: Integer);
+    procedure SetLeft(AValue: Integer);
+    procedure SetText(AValue: TACaption);
+    procedure SetTop(AValue: Integer);
     procedure SetWidth(AValue: Integer);
+    //
     procedure ReParent(AValue: IAWinControlPeer);
   end;
 
@@ -46,7 +51,9 @@
 
   IACustomControlPeer = interface(IAWinControlPeer)
     ['{78B50173-8CA7-4176-A6BD-404570BDD6DE}']
+    function GetBorderStyle: TABorderStyle;
     function GetCanvas: TACanvas;
+    procedure SetBorderStyle(AValue: TABorderStyle);
     procedure SetCanvas(AValue: TACanvas);
     //property OnPaint: TNotifyEvent read FOnPaint write FOnPaint;
   end;
@@ -68,6 +75,8 @@
 
   IAFormPeer = interface(IAWinControlPeer)
     ['{5A8A620E-272E-4724-B339-282802CE878E}']
+    function GetFormBorderStyle: TAFormBorderStyle;
+    procedure SetFormBorderStyle(AValue: TAFormBorderStyle);
     function ShowModal: Integer;
   end;
 
