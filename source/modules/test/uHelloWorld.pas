@@ -55,7 +55,7 @@ var
 
 procedure THelloWorld.Test;
 var
-  i: Integer;
+  //i: Integer;
   afont: TAFont;
 begin
   try

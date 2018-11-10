@@ -4,11 +4,13 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="18">
+    <Units Count="19">
       <Unit0>
         <Filename Value="test.ppr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="22" Y="7"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="10"/>
+        <CursorPos X="20" Y="17"/>
         <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -29,9 +31,9 @@
       <Unit3>
         <Filename Value="uHelloWorld.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="22" Y="10"/>
+        <TopLine Value="45"/>
+        <CursorPos X="11" Y="58"/>
         <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit3>
@@ -56,8 +58,8 @@
         <Filename Value="..\..\kit\CMSDK\cm_plat.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="50"/>
-        <CursorPos X="11" Y="24"/>
+        <TopLine Value="58"/>
+        <CursorPos X="53" Y="89"/>
         <UsageCount Value="22"/>
       </Unit6>
       <Unit7>
@@ -82,8 +84,8 @@
       <Unit10>
         <Filename Value="..\..\kit\CMSDK\cm_messager.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="196"/>
-        <CursorPos X="64" Y="206"/>
+        <TopLine Value="193"/>
+        <CursorPos X="5" Y="206"/>
         <UsageCount Value="10"/>
       </Unit10>
       <Unit11>
@@ -131,16 +133,24 @@
       <Unit17>
         <Filename Value="..\..\kit\CMSDK\awt\awt_toolkit.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="21"/>
-        <CursorPos X="3" Y="43"/>
+        <TopLine Value="19"/>
+        <CursorPos Y="39"/>
         <UsageCount Value="10"/>
       </Unit17>
+      <Unit18>
+        <Filename Value="..\..\kit\CMSDK\cm_dialogs.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="239"/>
+        <CursorPos X="50" Y="253"/>
+        <UsageCount Value="20"/>
+      </Unit18>
     </Units>
     <OtherDefines Count="2">
       <Define0 Value="UseAWT"/>
       <Define1 Value="UseCThreads"/>
     </OtherDefines>
-    <JumpHistory Count="24" HistoryIndex="23">
+    <JumpHistory Count="23" HistoryIndex="22">
       <Position1>
         <Filename Value="uHelloWorld.pas"/>
         <Caret Line="28" Column="18" TopLine="14"/>
@@ -230,13 +240,9 @@
         <Caret Line="87" Column="9" TopLine="74"/>
       </Position22>
       <Position23>
-        <Filename Value="uHelloWorld.pas"/>
-        <Caret Line="10" Column="9" TopLine="24"/>
+        <Filename Value="test.ppr"/>
+        <Caret Line="17" Column="20"/>
       </Position23>
-      <Position24>
-        <Filename Value="uHelloWorld.pas"/>
-        <Caret Line="11" Column="3" TopLine="64"/>
-      </Position24>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

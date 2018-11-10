@@ -1,6 +1,18 @@
 
 
-  IAWinControlPeer = interface;
+  IAControlBorderSpacingPeer = interface(IAPeer)
+    ['{CD41CE07-9DBA-4785-8FF5-E05D716ACEF6}']
+    function GetAround: Integer;
+    function GetBottom: Integer;
+    function GetLeft: Integer;
+    function GetRight: Integer;
+    function GetTop: Integer;
+    procedure SetAround(AValue: Integer);
+    procedure SetBottom(AValue: Integer);
+    procedure SetLeft(AValue: Integer);
+    procedure SetRight(AValue: Integer);
+    procedure SetTop(AValue: Integer);
+  end;
 
   IAComponentPeer = interface(IAPeer)
     ['{F5955633-8025-47AE-87EB-A53E240AC20C}']
@@ -13,6 +25,7 @@
   IAControlPeer = interface(IAComponentPeer)
     ['{E1192DCA-5D61-4D56-AB24-0D3CA216FE54}']
     function GetAlign: TAAlign;
+    function GetBorderSpacing: TAControlBorderSpacing;
     function GetBoundsRect: TRect;
     function GetColor: TAColor;
     function GetEnabled: Boolean;
@@ -23,6 +36,7 @@
     function GetTop: Integer;
     function GetWidth: Integer;
     procedure SetAlign(AValue: TAAlign);
+    procedure SetBorderSpacing(AValue: TAControlBorderSpacing);
     procedure SetBoundsRect(AValue: TRect);
     procedure SetColor(AValue: TAColor);
     procedure SetEnabled(AValue: Boolean);
@@ -33,7 +47,8 @@
     procedure SetTop(AValue: Integer);
     procedure SetWidth(AValue: Integer);
     //
-    procedure ReParent(AValue: IAWinControlPeer);
+    function GetParent: TAWinControl;
+    procedure SetParent(AValue: TAWinControl);
   end;
 
   IAGraphicControlPeer = interface(IAControlPeer)
@@ -43,6 +58,12 @@
 
   IAWinControlPeer = interface(IAControlPeer)
     ['{F34E9CA5-AFE6-4AA0-8D35-FD81DC1A6956}']
+    function GetControl(AIndex: Integer): TAControl;
+    function GetControlCount: Integer;
+    procedure InsertControl(AControl: TAControl);
+    procedure RemoveControl(AControl: TAControl);
+    property ControlCount: Integer read GetControlCount;
+    //
     function CanFocus: Boolean;
     function CanSetFocus: Boolean;
     procedure SetFocus;

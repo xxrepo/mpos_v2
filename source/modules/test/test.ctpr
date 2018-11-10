@@ -25,7 +25,7 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <Units Count="8">
+    <Units Count="9">
       <Unit0>
         <Filename Value="test.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -58,6 +58,10 @@
         <Filename Value="..\..\public\uSystem.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="..\..\kit\CMSDK\cm_dialogs.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit8>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

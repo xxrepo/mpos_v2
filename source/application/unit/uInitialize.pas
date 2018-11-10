@@ -132,6 +132,8 @@ begin
   //这时初始化因为要设置主题
   FMsgBox := TPOSMsgBox.Create(Application);
   Result := True;
+  DefaultMsgBox := FMsgBox;
+  InterfaceRegister.PutInterface('ICMMsgBox', ICMMsgBox, DefaultMsgBox, DefaultMsgBoxCode);
 end;
 
 function TPOSInitialize.InitParameter: Boolean;
@@ -273,7 +275,7 @@ function TPOSInitialize.InitAWT: Boolean;
 begin
   Result := False;
   TAWTManager.DefaultToolkit := TProxyToolkit.Create;
-  Result := InterfaceRegister.PutInterface('IAToolkit', IAToolkit, TAWTManager.DefaultToolkit) >= 0;
+  Result := InterfaceRegister.PutInterface('IAToolkit', IAToolkit, TAWTManager.DefaultToolkit, DefaultToolkitCode) >= 0;
 end;
 
 //private

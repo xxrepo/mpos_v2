@@ -17,7 +17,7 @@ interface
 
 uses
   Classes, SysUtils
-  {$IFDEF LCL},Controls, StdCtrls, ExtCtrls, Graphics, Forms, LCLType, contnrs{$ENDIF}
+  {$IFDEF LCL},Controls, StdCtrls, ExtCtrls, Graphics, Forms, LCLType, Contnrs{$ENDIF}
   ;
 
 type
@@ -36,6 +36,20 @@ type
   }
   ICMMsgBox = interface
     ['{637ECDF7-86EF-4C4B-83B0-C88BD061ABD5}']
+    procedure ShowMessage(const AMsg: string);
+    function MessageBox(const AText, ACaption: string; AFlags: Longint=0): Integer;
+    function InputBox(const ACaption, APrompt, ADefault: string): string;
+  end;
+
+  { TProxyMessageBox }
+
+  TProxyMessageBox = class(TInterfacedObject, ICMMsgBox)
+  private
+    FMsgBox: ICMMsgBox;
+  public
+    constructor Create;
+    property CurrentMsgBox: ICMMsgBox read FMsgBox write FMsgBox;
+  public
     procedure ShowMessage(const AMsg: string);
     function MessageBox(const AText, ACaption: string; AFlags: Longint=0): Integer;
     function InputBox(const ACaption, APrompt, ADefault: string): string;
@@ -236,6 +250,11 @@ const
   DefaultBoardWidth: Integer = 450;
   DefaultButtonHeight: Integer = 40;
   DefaultButtonWidth: Integer = 120;
+
+  DefaultMsgBoxCode: string = 'DEFAULT';
+
+var
+  DefaultMsgBox: ICMMsgBox = nil;
 
 implementation
 
@@ -1093,6 +1112,39 @@ end;
 
 {$ENDIF}
 
+{ TProxyMessageBox }
+
+constructor TProxyMessageBox.Create;
+begin
+  FMsgBox := nil;
+end;
+
+procedure TProxyMessageBox.ShowMessage(const AMsg: string);
+begin
+  if Assigned(FMsgBox) then
+    FMsgBox.ShowMessage(AMsg);
+end;
+
+function TProxyMessageBox.MessageBox(const AText, ACaption: string; AFlags: Longint): Integer;
+begin
+  Result := 0;
+  if Assigned(FMsgBox) then
+    Result := FMsgBox.MessageBox(AText, ACaption, AFlags);
+end;
+
+function TProxyMessageBox.InputBox(const ACaption, APrompt, ADefault: string): string;
+begin
+  Result := ADefault;
+  if Assigned(FMsgBox) then
+    Result := FMsgBox.InputBox(ACaption, APrompt, ADefault);
+end;
+
+
+initialization
+  DefaultMsgBox := TProxyMessageBox.Create;
+
+finalization
+  DefaultMsgBox := nil;
 
 
 

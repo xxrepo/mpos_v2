@@ -6,21 +6,22 @@ object Form1: TForm1
   Caption = 'Form1'
   ClientHeight = 399
   ClientWidth = 670
+  OnCreate = FormCreate
   LCLVersion = '6.5'
   object Button1: TButton
-    Left = 16
+    Left = 8
     Height = 25
     Top = 8
-    Width = 75
-    Caption = 'Button1'
+    Width = 160
+    Caption = '局部类声明，指定接口实例'
     OnClick = Button1Click
     TabOrder = 0
   end
   object Memo1: TMemo
-    Left = 144
+    Left = 200
     Height = 399
     Top = 0
-    Width = 526
+    Width = 470
     Align = alRight
     Lines.Strings = (
       'Memo1'
@@ -28,21 +29,48 @@ object Form1: TForm1
     TabOrder = 1
   end
   object Button2: TButton
-    Left = 16
+    Left = 8
     Height = 25
-    Top = 88
+    Top = 48
     Width = 75
-    Caption = 'Button2'
+    Caption = '= nil'
     OnClick = Button2Click
     TabOrder = 2
   end
   object Button3: TButton
-    Left = 16
+    Left = 8
     Height = 25
-    Top = 48
+    Top = 80
     Width = 75
-    Caption = 'Button3'
+    Caption = '调接口方法'
     OnClick = Button3Click
     TabOrder = 3
+  end
+  object Button4: TButton
+    Left = 8
+    Height = 25
+    Top = 120
+    Width = 160
+    Caption = '直接指定全局接口实例'
+    OnClick = Button4Click
+    TabOrder = 4
+  end
+  object Button5: TButton
+    Left = 8
+    Height = 25
+    Top = 152
+    Width = 160
+    Caption = '指定局部接口实例'
+    OnClick = Button5Click
+    TabOrder = 5
+  end
+  object Button6: TButton
+    Left = 8
+    Height = 25
+    Top = 216
+    Width = 99
+    Caption = '加接口加入List'
+    OnClick = Button6Click
+    TabOrder = 6
   end
 end

@@ -20,6 +20,7 @@ type
     edtShopCode: TEdit;
     edtTermCode: TEdit;
     edtTermUUID: TEdit;
+    Label1: TLabel;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
@@ -158,10 +159,11 @@ procedure TTestFrame.Panel3Click(Sender: TObject);
 var
   i: Integer;
   afont: TAFont;
+  ac: TAControl;
 begin
   f := TAForm.Create(nil);
 
-  AppSystem.GetMsgBar.ShowMessage(etInfo, Self.FindComponent('Label1').Name);
+  AppSystem.GetMsgBar.ShowMessage(etInfo, Self.FindComponent('Panel1').Name);
 
   f.Color := clBlue;
   f.Left := 100;
@@ -182,6 +184,7 @@ begin
   p.Width := 600;
   p.Height := 200;
   p.Color := clGray;
+  p.Name := 'haha';
 
   e.Parent := p;
 
@@ -207,15 +210,16 @@ begin
 
   for i:=0 to f.ControlCount-1 do
     begin
-      DefaultMessager.Info(f.Controls[i].Name);
+      ac := f.Controls[i];
+      DefaultMessager.Info('-----------------------------------------%s', [ac.Name]);
     end;
 end;
 
 procedure TTestFrame.Panel4Click(Sender: TObject);
 var
-  f: TAPOSForm;
+  f: TTitledForm;
 begin
-  f := TAPOSForm.Create(nil);
+  f := TTitledForm.Create(nil);
   f.SetTitle('你好，世界！');
   f.BoundsRect := AppSystem.GetServiceRect;
   f.BorderStyle := TAFormBorderStyle.bsNone;
@@ -232,6 +236,7 @@ begin
   //
   //Panel1.BorderStyle := ;
   //TForm.BorderStyle := ;
+  //Label1.BorderSpacing;
 end;
 
 { TTestKeyLi }

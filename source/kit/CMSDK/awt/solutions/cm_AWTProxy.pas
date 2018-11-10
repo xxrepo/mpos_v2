@@ -17,9 +17,10 @@ unit cm_AWTProxy;
 interface
 
 uses
-  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics, Dialogs,
-  cm_interfaces, cm_messager,
-  cm_AWTBase, cm_awt, cm_AWTEvent, cm_AWTEventUtils;
+  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics,
+  cm_interfaces, cm_messager, cm_dialogs,
+  cm_AWTBase, cm_awt, cm_AWTEvent, cm_AWTEventUtils,
+  uSystem;
 
 type
 
@@ -135,11 +136,33 @@ type
     procedure TextOut(X,Y: Integer; const Text: string);
   end;
 
+  { TProxyControlBorderSpacingPeer }
+
+  TProxyControlBorderSpacingPeer = class(TProxyPeer, IAControlBorderSpacingPeer)
+  public
+    constructor Create(OwnerControl: TControl);
+    constructor Create(TheDelegate: TControlBorderSpacing); overload;
+    function GetDelegate: TControlBorderSpacing;
+  public
+    function GetAround: Integer;
+    function GetBottom: Integer;
+    function GetLeft: Integer;
+    function GetRight: Integer;
+    function GetTop: Integer;
+    procedure SetAround(AValue: Integer);
+    procedure SetBottom(AValue: Integer);
+    procedure SetLeft(AValue: Integer);
+    procedure SetRight(AValue: Integer);
+    procedure SetTop(AValue: Integer);
+  end;
+
   { TProxyComponentPeer }
 
   TProxyComponentPeer = class(TProxyPeer, IAComponentPeer)
+  protected
+    FTargetObj: TAComponent;
   public
-    constructor Create(AOwner: TComponent); virtual;
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); virtual;
     function GetDelegate: TComponent;
   public
     function GetName: TComponentName;
@@ -153,12 +176,15 @@ type
   TProxyControlPeer = class(TProxyComponentPeer, IAControlPeer)
   private
     FFont: TAFont;
+    FBorderSpacing: TAControlBorderSpacing;
+    class var FControlPeerList: TFPList;
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
     function GetDelegate: TControl;
   public
     function GetAlign: TAAlign;
+    function GetBorderSpacing: TAControlBorderSpacing;
     function GetBoundsRect: TRect;
     function GetColor: TAColor;
     function GetEnabled: Boolean;
@@ -169,6 +195,7 @@ type
     function GetTop: Integer;
     function GetWidth: Integer;
     procedure SetAlign(AValue: TAAlign);
+    procedure SetBorderSpacing(AValue: TAControlBorderSpacing);
     procedure SetBoundsRect(AValue: TRect);
     procedure SetColor(AValue: TAColor);
     procedure SetEnabled(AValue: Boolean);
@@ -179,7 +206,8 @@ type
     procedure SetTop(AValue: Integer);
     procedure SetWidth(AValue: Integer);
     //
-    procedure ReParent(AValue: IAWinControlPeer);
+    function GetParent: TAWinControl;
+    procedure SetParent(AValue: TAWinControl);
   end;
 
   TProxyGraphicControlPeer = class(TProxyControlPeer, IAGraphicControlPeer)
@@ -190,13 +218,22 @@ type
 
   TProxyWinControlPeer = class(TProxyControlPeer, IAWinControlPeer)
   private
+    FControls: TFPList;    // the child controls
     FKeyListenerList: TKeyListenerList;
   public
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
+    destructor Destroy; override;
     function GetDelegate: TWinControl;
     procedure KeyDownEvent(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure KeyPressEvent(Sender: TObject; var Key: Char);
     procedure KeyUpEvent(Sender: TObject; var Key: Word; Shift: TShiftState);
   public
+    function GetControl(AIndex: Integer): TAControl;
+    function GetControlCount: Integer;
+    procedure InsertControl(AControl: TAControl);
+    procedure RemoveControl(AControl: TAControl);
+    property ControlCount: Integer read GetControlCount;
+    //
     function CanFocus: Boolean;
     function CanSetFocus: Boolean;
     procedure SetFocus;
@@ -210,7 +247,7 @@ type
   private
     FCanvas: TACanvas;
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
     function GetDelegate: TCustomControl;
   public
@@ -224,7 +261,7 @@ type
 
   TProxyLabelPeer = class(TProxyGraphicControlPeer, IALabelPeer)
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TLabel;
   end;
 
@@ -232,7 +269,7 @@ type
 
   TProxyPanelPeer = class(TProxyCustomControlPeer, IAPanelPeer)
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TPanel;
   end;
 
@@ -240,7 +277,7 @@ type
 
   TProxyEditPeer = class(TProxyWinControlPeer, IAEditPeer)
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TEdit;
   public
     procedure Clear;
@@ -251,7 +288,7 @@ type
 
   TProxyFormPeer = class(TProxyWinControlPeer, IAFormPeer)
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TForm;
   public
     function GetFormBorderStyle: TAFormBorderStyle;
@@ -264,8 +301,9 @@ type
   TProxyToolkit = class(TCMMessageable, IAToolkit)
   public
     function CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
-    function CreateCanvas(ATarget: TACanvas): IACanvasPeer;
     function CreateFont(ATarget: TAFont): IAFontPeer;
+    function CreateCanvas(ATarget: TACanvas): IACanvasPeer;
+    function CreateBorderSpacing(ATarget: TAControlBorderSpacing; OwnerControl: TAControl): IAControlBorderSpacingPeer;
     //
     function CreateLabel(ATarget: TALabel): IALabelPeer;
     function CreatePanel(ATarget: TAPanel): IAPanelPeer;
@@ -300,11 +338,82 @@ begin
   Result := FDelegateObj;
 end;
 
-{ TProxyComponentPeer }
+{ TProxyControlBorderSpacingPeer }
 
-constructor TProxyComponentPeer.Create(AOwner: TComponent);
+constructor TProxyControlBorderSpacingPeer.Create(OwnerControl: TControl);
 begin
   inherited Create;
+  FIsSelfCreateDelegate := True;
+  FDelegateObj := TControlBorderSpacing.Create(OwnerControl);
+end;
+
+constructor TProxyControlBorderSpacingPeer.Create(TheDelegate: TControlBorderSpacing);
+begin
+  inherited Create;
+  FDelegateObj := TheDelegate;
+end;
+
+function TProxyControlBorderSpacingPeer.GetDelegate: TControlBorderSpacing;
+begin
+  Result := TControlBorderSpacing(FDelegateObj);
+end;
+
+function TProxyControlBorderSpacingPeer.GetAround: Integer;
+begin
+  Result := GetDelegate.Around;
+end;
+
+function TProxyControlBorderSpacingPeer.GetBottom: Integer;
+begin
+  Result := GetDelegate.Bottom;
+end;
+
+function TProxyControlBorderSpacingPeer.GetLeft: Integer;
+begin
+  Result := GetDelegate.Left;
+end;
+
+function TProxyControlBorderSpacingPeer.GetRight: Integer;
+begin
+  Result := GetDelegate.Right;
+end;
+
+function TProxyControlBorderSpacingPeer.GetTop: Integer;
+begin
+  Result := GetDelegate.Top;
+end;
+
+procedure TProxyControlBorderSpacingPeer.SetAround(AValue: Integer);
+begin
+  GetDelegate.Around := AValue;
+end;
+
+procedure TProxyControlBorderSpacingPeer.SetBottom(AValue: Integer);
+begin
+  GetDelegate.Bottom := AValue;
+end;
+
+procedure TProxyControlBorderSpacingPeer.SetLeft(AValue: Integer);
+begin
+  GetDelegate.Left := AValue;
+end;
+
+procedure TProxyControlBorderSpacingPeer.SetRight(AValue: Integer);
+begin
+  GetDelegate.Right := AValue;
+end;
+
+procedure TProxyControlBorderSpacingPeer.SetTop(AValue: Integer);
+begin
+  GetDelegate.Top := AValue;
+end;
+
+{ TProxyComponentPeer }
+
+constructor TProxyComponentPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
+begin
+  inherited Create;
+  FTargetObj := TheTarget;
 end;
 
 function TProxyComponentPeer.GetDelegate: TComponent;
@@ -334,16 +443,21 @@ end;
 
 { TProxyControlPeer }
 
-constructor TProxyControlPeer.Create(AOwner: TComponent);
+constructor TProxyControlPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
-  inherited Create(AOwner);
+  inherited Create(TheTarget, AOwner);
   FFont := nil;
+  FBorderSpacing := nil;
+  FControlPeerList.Add(Self);
 end;
 
 destructor TProxyControlPeer.Destroy;
 begin
   if Assigned(FFont) then
     FFont.Free;
+  if Assigned(FBorderSpacing) then
+    FBorderSpacing.Free;
+  FControlPeerList.Remove(Self);
   inherited Destroy;
 end;
 
@@ -355,6 +469,19 @@ end;
 function TProxyControlPeer.GetAlign: TAAlign;
 begin
   Result := TAAlign(GetDelegate.Align);
+end;
+
+function TProxyControlPeer.GetBorderSpacing: TAControlBorderSpacing;
+var
+  cbsp: IAControlBorderSpacingPeer;
+begin
+  Result := nil;
+  if not Assigned(FBorderSpacing) then
+    begin
+      cbsp := TProxyControlBorderSpacingPeer.Create(GetDelegate.BorderSpacing);
+      FBorderSpacing := TAControlBorderSpacing.Create(cbsp);
+    end;
+  Result := FBorderSpacing;
 end;
 
 function TProxyControlPeer.GetBoundsRect: TRect;
@@ -456,6 +583,17 @@ begin
   GetDelegate.Align := TAlign(AValue);
 end;
 
+procedure TProxyControlPeer.SetBorderSpacing(AValue: TAControlBorderSpacing);
+begin
+  if FBorderSpacing = AValue then
+    Exit;
+  if Assigned(FBorderSpacing) then
+    FreeAndNil(FBorderSpacing);
+  FBorderSpacing := TAControlBorderSpacing.Create(AValue.GetPeer);
+  if FBorderSpacing.GetPeer.GetDelegate is TControlBorderSpacing then
+    GetDelegate.BorderSpacing := TControlBorderSpacing(FBorderSpacing.GetPeer.GetDelegate);
+end;
+
 procedure TProxyControlPeer.SetBoundsRect(AValue: TRect);
 begin
   GetDelegate.BoundsRect := AValue;
@@ -466,18 +604,69 @@ begin
   GetDelegate.Width := AValue;
 end;
 
-procedure TProxyControlPeer.ReParent(AValue: IAWinControlPeer);
+function TProxyControlPeer.GetParent: TAWinControl;
+var
+  i: Integer;
+  cp: TProxyControlPeer;
+begin
+  // TODO 改进实现
+  Result := nil;
+  try
+    //Result := FParent;
+    //if Assigned(FParent) and (GetDelegate.Parent = FParent.GetPeer.GetDelegate) then
+    //  Result := FParent;
+    for i:=0 to FControlPeerList.Count-1 do
+      begin
+        cp := TProxyControlPeer(FControlPeerList[i]);
+        if cp.GetDelegate = GetDelegate.Parent then
+          Result := TAWinControl(cp.FTargetObj);
+      end;
+  except
+    on e: Exception do
+      DefaultMsgBox.MessageBox(e.ClassName + #10 + e.Message, Self.ClassName + ' output error');
+  end;
+end;
+
+procedure TProxyControlPeer.SetParent(AValue: TAWinControl);
 var
   parent: TObject;
 begin
-  parent := AValue.GetDelegate;
+  // 之前在外面的代码，这里已直接代理外部了，不再需要这层关系。
+  //if FParent = AValue then
+  //  Exit;
+  //GetPeer.ReParent(AValue.GetPeer);
+  //if FParent <> nil then
+  //  FParent.RemoveControl(Self);
+  //if AValue <> nil then
+  //  AValue.InsertControl(Self);
+  //FParent := AValue;
+  parent := AValue.GetPeer.GetDelegate;
   if parent is TWinControl then
     begin
       GetDelegate.Parent := TWinControl(parent);
+      //FParent := AValue;
     end;
 end;
 
 { TProxyWinControlPeer }
+
+constructor TProxyWinControlPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
+begin
+  inherited Create(TheTarget, AOwner);
+  FControls := TFPList.Create;
+end;
+
+destructor TProxyWinControlPeer.Destroy;
+var
+  c: TAControl;
+begin
+  while FControls.Count > 0 do
+    begin
+      c := TAControl(FControls.Last);
+      RemoveControl(c);
+    end;
+  inherited Destroy;
+end;
 
 function TProxyWinControlPeer.GetDelegate: TWinControl;
 begin
@@ -523,6 +712,50 @@ begin
     end;
 end;
 
+function TProxyWinControlPeer.GetControl(AIndex: Integer): TAControl;
+var
+  c: TControl;
+  i: Integer;
+  cp: TProxyControlPeer;
+begin
+  // TODO 改进实现
+  c := GetDelegate.Controls[AIndex];
+  if Assigned(c) then
+    begin
+      for i:=0 to FControlPeerList.Count-1 do
+        begin
+          cp := TProxyControlPeer(FControlPeerList[i]);
+          if cp.GetDelegate = c then
+            Result := TAControl(cp.FTargetObj);
+        end;
+    end;
+end;
+
+function TProxyWinControlPeer.GetControlCount: Integer;
+begin
+  Result := GetDelegate.ControlCount;
+end;
+
+procedure TProxyWinControlPeer.InsertControl(AControl: TAControl);
+var
+  c: TObject;
+begin
+  c := AControl.GetPeer.GetDelegate;
+  if Assigned(c) then
+    GetDelegate.InsertControl(TControl(c));
+  //AControl.FParent := Self;
+end;
+
+procedure TProxyWinControlPeer.RemoveControl(AControl: TAControl);
+var
+  c: TObject;
+begin
+  c := AControl.GetPeer.GetDelegate;
+  if Assigned(c) then
+    GetDelegate.RemoveControl(TControl(c));
+  //AControl.FParent := nil;
+end;
+
 function TProxyWinControlPeer.CanFocus: Boolean;
 begin
   Result := GetDelegate.CanFocus;
@@ -558,9 +791,9 @@ end;
 
 { TProxyCustomControlPeer }
 
-constructor TProxyCustomControlPeer.Create(AOwner: TComponent);
+constructor TProxyCustomControlPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
-  inherited Create(AOwner);
+  inherited Create(TheTarget, AOwner);
   FCanvas := nil;
 end;
 
@@ -612,9 +845,9 @@ end;
 
 { TProxyLabelPeer }
 
-constructor TProxyLabelPeer.Create(AOwner: TComponent);
+constructor TProxyLabelPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
-  inherited Create(AOwner);
+  inherited Create(TheTarget, AOwner);
   FDelegateObj := TLabel.Create(AOwner);
 end;
 
@@ -625,8 +858,9 @@ end;
 
 { TProxyPanelPeer }
 
-constructor TProxyPanelPeer.Create(AOwner: TComponent);
+constructor TProxyPanelPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
+  inherited Create(TheTarget, AOwner);
   FDelegateObj := TPanel.Create(AOwner);
 end;
 
@@ -637,8 +871,9 @@ end;
 
 { TProxyEditPeer }
 
-constructor TProxyEditPeer.Create(AOwner: TComponent);
+constructor TProxyEditPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
+  inherited Create(TheTarget, AOwner);
   FDelegateObj := TEdit.Create(AOwner);
 end;
 
@@ -659,8 +894,9 @@ end;
 
 { TProxyFormPeer }
 
-constructor TProxyFormPeer.Create(AOwner: TComponent);
+constructor TProxyFormPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
+  inherited Create(TheTarget, AOwner);
   FDelegateObj := TForm.Create(AOwner);
 end;
 
@@ -715,37 +951,52 @@ begin
     Result := TProxyCustomBitmapPeer.Create(TPortableNetworkGraphic.Create);
 end;
 
-function TProxyToolkit.CreateCanvas(ATarget: TACanvas): IACanvasPeer;
-begin
-  Result := TProxyCanvasPeer.Create;
-end;
-
 function TProxyToolkit.CreateFont(ATarget: TAFont): IAFontPeer;
 begin
   Result := TProxyFontPeer.Create;
 end;
 
+function TProxyToolkit.CreateCanvas(ATarget: TACanvas): IACanvasPeer;
+begin
+  Result := TProxyCanvasPeer.Create;
+end;
+
+function TProxyToolkit.CreateBorderSpacing(ATarget: TAControlBorderSpacing; OwnerControl: TAControl): IAControlBorderSpacingPeer;
+var
+  c: TObject;
+begin
+  Result := nil;
+  c := OwnerControl.GetPeer.GetDelegate;
+  if c is TControl then
+    Result := TProxyControlBorderSpacingPeer.Create(TControl(c));
+end;
+
 function TProxyToolkit.CreateLabel(ATarget: TALabel): IALabelPeer;
 begin
-  Result := TProxyLabelPeer.Create(nil);
+  Result := TProxyLabelPeer.Create(ATarget, nil);
 end;
 
 function TProxyToolkit.CreatePanel(ATarget: TAPanel): IAPanelPeer;
 begin
-  Result := TProxyPanelPeer.Create(nil);
+  Result := TProxyPanelPeer.Create(ATarget, nil);
 end;
 
 function TProxyToolkit.CreateEdit(ATarget: TAEdit): IAEditPeer;
 begin
-  Result := TProxyEditPeer.Create(nil);
+  Result := TProxyEditPeer.Create(ATarget, nil);
 end;
 
 function TProxyToolkit.CreateForm(ATarget: TAForm): IAFormPeer;
 begin
-  Result := TProxyFormPeer.Create(nil);
+  Result := TProxyFormPeer.Create(ATarget, nil);
 end;
 
 
+initialization
+  TProxyControlPeer.FControlPeerList := TFPList.Create;
+
+finalization
+  TProxyControlPeer.FControlPeerList.Free;
 
 end.
 

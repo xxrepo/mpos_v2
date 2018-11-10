@@ -1,3 +1,20 @@
+{
+    This file is part of the CM SDK.
+    Copyright (c) 2013-2018 by the ChenMeng studio
+
+    cm_theme
+
+    This is not a complete unit, for testing
+
+    Abstract Window Toolkit
+    依赖于具体解决方案，否则抛出异常。
+    不建议不分次建议中操作同一对象，你可能遇到类型操作失误的状况。
+    建议在使用时捕获相应的异常。
+
+    这一部分都是线程不安全的。
+
+ **********************************************************************}
+
 unit cm_AWT;
 
 {$mode objfpc}{$H+}
@@ -16,6 +33,8 @@ type
   TACustomBitmap = class;
   TABrush = class;
   TACanvas = class;
+  TAControlBorderSpacing = class;
+  TAControl = class;
   TAWinControl = class;
   IAToolkit = interface;
 
@@ -172,7 +191,33 @@ type
     property Font: TAFont read GetFont write SetFont;
   end;
 
-  {$I awt_controlpeer.inc}
+  {$i awt_controlpeer.inc}
+
+  { TAControlBorderSpacing }
+
+  TAControlBorderSpacing = class(TAObject)
+  private
+    function GetAround: Integer;
+    function GetBottom: Integer;
+    function GetLeft: Integer;
+    function GetRight: Integer;
+    function GetTop: Integer;
+    procedure SetAround(AValue: Integer);
+    procedure SetBottom(AValue: Integer);
+    procedure SetLeft(AValue: Integer);
+    procedure SetRight(AValue: Integer);
+    procedure SetTop(AValue: Integer);
+  public
+    constructor Create(OwnerControl: TAControl);
+    constructor Create(APeer: IAControlBorderSpacingPeer); overload;
+    function GetPeer: IAControlBorderSpacingPeer;
+  public
+    property Left: Integer read GetLeft write SetLeft;
+    property Top: Integer read GetTop write SetTop;
+    property Right: Integer read GetRight write SetRight;
+    property Bottom: Integer read GetBottom write SetBottom;
+    property Around: Integer read GetAround write SetAround;
+  end;
 
   { TAComponent }
 
@@ -205,16 +250,14 @@ type
   { TAControl }
 
   TAControl = class abstract(TAComponent)
-  private
-    FParent: TAWinControl;
   public
-    constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAControlPeer;
   private
     function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
   private
     function GetAlign: TAAlign;
+    function GetBorderSpacing: TAControlBorderSpacing;
     function GetBoundsRect: TRect;
     function GetColor: TAColor;
     function GetEnabled: Boolean;
@@ -225,6 +268,7 @@ type
     function GetTop: Integer;
     function GetWidth: Integer;
     procedure SetAlign(AValue: TAAlign);
+    procedure SetBorderSpacing(AValue: TAControlBorderSpacing);
     procedure SetBoundsRect(AValue: TRect);
     procedure SetColor(AValue: TAColor);
     procedure SetEnabled(AValue: Boolean);
@@ -237,6 +281,7 @@ type
   public
     property Align: TAAlign read GetAlign write SetAlign;
     property BoundsRect: TRect read GetBoundsRect write SetBoundsRect;
+    property BorderSpacing: TAControlBorderSpacing read GetBorderSpacing write SetBorderSpacing;
     property Caption: TACaption read GetText write SetText;
     property Color: TAColor read GetColor write SetColor;
     property Enabled: Boolean read GetEnabled write SetEnabled;
@@ -256,17 +301,15 @@ type
 
   TAWinControl = class abstract(TAControl)
   private
-    FControls: TFPList;    // the child controls
     function GetControl(AIndex: Integer): TAControl;
     function GetControlCount: Integer;
   public
-    constructor Create(AOwner: TAComponent); override;
-    destructor Destroy; override;
+    function GetPeer: IAWinControlPeer;
+  public
     procedure InsertControl(AControl: TAControl);
     procedure RemoveControl(AControl: TAControl);
     property ControlCount: Integer read GetControlCount;
     property Controls[AIndex: Integer]: TAControl read GetControl;
-    function GetPeer: IAWinControlPeer;
   public
     function CanFocus: Boolean;
     function CanSetFocus: Boolean;
@@ -733,12 +776,6 @@ end;
 
 { TAControl }
 
-constructor TAControl.Create(AOwner: TAComponent);
-begin
-  inherited Create(AOwner);
-  FParent := nil;
-end;
-
 function TAControl.GetPeer: IAControlPeer;
 begin
   FPeer.QueryInterface(IAControlPeer, Result);
@@ -746,19 +783,12 @@ end;
 
 function TAControl.GetParent: TAWinControl;
 begin
-  Result := FParent;
+  Result := GetPeer.GetParent;
 end;
 
 procedure TAControl.SetParent(AValue: TAWinControl);
 begin
-  if FParent = AValue then
-    Exit;
-  GetPeer.ReParent(AValue.GetPeer);
-  if FParent <> nil then
-    FParent.RemoveControl(Self);
-  if AValue <> nil then
-    AValue.InsertControl(Self);
-  FParent := AValue;
+  GetPeer.SetParent(AValue);
 end;
 
 function TAControl.GetWidth: Integer;
@@ -779,6 +809,11 @@ end;
 function TAControl.GetAlign: TAAlign;
 begin
   Result := GetPeer.GetAlign;
+end;
+
+function TAControl.GetBorderSpacing: TAControlBorderSpacing;
+begin
+  Result := GetPeer.GetBorderSpacing;
 end;
 
 function TAControl.GetColor: TAColor;
@@ -819,6 +854,11 @@ end;
 procedure TAControl.SetAlign(AValue: TAAlign);
 begin
   GetPeer.SetAlign(AValue);
+end;
+
+procedure TAControl.SetBorderSpacing(AValue: TAControlBorderSpacing);
+begin
+  GetPeer.SetBorderSpacing(AValue);
 end;
 
 procedure TAControl.SetColor(AValue: TAColor);
@@ -865,50 +905,27 @@ end;
 
 function TAWinControl.GetControl(AIndex: Integer): TAControl;
 begin
-  Result := TAControl(FControls[AIndex]);
+  Result := GetPeer.GetControl(AIndex);
 end;
 
 function TAWinControl.GetControlCount: Integer;
 begin
-  if FControls <> nil then
-    Result := FControls.Count
-  else
-    Result := 0;
-end;
-
-constructor TAWinControl.Create(AOwner: TAComponent);
-begin
-  inherited Create(AOwner);
-  FControls := TFPList.Create;
-end;
-
-destructor TAWinControl.Destroy;
-var
-  c: TAControl;
-begin
-  while FControls.Count > 0 do
-    begin
-      c := TAControl(FControls.Last);
-      RemoveControl(c);
-    end;
-  inherited Destroy;
-end;
-
-procedure TAWinControl.InsertControl(AControl: TAControl);
-begin
-  FControls.Add(AControl);
-  AControl.FParent := Self;
-end;
-
-procedure TAWinControl.RemoveControl(AControl: TAControl);
-begin
-  FControls.Remove(AControl);
-  AControl.FParent := nil;
+  Result := GetPeer.GetControlCount;
 end;
 
 function TAWinControl.GetPeer: IAWinControlPeer;
 begin
   FPeer.QueryInterface(IAWinControlPeer, Result);
+end;
+
+procedure TAWinControl.InsertControl(AControl: TAControl);
+begin
+  GetPeer.InsertControl(AControl);
+end;
+
+procedure TAWinControl.RemoveControl(AControl: TAControl);
+begin
+  GetPeer.RemoveControl(AControl);
 end;
 
 function TAWinControl.CanFocus: Boolean;
@@ -1033,6 +1050,75 @@ end;
 function TAForm.ShowModal: Integer;
 begin
   Result := IAFormPeer(FPeer).ShowModal;
+end;
+
+{ TAControlBorderSpacing }
+
+function TAControlBorderSpacing.GetAround: Integer;
+begin
+  Result := GetPeer.GetAround;
+end;
+
+function TAControlBorderSpacing.GetBottom: Integer;
+begin
+  Result := GetPeer.GetBottom;
+end;
+
+function TAControlBorderSpacing.GetLeft: Integer;
+begin
+  Result := GetPeer.GetLeft;
+end;
+
+function TAControlBorderSpacing.GetRight: Integer;
+begin
+  Result := GetPeer.GetRight;
+end;
+
+function TAControlBorderSpacing.GetTop: Integer;
+begin
+  Result := GetPeer.GetTop;
+end;
+
+procedure TAControlBorderSpacing.SetAround(AValue: Integer);
+begin
+  GetPeer.SetAround(AValue);
+end;
+
+procedure TAControlBorderSpacing.SetBottom(AValue: Integer);
+begin
+  GetPeer.SetBottom(AValue);
+end;
+
+procedure TAControlBorderSpacing.SetLeft(AValue: Integer);
+begin
+  GetPeer.SetLeft(AValue);
+end;
+
+procedure TAControlBorderSpacing.SetRight(AValue: Integer);
+begin
+  GetPeer.SetRight(AValue);
+end;
+
+procedure TAControlBorderSpacing.SetTop(AValue: Integer);
+begin
+  GetPeer.SetTop(AValue);
+end;
+
+constructor TAControlBorderSpacing.Create(OwnerControl: TAControl);
+begin
+  inherited Create;
+  FPeer := TAWTManager.DefaultToolkit.CreateBorderSpacing(Self, OwnerControl);
+end;
+
+constructor TAControlBorderSpacing.Create(APeer: IAControlBorderSpacingPeer);
+begin
+  inherited Create;
+  FPeer := APeer;
+end;
+
+function TAControlBorderSpacing.GetPeer: IAControlBorderSpacingPeer;
+begin
+  Result := IAControlBorderSpacingPeer(FPeer);
 end;
 
 initialization

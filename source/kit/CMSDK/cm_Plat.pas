@@ -16,7 +16,7 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_messager,
+  cm_messager, cm_dialogs,
   {$IFDEF LCL}
   cm_LCL, cm_LCLGlobalSet,
   {$ENDIF}
@@ -63,10 +63,15 @@ procedure FetchDefaultToolKit;
 var
   tk: IAToolkit;
 begin
-  if InterfaceRegister.OutInterface(IAToolkit, tk) then
+  if InterfaceRegister.OutInterface(IAToolkit, tk, DefaultToolkitCode) then
     TAWTManager.DefaultToolkit := tk;
 end;
 {$ENDIF}
+
+procedure FetchDefaultDefultMsgBox;
+begin
+  InterfaceRegister.OutInterface(ICMMsgBox, DefaultMsgBox, DefaultMsgBoxCode);
+end;
 
 function SetInterfaceRegister(AInterfaceRegister: ICMInterfaceRegister): Boolean;
 begin
@@ -81,6 +86,7 @@ begin
       {$IFDEF UseAWT}
       FetchDefaultToolKit;
       {$ENDIF}
+      FetchDefaultDefultMsgBox;
       Result := True;
     end;
 end;

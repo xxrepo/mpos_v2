@@ -121,4 +121,12 @@ object TestFrame: TTestFrame
     TabOrder = 11
     OnClick = Panel4Click
   end
+  object Label1: TLabel
+    Left = 36
+    Height = 12
+    Top = 248
+    Width = 36
+    Caption = 'Label1'
+    ParentColor = False
+  end
 end
