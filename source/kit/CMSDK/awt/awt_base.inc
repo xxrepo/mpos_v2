@@ -1,21 +1,6 @@
-unit cm_AWTBase;
-
-{$mode objfpc}{$H+}
-
-interface
-
-uses
-  Classes, SysUtils;
 
 type
 
-  { TColor、TCaption 定义是依赖 LCL 的。}
-
-  TAColor = -$7FFFFFFF-1..$7FFFFFFF;
-  TACaption = type String;
-  TAAlign = (alNone, alTop, alBottom, alLeft, alRight, alClient, alCustom);
-  TAFormBorderStyle = (bsNone, bsSingle, bsSizeable, bsDialog, bsToolWindow, bsSizeToolWin);
-  TABorderStyle = bsNone..bsSingle;
 
 
   { IAPeer
@@ -34,7 +19,27 @@ type
     function GetHashCode: PtrInt;
   end;
 
-implementation
 
-end.
+  // 前置声明
+  TAFont = class;
+  TACustomBitmap = class;
+  TABrush = class;
+  TACanvas = class;
+  TAControlBorderSpacing = class;
+  TAControl = class;
+  TAWinControl = class;
+  IAToolkit = interface;
+
+  { TAObject }
+
+  TAObject = class abstract(TCMBasePersistent)
+  protected
+    FPeer: IAPeer;
+  public
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+
+
 

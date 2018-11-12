@@ -1,17 +1,15 @@
 unit cm_AWTEventUtils;
 
-{$mode delphi}{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, Generics.Collections, //Generics.Defaults,
+  Classes, SysUtils, //Generics.Defaults,
   cm_interfaces,
   cm_AWTEvent;
 
 type
-
-  TKeyListenerList = TList<IKeyListener>;
 
   { TKeyEvent }
 
@@ -25,6 +23,15 @@ type
     function GetKeyCode: Word;
     procedure SetKeyChar(AKeyChar: Char);
     procedure SetKeyCode(AKeyCode: Word);
+  end;
+
+  { TKeyAdapter }
+
+  TKeyAdapter = class(TCMBase, IKeyListener)
+  public
+    procedure KeyPressed(e: IKeyEvent); virtual;
+    procedure KeyReleased(e: IKeyEvent); virtual;
+    procedure KeyTyped(e: IKeyEvent); virtual;
   end;
 
 implementation
@@ -56,6 +63,23 @@ end;
 procedure TKeyEvent.SetKeyCode(AKeyCode: Word);
 begin
   FKeyCode := AKeyCode;
+end;
+
+{ TKeyAdapter }
+
+procedure TKeyAdapter.KeyPressed(e: IKeyEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TKeyAdapter.KeyReleased(e: IKeyEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TKeyAdapter.KeyTyped(e: IKeyEvent);
+begin
+  //There's nothing to do here.
 end;
 
 end.

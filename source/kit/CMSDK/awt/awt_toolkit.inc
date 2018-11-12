@@ -10,7 +10,7 @@
     // 更多思路请参阅 jdk api。
   }
 
-  IAToolkit = interface
+  IAToolkit = interface(IUnknown)
     ['{39A81EE2-2BBF-48D4-8389-2085F826707A}']
     function CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
     function CreateFont(ATarget: TAFont): IAFontPeer;

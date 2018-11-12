@@ -142,9 +142,9 @@ begin
   Result := TFont(FDelegateObj);
 end;
 
-function TProxyFontPeer.GetColor: TAColor;
+function TProxyFontPeer.GetColor: TColor;
 begin
-  Result := GetDelegate.Color;
+  Result := cm_AWT.TColor(GetDelegate.Color);
 end;
 
 function TProxyFontPeer.GetHeight: Integer;
@@ -162,7 +162,7 @@ begin
   Result := GetDelegate.Size;
 end;
 
-procedure TProxyFontPeer.SetColor(AValue: TAColor);
+procedure TProxyFontPeer.SetColor(AValue: TColor);
 begin
   GetDelegate.Color := AValue;
 end;
@@ -217,7 +217,7 @@ begin
   Result := FCustomBitmap;
 end;
 
-function TProxyBrushPeer.GetColor: TAColor;
+function TProxyBrushPeer.GetColor: TColor;
 begin
   Result := GetDelegate.Color;
 end;
@@ -233,9 +233,9 @@ begin
     GetDelegate.Bitmap := TCustomBitmap(FCustomBitmap.GetPeer.GetDelegate);
 end;
 
-procedure TProxyBrushPeer.SetColor(AValue: TAColor);
+procedure TProxyBrushPeer.SetColor(AValue: TColor);
 begin
-  GetDelegate.Color := AValue;
+  GetDelegate.Color := Graphics.TColor(AValue);
 end;
 
 { TProxyCanvasPeer }

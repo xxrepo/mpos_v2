@@ -7,7 +7,7 @@
 			<rightWidth>164</rightWidth>
 		</mainForm>
 
-	    <!-- 基本的 -->
+	    <!-- 基本的默认 -->
 		<boardColor>$ffffff</boardColor>
 		<panelColor>$fbd5dd</panelColor>
 		<defaultFont>
@@ -43,10 +43,32 @@
 		<navigator>
 			<topColor>$ebc5cd</topColor>
 		    <bottomColor>$ebc5cd</bottomColor>
-		</navigator>		
-	    
+		</navigator>
+		
+		<!-- 华丽的分割线 -->
+
 		<!-- 业务窗口 -->
 		<service>
+		    <head> 
+			    <height>40</height>
+				<color>$e99fad</color>
+				<titleFont>
+					<color>0</color>
+					<size>14</size>
+					<name>黑体</name>
+				</titleFont>
+			</head>
+			<foot>
+			    <height>40</height>
+			    <color>$e99fad</color>
+				<buttonColor1>$cfc76c</buttonColor1>
+				<buttonColor2>$748de3</buttonColor2>
+				<buttonColor3>$e7bf66</buttonColor3>
+				<buttonColor4>$dddddd</buttonColor4>
+			</foot>
+			
+
+			<!-- 以下过时 -->
 			<titleColor>$e99fad</titleColor>
 			<titleFont>
 				<color>0</color>

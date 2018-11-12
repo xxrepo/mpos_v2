@@ -7,8 +7,7 @@ interface
 uses
   Classes, SysUtils,
   cm_interfaces, cm_parameter,
-  cm_theme,
-  cm_collections;
+  cm_theme;
 
 type
 
@@ -31,7 +30,7 @@ type
   TCMThemeUtil = class(TCMBase, IThemeableSet, IThemeController)
   private
     FAbleList: TInterfaceList;
-    FThemeList: TCMHashInterfaceList;
+    FThemeList: TInterfaceList;
     FReNames: TStrings;
     FFirstThemeName: string;
     FCurrTheme: ITheme;
@@ -82,7 +81,7 @@ end;
 constructor TCMThemeUtil.Create;
 begin
   FAbleList := TInterfaceList.Create;
-  FThemeList := TCMHashInterfaceList.Create;
+  FThemeList := TInterfaceList.Create;
   FReNames := nil;
   FFirstThemeName := '';
   FCurrTheme := nil;
@@ -127,7 +126,7 @@ begin
   Result := False;
   if Assigned(ATheme) then
     begin
-      Result := FThemeList.Add(ATheme.GetName, ATheme) >= 0;
+      Result := FThemeList.Add(ATheme) >= 0;
       if Result then
         if FFirstThemeName = '' then
           FFirstThemeName := ATheme.GetName;
@@ -155,20 +154,25 @@ function TCMThemeUtil.SwitchTheme(const AThemeName: string): Boolean;
 var
   theme: ITheme;
   ile: TInterfaceListEnumerator;
+  enumerator: TInterfaceListEnumerator;
 begin
   Result := False;
-  theme := ITheme(FThemeList.Find(AThemeName));
-  if Assigned(theme) then
+  enumerator := FThemeList.GetEnumerator;
+  while enumerator.MoveNext do
     begin
-      FCurrTheme := theme;
-      ile := FAbleList.GetEnumerator;
-      try
-        while ile.MoveNext do
-          IThemeable(ile.Current).SetTheme(theme);
-      finally
-        ile.Free;
-      end;
-      Result := True;
+      theme := ITheme(enumerator.GetCurrent);
+      if theme.GetName = AThemeName then
+        begin
+          FCurrTheme := theme;
+          ile := FAbleList.GetEnumerator;
+          try
+            while ile.MoveNext do
+              IThemeable(ile.Current).SetTheme(theme);
+          finally
+            ile.Free;
+          end;
+          Result := True;
+        end;
     end;
 end;
 

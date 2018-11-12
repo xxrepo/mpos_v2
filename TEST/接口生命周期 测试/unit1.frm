@@ -18,10 +18,10 @@ object Form1: TForm1
     TabOrder = 0
   end
   object Memo1: TMemo
-    Left = 200
+    Left = 240
     Height = 399
     Top = 0
-    Width = 470
+    Width = 430
     Align = alRight
     Lines.Strings = (
       'Memo1'
@@ -72,5 +72,23 @@ object Form1: TForm1
     Caption = '加接口加入List'
     OnClick = Button6Click
     TabOrder = 6
+  end
+  object Button7: TButton
+    Left = 8
+    Height = 25
+    Top = 248
+    Width = 128
+    Caption = '加接口加入泛型List'
+    OnClick = Button7Click
+    TabOrder = 7
+  end
+  object Button8: TButton
+    Left = 142
+    Height = 25
+    Top = 248
+    Width = 98
+    Caption = '泛型List clear'
+    OnClick = Button8Click
+    TabOrder = 8
   end
 end

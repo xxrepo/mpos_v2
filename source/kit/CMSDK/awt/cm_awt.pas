@@ -24,45 +24,27 @@ interface
 uses
   Classes, SysUtils,
   cm_interfaces,
-  cm_AWTBase, cm_AWTEvent;
+  cm_AWTEvent;
 
 type
-
-  // 前置声明
-  TAFont = class;
-  TACustomBitmap = class;
-  TABrush = class;
-  TACanvas = class;
-  TAControlBorderSpacing = class;
-  TAControl = class;
-  TAWinControl = class;
-  IAToolkit = interface;
 
   { EAWTException }
 
   EAWTException = class(Exception);
 
-  {$I awt_graphicspeer.inc}
-
-  { TAObject }
-
-  TAObject = class abstract(TCMBasePersistent)
-  protected
-    FPeer: IAPeer;
-  public
-    constructor Create;
-    destructor Destroy; override;
-  end;
+  {$i awt_type.inc}
+  {$i awt_base.inc}
+  {$i awt_graphicspeer.inc}
 
   { TAFont }
 
   TAFont = class(TAObject)
   private
-    function GetColor: TAColor;
+    function GetColor: TColor;
     function GetHeight: Integer;
     function GetName: string;
     function GetSize: Integer;
-    procedure SetColor(AValue: TAColor);
+    procedure SetColor(AValue: TColor);
     procedure SetHeight(AValue: Integer);
     procedure SetName(AValue: string);
     procedure SetSize(AValue: Integer);
@@ -71,7 +53,7 @@ type
     constructor Create(APeer: IAFontPeer); overload;
     function GetPeer: IAFontPeer;
   public
-    property Color: TAColor read GetColor write SetColor;
+    property Color: TColor read GetColor write SetColor;
     property Height: Integer read GetHeight write SetHeight;
     property Name: string read GetName write SetName;
     property Size: Integer read GetSize write SetSize;
@@ -161,15 +143,15 @@ type
   TABrush = class(TAObject)
   private
     function GetBitmap: TACustomBitmap;
-    function GetColor: TAColor;
+    function GetColor: TColor;
     procedure SetBitmap(AValue: TACustomBitmap);
-    procedure SetColor(AValue: TAColor);
+    procedure SetColor(AValue: TColor);
   public
     constructor Create(APeer: IABrushPeer);
     function GetPeer: IABrushPeer;
   public
     property Bitmap: TACustomBitmap read GetBitmap write SetBitmap;
-    property Color: TAColor read GetColor write SetColor;
+    property Color: TColor read GetColor write SetColor;
   end;
 
   { TACanvas }
@@ -191,6 +173,7 @@ type
     property Font: TAFont read GetFont write SetFont;
   end;
 
+  {$i awt_event.inc}
   {$i awt_controlpeer.inc}
 
   { TAControlBorderSpacing }
@@ -224,7 +207,7 @@ type
   TAComponent = class abstract(TAObject)
   private
     FOwner: TAComponent;
-    FComponents: TFPList;
+    FComponents: TFPList; // TODO 是否应该如 WinControl controls 一样代理？
     function GetComponent(AIndex: Integer): TAComponent;
     function GetComponentCount: Integer;
   public
@@ -256,34 +239,46 @@ type
     function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
   private
-    function GetAlign: TAAlign;
+    function GetAlign: TAlign;
     function GetBorderSpacing: TAControlBorderSpacing;
     function GetBoundsRect: TRect;
-    function GetColor: TAColor;
+    function GetColor: TColor;
     function GetEnabled: Boolean;
     function GetFont: TAFont;
     function GetHeight: Integer;
     function GetLeft: Integer;
-    function GetText: TACaption;
+    function GetText: TCaption;
     function GetTop: Integer;
+    function GetVisible: Boolean;
     function GetWidth: Integer;
-    procedure SetAlign(AValue: TAAlign);
+    procedure SetAlign(AValue: TAlign);
     procedure SetBorderSpacing(AValue: TAControlBorderSpacing);
     procedure SetBoundsRect(AValue: TRect);
-    procedure SetColor(AValue: TAColor);
+    procedure SetColor(AValue: TColor);
     procedure SetEnabled(AValue: Boolean);
     procedure SetFont(AValue: TAFont);
     procedure SetHeight(AValue: Integer);
     procedure SetLeft(AValue: Integer);
-    procedure SetText(AValue: TACaption);
+    procedure SetText(AValue: TCaption);
     procedure SetTop(AValue: Integer);
+    procedure SetVisible(AValue: Boolean);
     procedure SetWidth(AValue: Integer);
   public
-    property Align: TAAlign read GetAlign write SetAlign;
+    procedure AdjustSize; virtual;
+    procedure InvalidatePreferredSize; virtual;
+  public
+    procedure BringToFront;
+    procedure Hide;
+    procedure Invalidate; virtual;
+    procedure SendToBack;
+    procedure Show;
+    procedure Update; virtual;
+  public
+    property Align: TAlign read GetAlign write SetAlign;
     property BoundsRect: TRect read GetBoundsRect write SetBoundsRect;
     property BorderSpacing: TAControlBorderSpacing read GetBorderSpacing write SetBorderSpacing;
-    property Caption: TACaption read GetText write SetText;
-    property Color: TAColor read GetColor write SetColor;
+    property Caption: TCaption read GetText write SetText;
+    property Color: TColor read GetColor write SetColor;
     property Enabled: Boolean read GetEnabled write SetEnabled;
     property Font: TAFont read GetFont write SetFont;
   public
@@ -292,6 +287,10 @@ type
     property Top: Integer read GetTop write SetTop;
     property Width: Integer read GetWidth write SetWidth;
     property Parent: TAWinControl read GetParent write SetParent;
+    property Visible: Boolean read GetVisible write SetVisible;
+  public
+    procedure AddControlListener(l: IControlListener);
+    procedure RemoveControlListener(l: IControlListener);
   end;
 
   TAGraphicControl = class abstract(TAControl)
@@ -313,43 +312,67 @@ type
   public
     function CanFocus: Boolean;
     function CanSetFocus: Boolean;
+    function Focused: Boolean;
     procedure SetFocus;
+  public
     procedure AddKeyListener(l: IKeyListener); //添加指定的按键侦听器，以接收发自此 WinControl 的按键事件。
+    procedure RemoveKeyListener(l: IKeyListener);
   end;
 
   { TACustomControl }
 
   TACustomControl = class abstract(TAWinControl)
   private
-    function GetBorderStyle: TABorderStyle;
+    function GetBorderStyle: TBorderStyle;
     function GetCanvas: TACanvas;
-    procedure SetBorderStyle(AValue: TABorderStyle);
+    procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetCanvas(AValue: TACanvas);
   public
     function GetPeer: IACustomControlPeer;
   public
-    property BorderStyle: TABorderStyle read GetBorderStyle write SetBorderStyle; //start at TWinControl
+    property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle; //start at TWinControl
     property Canvas: TACanvas read GetCanvas write SetCanvas;
   end;
 
   { TALabel }
 
   TALabel = class(TAGraphicControl)
+  private
+    function GetAlignment: TAlignment;
+    function GetLayout: TTextLayout;
+    procedure SetAlignment(AValue: TAlignment);
+    procedure SetLayout(AValue: TTextLayout);
   public
     constructor Create(AOwner: TAComponent); override;
     function GetPeer: IALabelPeer;
   public
-
+    property Alignment: TAlignment read GetAlignment write SetAlignment;
+    property Layout: TTextLayout read GetLayout write SetLayout;
   end;
 
   { TAPanel }
 
   TAPanel = class(TACustomControl)
+  private
+    function GetAlignment: TAlignment;
+    function GetBevelColor: TColor;
+    function GetBevelInner: TPanelBevel;
+    function GetBevelOuter: TPanelBevel;
+    function GetBevelWidth: TBevelWidth;
+    procedure SetAlignment(AValue: TAlignment);
+    procedure SetBevelColor(AValue: TColor);
+    procedure SetBevelInner(AValue: TPanelBevel);
+    procedure SetBevelOuter(AValue: TPanelBevel);
+    procedure SetBevelWidth(AValue: TBevelWidth);
   public
     constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAPanelPeer;
   public
-
+    property Alignment: TAlignment read GetAlignment write SetAlignment;
+    property BevelColor: TColor read GetBevelColor write SetBevelColor;
+    property BevelInner: TPanelBevel read GetBevelInner write SetBevelInner;
+    property BevelOuter: TPanelBevel read GetBevelOuter write SetBevelOuter;
+    property BevelWidth: TBevelWidth read GetBevelWidth write SetBevelWidth;
   end;
 
   { TAEdit }
@@ -361,24 +384,24 @@ type
   public
     procedure Clear;
     procedure SelectAll;
-    property Text: TACaption read GetText write SetText;
+    property Text: TCaption read GetText write SetText;
   end;
 
   { TAForm }
 
   TAForm = class(TAWinControl)
   private
-    function GetFormBorderStyle: TAFormBorderStyle;
-    procedure SetFormBorderStyle(AValue: TAFormBorderStyle);
+    function GetFormBorderStyle: TFormBorderStyle;
+    procedure SetFormBorderStyle(AValue: TFormBorderStyle);
   public
     constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAFormPeer;
   public
-    property BorderStyle: TAFormBorderStyle read GetFormBorderStyle write SetFormBorderStyle;
+    property BorderStyle: TFormBorderStyle read GetFormBorderStyle write SetFormBorderStyle;
     function ShowModal: Integer;
   end;
 
-  {$I awt_toolkit.inc}
+  {$i awt_toolkit.inc}
 
 implementation
 
@@ -399,7 +422,7 @@ end;
 
 { TAFont }
 
-function TAFont.GetColor: TAColor;
+function TAFont.GetColor: TColor;
 begin
   Result := GetPeer.GetColor;
 end;
@@ -419,7 +442,7 @@ begin
   Result := GetPeer.GetSize;
 end;
 
-procedure TAFont.SetColor(AValue: TAColor);
+procedure TAFont.SetColor(AValue: TColor);
 begin
   GetPeer.SetColor(AValue);
 end;
@@ -604,7 +627,7 @@ begin
   Result := GetPeer.GetBitmap;
 end;
 
-function TABrush.GetColor: TAColor;
+function TABrush.GetColor: TColor;
 begin
   Result := GetPeer.GetColor;
 end;
@@ -614,7 +637,7 @@ begin
   GetPeer.SetBitmap(AValue);
 end;
 
-procedure TABrush.SetColor(AValue: TAColor);
+procedure TABrush.SetColor(AValue: TColor);
 begin
   GetPeer.SetColor(AValue);
 end;
@@ -801,12 +824,62 @@ begin
   GetPeer.SetWidth(AValue);
 end;
 
+procedure TAControl.AdjustSize;
+begin
+  GetPeer.AdjustSize;
+end;
+
+procedure TAControl.InvalidatePreferredSize;
+begin
+  GetPeer.InvalidatePreferredSize;
+end;
+
+procedure TAControl.BringToFront;
+begin
+  GetPeer.BringToFront;
+end;
+
+procedure TAControl.Hide;
+begin
+  GetPeer.Hide;
+end;
+
+procedure TAControl.Invalidate;
+begin
+  GetPeer.Invalidate;
+end;
+
+procedure TAControl.SendToBack;
+begin
+  GetPeer.SendToBack;
+end;
+
+procedure TAControl.Show;
+begin
+  GetPeer.Show;
+end;
+
+procedure TAControl.Update;
+begin
+  GetPeer.Update;
+end;
+
+procedure TAControl.AddControlListener(l: IControlListener);
+begin
+
+end;
+
+procedure TAControl.RemoveControlListener(l: IControlListener);
+begin
+
+end;
+
 function TAControl.GetBoundsRect: TRect;
 begin
   Result := GetPeer.GetBoundsRect;
 end;
 
-function TAControl.GetAlign: TAAlign;
+function TAControl.GetAlign: TAlign;
 begin
   Result := GetPeer.GetAlign;
 end;
@@ -816,7 +889,7 @@ begin
   Result := GetPeer.GetBorderSpacing;
 end;
 
-function TAControl.GetColor: TAColor;
+function TAControl.GetColor: TColor;
 begin
   Result := GetPeer.GetColor;
 end;
@@ -841,7 +914,7 @@ begin
   Result := GetPeer.GetLeft;
 end;
 
-function TAControl.GetText: TACaption;
+function TAControl.GetText: TCaption;
 begin
   Result := GetPeer.GetText;
 end;
@@ -851,7 +924,12 @@ begin
   Result := GetPeer.GetTop;
 end;
 
-procedure TAControl.SetAlign(AValue: TAAlign);
+function TAControl.GetVisible: Boolean;
+begin
+  Result := GetPeer.GetVisible;
+end;
+
+procedure TAControl.SetAlign(AValue: TAlign);
 begin
   GetPeer.SetAlign(AValue);
 end;
@@ -861,7 +939,7 @@ begin
   GetPeer.SetBorderSpacing(AValue);
 end;
 
-procedure TAControl.SetColor(AValue: TAColor);
+procedure TAControl.SetColor(AValue: TColor);
 begin
   GetPeer.SetColor(AValue);
 end;
@@ -886,7 +964,7 @@ begin
   GetPeer.SetLeft(AValue);
 end;
 
-procedure TAControl.SetText(AValue: TACaption);
+procedure TAControl.SetText(AValue: TCaption);
 begin
   GetPeer.SetText(AValue);
 end;
@@ -894,6 +972,11 @@ end;
 procedure TAControl.SetTop(AValue: Integer);
 begin
   GetPeer.SetTop(AValue);
+end;
+
+procedure TAControl.SetVisible(AValue: Boolean);
+begin
+  GetPeer.SetVisible(AValue);
 end;
 
 procedure TAControl.SetBoundsRect(AValue: TRect);
@@ -938,6 +1021,11 @@ begin
   Result := GetPeer.CanSetFocus;
 end;
 
+function TAWinControl.Focused: Boolean;
+begin
+  Result := GetPeer.Focused;
+end;
+
 procedure TAWinControl.SetFocus;
 begin
   GetPeer.SetFocus;
@@ -948,9 +1036,14 @@ begin
   GetPeer.AddKeyListener(l);
 end;
 
+procedure TAWinControl.RemoveKeyListener(l: IKeyListener);
+begin
+  GetPeer.RemoveKeyListener(l);
+end;
+
 { TACustomControl }
 
-function TACustomControl.GetBorderStyle: TABorderStyle;
+function TACustomControl.GetBorderStyle: TBorderStyle;
 begin
   Result := GetPeer.GetBorderStyle;
 end;
@@ -960,7 +1053,7 @@ begin
   Result := GetPeer.GetCanvas;
 end;
 
-procedure TACustomControl.SetBorderStyle(AValue: TABorderStyle);
+procedure TACustomControl.SetBorderStyle(AValue: TBorderStyle);
 begin
   GetPeer.SetBorderStyle(AValue);
 end;
@@ -977,6 +1070,26 @@ end;
 
 { TALabel }
 
+function TALabel.GetAlignment: TAlignment;
+begin
+  Result := GetPeer.GetAlignment;
+end;
+
+function TALabel.GetLayout: TTextLayout;
+begin
+  Result := GetPeer.GetLayout;
+end;
+
+procedure TALabel.SetAlignment(AValue: TAlignment);
+begin
+  GetPeer.SetAlignment(AValue);
+end;
+
+procedure TALabel.SetLayout(AValue: TTextLayout);
+begin
+  GetPeer.SetLayout(AValue);
+end;
+
 constructor TALabel.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
@@ -989,6 +1102,56 @@ begin
 end;
 
 { TAPanel }
+
+function TAPanel.GetAlignment: TAlignment;
+begin
+  Result := GetPeer.GetAlignment;
+end;
+
+function TAPanel.GetBevelColor: TColor;
+begin
+  Result := GetPeer.GetBevelColor;
+end;
+
+function TAPanel.GetBevelInner: TPanelBevel;
+begin
+  Result := GetPeer.GetBevelInner;
+end;
+
+function TAPanel.GetBevelOuter: TPanelBevel;
+begin
+  Result := GetPeer.GetBevelOuter;
+end;
+
+function TAPanel.GetBevelWidth: TBevelWidth;
+begin
+  Result := GetPeer.GetBevelWidth;
+end;
+
+procedure TAPanel.SetAlignment(AValue: TAlignment);
+begin
+  GetPeer.SetAlignment(AValue);
+end;
+
+procedure TAPanel.SetBevelColor(AValue: TColor);
+begin
+  GetPeer.SetBevelColor(AValue);
+end;
+
+procedure TAPanel.SetBevelInner(AValue: TPanelBevel);
+begin
+  GetPeer.SetBevelInner(AValue);
+end;
+
+procedure TAPanel.SetBevelOuter(AValue: TPanelBevel);
+begin
+  GetPeer.SetBevelOuter(AValue);
+end;
+
+procedure TAPanel.SetBevelWidth(AValue: TBevelWidth);
+begin
+  GetPeer.SetBevelWidth(AValue);
+end;
 
 constructor TAPanel.Create(AOwner: TAComponent);
 begin
@@ -1026,12 +1189,12 @@ end;
 
 { TAForm }
 
-function TAForm.GetFormBorderStyle: TAFormBorderStyle;
+function TAForm.GetFormBorderStyle: TFormBorderStyle;
 begin
   Result := GetPeer.GetFormBorderStyle;
 end;
 
-procedure TAForm.SetFormBorderStyle(AValue: TAFormBorderStyle);
+procedure TAForm.SetFormBorderStyle(AValue: TFormBorderStyle);
 begin
   GetPeer.SetFormBorderStyle(AValue);
 end;

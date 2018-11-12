@@ -1,11 +1,15 @@
 unit Unit1;
 
-{$mode objfpc}{$H+}
+//{$mode objfpc}{$H+}
+{$mode delphi}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Contnrs
+  ,Generics.Collections
+  //,fgl
+  ;
 
 type
 
@@ -18,6 +22,8 @@ type
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    Button7: TButton;
+    Button8: TButton;
     Memo1: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -25,6 +31,8 @@ type
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
 
@@ -37,6 +45,10 @@ type
     procedure aa;
   end;
 
+  TAList = TThreadList<IA>;
+  //TAList = class(specialize TFPGList<IA>);
+
+
   { TA }
 
   TA = class(TInterfacedObject, IA)
@@ -48,7 +60,9 @@ type
 var
   Form1: TForm1;
   aIntf: IA;
-  aList: TFPList;
+  aList: TList;
+  aList2: TAList;
+  aList3: TFPHashList;
 
   //测试接口怎样指派实例与其释放的关系
 
@@ -99,13 +113,29 @@ var
   ai: IA;
 begin
   ai := TA.Create;
-  aList.Add(ai);
+  aList2.Add(ai);
   ai.aa;
+end;
+
+procedure TForm1.Button7Click(Sender: TObject);
+var
+  ai: IA;
+begin
+  ai := TA.Create;
+  aList3.Add('aa', ai);
+  ai.aa;
+end;
+
+procedure TForm1.Button8Click(Sender: TObject);
+begin
+  aList3.Clear;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  aList := TFPList.Create;
+  aList := TList.Create;
+  aList2 := TAList.Create;
+  aList3 := TFPHashList.Create;
 end;
 
 { TA }

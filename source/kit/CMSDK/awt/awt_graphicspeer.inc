@@ -2,11 +2,11 @@
 
   IAFontPeer = interface(IAPeer)
     ['{3F71ACAE-FB45-4D03-B19D-11D9F9904F28}']
-    function GetColor: TAColor;
+    function GetColor: TColor;
     function GetHeight: Integer;
     function GetName: string;
     function GetSize: Integer;
-    procedure SetColor(AValue: TAColor);
+    procedure SetColor(AValue: TColor);
     procedure SetHeight(AValue: Integer);
     procedure SetName(AValue: string);
     procedure SetSize(AValue: Integer);
@@ -56,9 +56,9 @@
   IABrushPeer = interface(IAPeer)
     ['{23F27BBB-4BA5-45D3-84BF-6E050819EF21}']
     function GetBitmap: TACustomBitmap;
-    function GetColor: TAColor;
+    function GetColor: TColor;
     procedure SetBitmap(AValue: TACustomBitmap);
-    procedure SetColor(AValue: TAColor);
+    procedure SetColor(AValue: TColor);
   end;
 
   IACanvasPeer = interface(IAPeer)

@@ -19,7 +19,7 @@ interface
 uses
   Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics,
   cm_interfaces, cm_messager, cm_dialogs,
-  cm_AWTBase, cm_awt, cm_AWTEvent, cm_AWTEventUtils,
+  cm_AWT, cm_AWTEvent, cm_AWTEventUtils,
   uSystem;
 
 type
@@ -46,11 +46,11 @@ type
     constructor Create(TheDelegate: TFont); overload;
     function GetDelegate: TFont;
   public
-    function GetColor: TAColor;
+    function GetColor: TColor;
     function GetHeight: Integer;
     function GetName: string;
     function GetSize: Integer;
-    procedure SetColor(AValue: TAColor);
+    procedure SetColor(AValue: TColor);
     procedure SetHeight(AValue: Integer);
     procedure SetName(AValue: string);
     procedure SetSize(AValue: Integer);
@@ -111,9 +111,9 @@ type
     function GetDelegate: TBrush;
   public
     function GetBitmap: TACustomBitmap;
-    function GetColor: TAColor;
+    function GetColor: TColor;
     procedure SetBitmap(AValue: TACustomBitmap);
-    procedure SetColor(AValue: TAColor);
+    procedure SetColor(AValue: TColor);
   end;
 
   { TProxyCanvasPeer }
@@ -177,37 +177,54 @@ type
   private
     FFont: TAFont;
     FBorderSpacing: TAControlBorderSpacing;
+    FControlListenerList: TControlListenerList;
     class var FControlPeerList: TFPList;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
     function GetDelegate: TControl;
+    procedure ControlClickEvent(Sender: TObject);
+    procedure ControlResizeEvent(Sender: TObject);
   public
-    function GetAlign: TAAlign;
+    function GetAlign: TAlign;
     function GetBorderSpacing: TAControlBorderSpacing;
     function GetBoundsRect: TRect;
-    function GetColor: TAColor;
+    function GetColor: TColor;
     function GetEnabled: Boolean;
     function GetFont: TAFont;
     function GetHeight: Integer;
     function GetLeft: Integer;
-    function GetText: TACaption;
+    function GetText: TCaption;
     function GetTop: Integer;
+    function GetVisible: Boolean;
     function GetWidth: Integer;
-    procedure SetAlign(AValue: TAAlign);
+    procedure SetAlign(AValue: TAlign);
     procedure SetBorderSpacing(AValue: TAControlBorderSpacing);
     procedure SetBoundsRect(AValue: TRect);
-    procedure SetColor(AValue: TAColor);
+    procedure SetColor(AValue: TColor);
     procedure SetEnabled(AValue: Boolean);
     procedure SetFont(AValue: TAFont);
     procedure SetHeight(AValue: Integer);
     procedure SetLeft(AValue: Integer);
-    procedure SetText(AValue: TACaption);
+    procedure SetText(AValue: TCaption);
     procedure SetTop(AValue: Integer);
+    procedure SetVisible(AValue: Boolean);
     procedure SetWidth(AValue: Integer);
     //
     function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
+    //
+    procedure AdjustSize;
+    procedure InvalidatePreferredSize;
+    procedure BringToFront;
+    procedure Hide;
+    procedure Invalidate;
+    procedure SendToBack;
+    procedure Show;
+    procedure Update;
+    //
+    procedure AddControlListener(l: IControlListener);
+    procedure RemoveControlListener(l: IControlListener);
   end;
 
   TProxyGraphicControlPeer = class(TProxyControlPeer, IAGraphicControlPeer)
@@ -232,10 +249,10 @@ type
     function GetControlCount: Integer;
     procedure InsertControl(AControl: TAControl);
     procedure RemoveControl(AControl: TAControl);
-    property ControlCount: Integer read GetControlCount;
     //
     function CanFocus: Boolean;
     function CanSetFocus: Boolean;
+    function Focused: Boolean;
     procedure SetFocus;
     procedure AddKeyListener(l: IKeyListener);
     procedure RemoveKeyListener(l: IKeyListener);
@@ -251,9 +268,9 @@ type
     destructor Destroy; override;
     function GetDelegate: TCustomControl;
   public
-    function GetBorderStyle: TABorderStyle;
+    function GetBorderStyle: TBorderStyle;
     function GetCanvas: TACanvas;
-    procedure SetBorderStyle(AValue: TABorderStyle);
+    procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetCanvas(AValue: TACanvas);
   end;
 
@@ -263,6 +280,11 @@ type
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TLabel;
+  public
+    function GetAlignment: TAlignment;
+    function GetLayout: TTextLayout;
+    procedure SetAlignment(AValue: TAlignment);
+    procedure SetLayout(AValue: TTextLayout);
   end;
 
   { TProxyPanelPeer }
@@ -271,6 +293,17 @@ type
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TPanel;
+  public
+    function GetAlignment: TAlignment;
+    function GetBevelColor: TColor;
+    function GetBevelInner: TPanelBevel;
+    function GetBevelOuter: TPanelBevel;
+    function GetBevelWidth: TBevelWidth;
+    procedure SetAlignment(AValue: TAlignment);
+    procedure SetBevelColor(AValue: TColor);
+    procedure SetBevelInner(AValue: TPanelBevel);
+    procedure SetBevelOuter(AValue: TPanelBevel);
+    procedure SetBevelWidth(AValue: TBevelWidth);
   end;
 
   { TProxyEditPeer }
@@ -291,8 +324,8 @@ type
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TForm;
   public
-    function GetFormBorderStyle: TAFormBorderStyle;
-    procedure SetFormBorderStyle(AValue: TAFormBorderStyle);
+    function GetFormBorderStyle: TFormBorderStyle;
+    procedure SetFormBorderStyle(AValue: TFormBorderStyle);
     function ShowModal: Integer;
   end;
 
@@ -449,6 +482,7 @@ begin
   FFont := nil;
   FBorderSpacing := nil;
   FControlPeerList.Add(Self);
+  FControlListenerList := TControlListenerList.Create;
 end;
 
 destructor TProxyControlPeer.Destroy;
@@ -458,6 +492,7 @@ begin
   if Assigned(FBorderSpacing) then
     FBorderSpacing.Free;
   FControlPeerList.Remove(Self);
+  FControlListenerList.Free;
   inherited Destroy;
 end;
 
@@ -466,9 +501,30 @@ begin
   Result := TControl(FDelegateObj);
 end;
 
-function TProxyControlPeer.GetAlign: TAAlign;
+procedure TProxyControlPeer.ControlClickEvent(Sender: TObject);
+var
+  i: Integer;
+  ke: ICMEvent;
 begin
-  Result := TAAlign(GetDelegate.Align);
+  if Assigned(FControlListenerList) then
+    begin
+      //ke := TCMEvent.Create(Sender);
+      //for i:=0 to FKeyListenerList.Count-1 do
+      //  begin
+      //    FControlListenerList[i].KeyPressed(ke);
+      //    Key := ke.GetKeyCode;
+      //  end;
+    end;
+end;
+
+procedure TProxyControlPeer.ControlResizeEvent(Sender: TObject);
+begin
+
+end;
+
+function TProxyControlPeer.GetAlign: TAlign;
+begin
+  Result := cm_AWT.TAlign(GetDelegate.Align);
 end;
 
 function TProxyControlPeer.GetBorderSpacing: TAControlBorderSpacing;
@@ -489,22 +545,22 @@ begin
   Result := GetDelegate.BoundsRect;
 end;
 
-function TProxyControlPeer.GetText: TACaption;
+function TProxyControlPeer.GetText: TCaption;
 begin
   Result := GetDelegate.Caption;
 end;
 
-procedure TProxyControlPeer.SetText(AValue: TACaption);
+procedure TProxyControlPeer.SetText(AValue: TCaption);
 begin
   GetDelegate.Caption := AValue;
 end;
 
-function TProxyControlPeer.GetColor: TAColor;
+function TProxyControlPeer.GetColor: TColor;
 begin
   Result := GetDelegate.Color;
 end;
 
-procedure TProxyControlPeer.SetColor(AValue: TAColor);
+procedure TProxyControlPeer.SetColor(AValue: TColor);
 begin
   GetDelegate.Color := AValue;
 end;
@@ -568,9 +624,19 @@ begin
   Result := GetDelegate.Top;
 end;
 
+function TProxyControlPeer.GetVisible: Boolean;
+begin
+  Result := GetDelegate.Visible;
+end;
+
 procedure TProxyControlPeer.SetTop(AValue: Integer);
 begin
   GetDelegate.Top := AValue;
+end;
+
+procedure TProxyControlPeer.SetVisible(AValue: Boolean);
+begin
+  GetDelegate.Visible := AValue;
 end;
 
 function TProxyControlPeer.GetWidth: Integer;
@@ -578,9 +644,9 @@ begin
   Result := GetDelegate.Width;
 end;
 
-procedure TProxyControlPeer.SetAlign(AValue: TAAlign);
+procedure TProxyControlPeer.SetAlign(AValue: TAlign);
 begin
-  GetDelegate.Align := TAlign(AValue);
+  GetDelegate.Align := Controls.TAlign(AValue);
 end;
 
 procedure TProxyControlPeer.SetBorderSpacing(AValue: TAControlBorderSpacing);
@@ -640,12 +706,67 @@ begin
   //if AValue <> nil then
   //  AValue.InsertControl(Self);
   //FParent := AValue;
-  parent := AValue.GetPeer.GetDelegate;
-  if parent is TWinControl then
-    begin
-      GetDelegate.Parent := TWinControl(parent);
-      //FParent := AValue;
-    end;
+  try
+    parent := AValue.GetPeer.GetDelegate;
+    if parent is TWinControl then
+      begin
+        GetDelegate.Parent := TWinControl(parent);
+        //FParent := AValue;
+      end;
+  except
+    on e: Exception do
+      DefaultMsgBox.MessageBox(e.ClassName + #10 + e.Message, Self.ClassName + ' output error');
+  end;
+end;
+
+procedure TProxyControlPeer.AdjustSize;
+begin
+  GetDelegate.AdjustSize;
+end;
+
+procedure TProxyControlPeer.InvalidatePreferredSize;
+begin
+  GetDelegate.InvalidatePreferredSize;
+end;
+
+procedure TProxyControlPeer.BringToFront;
+begin
+  GetDelegate.BringToFront;
+end;
+
+procedure TProxyControlPeer.Hide;
+begin
+  GetDelegate.Hide;
+end;
+
+procedure TProxyControlPeer.Invalidate;
+begin
+  GetDelegate.Invalidate;
+end;
+
+procedure TProxyControlPeer.SendToBack;
+begin
+  GetDelegate.SendToBack;
+end;
+
+procedure TProxyControlPeer.Show;
+begin
+  GetDelegate.Show;
+end;
+
+procedure TProxyControlPeer.Update;
+begin
+  GetDelegate.Update;
+end;
+
+procedure TProxyControlPeer.AddControlListener(l: IControlListener);
+begin
+
+end;
+
+procedure TProxyControlPeer.RemoveControlListener(l: IControlListener);
+begin
+
 end;
 
 { TProxyWinControlPeer }
@@ -682,7 +803,10 @@ begin
     begin
       ke := TKeyEvent.BuildKeyEvent(Sender, Char(Key), Key);
       for i:=0 to FKeyListenerList.Count-1 do
-        FKeyListenerList[i].KeyPressed(ke);
+        begin
+          FKeyListenerList[i].KeyPressed(ke);
+          Key := ke.GetKeyCode;
+        end;
     end;
 end;
 
@@ -695,7 +819,10 @@ begin
     begin
       ke := TKeyEvent.BuildKeyEvent(Sender, Key, Ord(Key));
       for i:=0 to FKeyListenerList.Count-1 do
-        FKeyListenerList[i].KeyTyped(ke);
+        begin
+          FKeyListenerList[i].KeyTyped(ke);
+          Key := ke.GetKeyChar;
+        end;
     end;
 end;
 
@@ -708,7 +835,10 @@ begin
     begin
       ke := TKeyEvent.BuildKeyEvent(Sender, Char(Key), Key);
       for i:=0 to FKeyListenerList.Count-1 do
-        FKeyListenerList[i].KeyReleased(ke);
+        begin
+          FKeyListenerList[i].KeyReleased(ke);
+          Key := ke.GetKeyCode;
+        end;
     end;
 end;
 
@@ -766,6 +896,11 @@ begin
   Result := GetDelegate.CanSetFocus;
 end;
 
+function TProxyWinControlPeer.Focused: Boolean;
+begin
+  Result := GetDelegate.Focused;
+end;
+
 procedure TProxyWinControlPeer.SetFocus;
 begin
   GetDelegate.SetFocus;
@@ -809,9 +944,9 @@ begin
   Result := TCustomControl(FDelegateObj);
 end;
 
-function TProxyCustomControlPeer.GetBorderStyle: TABorderStyle;
+function TProxyCustomControlPeer.GetBorderStyle: TBorderStyle;
 begin
-  Result := TABorderStyle(GetDelegate.BorderStyle);
+  Result := cm_AWT.TBorderStyle(GetDelegate.BorderStyle);
 end;
 
 function TProxyCustomControlPeer.GetCanvas: TACanvas;
@@ -827,9 +962,9 @@ begin
   Result := FCanvas;
 end;
 
-procedure TProxyCustomControlPeer.SetBorderStyle(AValue: TABorderStyle);
+procedure TProxyCustomControlPeer.SetBorderStyle(AValue: TBorderStyle);
 begin
-  GetDelegate.BorderStyle := TBorderStyle(AValue);
+  GetDelegate.BorderStyle := Controls.TBorderStyle(AValue);
 end;
 
 procedure TProxyCustomControlPeer.SetCanvas(AValue: TACanvas);
@@ -856,6 +991,26 @@ begin
   Result := TLabel(FDelegateObj);
 end;
 
+function TProxyLabelPeer.GetAlignment: TAlignment;
+begin
+  Result := GetDelegate.Alignment;
+end;
+
+function TProxyLabelPeer.GetLayout: TTextLayout;
+begin
+  Result := cm_AWT.TTextLayout(GetDelegate.Layout);
+end;
+
+procedure TProxyLabelPeer.SetAlignment(AValue: TAlignment);
+begin
+  GetDelegate.Alignment := AValue;
+end;
+
+procedure TProxyLabelPeer.SetLayout(AValue: TTextLayout);
+begin
+  GetDelegate.Layout := Graphics.TTextLayout(AValue);
+end;
+
 { TProxyPanelPeer }
 
 constructor TProxyPanelPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
@@ -867,6 +1022,56 @@ end;
 function TProxyPanelPeer.GetDelegate: TPanel;
 begin
   Result := TPanel(FDelegateObj);
+end;
+
+function TProxyPanelPeer.GetAlignment: TAlignment;
+begin
+  Result := GetDelegate.Alignment;
+end;
+
+function TProxyPanelPeer.GetBevelColor: TColor;
+begin
+  Result := GetDelegate.BevelColor;
+end;
+
+function TProxyPanelPeer.GetBevelInner: TPanelBevel;
+begin
+  Result := cm_AWT.TPanelBevel(GetDelegate.BevelInner);
+end;
+
+function TProxyPanelPeer.GetBevelOuter: TPanelBevel;
+begin
+  Result := cm_AWT.TPanelBevel(GetDelegate.BevelOuter);
+end;
+
+function TProxyPanelPeer.GetBevelWidth: TBevelWidth;
+begin
+  Result := GetDelegate.BevelWidth;
+end;
+
+procedure TProxyPanelPeer.SetAlignment(AValue: TAlignment);
+begin
+  GetDelegate.Alignment := AValue;
+end;
+
+procedure TProxyPanelPeer.SetBevelColor(AValue: TColor);
+begin
+  GetDelegate.BevelColor := AValue;
+end;
+
+procedure TProxyPanelPeer.SetBevelInner(AValue: TPanelBevel);
+begin
+  GetDelegate.BevelInner := ExtCtrls.TPanelBevel(AValue);
+end;
+
+procedure TProxyPanelPeer.SetBevelOuter(AValue: TPanelBevel);
+begin
+  GetDelegate.BevelOuter := ExtCtrls.TPanelBevel(AValue);
+end;
+
+procedure TProxyPanelPeer.SetBevelWidth(AValue: TBevelWidth);
+begin
+  GetDelegate.BevelWidth := AValue;
 end;
 
 { TProxyEditPeer }
@@ -898,6 +1103,7 @@ constructor TProxyFormPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
   inherited Create(TheTarget, AOwner);
   FDelegateObj := TForm.Create(AOwner);
+  TForm(FDelegateObj).KeyPreview := True;
 end;
 
 function TProxyFormPeer.GetDelegate: TForm;
@@ -905,14 +1111,14 @@ begin
   Result := TForm(FDelegateObj);
 end;
 
-function TProxyFormPeer.GetFormBorderStyle: TAFormBorderStyle;
+function TProxyFormPeer.GetFormBorderStyle: TFormBorderStyle;
 begin
-  Result := TAFormBorderStyle(GetDelegate.BorderStyle);
+  Result := cm_AWT.TFormBorderStyle(GetDelegate.BorderStyle);
 end;
 
-procedure TProxyFormPeer.SetFormBorderStyle(AValue: TAFormBorderStyle);
+procedure TProxyFormPeer.SetFormBorderStyle(AValue: TFormBorderStyle);
 begin
-  GetDelegate.BorderStyle := TFormBorderStyle(AValue);
+  GetDelegate.BorderStyle := Controls.TFormBorderStyle(AValue);
 end;
 
 function TProxyFormPeer.ShowModal: Integer;

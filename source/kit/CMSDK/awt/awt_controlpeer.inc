@@ -24,31 +24,45 @@
 
   IAControlPeer = interface(IAComponentPeer)
     ['{E1192DCA-5D61-4D56-AB24-0D3CA216FE54}']
-    function GetAlign: TAAlign;
+    function GetAlign: TAlign;
     function GetBorderSpacing: TAControlBorderSpacing;
     function GetBoundsRect: TRect;
-    function GetColor: TAColor;
+    function GetColor: TColor;
     function GetEnabled: Boolean;
     function GetFont: TAFont;
     function GetHeight: Integer;
     function GetLeft: Integer;
-    function GetText: TACaption;
+    function GetText: TCaption;
     function GetTop: Integer;
+    function GetVisible: Boolean;
     function GetWidth: Integer;
-    procedure SetAlign(AValue: TAAlign);
+    procedure SetAlign(AValue: TAlign);
     procedure SetBorderSpacing(AValue: TAControlBorderSpacing);
     procedure SetBoundsRect(AValue: TRect);
-    procedure SetColor(AValue: TAColor);
+    procedure SetColor(AValue: TColor);
     procedure SetEnabled(AValue: Boolean);
     procedure SetFont(AValue: TAFont);
     procedure SetHeight(AValue: Integer);
     procedure SetLeft(AValue: Integer);
-    procedure SetText(AValue: TACaption);
+    procedure SetText(AValue: TCaption);
     procedure SetTop(AValue: Integer);
+    procedure SetVisible(AValue: Boolean);
     procedure SetWidth(AValue: Integer);
     //
     function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
+    //
+    procedure AdjustSize;
+    procedure InvalidatePreferredSize;
+    procedure BringToFront;
+    procedure Hide;
+    procedure Invalidate;
+    procedure SendToBack;
+    procedure Show;
+    procedure Update;
+    //
+    //procedure AddControlListener(l: IControlListener);
+    //procedure RemoveControlListener(l: IControlListener);
   end;
 
   IAGraphicControlPeer = interface(IAControlPeer)
@@ -62,30 +76,44 @@
     function GetControlCount: Integer;
     procedure InsertControl(AControl: TAControl);
     procedure RemoveControl(AControl: TAControl);
-    property ControlCount: Integer read GetControlCount;
     //
     function CanFocus: Boolean;
     function CanSetFocus: Boolean;
+    function Focused: Boolean;
     procedure SetFocus;
     procedure AddKeyListener(l: IKeyListener);
+    procedure RemoveKeyListener(l: IKeyListener);
   end;
 
   IACustomControlPeer = interface(IAWinControlPeer)
     ['{78B50173-8CA7-4176-A6BD-404570BDD6DE}']
-    function GetBorderStyle: TABorderStyle;
+    function GetBorderStyle: TBorderStyle;
     function GetCanvas: TACanvas;
-    procedure SetBorderStyle(AValue: TABorderStyle);
+    procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetCanvas(AValue: TACanvas);
     //property OnPaint: TNotifyEvent read FOnPaint write FOnPaint;
   end;
 
   IALabelPeer = interface(IAGraphicControlPeer)
     ['{234D8271-1395-4DC3-B018-B783E0F4A76F}']
+    function GetAlignment: TAlignment;
+    function GetLayout: TTextLayout;
+    procedure SetAlignment(AValue: TAlignment);
+    procedure SetLayout(AValue: TTextLayout);
   end;
 
   IAPanelPeer = interface(IACustomControlPeer)
     ['{4BA1BB04-559F-46AF-BD05-D5CB2D2DA227}']
-
+    function GetAlignment: TAlignment;
+    function GetBevelColor: TColor;
+    function GetBevelInner: TPanelBevel;
+    function GetBevelOuter: TPanelBevel;
+    function GetBevelWidth: TBevelWidth;
+    procedure SetAlignment(AValue: TAlignment);
+    procedure SetBevelColor(AValue: TColor);
+    procedure SetBevelInner(AValue: TPanelBevel);
+    procedure SetBevelOuter(AValue: TPanelBevel);
+    procedure SetBevelWidth(AValue: TBevelWidth);
   end;
 
   IAEditPeer = interface(IAWinControlPeer)
@@ -96,8 +124,8 @@
 
   IAFormPeer = interface(IAWinControlPeer)
     ['{5A8A620E-272E-4724-B339-282802CE878E}']
-    function GetFormBorderStyle: TAFormBorderStyle;
-    procedure SetFormBorderStyle(AValue: TAFormBorderStyle);
+    function GetFormBorderStyle: TFormBorderStyle;
+    procedure SetFormBorderStyle(AValue: TFormBorderStyle);
     function ShowModal: Integer;
   end;
 

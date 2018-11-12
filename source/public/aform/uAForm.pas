@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_AWTBase, cm_AWT,
-  cm_theme;
+  cm_theme, cm_AWT;
 
 type
 
@@ -22,11 +21,22 @@ type
     procedure SetTheme(ATheme: ITheme); virtual;
   end;
 
-  { TTitledForm }
+  { TAServiceForm }
 
-  TTitledForm = class(TAPOSForm)
+  TAServiceForm = class(TAPOSForm)
   protected
-    FTitlePanel: TAPanel;
+    FHeadPanel: TAPanel;
+    FMainPanel: TAPanel;
+    FFootPanel: TAPanel;
+  public
+    constructor Create(AOwner: TAComponent); override;
+    procedure SetTheme(ATheme: ITheme); override;
+  end;
+
+  { TATitledServiceForm }
+
+  TATitledServiceForm = class(TAServiceForm)
+  protected
     FTitleLab: TALabel;
   public
     constructor Create(AOwner: TAComponent); override;
@@ -35,13 +45,27 @@ type
     procedure SetTitle(const ATitle: string);
   end;
 
-  TServiceForm = class(TTitledForm)
-  //protected
-  //  FWorkPanel: TAPanel;
-  //  FToolPanel: TAPanel;
-  //public
-  //  constructor Create(AOwner: TAComponent); override;
-  //  procedure SetTheme(ATheme: ITheme); override;
+  { TAControllableServiceForm }
+
+  TAControllableServiceForm = class(TATitledServiceForm)
+  public
+    constructor Create(AOwner: TAComponent); override;
+    procedure SetTheme(ATheme: ITheme); override;
+  public
+    procedure AddButton(const ACaption: string);
+  end;
+
+  //Popup
+
+  { TAQueryServiceForm }
+
+  TAQueryServiceForm = class(TAControllableServiceForm)
+  protected
+    FQueryPanel: TAPanel;
+    FDataPanel: TAPanel;
+  public
+    constructor Create(AOwner: TAComponent); override;
+    procedure SetTheme(ATheme: ITheme); override;
   end;
 
 implementation
@@ -68,34 +92,110 @@ begin
   Self.Font.Name := ATheme.GetParameter.Get('defaultFont').Get('name').AsString;
 end;
 
-{ TTitledForm }
+{ TAServiceForm }
 
-constructor TTitledForm.Create(AOwner: TAComponent);
+constructor TAServiceForm.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
-  FTitlePanel := TAPanel.Create(Self);
-  FTitlePanel.Parent := Self;
-  FTitlePanel.Align := alTop;
-  FTitleLab := TALabel.Create(Self);
-  FTitleLab.Parent := FTitlePanel;
-  FTitleLab.Align := alLeft;
-  FTitleLab.BorderSpacing.Left := 100;
-  //FTitleLab.Layout := tlCenter;
+  FHeadPanel := TAPanel.Create(Self);
+  FHeadPanel.Parent := Self;
+  FHeadPanel.Align := alTop;
+  FHeadPanel.BevelOuter := bvNone;
+  FHeadPanel.Visible := False;
+  FMainPanel := TAPanel.Create(Self);
+  FMainPanel.Parent := Self;
+  FMainPanel.Align := alClient;
+  FMainPanel.BevelOuter := bvNone;
+  FFootPanel := TAPanel.Create(Self);
+  FFootPanel.Parent := Self;
+  FFootPanel.Align := alBottom;
+  FFootPanel.BevelOuter := bvNone;
+  FFootPanel.Visible := False;
 end;
 
-procedure TTitledForm.SetTheme(ATheme: ITheme);
+procedure TAServiceForm.SetTheme(ATheme: ITheme);
 begin
   inherited SetTheme(ATheme);
-  FTitlePanel.Color := ATheme.GetParameter.Get('service.titleColor').AsInteger;
-  FTitleLab.Font.Size := ATheme.GetParameter.Get('service.titleFont').Get('size').AsInteger;
-  FTitleLab.Font.Color := ATheme.GetParameter.Get('service.titleFont').Get('color').AsInteger;
-  FTitleLab.Font.Name := ATheme.GetParameter.Get('service.titleFont').Get('name').AsString;
+  FHeadPanel.Color := ATheme.GetParameter.Get('service.head.color').AsInteger;
+  FHeadPanel.Height := ATheme.GetParameter.Get('service.head.height').AsInteger;
+  FMainPanel.Color := ATheme.GetParameter.Get('panelColor').AsInteger;
+  FFootPanel.Color := ATheme.GetParameter.Get('service.foot.color').AsInteger;
+  FFootPanel.Height := ATheme.GetParameter.Get('service.foot.height').AsInteger;
 end;
 
-procedure TTitledForm.SetTitle(const ATitle: string);
+{ TATitledServiceForm }
+
+constructor TATitledServiceForm.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FHeadPanel.Visible := True;
+  FTitleLab := TALabel.Create(Self);
+  FTitleLab.Parent := FHeadPanel;
+  FTitleLab.Align := alLeft;
+  FTitleLab.BorderSpacing.Left := 10;
+  FTitleLab.Layout := tlCenter;
+end;
+
+procedure TATitledServiceForm.SetTheme(ATheme: ITheme);
+begin
+  inherited SetTheme(ATheme);
+  FTitleLab.Font.Size := ATheme.GetParameter.Get('service.head.titleFont.size').AsInteger;
+  FTitleLab.Font.Color := ATheme.GetParameter.Get('service.head.titleFont.color').AsInteger;
+  FTitleLab.Font.Name := ATheme.GetParameter.Get('service.head.titleFont.name').AsString;
+end;
+
+procedure TATitledServiceForm.SetTitle(const ATitle: string);
 begin
   FTitleLab.Caption := ATitle;
 end;
+
+{ TAControllableServiceForm }
+
+constructor TAControllableServiceForm.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FFootPanel.Visible := True;
+end;
+
+procedure TAControllableServiceForm.SetTheme(ATheme: ITheme);
+begin
+  inherited SetTheme(ATheme);
+end;
+
+procedure TAControllableServiceForm.AddButton(const ACaption: string);
+var
+  p: TAPanel;
+begin
+  p := TAPanel.Create(FFootPanel);
+  p.Parent := FFootPanel;
+  p.Left := 10;
+  p.Top := 4;
+  p.Height := FFootPanel.Height - 8;
+  p.Width := 100;
+  p.Caption := ACaption
+end;
+
+{ TAQueryServiceForm }
+
+constructor TAQueryServiceForm.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FQueryPanel := TAPanel.Create(FMainPanel);
+  FQueryPanel.Parent := FMainPanel;
+  FQueryPanel.Align := alTop;
+  FQueryPanel.BevelOuter := bvNone;
+  FDataPanel := TAPanel.Create(FMainPanel);
+  FDataPanel.Parent := FMainPanel;
+  FDataPanel.Align := alClient;
+  FDataPanel.Color := clYellow;
+  FDataPanel.BevelOuter := bvNone;
+end;
+
+procedure TAQueryServiceForm.SetTheme(ATheme: ITheme);
+begin
+  inherited SetTheme(ATheme);
+end;
+
 
 end.
 

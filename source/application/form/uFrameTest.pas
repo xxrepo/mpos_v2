@@ -6,11 +6,11 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics,
-  cm_theme, cm_Plat,
+  cm_theme, cm_plat,
   uSale, uSaleDTO,
   uSystem,
-  cm_AWTEvent, cm_AWTBase,
-  uAForm;
+  cm_AWT, cm_AWTEvent, cm_AWTEventUtils,
+  uAForm, uAConmponents;
 
 type
 
@@ -53,10 +53,27 @@ type
     procedure KeyReleased(e: IKeyEvent); override;
   end;
 
+  { TASaleQueryServiceForm }
+
+  TASaleQueryServiceForm = class(TAQueryServiceForm)
+  private
+    FLab: TALabel;
+    FEdt: TAQueryEdit;
+  public
+    constructor Create(AOwner: TAComponent); override;
+  end;
+
+  { TFormKeyListener }
+
+  TFormKeyListener = class(TKeyAdapter)
+  public
+    procedure KeyPressed(e: IKeyEvent); override;
+  end;
+
 implementation
 
 uses
-  uDBInitialize, cm_messager, uPOS, cm_awt, uTest;
+  uDBInitialize, cm_messager, uPOS, uTest;
 
 {$R *.frm}
 
@@ -217,12 +234,17 @@ end;
 
 procedure TTestFrame.Panel4Click(Sender: TObject);
 var
-  f: TTitledForm;
+  f: TASaleQueryServiceForm;
 begin
-  f := TTitledForm.Create(nil);
+  f := TASaleQueryServiceForm.Create(nil);
   f.SetTitle('你好，世界！');
   f.BoundsRect := AppSystem.GetServiceRect;
-  f.BorderStyle := TAFormBorderStyle.bsNone;
+  f.BorderStyle := TFormBorderStyle.bsNone;
+
+  f.AddButton('测试1');
+
+  f.AddKeyListener(TFormKeyListener.Create);
+
   f.ShowModal;
 
 end;
@@ -237,6 +259,11 @@ begin
   //Panel1.BorderStyle := ;
   //TForm.BorderStyle := ;
   //Label1.BorderSpacing;
+  //Label1.Layout := ;
+  //Panel1.Visible := ;
+  //Panel1.BevelOuter := ;
+  //Label1.Alignment := ;
+  //Label1.OnClick := ;
 end;
 
 { TTestKeyLi }
@@ -261,6 +288,30 @@ end;
 procedure TTestKeyLi.KeyReleased(e: IKeyEvent);
 begin
   AppSystem.GetMsgBar.ShowMessage(etError, 'input:' + e.GetKeyChar);
+end;
+
+{ TASaleQueryServiceForm }
+
+constructor TASaleQueryServiceForm.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FLab := TALabel.Create(FQueryPanel);
+  FLab.Parent := FQueryPanel;
+  FLab.Top := 10;
+  FLab.Left := 20;
+  FLab.Caption := '请输入';
+  FEdt := TAQueryEdit.Create(FQueryPanel);
+  FEdt.Parent := FQueryPanel;
+  FEdt.Left := 120;
+  FEdt.Top := 10;
+end;
+
+{ TFormKeyListener }
+
+procedure TFormKeyListener.KeyPressed(e: IKeyEvent);
+begin
+  inherited KeyPressed(e);
+  AppSystem.GetMsgBar.ShowMessage(etInfo, Format('input: %d - %s', [e.GetKeyCode, e.GetKeyChar]));
 end;
 
 

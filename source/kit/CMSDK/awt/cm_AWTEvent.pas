@@ -1,14 +1,16 @@
 unit cm_AWTEvent;
 
-{$mode objfpc}{$H+}
+{$mode delphi}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils,
+  Classes, SysUtils, Generics.Collections,
   cm_interfaces;
 
 type
+
+
 
   { IKeyEvent
     // 表示组件中发生键击的事件。
@@ -21,6 +23,16 @@ type
     procedure SetKeyChar(AKeyChar: Char); //设置 keyCode 值，以表示某个逻辑字符。
     procedure SetKeyCode(AKeyCode: Word); //设置 keyCode 值，以表示某个物理键。
   end;
+
+  { IControlListener }
+
+  IControlListener = interface(ICMListener)
+    ['{9E755FA8-F5D9-43B6-AF0A-1ACDDE80404A}']
+    procedure ControlClick(e: ICMEvent);
+    procedure ControlResize(e: ICMEvent);
+  end;
+
+  TControlListenerList = TList<IControlListener>;
 
   { IKeyListener
     //  用于接收键盘事件（击键）的侦听器接口。
@@ -36,33 +48,14 @@ type
     procedure KeyTyped(e: IKeyEvent); //键入某个键时调用此方法。
   end;
 
-  { TKeyAdapter }
+  TKeyListenerList = TList<IKeyListener>;
 
-  TKeyAdapter = class(TCMBase, IKeyListener)
-  public
-    procedure KeyPressed(e: IKeyEvent); virtual;
-    procedure KeyReleased(e: IKeyEvent); virtual;
-    procedure KeyTyped(e: IKeyEvent); virtual;
-  end;
+
+
 
 implementation
 
-{ TKeyAdapter }
 
-procedure TKeyAdapter.KeyPressed(e: IKeyEvent);
-begin
-  //There's nothing to do here.
-end;
-
-procedure TKeyAdapter.KeyReleased(e: IKeyEvent);
-begin
-  //There's nothing to do here.
-end;
-
-procedure TKeyAdapter.KeyTyped(e: IKeyEvent);
-begin
-  //There's nothing to do here.
-end;
 
 end.
 
