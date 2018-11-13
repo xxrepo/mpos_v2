@@ -5,21 +5,25 @@ unit uHelloWorld;
 interface
 
 uses
-  Classes, SysUtils, cm_messager,
+  Classes, SysUtils,
+  cm_interfaces, cm_messager,
   uTest, cm_plat, uSystem,
-  cm_AWT, cm_AWTBase,
-  cm_AWTEvent;
+  cm_AWT, cm_AWTEventUtils;
 
 type
 
   { THelloWorld }
 
-  THelloWorld = class(TCMMessageable, ITest)
+  THelloWorld = class(TCMMessageable, ITest, IOneOffExecute)
+  public
+    constructor Create;
   public
     procedure Test;
     //procedure UseTest;
     procedure Test2;
     procedure aa;
+  public
+    procedure Execute;
   end;
 
   { TTestThread }
@@ -52,6 +56,12 @@ var
   e: TAEdit;
   p: TAPanel;
   l: TALabel;
+
+constructor THelloWorld.Create;
+begin
+  inherited Create;
+  AppSystem.AddLoadedExecute(Self);
+end;
 
 procedure THelloWorld.Test;
 var
@@ -125,6 +135,11 @@ end;
 procedure THelloWorld.aa;
 begin
   Messager.Debug('------------------------ aa -----------------------');
+end;
+
+procedure THelloWorld.Execute;
+begin
+  Messager.Warning('你好吗？我是执行一次的东西。');
 end;
 
 //procedure THelloWorld.UseTest;

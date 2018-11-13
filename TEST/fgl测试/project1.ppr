@@ -1,14 +1,14 @@
-program MPOS;
+program project1;
 
 {$mode objfpc}{$H+}
 
 uses
-  {$IFDEF UNIX}
+  {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
-  {$ENDIF}
+  {$ENDIF}{$ENDIF}
   Interfaces, // this includes the adLCL widgetset
-  Forms,
-  uInitialize, uFormMain, cm_plat, cm_generics, uSystemBase, cm_AWTEventBuilder;
+  Forms, Unit1, cm_generics, Unit2
+  { you can add units after this };
 
 {$R *.res}
 
@@ -16,9 +16,8 @@ begin
   RequireDerivedFormResource := True;
   Application.Scaled := True;
   Application.Initialize;
-  POSInitialize.Init;
-  Application.CreateForm(TMainForm, MainForm);
-  POSInitialize.Start;
+  //Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TForm2, Form2);
   Application.Run;
 end.
 

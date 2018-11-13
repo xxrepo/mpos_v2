@@ -19,8 +19,7 @@ interface
 uses
   Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics,
   cm_interfaces, cm_messager, cm_dialogs,
-  cm_AWT, cm_AWTEvent, cm_AWTEventUtils,
-  uSystem;
+  cm_AWT, cm_AWTEventBuilder;
 
 type
 
@@ -225,6 +224,7 @@ type
     //
     procedure AddControlListener(l: IControlListener);
     procedure RemoveControlListener(l: IControlListener);
+    function GetControlListeners: TControlListenerList;
   end;
 
   TProxyGraphicControlPeer = class(TProxyControlPeer, IAGraphicControlPeer)
@@ -256,6 +256,7 @@ type
     procedure SetFocus;
     procedure AddKeyListener(l: IKeyListener);
     procedure RemoveKeyListener(l: IKeyListener);
+    function GetKeyListeners: TKeyListenerList;
   end;
 
   { TProxyCustomControlPeer }
@@ -482,7 +483,7 @@ begin
   FFont := nil;
   FBorderSpacing := nil;
   FControlPeerList.Add(Self);
-  FControlListenerList := TControlListenerList.Create;
+  FControlListenerList := nil;
 end;
 
 destructor TProxyControlPeer.Destroy;
@@ -504,22 +505,27 @@ end;
 procedure TProxyControlPeer.ControlClickEvent(Sender: TObject);
 var
   i: Integer;
-  ke: ICMEvent;
+  ce: IControlEvent;
 begin
   if Assigned(FControlListenerList) then
     begin
-      //ke := TCMEvent.Create(Sender);
-      //for i:=0 to FKeyListenerList.Count-1 do
-      //  begin
-      //    FControlListenerList[i].KeyPressed(ke);
-      //    Key := ke.GetKeyCode;
-      //  end;
+      ce := TControlEvent.BuildControlEvent(Sender, TAControl(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        FControlListenerList[i].ControlClick(ce);
     end;
 end;
 
 procedure TProxyControlPeer.ControlResizeEvent(Sender: TObject);
+var
+  i: Integer;
+  ce: IControlEvent;
 begin
-
+  if Assigned(FControlListenerList) then
+    begin
+      ce := TControlEvent.BuildControlEvent(Sender, TAControl(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        FControlListenerList[i].ControlResize(ce);
+    end;
 end;
 
 function TProxyControlPeer.GetAlign: TAlign;
@@ -761,12 +767,30 @@ end;
 
 procedure TProxyControlPeer.AddControlListener(l: IControlListener);
 begin
-
+  if not Assigned(FControlListenerList) then
+    begin
+      FControlListenerList := TControlListenerList.Create;
+      GetDelegate.OnClick := @ControlClickEvent;
+      GetDelegate.OnResize := @ControlResizeEvent;
+    end;
+  FControlListenerList.Add(l);
 end;
 
 procedure TProxyControlPeer.RemoveControlListener(l: IControlListener);
 begin
+  if Assigned(FControlListenerList) then
+    FControlListenerList.Remove(l);
+end;
 
+function TProxyControlPeer.GetControlListeners: TControlListenerList;
+begin
+  if not Assigned(FControlListenerList) then
+    begin
+      FControlListenerList := TControlListenerList.Create;
+      GetDelegate.OnClick := @ControlClickEvent;
+      GetDelegate.OnResize := @ControlResizeEvent;
+    end;
+  Result := FControlListenerList;
 end;
 
 { TProxyWinControlPeer }
@@ -775,6 +799,7 @@ constructor TProxyWinControlPeer.Create(TheTarget: TAComponent; AOwner: TCompone
 begin
   inherited Create(TheTarget, AOwner);
   FControls := TFPList.Create;
+  FKeyListenerList := nil;
 end;
 
 destructor TProxyWinControlPeer.Destroy;
@@ -786,6 +811,8 @@ begin
       c := TAControl(FControls.Last);
       RemoveControl(c);
     end;
+  if Assigned(FKeyListenerList) then
+    FKeyListenerList.Free;
   inherited Destroy;
 end;
 
@@ -922,6 +949,18 @@ procedure TProxyWinControlPeer.RemoveKeyListener(l: IKeyListener);
 begin
   if Assigned(FKeyListenerList) then
     FKeyListenerList.Remove(l);
+end;
+
+function TProxyWinControlPeer.GetKeyListeners: TKeyListenerList;
+begin
+  if not Assigned(FKeyListenerList) then
+    begin
+      FKeyListenerList := TKeyListenerList.Create;
+      GetDelegate.OnKeyDown := @KeyDownEvent;
+      GetDelegate.OnKeyPress := @KeyPressEvent;
+      GetDelegate.OnKeyUp := @KeyUpEvent;
+    end;
+  Result := FKeyListenerList;
 end;
 
 { TProxyCustomControlPeer }

@@ -35,7 +35,7 @@
         <PackageName Value="adLCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="62">
+    <Units Count="65">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -242,69 +242,81 @@
         <IsPartOfProject Value="True"/>
       </Unit45>
       <Unit46>
-        <Filename Value="..\kit\CMSDK\awt\cm_AWTEvent.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_TypeUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit46>
       <Unit47>
-        <Filename Value="..\kit\CMSDK\solutions\cm_TypeUtils.pas"/>
+        <Filename Value="..\service\uTest.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit47>
       <Unit48>
-        <Filename Value="..\service\uTest.pas"/>
+        <Filename Value="..\kit\CMSDK\solutions\cm_GlobalSet.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit48>
       <Unit49>
-        <Filename Value="..\kit\CMSDK\solutions\cm_GlobalSet.pp"/>
+        <Filename Value="..\kit\CMSDK\cm_type.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit49>
       <Unit50>
-        <Filename Value="..\kit\CMSDK\cm_type.pas"/>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWT.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit50>
       <Unit51>
-        <Filename Value="..\kit\CMSDK\awt\cm_AWT.pas"/>
+        <Filename Value="..\kit\CMSDK\awt\solutions\graphics_proxy.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit51>
       <Unit52>
-        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTEventUtils.pas"/>
+        <Filename Value="..\kit\CMSDK\awt\awt_toolkit.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit52>
       <Unit53>
-        <Filename Value="..\kit\CMSDK\awt\solutions\graphics_proxy.inc"/>
+        <Filename Value="..\kit\CMSDK\awt\awt_controlpeer.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit53>
       <Unit54>
-        <Filename Value="..\kit\CMSDK\awt\awt_toolkit.inc"/>
+        <Filename Value="..\kit\CMSDK\awt\awt_graphicspeer.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit54>
       <Unit55>
-        <Filename Value="..\kit\CMSDK\awt\awt_controlpeer.inc"/>
+        <Filename Value="..\public\aform\uAForm.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit55>
       <Unit56>
-        <Filename Value="..\kit\CMSDK\awt\awt_graphicspeer.inc"/>
+        <Filename Value="..\kit\CMSDK\cm_plat.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit56>
       <Unit57>
-        <Filename Value="..\public\aform\uAForm.pas"/>
+        <Filename Value="..\kit\CMSDK\awt\awt_base.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit57>
       <Unit58>
-        <Filename Value="..\kit\CMSDK\cm_plat.pas"/>
+        <Filename Value="..\public\aform\uAConmponents.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit58>
       <Unit59>
-        <Filename Value="..\kit\CMSDK\awt\awt_base.inc"/>
+        <Filename Value="..\kit\CMSDK\awt\awt_event.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit59>
       <Unit60>
-        <Filename Value="..\public\aform\uAConmponents.pas"/>
+        <Filename Value="..\kit\CMSDK\cm_freegenerics.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit60>
       <Unit61>
-        <Filename Value="..\kit\CMSDK\awt\awt_event.inc"/>
+        <Filename Value="..\kit\CMSDK\cm_generics.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit61>
+      <Unit62>
+        <Filename Value="unit\uSystemBase.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit62>
+      <Unit63>
+        <Filename Value="..\kit\CMSDK\awt\cm_AWTEventUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit63>
+      <Unit64>
+        <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTEventBuilder.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit64>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -316,7 +328,7 @@
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);..\kit\CMSDK\awt"/>
       <Libraries Value="$(CTDir)"/>
-      <OtherUnitFiles Value="..\public\form;..\kit\CMSDK;..\kit\CMSDK\solutions;form;..\public;..\service;..\kit\CMSDK\extension;unit;..\kit\CMSDK\awt;..\persistent;..\kit\CMSDK\awt\solutions;..\public\aform"/>
+      <OtherUnitFiles Value="..\public\form;..\kit\CMSDK;..\kit\CMSDK\solutions;form;..\public;..\service;..\kit\CMSDK\extension;unit;..\kit\CMSDK\awt;..\persistent;..\public\aform;..\kit\CMSDK\awt\solutions"/>
       <UnitOutputDirectory Value="lib"/>
     </SearchPaths>
     <Linking>

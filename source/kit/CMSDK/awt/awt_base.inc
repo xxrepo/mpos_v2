@@ -1,7 +1,15 @@
 
 type
 
-
+  // 前置声明
+  TAFont = class;
+  TACustomBitmap = class;
+  TABrush = class;
+  TACanvas = class;
+  TAControlBorderSpacing = class;
+  TAControl = class;
+  TAWinControl = class;
+  IAToolkit = interface;
 
   { IAPeer
     // The peer interface for . This is the top level peer interface for widgets and defines the
@@ -18,28 +26,6 @@ type
     function GetDelegate: TObject;
     function GetHashCode: PtrInt;
   end;
-
-
-  // 前置声明
-  TAFont = class;
-  TACustomBitmap = class;
-  TABrush = class;
-  TACanvas = class;
-  TAControlBorderSpacing = class;
-  TAControl = class;
-  TAWinControl = class;
-  IAToolkit = interface;
-
-  { TAObject }
-
-  TAObject = class abstract(TCMBasePersistent)
-  protected
-    FPeer: IAPeer;
-  public
-    constructor Create;
-    destructor Destroy; override;
-  end;
-
 
 
 

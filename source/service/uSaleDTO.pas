@@ -44,7 +44,7 @@ type
     function GetAmount: Currency;
   end;
 
-  TShowItemList = class(TCMHashObjectList<TShowItem>)
+  TShowItemList = class(TGFPHashObjectList<TShowItem>)
   public
     function SumAmount: Currency;
   end;

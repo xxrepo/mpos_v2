@@ -9,7 +9,7 @@ uses
   cm_theme, cm_plat,
   uSale, uSaleDTO,
   uSystem,
-  cm_AWT, cm_AWTEvent, cm_AWTEventUtils,
+  cm_AWT, cm_AWTEventUtils,
   uAForm, uAConmponents;
 
 type
@@ -68,6 +68,13 @@ type
   TFormKeyListener = class(TKeyAdapter)
   public
     procedure KeyPressed(e: IKeyEvent); override;
+  end;
+
+  { TFormControlListener }
+
+  TFormControlListener = class(TControlAdapter)
+  public
+    procedure ControlClick(e: IControlEvent); override;
   end;
 
 implementation
@@ -244,6 +251,7 @@ begin
   f.AddButton('测试1');
 
   f.AddKeyListener(TFormKeyListener.Create);
+  f.FLab.AddControlListener(TFormControlListener.Create);
 
   f.ShowModal;
 
@@ -312,6 +320,14 @@ procedure TFormKeyListener.KeyPressed(e: IKeyEvent);
 begin
   inherited KeyPressed(e);
   AppSystem.GetMsgBar.ShowMessage(etInfo, Format('input: %d - %s', [e.GetKeyCode, e.GetKeyChar]));
+end;
+
+{ TFormControlListener }
+
+procedure TFormControlListener.ControlClick(e: IControlEvent);
+begin
+  inherited ControlClick(e);
+  AppSystem.GetMsgBar.ShowMessage(etInfo, Format('input: %d - %s', [e.GetAControl.GetHashCode, e.GetAControl.ClassName]));
 end;
 
 

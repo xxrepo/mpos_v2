@@ -107,6 +107,17 @@ type
     function GetSource: TObject;
   end;
 
+  //------------------------------------------------------------------------------------------------
+
+  { IOneOffExecute
+    // 一次性的执行接口，具体功能依相关使用协议
+  }
+
+  IOneOffExecute = interface
+    ['{FC949ADB-BA89-4698-B113-9C1CF7BB2DFB}']
+    procedure Execute;
+  end;
+
 implementation
 
 {TCMBase}

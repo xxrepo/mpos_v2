@@ -2,13 +2,13 @@
     This file is part of the CM SDK.
     Copyright (c) 2013-2018 by the ChenMeng studio
 
-    cm_theme
+    cm_AWT
 
     This is not a complete unit, for testing
 
     Abstract Window Toolkit
     依赖于具体解决方案，否则抛出异常。
-    不建议不分次建议中操作同一对象，你可能遇到类型操作失误的状况。
+    不建议不分次编译中操作同一对象，你可能遇到类型操作失误的状况。
     建议在使用时捕获相应的异常。
 
     这一部分都是线程不安全的。
@@ -23,8 +23,7 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_interfaces,
-  cm_AWTEvent;
+  cm_interfaces, cm_freegenerics;
 
 type
 
@@ -35,6 +34,16 @@ type
   {$i awt_type.inc}
   {$i awt_base.inc}
   {$i awt_graphicspeer.inc}
+
+  { TAObject }
+
+  TAObject = class abstract(TCMBasePersistent)
+  protected
+    FPeer: IAPeer;
+  public
+    constructor Create;
+    destructor Destroy; override;
+  end;
 
   { TAFont }
 
@@ -291,6 +300,7 @@ type
   public
     procedure AddControlListener(l: IControlListener);
     procedure RemoveControlListener(l: IControlListener);
+    function GetControlListeners: TControlListenerList;
   end;
 
   TAGraphicControl = class abstract(TAControl)
@@ -317,6 +327,7 @@ type
   public
     procedure AddKeyListener(l: IKeyListener); //添加指定的按键侦听器，以接收发自此 WinControl 的按键事件。
     procedure RemoveKeyListener(l: IKeyListener);
+    function GetKeyListeners: TKeyListenerList;
   end;
 
   { TACustomControl }
@@ -866,12 +877,17 @@ end;
 
 procedure TAControl.AddControlListener(l: IControlListener);
 begin
-
+  GetPeer.AddControlListener(l);
 end;
 
 procedure TAControl.RemoveControlListener(l: IControlListener);
 begin
+  GetPeer.RemoveControlListener(l);
+end;
 
+function TAControl.GetControlListeners: TControlListenerList;
+begin
+  Result := GetPeer.GetControlListeners;
 end;
 
 function TAControl.GetBoundsRect: TRect;
@@ -1039,6 +1055,11 @@ end;
 procedure TAWinControl.RemoveKeyListener(l: IKeyListener);
 begin
   GetPeer.RemoveKeyListener(l);
+end;
+
+function TAWinControl.GetKeyListeners: TKeyListenerList;
+begin
+  Result := GetPeer.GetKeyListeners;
 end;
 
 { TACustomControl }

@@ -6,29 +6,25 @@ interface
 
 uses
   Classes, SysUtils, Controls, Forms, DateTimePicker,
-  cm_classes, cm_interfaces, cm_InterfaceLoader,
-  cm_DOM, cm_XML, cm_dialogs, cm_logutils,
+  cm_classes, cm_interfaces, cm_TypeUtils, cm_InterfaceLoader, cm_DOM, cm_XML, cm_dialogs, cm_logutils,
   cm_messager, cm_SimpleMessage,
   cm_parameter, cm_ParameterUtils,
   cm_theme, cm_ThemeUtils,
-  cm_Plat, cm_PlatInitialize, cm_LCLUtils,
-  uSystem, uFormLoading,
-  cm_TypeUtils;
+  cm_plat, cm_PlatInitialize, cm_LCLUtils,
+  uSystem, uSystemBase, uFormLoading;
 
 type
 
   { TPOSInitialize }
 
-  TPOSInitialize = class(TCMMessageableComponent, IAppSystem)
+  TPOSInitialize = class(TAppSystemBase, IAppSystem)
   private
     FLogger: TCMJointFileLogger;
     FMessageHandler: ICMMessageHandler;
     FParameter: ICMParameter;
-    FStartTime, FLoginTime: TDateTime;
     FMsgBar: ICMMsgBar;
     FMsgBox: TCMMsgBox;
     FWorkRectControl, FServiceRectControl: TControl;
-    FSystemListenerList: TInterfaceList;
     //
     FParameterLoader: ICMParameterLoader;
     FThemeUtil: TCMThemeUtil;
@@ -37,8 +33,7 @@ type
     procedure AppKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure LibLoading(Sender: TObject; const TheFileName: string);
   public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
+    constructor Create;
     property MessageHandler: ICMMessageHandler read FMessageHandler;
     property MsgBar: ICMMsgBar write FMsgBar;
     property WorkRectControl: TControl write FWorkRectControl;
@@ -53,17 +48,12 @@ type
     function InitDBMessageHandler: Boolean;
     function InitAWT: Boolean;
   public //IAppSystem
-    function GetVersion: string;
-    function IsTestMode: Boolean;
-    function GetStartTime: TDateTime;
-    function GetLoginTime: TDateTime;
-    function GetParameter: ICMParameter;
-    function GetMsgBar: ICMMsgBar;
-    function GetMsgBox: ICMMsgBox;
-    function GetLog: ICMLog;
-    function GetWorkRect: TRect;
-    function GetServiceRect: TRect;
-    procedure AddSystemListener(l: ISystemListener);
+    function GetParameter: ICMParameter; override;
+    function GetMsgBar: ICMMsgBar; override;
+    function GetMsgBox: ICMMsgBox; override;
+    function GetLog: ICMLog; override;
+    function GetWorkRect: TRect; override;
+    function GetServiceRect: TRect; override;
   public
     procedure Init;
     procedure Start;
@@ -86,9 +76,9 @@ end;
 
 { TPOSInitialize }
 
-constructor TPOSInitialize.Create(AOwner: TComponent);
+constructor TPOSInitialize.Create;
 begin
-  inherited Create(AOwner);
+  inherited Create;
   //1、日志
   FLogger := TCMJointFileLogger.Create(Application);
   FLogger.FilePath := LogPath;
@@ -102,11 +92,9 @@ begin
   //3、初始值
   FParameterLoader := nil;
   FExceptMsgBox := nil;
-  FStartTime := now;
   FMsgBar := nil;
   FWorkRectControl := nil;
   FServiceRectControl := nil;
-  FSystemListenerList := TInterfaceList.Create;
 
   //------------------------------------------------------------------------------------------------
   //以下是其他构建所需的一些依赖
@@ -117,12 +105,6 @@ begin
   TThemeableManager.GetInstance.AddThemeableSet(FThemeUtil);
   //2、AppSystem
   InterfaceRegister.PutInterface('IAppSystem', IAppSystem, Self);
-end;
-
-destructor TPOSInitialize.Destroy;
-begin
-  FSystemListenerList.Free;
-  inherited Destroy;
 end;
 
 function TPOSInitialize.InitHeadmost: Boolean;
@@ -323,46 +305,39 @@ end;
 
 procedure TPOSInitialize.NotifySystem(const AEventName: string);
 var
-  le: TInterfaceListEnumerator;
+  i: Integer;
+  sl: ISystemListener;
   se: ISystemEvent;
 begin
-  le := FSystemListenerList.GetEnumerator;
-  while le.MoveNext do
+  for i:=0 to FSystemListenerList.Count-1 do
     begin
+      sl := FSystemListenerList[i];
       se := TSystemEvent.Create(Self, Self);
       case AEventName of
-      'Loaded': ISystemListener(le.GetCurrent).Loaded(se);
-      'Logined': ISystemListener(le.GetCurrent).Logined(se);
-      'LoggedOut': ISystemListener(le.GetCurrent).LoggedOut(se);
-      'Closing': ISystemListener(le.GetCurrent).Closing(se);
+      'Loaded': sl.Loaded(se);
+      //'Logined': ISystemListener(le.GetCurrent).Logined(se);
+      //'LoggedOut': ISystemListener(le.GetCurrent).LoggedOut(se);
+      'Closing': sl.Closing(se);
       end;
     end;
+
+  case AEventName of
+  'Loaded':
+     begin
+       for i:=0 to FLoadedExecuteList.Count-1 do
+         FLoadedExecuteList[i].Execute;
+       FLoadedExecuteList.Clear;
+     end;
+  'Closing':
+     begin
+       for i:=0 to FClosingExecuteList.Count-1 do
+         FClosingExecuteList[i].Execute;
+       FClosingExecuteList.Clear;
+     end;
+  end;
 end;
 
 //---- 以下接口实现 --------------------------------------------------------------------------------
-
-function TPOSInitialize.GetVersion: string;
-begin
-  Result := VersionStr;
-end;
-
-function TPOSInitialize.IsTestMode: Boolean;
-begin
-  Result := False;
-  {$IFDEF Test}
-  Result := True;
-  {$ENDIF}
-end;
-
-function TPOSInitialize.GetStartTime: TDateTime;
-begin
-  Result := FStartTime;
-end;
-
-function TPOSInitialize.GetLoginTime: TDateTime;
-begin
-  Result := FLoginTime;
-end;
 
 function TPOSInitialize.GetParameter: ICMParameter;
 begin
@@ -398,16 +373,6 @@ begin
     Result := FServiceRectControl.BoundsRect
   else
     Result := Screen.DesktopRect;
-end;
-
-procedure TPOSInitialize.AddSystemListener(l: ISystemListener);
-begin
-  if not Assigned(l) then
-    begin
-      Messager.Error('AddSystemListener() 传入的ISystemListener为空！');
-      Exit;
-    end;
-  FSystemListenerList.Add(l);
 end;
 
 procedure TPOSInitialize.Init;
@@ -483,7 +448,7 @@ end;
 
 
 initialization
-  POSInitialize := TPOSInitialize.Create(Application);
+  POSInitialize := TPOSInitialize.Create;
 
 
 end.

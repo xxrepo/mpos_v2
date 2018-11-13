@@ -61,8 +61,9 @@
     procedure Show;
     procedure Update;
     //
-    //procedure AddControlListener(l: IControlListener);
-    //procedure RemoveControlListener(l: IControlListener);
+    procedure AddControlListener(l: IControlListener);
+    procedure RemoveControlListener(l: IControlListener);
+    function GetControlListeners: TControlListenerList;
   end;
 
   IAGraphicControlPeer = interface(IAControlPeer)
@@ -83,6 +84,7 @@
     procedure SetFocus;
     procedure AddKeyListener(l: IKeyListener);
     procedure RemoveKeyListener(l: IKeyListener);
+    function GetKeyListeners: TKeyListenerList;
   end;
 
   IACustomControlPeer = interface(IAWinControlPeer)

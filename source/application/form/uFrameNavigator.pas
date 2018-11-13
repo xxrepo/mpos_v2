@@ -51,10 +51,10 @@ begin
   FHostingMenu.TopSpacing := 4;
   FHostingMenu.LeftSpacing := 4;
   FHostingMenu.BorderSpacing := 4;
-  FHostingMenu.SetColWidth(79);
+  FHostingMenu.SetColWidth(160);
   FHostingMenu.SetRowHeight(40);
   FHostingMenu.RowCount := 10;
-  FHostingMenu.ColCount := 2;
+  FHostingMenu.ColCount := 1;
   FHostingMenu.SelectBoxSpacing := 1;
   //FHostingMenu.SelectBoxWidth := 4;
   //FHostingMenu.SelectBoxSize := 10;

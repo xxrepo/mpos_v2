@@ -53,7 +53,7 @@ type
 
   { TSaleCommodityList }
 
-  TSaleCommodityList = class(TCMHashObjectList<TSaleCommodity>)
+  TSaleCommodityList = class(TGFPHashObjectList<TSaleCommodity>)
   public
     function SumAmount: Currency; //总额
     function SumSettlementAmount: Currency; //结算总额

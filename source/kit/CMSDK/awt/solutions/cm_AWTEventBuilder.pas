@@ -1,15 +1,24 @@
-unit cm_AWTEventUtils;
+unit cm_AWTEventBuilder;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, //Generics.Defaults,
-  cm_interfaces,
-  cm_AWTEvent;
+  Classes, SysUtils,
+  cm_interfaces, cm_AWT;
 
 type
+
+  { TControlEvent }
+
+  TControlEvent = class(TCMEvent, IControlEvent)
+  private
+    FAControl: TAControl;
+  public
+    class function BuildControlEvent(ASource: TObject; AAControl: TAControl): TControlEvent;
+    function GetAControl: TAControl;
+  end;
 
   { TKeyEvent }
 
@@ -25,16 +34,20 @@ type
     procedure SetKeyCode(AKeyCode: Word);
   end;
 
-  { TKeyAdapter }
-
-  TKeyAdapter = class(TCMBase, IKeyListener)
-  public
-    procedure KeyPressed(e: IKeyEvent); virtual;
-    procedure KeyReleased(e: IKeyEvent); virtual;
-    procedure KeyTyped(e: IKeyEvent); virtual;
-  end;
-
 implementation
+
+{ TControlEvent }
+
+class function TControlEvent.BuildControlEvent(ASource: TObject; AAControl: TAControl): TControlEvent;
+begin
+  Result := TControlEvent.Create(ASource);
+  Result.FAControl := AAControl;
+end;
+
+function TControlEvent.GetAControl: TAControl;
+begin
+  Result := FAControl;
+end;
 
 { TKeyEvent }
 
@@ -63,23 +76,6 @@ end;
 procedure TKeyEvent.SetKeyCode(AKeyCode: Word);
 begin
   FKeyCode := AKeyCode;
-end;
-
-{ TKeyAdapter }
-
-procedure TKeyAdapter.KeyPressed(e: IKeyEvent);
-begin
-  //There's nothing to do here.
-end;
-
-procedure TKeyAdapter.KeyReleased(e: IKeyEvent);
-begin
-  //There's nothing to do here.
-end;
-
-procedure TKeyAdapter.KeyTyped(e: IKeyEvent);
-begin
-  //There's nothing to do here.
 end;
 
 end.

@@ -124,8 +124,7 @@ begin
       POSInitialize.ServiceRectControl := PanelService;
     end;
   //TODO 登陆
-  POSInitialize.NotifySystem('Logined');
-  FNavigatorFrame.LoadConfig;
+  //FNavigatorFrame.LoadConfig;
   PanelRightHint.Width := 12;
 end;
 

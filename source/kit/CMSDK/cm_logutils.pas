@@ -296,7 +296,9 @@ end;
 
 procedure TCMFileLogger.doLog(EventType: TEventType; const Msg: String; DateTime: TDateTime);
 begin
-  FCriticalSection.Enter;
+  //系统关闭时因为环境关闭的顺应u问题，直接使用 Enter() 可能会b出错
+  //FCriticalSection.Enter;
+  if FCriticalSection.TryEnter then
   try
     WriteFileLog(EventType, Msg, DateTime);
   finally
