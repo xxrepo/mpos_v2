@@ -32,8 +32,8 @@
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="129"/>
-        <CursorPos X="61" Y="141"/>
+        <TopLine Value="131"/>
+        <CursorPos X="3" Y="142"/>
         <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit3>
@@ -154,18 +154,17 @@
       </Unit19>
       <Unit20>
         <Filename Value="..\..\kit\CMSDK\cm_interfaces.pas"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="103"/>
-        <CursorPos X="24" Y="118"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="109"/>
+        <CursorPos X="12" Y="125"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit20>
     </Units>
     <OtherDefines Count="2">
       <Define0 Value="UseAWT"/>
       <Define1 Value="UseCThreads"/>
     </OtherDefines>
-    <JumpHistory Count="28" HistoryIndex="27">
+    <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="uHelloWorld.pas"/>
         <Caret Line="28" Column="18" TopLine="14"/>
@@ -278,6 +277,14 @@
         <Filename Value="uHelloWorld.pas"/>
         <Caret Line="63" Column="34" TopLine="60"/>
       </Position28>
+      <Position29>
+        <Filename Value="uHelloWorld.pas"/>
+        <Caret Line="141" Column="61" TopLine="105"/>
+      </Position29>
+      <Position30>
+        <Filename Value="uHelloWorld.pas"/>
+        <Caret Line="26" Column="17" TopLine="10"/>
+      </Position30>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

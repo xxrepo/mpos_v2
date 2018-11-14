@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<navigator>
-    <items>
-	    <item>
-		    <caption>first</caption>
-			<call>mpos/btn/first</call>
-		</item>
-		<item>
-		    <caption>222</caption>
-		</item>
-		<item>
-		    <caption>333</caption>
-		</item>
-		<item>
-		    <caption>zzz</caption>
-		</item>
-	</items>
-</navigator>
+<Navigator>
+    <ItemsStyle>
+		<ColWidth>160</ColWidth>
+		<RowHeight>40</RowHeight>  
+		<ColCount>1</ColCount>
+		<RowCount>10</RowCount>
+		<AlignAtGrid>True</AlignAtGrid>
+	</ItemsStyle>
+    <Items>
+	    <Item>
+		    <Name>A</Name>
+		    <Caption>first</Caption>
+			<Call>mpos/btn/first</Call>
+			<Width>160</Width>
+			<Height>40</Height>
+			<ItemsStyle>
+				<ColWidth>80</ColWidth>
+				<RowHeight>40</RowHeight>  
+				<ColCount>2</ColCount>
+				<RowCount>10</RowCount>
+				<AlignAtGrid>True</AlignAtGrid>
+			</ItemsStyle>
+			<Items>
+			   <Item>
+					<Name>A1</Name>
+					<Caption>A__1</Caption>
+			   </Item>
+			   <Item>
+					<Name>A2</Name>
+					<Caption>A__2</Caption>
+			   </Item>
+		    </Items>
+		</Item>
+
+	    <Item>
+		    <Name>B</Name>
+		    <Caption>BBBB</Caption>
+		</Item>
+	</Items>
+</Navigator>

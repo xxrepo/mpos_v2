@@ -26,13 +26,4 @@ inherited NavigatorFrame: TNavigatorFrame
     ParentColor = False
     TabOrder = 1
   end
-  object PanelClient: TPanel[2]
-    Left = 0
-    Height = 270
-    Top = 38
-    Width = 160
-    Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 2
-  end
 end

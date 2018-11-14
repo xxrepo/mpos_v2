@@ -14,7 +14,7 @@ type
 
   { THelloWorld }
 
-  THelloWorld = class(TCMMessageable, ITest, IOneOffExecute)
+  THelloWorld = class(TCMMessageable, ITest, IRunnable)
   public
     constructor Create;
   public
@@ -23,7 +23,7 @@ type
     procedure Test2;
     procedure aa;
   public
-    procedure Execute;
+    procedure Run;
   end;
 
   { TTestThread }
@@ -60,7 +60,7 @@ var
 constructor THelloWorld.Create;
 begin
   inherited Create;
-  AppSystem.AddLoadedExecute(Self);
+  AppSystem.AddLoadedOneOffExecute(Self);
 end;
 
 procedure THelloWorld.Test;
@@ -137,7 +137,7 @@ begin
   Messager.Debug('------------------------ aa -----------------------');
 end;
 
-procedure THelloWorld.Execute;
+procedure THelloWorld.Run;
 begin
   Messager.Warning('你好吗？我是执行一次的东西。');
 end;

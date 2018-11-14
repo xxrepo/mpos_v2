@@ -27,7 +27,7 @@ type
   public
     procedure Loaded(e: ISystemEvent); virtual;
     procedure Logined(e: ISystemEvent); virtual;
-    procedure LoggedOut(e: ISystemEvent); virtual;
+    procedure Logoutting(e: ISystemEvent); virtual;
     procedure Closing(e: ISystemEvent); virtual;
   end;
 
@@ -59,7 +59,7 @@ begin
 
 end;
 
-procedure TSystemAdapter.LoggedOut(e: ISystemEvent);
+procedure TSystemAdapter.Logoutting(e: ISystemEvent);
 begin
 
 end;

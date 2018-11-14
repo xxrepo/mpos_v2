@@ -35,7 +35,7 @@
         <PackageName Value="adLCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="65">
+    <Units Count="66">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -317,6 +317,10 @@
         <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTEventBuilder.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit64>
+      <Unit65>
+        <Filename Value="..\public\uNavigator.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit65>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

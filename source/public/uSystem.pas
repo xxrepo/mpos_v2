@@ -19,8 +19,10 @@ type
   end;
 
   ISystemListener = interface(ICMListener)
-    ['{DE6FAA48-4734-4362-973D-8A6D152A2090}']
+    ['{6F93ABB7-7463-44BD-9946-1CDFAE1EA7CE}']
     procedure Loaded(e: ISystemEvent);
+    procedure Logined(e: ISystemEvent);
+    procedure Logoutting(e: ISystemEvent);
     procedure Closing(e: ISystemEvent);
   end;
 
@@ -28,26 +30,35 @@ type
 
   TSystemListenerListEnumerator = TGInterfaceListEnumerator<ISystemListener>;
 
+  ILoginHandler = interface(ICMBase)
+    ['{52F06A91-BA2A-469E-BCAB-D2C726B1E06B}']
+    function DoLogin: Boolean;
+    function DoLogout: Boolean;
+  end;
+
   IAppSystem = interface(ICMBase)
-    ['{B7FDA120-2DD9-4ADF-996F-96BA9A3A38E6}']
+    ['{A48444D8-6690-4430-B8AA-A517FD2D9FC8}']
     function GetVersion: string;           //系统版本
     function IsTestMode: Boolean;
     function GetStartTime: TDateTime;      //启动时间
+    function IsLogined: Boolean;
+    function GetLastLoginedTime: TDateTime;
     function GetParameter: ICMParameter;   //配置参数
     function GetMsgBar: ICMMsgBar;         //消息显示条
     function GetMsgBox: ICMMsgBox;         //消息显示框
     function GetLog: ICMLog;               //系统日志
     function GetWorkRect: TRect;           //系统在屏幕工作区域
-    function GetServiceRect: TRect;        //分配给业务在屏幕的工作区域
-    procedure AddSystemListener(l: ISystemListener);  //添加指定的系统侦听器
+    function GetServiceRect: TRect;        //分配给业务的工作区域
+    function SetLoginHandler(h: ILoginHandler): Boolean; //设置登陆处理器，应在加载时设置
+    procedure AddSystemListener(l: ISystemListener);     //添加指定的系统侦听器
     procedure RemoveSystemListener(l: ISystemListener);
     function GetSystemListeners: TSystemListenerList;
     function IsActive: Boolean;
     procedure Close;
-    procedure Terminate;
+    procedure Terminate; //除非异常，否则慎用
     // 执行体执行后消除引用
-    procedure AddLoadedExecute(AExecute: IOneOffExecute);
-    procedure AddClosingExecute(AExecute: IOneOffExecute);
+    procedure AddLoadedOneOffExecute(rab: IRunnable);
+    procedure AddClosingOneOffExecute(rab: IRunnable);
   end;
 
 function AppSystem: IAppSystem;

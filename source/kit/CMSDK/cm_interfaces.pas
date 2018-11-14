@@ -108,15 +108,35 @@ type
   end;
 
   //------------------------------------------------------------------------------------------------
+  // 以下不从 ICMBase 拓展
+  //------------------------------------------------------------------------------------------------
 
-  { IOneOffExecute
-    // 一次性的执行接口，具体功能依相关使用协议
+  { IRunnable
+    //  Runnable 接口应该由那些打算通过某一线程执行其实例的类来实现。类必须定义一个称为 run 的无参
+    数方法。也可用于作为一个单纯的执行体。
+        设计该接口的目的是为希望在活动时执行代码的对象提供一个公共协议。例如，CMThread 类实现了
+    Runnable。激活的意思是说某个线程已启动并且尚未停止。
+        此外，Runnable 为非 CMThread 子类的类提供了一种激活方式。通过实例化某个 Thread 实例并将自身
+    作为运行目标，就可以运行实现 Runnable 的类而无需创建 CMThread 的子类。大多数情况下，如果只想重写
+    run() 方法，而不重写其他 CMThread 方法，那么应使用 Runnable 接口。这很重要，因为除非程序员打算修
+    改或增强类的基本行为，否则不应为该类创建子类。
   }
 
-  IOneOffExecute = interface
-    ['{FC949ADB-BA89-4698-B113-9C1CF7BB2DFB}']
-    procedure Execute;
+  IRunnable = interface
+    ['{E75DDBD5-E3D7-41C5-9209-71FFCC9EACA9}']
+    procedure Run;
   end;
+
+  { IExecutor
+    //  执行已提交的 Runnable 任务的对象。此接口提供一种将任务提交与每个任务将如何运行的机制（包括
+    线程使用的细节、调度等）分离开来的方法。通常使用 Executor 而不是显式地创建线程。
+  }
+
+  IExecutor = interface
+    ['{FC949ADB-BA89-4698-B113-9C1CF7BB2DFB}']
+    procedure Execute(Aommand: IRunnable);
+  end;
+
 
 implementation
 

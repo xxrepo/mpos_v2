@@ -309,29 +309,30 @@ var
   sl: ISystemListener;
   se: ISystemEvent;
 begin
+  Messager.Debug('NotifySystem(%s)...', [AEventName]);
   for i:=0 to FSystemListenerList.Count-1 do
     begin
       sl := FSystemListenerList[i];
       se := TSystemEvent.Create(Self, Self);
       case AEventName of
       'Loaded': sl.Loaded(se);
-      //'Logined': ISystemListener(le.GetCurrent).Logined(se);
-      //'LoggedOut': ISystemListener(le.GetCurrent).LoggedOut(se);
+      'Logined': sl.Logined(se);
+      'Logoutting': sl.Logoutting(se);
       'Closing': sl.Closing(se);
       end;
     end;
-
+  //
   case AEventName of
   'Loaded':
      begin
        for i:=0 to FLoadedExecuteList.Count-1 do
-         FLoadedExecuteList[i].Execute;
+         FLoadedExecuteList[i].Run;
        FLoadedExecuteList.Clear;
      end;
   'Closing':
      begin
        for i:=0 to FClosingExecuteList.Count-1 do
-         FClosingExecuteList[i].Execute;
+         FClosingExecuteList[i].Run;
        FClosingExecuteList.Clear;
      end;
   end;
