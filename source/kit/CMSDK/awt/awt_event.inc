@@ -11,6 +11,7 @@ type
   IControlListener = interface(ICMListener)
     ['{9E755FA8-F5D9-43B6-AF0A-1ACDDE80404A}']
     procedure ControlClick(e: IControlEvent);
+    procedure ControlDblClick(e: IControlEvent);
     procedure ControlResize(e: IControlEvent);
   end;
 

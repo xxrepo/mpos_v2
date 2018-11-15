@@ -77,7 +77,27 @@ type
     function GetRootNames: TStrings;
   end;
 
+  { TNavigatorNodeAdapter }
+
+  TNavigatorNodeAdapter = class(TCMListener, INavigatorNodeListener)
+  public
+    procedure Click(e: INavigatorNodeEvent); virtual;
+    procedure DblClick(e: INavigatorNodeEvent); virtual;
+  end;
+
 implementation
+
+{ TNavigatorNodeAdapter }
+
+procedure TNavigatorNodeAdapter.Click(e: INavigatorNodeEvent);
+begin
+
+end;
+
+procedure TNavigatorNodeAdapter.DblClick(e: INavigatorNodeEvent);
+begin
+
+end;
 
 end.
 

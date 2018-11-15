@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Companys>
+	<Company Name="GD" CompName="广东分公司" AbbrName="粤" AreaConfig="GDArea"></Company>
+	<Company Name="FJ" CompName="福建分公司" AbbrName="闽" AreaConfig="WSArea"></Company>
+	<Company Name="HN" CompName="湖南分公司" AbbrName="湘" AreaConfig="WSArea"></Company>
+	<Company Name="HB" CompName="湖北分公司" AbbrName="鄂" AreaConfig="WSArea"></Company>
+	<Company Name="JX" CompName="江西分公司" AbbrName="赣" AreaConfig="WSArea"></Company>
+	<Company Name="GX" CompName="广西分公司" AbbrName="桂" AreaConfig="WSArea"></Company>
+	<Company Name="CQ" CompName="重庆分公司" AbbrName="渝" AreaConfig="WSArea"></Company>
+	<Company Name="HA" CompName="河南分公司" AbbrName="豫" AreaConfig="WSArea"></Company>
+	<Company Name="AH" CompName="安徽分公司" AbbrName="皖" AreaConfig="WSArea"></Company>
+	<Company Name="HO" CompName="华东(上海)" AbbrName="沪" AreaConfig="WSArea"></Company>
+	<Company Name="HO" CompName="华东(江苏)" AbbrName="苏" AreaConfig="WSArea"></Company>	
+	<Company Name="HO" CompName="华东(浙江)" AbbrName="浙" AreaConfig="WSArea"></Company>
+	<Company Name="HS" CompName="海南分公司" AbbrName="琼" AreaConfig="WSArea"></Company>
+	<Company Name="SC" CompName="四川分公司" AbbrName="川" AreaConfig="WSArea"></Company>
+	<Company Name="GZ" CompName="贵州分公司" AbbrName="黔" AreaConfig="WSArea"></Company>
+	<Company Name="BJ" CompName="北京分公司" AbbrName="京" AreaConfig="WSArea"></Company>
+	<Company Name="TJ" CompName="天津分公司" AbbrName="津" AreaConfig="WSArea"></Company>
+	<Company Name="SD" CompName="山东分公司" AbbrName="鲁" AreaConfig="WSArea"></Company>	
+	<Company Name="HC" CompName="河北分公司" AbbrName="冀" AreaConfig="WSArea"></Company>
+	<Company Name="SX" CompName="山西分公司" AbbrName="晋" AreaConfig="WSArea"></Company>
+	<Company Name="JL" CompName="吉林分公司" AbbrName="吉" AreaConfig="WSArea"></Company>
+	<Company Name="LN" CompName="辽宁分公司" AbbrName="辽" AreaConfig="WSArea"></Company>
+	<Company Name="YN" CompName="云南分公司" AbbrName="滇" AreaConfig="WSArea"></Company>	
+	<Company Name="XZ" CompName="西藏分公司" AbbrName="藏" AreaConfig="WSArea"></Company>	
+	<Company Name="SW" CompName="陕西分公司" AbbrName="陕" AreaConfig="WSArea"></Company>	
+	<Company Name="GS" CompName="甘肃分公司" AbbrName="甘" AreaConfig="WSArea"></Company>	
+	<Company Name="NX" CompName="宁夏分公司" AbbrName="宁" AreaConfig="WSArea"></Company>
+	<Company Name="QH" CompName="青海分公司" AbbrName="青" AreaConfig="WSArea"></Company>
+	<Company Name="XJ" CompName="新疆分公司" AbbrName="新" AreaConfig="WSArea"></Company>
+	<Company Name="NM" CompName="内蒙古分公司" AbbrName="蒙" AreaConfig="WSArea"></Company>
+	<Company Name="HL" CompName="黑龙江分公司" AbbrName="黑" SrvUrlConfig="WSArea"></Company>	
+</Companys>

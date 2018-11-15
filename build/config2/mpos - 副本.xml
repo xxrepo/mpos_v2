@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mpos>
+    <messageLevel>etlDebug</messageLevel>
+	<resources>
+		<ico>resource/logo.ico</ico>
+		<logo>resource/logo.png</logo>
+	</resources>  
+	<configFiles>	 
+		 <navigator>config/navigator.xml</navigator>
+		 <test>config/test.xml</test>
+	</configFiles>
+
+</mpos>
+

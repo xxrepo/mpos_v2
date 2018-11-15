@@ -20,39 +20,47 @@ type
   private
     FUUID: string;
     FOrderUUID: string;
-    FGID: Integer;
+    FGID: integer;
     FCommodityName: string;
-    FSettlementPrice: Currency;
-    FQuantity: Currency;
-    FSettlementAmount: Currency;
+    FSettlementPrice: currency;
+    FQuantity: currency;
+    FSettlementAmount: currency;
     FRemark: string;
   published
     property UUID: string read FUUID write FUUID;
     property OrderUUID: string read FOrderUUID write FOrderUUID;
-    property GID: Integer read FGID write FGID;
+    property GID: integer read FGID write FGID;
     property CommodityName: string read FCommodityName write FCommodityName;
-    property SettlementPrice: Currency read FSettlementPrice write FSettlementPrice; //实际结算价
-    property Quantity: Currency read FQuantity write FQuantity;
-    property SettlementAmount: Currency read FSettlementAmount write FSettlementAmount; //实际结算金额 应对不可数商品、舍数等
+    property SettlementPrice: currency read FSettlementPrice write FSettlementPrice; //实际结算价
+    property Quantity: currency read FQuantity write FQuantity;
+    property SettlementAmount: currency read FSettlementAmount write FSettlementAmount; //实际结算金额 应对不可数商品、舍数等
     property Remark: string read FRemark write FRemark;
   end;
+
+  TSaleDetailList = TObjectList<TSaleDetail>;
 
   TSaleOrder = class(TPersistent)
   private
     FUUID: string;
-    FSumSettlementAmount: Currency;
+    FType: byte; //单据类型0: 销售单, 1: 冲退单, 2: 提货单; 3 凭码兑奖; 11:外卖订单
+    FSumSettlementAmount: currency;
     FSellerID: string;
     FSettlementTime: TDateTime;
     FRemark: string;
   published
     property UUID: string read FUUID write FUUID;
-    property SumSettlementAmount: Currency read FSumSettlementAmount write FSumSettlementAmount; //实际结算总金额 应对不可数商品、舍数等
+    property SumSettlementAmount: currency read FSumSettlementAmount write FSumSettlementAmount;
+    //实际结算总金额 应对不可数商品、舍数等
     property SellerID: string read FSellerID write FSellerID;
     property SettlementTime: TDateTime read FSettlementTime write FSettlementTime; //结算时间
+    property Type_: byte read FType write FType;
     property Remark: string read FRemark write FRemark;
   end;
 
-  TSaleDetailList = TObjectList<TSaleDetail>;
+
+  TSaleOrderList = TObjectList<TSaleOrder>;
+
+
 
   { TSaleOrderEx }
 
@@ -82,4 +90,3 @@ begin
 end;
 
 end.
-

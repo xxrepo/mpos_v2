@@ -40,14 +40,14 @@ end;
 
 destructor TPOSForm.Destroy;
 begin
-  TThemeableManager.GetInstance.RemoveThemeable(Self);
+  GetThemeableManager.RemoveThemeable(Self);
   inherited Destroy;
 end;
 
 procedure TPOSForm.AfterConstruction;
 begin
   inherited AfterConstruction;
-  TThemeableManager.GetInstance.AddThemeable(Self);
+  GetThemeableManager.AddThemeable(Self);
 end;
 
 function TPOSForm.GetImplementorName: string;

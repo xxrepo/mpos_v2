@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils,
   cm_interfaces, cm_messager,
-  uSaleDTO, uSaleBO, uProductPO;
+  uInterfaces, uSaleDTO, uSaleBO, uSalePO, uProductPO;
 
 type
 
@@ -30,15 +30,45 @@ type
     function ToSelect(list: TProductList): TProduct;
   end;
 
+  ISaleOrderSelectBoard = interface(ICMBase)
+    ['{D50C5834-38B7-4E95-ABA5-387BDAD21400}']
+    function ToSelect(list: TSaleOrderList): TSaleOrder;
+  end;
+
+
+  ISaleQueryListener = interface(ICMListener)
+    ['{B01F745A-F78C-4981-BB4C-08FE02839B6E}']
+    function Search(const beginTime, endTime, orderNo, prodCode, barCode: string; amount: currency; orderType, payType: integer): boolean;
+    function Print(const AOrderUUID: string): boolean;
+    function Return(const AOrderUUID: string): boolean;
+    function ShowDetails(const AOrderUUID: string): boolean;
+  end;
+
+
+  ISaleQueryBoard = interface(IPromptableBoard)
+    ['{B1C69B27-1D4E-435D-B2E0-31790E05C075}']
+    procedure SetListener(AListener: ISaleQueryListener);
+    procedure StartQuery();
+
+    function AddShowItem(AVO: TSaleQueryShowItem): boolean;
+    function DeleteShowItem(const AUUID: string): boolean;
+    function UpdateShowItem(AVO: TSaleQueryShowItem): boolean;
+    function ShowOrderList(list: TSaleOrderList): boolean;
+  end;
+
+
+
   { ISaleBoardListener }//用于接收销售操作的侦听器接口
 
   ISaleBoardListener = interface(ICMListener)
-    ['{AC40A1E7-1132-41EB-89BD-438A19F4B2E2}']
+    ['{0A6442FD-56C8-45A4-9679-4D0A95FB322C}']
     procedure Deleting(const AUUID: string; var CanDelete: boolean);
     procedure Updating(AVO: TShowItem; var CanUpdate: boolean);
     procedure Cleared;
     procedure Inputted(const ACode: string);
     procedure Settle;  //结算
+    procedure Recovery;  //恢复
+    procedure Query;  //恢复
   end;
 
   { ISaleBillCenter }//销售单据中心，统一管理以方便处理（对象跨库类型不等和生命周期等问题） TODO
@@ -70,6 +100,11 @@ type
     ['{1FA20EBA-6923-42C2-AEBD-C8775C54E29C}']
     function Handle(ABill: TSaleBill): boolean;
     procedure AddHandler(AHandler: ISaleHandler);
+  end;
+
+  ISalePrintHandler = interface(ICMBase)
+    ['{E4EC0067-6688-4644-B7BE-6D0BD4863A20}']
+    //procedure doPrintByOrder(OrderNo);
   end;
 
   { TSaleHandler }
@@ -143,6 +178,5 @@ end;
 
 
 end.
-
 
 

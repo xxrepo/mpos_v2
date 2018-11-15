@@ -29,13 +29,13 @@ implementation
 constructor TCMThemePanel.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
-  TThemeableManager.GetInstance.AddThemeable(Self);
+  GetThemeableManager.AddThemeable(Self);
   FTheme := nil;
 end;
 
 destructor TCMThemePanel.Destroy;
 begin
-  TThemeableManager.GetInstance.RemoveThemeable(Self);
+  GetThemeableManager.RemoveThemeable(Self);
   FTheme := nil;
   inherited Destroy;
 end;

@@ -42,6 +42,7 @@ const
 
 ResourceString
   NoToolKitError = 'No ToolKit solution specified';
+  PeerNilError = 'The peer can not be nil.';
 
 
 

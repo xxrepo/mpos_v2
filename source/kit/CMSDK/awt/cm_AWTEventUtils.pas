@@ -16,6 +16,7 @@ type
   TControlAdapter = class(TCMBase, IControlListener)
   public
     procedure ControlClick(e: IControlEvent); virtual;
+    procedure ControlDblClick(e: IControlEvent); virtual;
     procedure ControlResize(e: IControlEvent); virtual;
   end;
 
@@ -41,26 +42,31 @@ begin
   //There's nothing to do here.
 end;
 
+procedure TControlAdapter.ControlDblClick(e: IControlEvent);
+begin
+
+end;
+
 procedure TControlAdapter.ControlResize(e: IControlEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
 { TKeyAdapter }
 
 procedure TKeyAdapter.KeyPressed(e: IKeyEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
 procedure TKeyAdapter.KeyReleased(e: IKeyEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
 procedure TKeyAdapter.KeyTyped(e: IKeyEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
 end.

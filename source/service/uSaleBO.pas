@@ -64,12 +64,14 @@ type
   TSaleBill = class
   protected
     FUUID: string;
+    FType: Byte; //单据类型0: 销售单, 1: 冲退单, 2: 提货单; 3 凭码兑奖; 11:外卖订单; 99:临时挂单
     FCommodityList: TSaleCommodityList;
   public
     constructor Create;
     destructor Destroy; override;
     property UUID: string read FUUID;
     function SumSettlementAmount: Currency; //结算总额
+    property Type_: Byte read FType write FType;
   public //operate
     function AddCommodity(ASampleCommodity: TSaleCommodity): Integer; virtual; //考虑跨库，传入 ACommodity 需自行销毁
     function RemoveCommodity(const ACommodityUUID: string): Integer; virtual;
@@ -157,6 +159,7 @@ end;
 constructor TSaleBill.Create;
 begin
   FUUID := CreateGUIDStr;
+  FType := 0;
   FCommodityList := TSaleCommodityList.Create(True);
 end;
 

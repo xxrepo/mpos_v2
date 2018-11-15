@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Service>
+	<GDArea>
+		<POSService>http://mpos.myj.com.cn/PosService.asmx</POSService>
+		<FileServices>
+			<Default>ftp://ftpuser:myj@123456@mposftp.myj.com.cn:6002</Default>
+			<Advertise>ftp://myj-download:M1y2j3.4*5*6_@120.24.51.67:8021</Advertise>
+			<DataPacket>ftp://ftpuser:myj@123456@mposftp.myj.com.cn:6002</DataPacket>
+			<Upgrade>ftp://ftpuser:myj@123456@mcloudftp.myj.com.cn:21</Upgrade>
+			<UploadFile>ftp://ftpUpload:mpos@123456@mposftp.myj.com.cn:6002</UploadFile>
+		</FileServices>
+		<MYJTicketService>http://183.63.202.130:9091/MTicketCenter.ashx</MYJTicketService>
+		<BaoZhangService>http://weboa.meiyijia.com.cn:8088/BaoZhang/WeiXin/baozhang/WebService.asmx</BaoZhangService>
+	</GDArea>
+	<WSArea>
+		<POSService>http://myjmpos.myj.com.cn/PosService.asmx</POSService>
+		<FileServices>
+			<Default>ftp://ftpuser:myj@123456@mposftp.myj.com.cn:6002</Default>
+			<Advertise>ftp://myj-download:M1y2j3.4*5*6_@120.24.51.67:8021</Advertise>
+			<DataPacket>ftp://ftpuser:myj@123456@mposftp.myj.com.cn:6002</DataPacket>
+			<Upgrade>ftp://ftpuser:myj@123456@mcloudftp.myj.com.cn:21</Upgrade>
+			<UploadFile>ftp://ftpUpload:mpos@123456@mposftp.myj.com.cn:6002</UploadFile>
+		</FileServices>
+		<MYJTicketService>http://183.63.202.130:9091/MTicketCenter.ashx</MYJTicketService>
+		<BaoZhangService>http://weboa.meiyijia.com.cn:8088/BaoZhang/WeiXin/baozhang/WebService.asmx</BaoZhangService>		
+	</WSArea>
+</Service>

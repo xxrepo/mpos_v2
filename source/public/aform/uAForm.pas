@@ -66,6 +66,7 @@ type
   public
     constructor Create(AOwner: TAComponent); override;
     procedure SetTheme(ATheme: ITheme); override;
+    property QueryPanel: TAPanel read FQueryPanel;
   end;
 
 implementation
@@ -74,14 +75,14 @@ implementation
 
 destructor TAPOSForm.Destroy;
 begin
-  TThemeableManager.GetInstance.RemoveThemeable(Self);
+  GetThemeableManager.RemoveThemeable(Self);
   inherited Destroy;
 end;
 
 procedure TAPOSForm.AfterConstruction;
 begin
   inherited AfterConstruction;
-  TThemeableManager.GetInstance.AddThemeable(Self);
+  GetThemeableManager.AddThemeable(Self);
 end;
 
 procedure TAPOSForm.SetTheme(ATheme: ITheme);
@@ -187,13 +188,13 @@ begin
   FDataPanel := TAPanel.Create(FMainPanel);
   FDataPanel.Parent := FMainPanel;
   FDataPanel.Align := alClient;
-  FDataPanel.Color := clYellow;
   FDataPanel.BevelOuter := bvNone;
 end;
 
 procedure TAQueryServiceForm.SetTheme(ATheme: ITheme);
 begin
   inherited SetTheme(ATheme);
+  FDataPanel.Color := ATheme.GetParameter.Get('boardColor').AsInteger;
 end;
 
 

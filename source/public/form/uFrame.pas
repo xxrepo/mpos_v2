@@ -30,14 +30,14 @@ implementation
 
 destructor TPOSFrame.Destroy;
 begin
-  TThemeableManager.GetInstance.RemoveThemeable(Self);
+  GetThemeableManager.RemoveThemeable(Self);
   inherited Destroy;
 end;
 
 procedure TPOSFrame.AfterConstruction;
 begin
   inherited AfterConstruction;
-  TThemeableManager.GetInstance.AddThemeable(Self);
+  GetThemeableManager.AddThemeable(Self);
 end;
 
 function TPOSFrame.GetImplementorName: string;

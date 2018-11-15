@@ -96,6 +96,9 @@ type
     function GetSource: TObject;
   end;
 
+  TCMListener = class(TCMBase, ICMListener)
+  end;
+
   { TCMEvent
     // 所有 Event 在构造时都引用了对象 "source"，在逻辑上认为该对象是最初发生有关 Event 的对象。
   }

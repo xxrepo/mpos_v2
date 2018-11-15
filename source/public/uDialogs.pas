@@ -29,13 +29,13 @@ implementation
 constructor TPOSMsgBox.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  TThemeableManager.GetInstance.AddThemeable(Self);
+  GetThemeableManager.AddThemeable(Self);
 end;
 
 destructor TPOSMsgBox.Destroy;
 begin
   inherited Destroy;
-  TThemeableManager.GetInstance.RemoveThemeable(Self);
+  GetThemeableManager.RemoveThemeable(Self);
 end;
 
 function TPOSMsgBox.GetImplementorName: string;

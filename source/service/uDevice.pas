@@ -9,6 +9,14 @@ uses
   cm_messager,
   uInterfaces;
 
+const
+  POS_Sale_PrintTicket: string = 'Sale.PrintTicket';
+  POS_Sale_TicketTemplate: string = 'Sale.TicketTemplate';
+
+  POS_Print_PrintPort: string = 'Print.PrintPort';
+  POS_Print_PrintPaper: string = 'Print.PrintPaper';
+
+
 type
 
   IPrint = interface(IService)
@@ -48,6 +56,8 @@ type
     function SetShowBMInfo(str_left1: string = ''; str_right1: string = ''; str_left2: string = ''; str_right2: string = '';
       str_left3: string = ''; str_right3: string = ''): boolean;
   end;
+
+
 
 implementation
 

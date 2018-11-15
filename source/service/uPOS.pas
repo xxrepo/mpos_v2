@@ -13,7 +13,9 @@ uses
 const
   //系统参数节点
   POS_System_UserCode: string = 'UserCode';
+  POS_System_UserName: string = 'UserName';
   POS_System_ShopCode: string = 'ShopCode';
+  POS_System_ShopName: string = 'ShopCode';
   POS_System_AuthCode: string = 'AuthCode';
   POS_System_TermCode: string = 'TermCode';
   POS_System_TermUUID: string = 'TermUUID';
@@ -51,8 +53,6 @@ const
   POS_Device_MultiScreenEnable: string = 'CustScreen.Enable';
   POS_Device_Electronic: string = 'Electronic';
   POS_Device_ElectronicEnable: string = 'Electronic.Enable';
-
-
 
 type
 

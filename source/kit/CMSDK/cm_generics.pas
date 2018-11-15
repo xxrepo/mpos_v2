@@ -15,7 +15,8 @@ unit cm_generics;
 interface
 
 uses
-  Classes, SysUtils, Contnrs;
+  Classes, SysUtils, Contnrs,
+  cm_classes;
 
 type
 
@@ -59,10 +60,10 @@ type
 
   TGInterfaceListEnumerator<T: IUnknown> = class
   private
-    FList: TInterfaceList;
+    FList: TCMInterfaceList;
     FPosition: Integer;
   public
-    constructor Create(AList: TInterfaceList);
+    constructor Create(AList: TCMInterfaceList);
     function GetCurrent: T;
     function MoveNext: Boolean;
     property Current: T read GetCurrent;
@@ -70,7 +71,7 @@ type
 
   { TGInterfaceList }
 
-  TGInterfaceList<T: IUnknown> = class(TInterfaceList)
+  TGInterfaceList<T: IUnknown> = class(TCMInterfaceList)
   private
     function Get(Index: Integer): T;
     procedure Put(Index: Integer; AValue: T);
@@ -84,6 +85,8 @@ type
     function Remove(Item: T): Integer;
     function Expand: TGInterfaceList<T>;
     property Items[Index: Integer]: T read Get write Put; default;
+  public
+    function Clone: TGInterfaceList<T>;
   end;
 
   { TGFPHashInterfaceList }
@@ -256,9 +259,14 @@ begin
   Result := TGInterfaceList<T>(inherited Expand)
 end;
 
+function TGInterfaceList<T>.Clone: TGInterfaceList<T>;
+begin
+  Result := TGInterfaceList<T>(inherited Clone);
+end;
+
 { TGInterfaceListEnumerator }
 
-constructor TGInterfaceListEnumerator<T>.Create(AList: TInterfaceList);
+constructor TGInterfaceListEnumerator<T>.Create(AList: TCMInterfaceList);
 begin
   inherited create;
   FList := AList;

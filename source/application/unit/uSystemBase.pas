@@ -21,7 +21,8 @@ type
     FLoginHandler: ILoginHandler;
     FSystemListenerList: TSystemListenerList;
     FLoadedExecuteList: TGInterfaceList<IRunnable>;
-    FClosingExecuteList: TGInterfaceList<IRunnable>;
+    FPreparedExecuteList: TGInterfaceList<IRunnable>;
+    FLoginedExecuteList: TGInterfaceList<IRunnable>;
   public
     constructor Create;
     destructor Destroy; override;
@@ -46,7 +47,8 @@ type
     procedure Terminate;
     //
     procedure AddLoadedOneOffExecute(rab: IRunnable);
-    procedure AddClosingOneOffExecute(rab: IRunnable);
+    procedure AddPreparedOneOffExecute(rab: IRunnable);
+    procedure AddLoginedOneOffExecute(rab: IRunnable);
   end;
 
 implementation
@@ -62,7 +64,8 @@ begin
   FLoginHandler := nil;
   FSystemListenerList := TSystemListenerList.Create;
   FLoadedExecuteList := TGInterfaceList<IRunnable>.Create;
-  FClosingExecuteList := TGInterfaceList<IRunnable>.Create;
+  FPreparedExecuteList := TGInterfaceList<IRunnable>.Create;
+  FLoginedExecuteList := TGInterfaceList<IRunnable>.Create;
 end;
 
 destructor TAppSystemBase.Destroy;
@@ -70,7 +73,8 @@ begin
   FLoginHandler := nil;
   FSystemListenerList.Free;
   FLoadedExecuteList.Free;
-  FClosingExecuteList.Free;
+  FPreparedExecuteList.Free;
+  FLoginedExecuteList.Free;
   inherited Destroy;
 end;
 
@@ -147,9 +151,14 @@ begin
   FLoadedExecuteList.Add(rab);
 end;
 
-procedure TAppSystemBase.AddClosingOneOffExecute(rab: IRunnable);
+procedure TAppSystemBase.AddPreparedOneOffExecute(rab: IRunnable);
 begin
-  FClosingExecuteList.Add(rab);
+  FPreparedExecuteList.Add(rab);
+end;
+
+procedure TAppSystemBase.AddLoginedOneOffExecute(rab: IRunnable);
+begin
+  FLoginedExecuteList.Add(rab);
 end;
 
 end.

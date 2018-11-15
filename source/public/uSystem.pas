@@ -19,11 +19,12 @@ type
   end;
 
   ISystemListener = interface(ICMListener)
-    ['{6F93ABB7-7463-44BD-9946-1CDFAE1EA7CE}']
-    procedure Loaded(e: ISystemEvent);
-    procedure Logined(e: ISystemEvent);
-    procedure Logoutting(e: ISystemEvent);
-    procedure Closing(e: ISystemEvent);
+    ['{EE4E0919-4AA1-43D0-8BCD-ACA40FA59DBA}']
+    procedure Loaded(e: ISystemEvent);     //加载完所有模块
+    procedure Prepared(e: ISystemEvent);   //所有准备完毕（有界面时包含主界面准备完毕）
+    procedure Logined(e: ISystemEvent);    //登录完成后
+    procedure Logoutting(e: ISystemEvent); //登出时
+    procedure Closing(e: ISystemEvent);    //关闭时
   end;
 
   TSystemListenerList = TGInterfaceList<ISystemListener>;
@@ -37,7 +38,7 @@ type
   end;
 
   IAppSystem = interface(ICMBase)
-    ['{A48444D8-6690-4430-B8AA-A517FD2D9FC8}']
+    ['{545FF2FD-A934-4D59-810D-412E01614F23}']
     function GetVersion: string;           //系统版本
     function IsTestMode: Boolean;
     function GetStartTime: TDateTime;      //启动时间
@@ -58,7 +59,8 @@ type
     procedure Terminate; //除非异常，否则慎用
     // 执行体执行后消除引用
     procedure AddLoadedOneOffExecute(rab: IRunnable);
-    procedure AddClosingOneOffExecute(rab: IRunnable);
+    procedure AddPreparedOneOffExecute(rab: IRunnable);
+    procedure AddLoginedOneOffExecute(rab: IRunnable);
   end;
 
 function AppSystem: IAppSystem;

@@ -102,7 +102,7 @@ begin
 
   //1、主窗体紧接之后创建，需要IThemeable；IThemeable 需要集合 IThemeableSet。
   FThemeUtil := TCMThemeUtil.Create;
-  TThemeableManager.GetInstance.AddThemeableSet(FThemeUtil);
+  GetThemeableManager.AddThemeableSet(FThemeUtil);
   //2、AppSystem
   InterfaceRegister.PutInterface('IAppSystem', IAppSystem, Self);
 end;
@@ -316,6 +316,7 @@ begin
       se := TSystemEvent.Create(Self, Self);
       case AEventName of
       'Loaded': sl.Loaded(se);
+      'Prepared': sl.Prepared(se);
       'Logined': sl.Logined(se);
       'Logoutting': sl.Logoutting(se);
       'Closing': sl.Closing(se);
@@ -329,11 +330,22 @@ begin
          FLoadedExecuteList[i].Run;
        FLoadedExecuteList.Clear;
      end;
-  'Closing':
+  'Prepared':
      begin
-       for i:=0 to FClosingExecuteList.Count-1 do
-         FClosingExecuteList[i].Run;
-       FClosingExecuteList.Clear;
+       for i:=0 to FPreparedExecuteList.Count-1 do
+         FPreparedExecuteList[i].Run;
+       FPreparedExecuteList.Clear;
+       //if Assigned(FLoginHandler) then
+       //  if FLoginHandler.DoLogin then
+       //    NotifySystem('Logined')
+       //  else
+       //    AppSystem.Close;
+     end;
+  'Logined':
+     begin
+       for i:=0 to FLoginedExecuteList.Count-1 do
+         FLoginedExecuteList[i].Run;
+       FLoginedExecuteList.Clear;
      end;
   end;
 end;

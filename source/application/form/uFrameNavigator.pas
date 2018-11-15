@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, Graphics,  Dialogs,
-  cm_interfaces, cm_theme, cm_controlutils, cm_parameter, cm_messager, cm_freegenerics,
+  cm_interfaces, cm_theme, cm_controlutils, cm_parameter, cm_messager, cm_freegenerics, cm_plat,
   uFrame, uSystem,
   uNavigator;
 
@@ -22,7 +22,6 @@ type
     procedure FrameResize(Sender: TObject);
   private
     FListPanel: TNavigationListPanel;
-    procedure aa(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
     procedure LoadConfig;
@@ -80,7 +79,7 @@ type
     FNavigator: INavigator;
     FNode: INavigationNode;
   public
-    constructor Create(ASource: TObject; ANavigator: INavigator; ANode: INavigationNode);
+    constructor Create(ASource: TObject; ANavigator: INavigator; ANode: INavigationNode); reintroduce;
   public
     function GetNavigator: INavigator;
     function GetNode: INavigationNode;
@@ -133,16 +132,14 @@ implementation
 
 {$R *.frm}
 
+var
+  _NavigatorFrame: TNavigatorFrame = nil;
+
 { TNavigatorFrame }
 
 procedure TNavigatorFrame.FrameResize(Sender: TObject);
 begin
   FListPanel.FHostingMenu.ReLayout;
-end;
-
-procedure TNavigatorFrame.aa(Sender: TObject);
-begin
-  AppSystem.GetMsgBox.ShowMessage(TPanel(Sender).Hint);
 end;
 
 constructor TNavigatorFrame.Create(AOwner: TComponent);
@@ -152,6 +149,9 @@ begin
   FListPanel.Parent := Self;
   FListPanel.Align := alClient;
   FListPanel.BevelOuter := bvNone;
+  //
+  _NavigatorFrame := Self;
+  InterfaceRegister.PutInterface(INavigator, Self);
 end;
 
 procedure SetStyle(menu: TCMGridLayoutMenu; param: ICMParameter);
@@ -182,7 +182,7 @@ begin
       cfg := TNavigationNodeConfig.Create(ip.Get('Name').AsString, ip.Get('Caption').AsString);
       //cfg.SetPos(ip.Get('Col').AsInteger, ip.Get('Row').AsInteger);
       cfg.SetSize(ip.Get('Width').AsInteger, ip.Get('Height').AsInteger);
-      cp := ip.Get('ItemsStyle');
+      cp := ip.Get('Items.Style');
       if not cp.IsNull then
         begin
           cfg.SetChildrenSize(cp.Get('ColWidth').AsInteger, cp.Get('RowHeight').AsInteger);
@@ -205,7 +205,7 @@ procedure TNavigatorFrame.LoadConfig;
 var
   p: ICMParameter;
 begin
-  p := AppSystem.GetParameter.Get('Navigator.ItemsStyle');
+  p := AppSystem.GetParameter.Get('Navigator.Items.Style');
   if not p.IsNull then
     SetStyle(FListPanel.FHostingMenu, p);
   p := AppSystem.GetParameter.Get('Navigator.Items');
@@ -240,9 +240,10 @@ begin
   // TODO
   for i:=0 to FListPanel.FNodeList.Count-1 do
     begin
-      if FListPanel.FNodeList[0].GetConfig.GetName = ANodeName then
+      DefaultMessager.Debug('222222--%s', [FListPanel.FNodeList[i].GetConfig.GetName]);
+      if FListPanel.FNodeList[i].GetConfig.GetName = ANodeName then
         begin
-          Result := FListPanel.FNodeList[0];
+          Result := FListPanel.FNodeList[i];
           Exit;
         end;
     end;
@@ -363,8 +364,8 @@ end;
 
 procedure TNavigationNodePanel.ClickEvent(Sender: TObject);
 begin
-  //if Assigned(FListener) then
-  //  FListener.Click();
+  if Assigned(FListener) then
+    FListener.Click(TNavigatorNodeEvent.Create(Self, _NavigatorFrame, Self));
 end;
 
 procedure TNavigationNodePanel.DblClickEvent(Sender: TObject);
@@ -375,6 +376,8 @@ begin
       FChildrenPanel.Align := alClient;
       FChildrenPanel.FHostingMenu.ReLayout;
     end;
+  if Assigned(FListener) then
+    FListener.DblClick(TNavigatorNodeEvent.Create(Self, _NavigatorFrame, Self));
 end;
 
 constructor TNavigationNodePanel.Create(AOwner: TComponent; AParent: INavigationNode; AConfig: INavigationNodeConfig);

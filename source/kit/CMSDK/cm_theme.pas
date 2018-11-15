@@ -16,8 +16,7 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_interfaces,
-  cm_parameter;
+  cm_interfaces, cm_parameter, cm_plat;
 
 type
 
@@ -51,36 +50,47 @@ type
     function GetThemeNames: TStrings;
   end;
 
-  { TThemeableManager }
-
-  TThemeableManager = class
-  private
-    class var FTManager: TThemeableManager;
-  private
-    FSetList: TInterfaceList;
-    constructor Create; //Please do not use this constructor
-  public
-    class function GetInstance: TThemeableManager;
+  IThemeableManager = interface(ICMBase)
+    ['{CFF51A34-17D0-4AD0-94C6-DB1B63230553}']
     function AddThemeableSet(ASet: IThemeableSet): Boolean;
     function AddThemeable(AThemeable: IThemeable): Boolean;
     function RemoveThemeable(AThemeable: IThemeable): Boolean;
   end;
 
+  { TThemeableManager }
+
+  TThemeableManager = class(TCMBase, IThemeableManager)
+  private
+    FSetList: TInterfaceList;
+    constructor Create; //Please do not use this constructor
+  public
+    function AddThemeableSet(ASet: IThemeableSet): Boolean;
+    function AddThemeable(AThemeable: IThemeable): Boolean;
+    function RemoveThemeable(AThemeable: IThemeable): Boolean;
+  end;
+
+function GetThemeableManager: IThemeableManager;
+
 implementation
+
+var
+  _ThemeableManager: IThemeableManager;
+
+function GetThemeableManager: IThemeableManager;
+begin
+  if (not Assigned(_ThemeableManager)) and (not InterfaceRegister.OutInterface(IThemeableManager, _ThemeableManager)) then
+    begin
+      _ThemeableManager := TThemeableManager.Create;
+      InterfaceRegister.PutInterface(IThemeableManager, _ThemeableManager);
+    end;
+  Result := _ThemeableManager;
+end;
 
 { TThemeableManager }
 
 constructor TThemeableManager.Create;
 begin
   FSetList := TInterfaceList.Create;
-end;
-
-class function TThemeableManager.GetInstance: TThemeableManager;
-begin
-  Result := nil;
-  if not Assigned(TThemeableManager.FTManager) then
-    TThemeableManager.FTManager := TThemeableManager.Create;
-  Result := TThemeableManager.FTManager;
 end;
 
 function TThemeableManager.AddThemeableSet(ASet: IThemeableSet): Boolean;
@@ -113,11 +123,11 @@ begin
 end;
 
 initialization
-  TThemeableManager.FTManager := nil;
+  _ThemeableManager := nil;
 
 finalization
-  if Assigned(TThemeableManager.FTManager) then
-    TThemeableManager.FTManager.Free;
+  _ThemeableManager := nil;
+
 
 end.
 

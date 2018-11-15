@@ -26,6 +26,7 @@ type
   TSystemAdapter = class(TCMBase, ISystemListener)
   public
     procedure Loaded(e: ISystemEvent); virtual;
+    procedure Prepared(e: ISystemEvent); virtual;
     procedure Logined(e: ISystemEvent); virtual;
     procedure Logoutting(e: ISystemEvent); virtual;
     procedure Closing(e: ISystemEvent); virtual;
@@ -50,6 +51,11 @@ end;
 { TSystemAdapter }
 
 procedure TSystemAdapter.Loaded(e: ISystemEvent);
+begin
+
+end;
+
+procedure TSystemAdapter.Prepared(e: ISystemEvent);
 begin
 
 end;

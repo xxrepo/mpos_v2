@@ -19,7 +19,8 @@ unit cm_freegenerics;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils,
+  cm_classes;
 
 
 type
@@ -66,10 +67,10 @@ type
 
   generic TFGInterfaceListEnumerator<T: IUnknown> = class
   private
-    FList: TInterfaceList;
+    FList: TCMInterfaceList;
     FPosition: Integer;
   public
-    constructor Create(AList: TInterfaceList);
+    constructor Create(AList: TCMInterfaceList);
     function GetCurrent: T;
     function MoveNext: Boolean;
     property Current: T read GetCurrent;
@@ -77,7 +78,7 @@ type
 
   { TFGInterfaceList }
 
-  generic TFGInterfaceList<T: IUnknown> = class(TInterfaceList)
+  generic TFGInterfaceList<T: IUnknown> = class(TCMInterfaceList)
   protected
     function Get(Index: Integer): T;
     procedure Put(Index: Integer; AValue: T);
@@ -93,6 +94,8 @@ type
     function Remove(Item: T): Integer;
     function Expand: specialize TFGInterfaceList<T>;
     property Items[Index: Integer]: T read Get write Put; default;
+  public
+    function Clone: specialize TFGInterfaceList<T>;
   end;
 
 
@@ -237,9 +240,14 @@ begin
   Result := specialize TFGInterfaceList<T>(inherited Expand);
 end;
 
+function TFGInterfaceList.Clone: specialize TFGInterfaceList<T>;
+begin
+  Result := specialize TFGInterfaceList<T>(inherited Clone);
+end;
+
 { TFGInterfaceListEnumerator }
 
-constructor TFGInterfaceListEnumerator.Create(AList: TInterfaceList);
+constructor TFGInterfaceListEnumerator.Create(AList: TCMInterfaceList);
 begin
   inherited Create;
   FList:=AList;

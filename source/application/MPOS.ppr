@@ -8,7 +8,7 @@ uses
   {$ENDIF}
   Interfaces, // this includes the adLCL widgetset
   Forms,
-  uInitialize, uFormMain, cm_plat, cm_generics, uSystemBase, cm_AWTEventBuilder, uNavigator;
+  uInitialize, uFormMain, cm_plat;
 
 {$R *.res}
 

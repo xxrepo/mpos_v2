@@ -42,7 +42,10 @@ type
     FPeer: IAPeer;
   public
     constructor Create;
+    constructor Create(APeer: IAPeer); overload;
     destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+    function GetPeer: IAPeer;
   end;
 
   { TAFont }
@@ -409,6 +412,7 @@ type
     function GetPeer: IAFormPeer;
   public
     property BorderStyle: TFormBorderStyle read GetFormBorderStyle write SetFormBorderStyle;
+    procedure Close;
     function ShowModal: Integer;
   end;
 
@@ -425,10 +429,28 @@ begin
   FPeer := nil;
 end;
 
+constructor TAObject.Create(APeer: IAPeer);
+begin
+  if not Assigned(APeer) then
+    raise EAWTException.Create(PeerNilError);
+  FPeer := APeer;
+end;
+
 destructor TAObject.Destroy;
 begin
   FPeer := nil;
   inherited Destroy;
+end;
+
+procedure TAObject.Assign(Source: TPersistent);
+begin
+  if Assigned(Source) and (Source.UnitName = 'cm_AWT') and (Source.FieldAddress('GetPeer') <> nil) then
+    TAObject(Source).FPeer := Self.FPeer;
+end;
+
+function TAObject.GetPeer: IAPeer;
+begin
+  Result := FPeer;
 end;
 
 { TAFont }
@@ -1228,12 +1250,17 @@ end;
 
 function TAForm.GetPeer: IAFormPeer;
 begin
-  FPeer.QueryInterface(IAFormPeer, Result);
+  Result := IAFormPeer(FPeer);
+end;
+
+procedure TAForm.Close;
+begin
+  GetPeer.Close;
 end;
 
 function TAForm.ShowModal: Integer;
 begin
-  Result := IAFormPeer(FPeer).ShowModal;
+  Result := GetPeer.ShowModal;
 end;
 
 { TAControlBorderSpacing }

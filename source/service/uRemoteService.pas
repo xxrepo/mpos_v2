@@ -266,8 +266,6 @@ begin
   inherited Destroy;
 end;
 
-
-
 constructor TInitialClientResponse.Create();
 begin
   inherited Create();

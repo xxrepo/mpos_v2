@@ -39,6 +39,7 @@ type
     FSQLRunFileName : string;   //文件总列表的文件名  sqlrun.txt
     FScriptDelimiter : string;  //脚本的分隔符
     FSQLProcessedList :TList;  //已处理语句
+    FLastErrorInfo: string;
   public
     FTableInfos : array of RFileAndTableSCount;  //记录操作了哪些文件，文件里有哪个表，下发了多少数据
   published
@@ -47,11 +48,14 @@ type
     property PackFileList: TStringList read FPackFileList write FPackFileList;
     property ExtractPath: string read FExtractPath write FExtractPath;
     property SQLProcessedList: TList read FSQLProcessedList write FSQLProcessedList;
+    property LastErrorInfo: string read FLastErrorInfo write FLastErrorInfo;
   public
     constructor Create;
     destructor Destroy;override;
     //初始化准备工作
     function init:boolean;
+    //增加一个压缩包
+    function addPackage(fileName:string):boolean;
     //增加一个文件名
     function addTables(fileName,filePath,tableName:string;tsc:integer):boolean;
     //设置文件名对应的表名
@@ -85,6 +89,7 @@ begin
   FPackFileList := TStringList.Create;
   FSQLProcessedList := TList.Create;
   FExtractPath := '.'+PathDelim+'temp'+PathDelim;
+  FLastErrorInfo := '';
   Messager.Debug('Create');
 end;
 
@@ -104,6 +109,14 @@ begin
   FScriptDelimiter :='[-ENDOFSCRIPT-]';  //脚本的分隔符,默认值
   FSQLProcessedList.Clear;  //已处理语句
   SetLength(FTableInfos,0);
+end;
+
+function TSQLProcessTask.addPackage(fileName: string): boolean;
+begin
+  Result := True;
+  if PackFileList.IndexOf(fileName)>=0 then Exit;
+  PackFileList.Add(fileName);
+  Messager.Debug('数据解析模块增加一个压缩包:'+fileName);
 end;
 
 
@@ -258,13 +271,13 @@ begin
         loadSqlRun.Clear;
         loadsqlrun.LoadFromFile(runFile);
         //loadSqlRun.Text := (GetStrForUTF8File(runFile));
-        //DefaultMessager.Debug('TSQLProcessTask.loadSqlRunFileList 加载完成:'+runFile);
-        //DefaultMessager.Debug('TSQLProcessTask.loadSqlRunFileList sqlrun数据条数:'+inttostr(loadSqlRun.Count));
+        //Messager.Debug('TSQLProcessTask.loadSqlRunFileList 加载完成:'+runFile);
+        //Messager.Debug('TSQLProcessTask.loadSqlRunFileList sqlrun数据条数:'+inttostr(loadSqlRun.Count));
         //开始分解出文件名和记录数量
         for j := 0 to loadSqlRun.Count-1 do
         begin
           sqlRunLineStr := Trim(loadSqlRun.Strings[j]);
-          DefaultMessager.Debug(sqlRunLineStr);
+          Messager.Debug(sqlRunLineStr);
           filename := Copy(sqlRunLineStr, 1, system.Pos(',', sqlRunLineStr) - 1);
           fCount := StrToInt(Trim(Copy(sqlRunLineStr, system.Pos(',', sqlRunLineStr) + 1, length(sqlRunLineStr))));
           if not addTables(filename,packfilePath,'',fCount) then
@@ -316,9 +329,19 @@ begin
       'DELE':
       begin
         State := 1;
+        //DELETE FROM tbposPricebdis_temp[-ENDOFSCRIPT-]
+        //删除的语句基本也就一句，要记录下表名
+        tmpSqlLine := UpperCase(tmpSqlLine);
+        tableName := Copy(tmpSqlLine, 1, system.Pos('[', tmpSqlLine) - 1);  //DELETE FROM tbposPricebdis_temp
+        tableName := Trim(Copy(tableName, system.Pos('FROM', tableName) + 5, Length(tableName))); //tbposPricebdis_temp
+        if fileName<>'' then
+          setTablesTableName(fileName,tableName);
+        tableName := '';
+        ///////////////////////////////////////////
         tmpSqlLine := ReplaceStr(tmpSqlLine, '[-ENDOFSCRIPT-]', ';');
         HeadSql := tmpSqlLine;
         runSql := runSql + HeadSql + chr(13);
+
         //inc(sCount);
       end;
       'INSE':
@@ -391,7 +414,7 @@ begin
                 psqlr^.FSQLType:='DELETE';
                 psqlr^.FSQLStr:= runSql;
                 SQLProcessedList.Add(psqlr);
-                //DefaultMessager.Debug('DELETE:'+runSql);
+                //Messager.Debug('DELETE:'+runSql);
                 runSql := '';
               end;
             end;
@@ -420,7 +443,7 @@ begin
                 psqlr^.FSQLStr:= runSql;
                 SQLProcessedList.Add(psqlr);
                 sCount := 0;
-                //DefaultMessager.Debug('INSERT:'+runSql);
+                //Messager.Debug('INSERT:'+runSql);
                 runSql := '';
               end;
             end;
@@ -435,7 +458,7 @@ begin
                 psqlr^.FSQLType:='UPDATE';
                 psqlr^.FSQLStr:= runSql;
                 SQLProcessedList.Add(psqlr);
-                //DefaultMessager.Debug('UPDATE:'+runSql);
+                //Messager.Debug('UPDATE:'+runSql);
                 runSql := '';
               end;
             end;
@@ -452,7 +475,7 @@ begin
                 //psqlr^.FTableName:= tableName;
                 psqlr^.FSQLStr:= runSql;
                 SQLProcessedList.Add(psqlr);
-                //DefaultMessager.Debug('CREATE:'+runSql);
+                //Messager.Debug('CREATE:'+runSql);
                 runSql := '';
               end;
             end;
@@ -467,7 +490,7 @@ begin
                 psqlr^.FSQLType:='DROP';
                 psqlr^.FSQLStr:= runSql;
                 SQLProcessedList.Add(psqlr);
-                //DefaultMessager.Debug('DROP:'+runSql);
+                //Messager.Debug('DROP:'+runSql);
                 runSql := '';
               end;
             end
@@ -490,7 +513,7 @@ begin
     psqlr^.FSQLType:='INSERT';
     psqlr^.FSQLStr:= runSql;
     SQLProcessedList.Add(psqlr);
-    //DefaultMessager.Debug('INSERT:'+runSql);
+    //Messager.Debug('INSERT:'+runSql);
     runSql := '';
   end;
   Result := True;
@@ -537,15 +560,15 @@ begin
       end;
     end;
 
-    //DefaultMessager.Debug('输出测试');
+    //Messager.Debug('输出测试');
     //for i := 0 to length(FTableInfos)-1 do
     //begin
-    //  DefaultMessager.Debug('==================================');
-    //  DefaultMessager.Debug('FFileName='+FTableInfos[i].FFileName);
-    //  DefaultMessager.Debug('FFilePath='+FTableInfos[i].FFilePath);
-    //  DefaultMessager.Debug('FTableName='+FTableInfos[i].FTableName);
-    //  DefaultMessager.Debug('FTableSourceCount='+inttostr(FTableInfos[i].FTableSourceCount));
-    //  DefaultMessager.Debug('==================================');
+    //  Messager.Debug('==================================');
+    //  Messager.Debug('FFileName='+FTableInfos[i].FFileName);
+    //  Messager.Debug('FFilePath='+FTableInfos[i].FFilePath);
+    //  Messager.Debug('FTableName='+FTableInfos[i].FTableName);
+    //  Messager.Debug('FTableSourceCount='+inttostr(FTableInfos[i].FTableSourceCount));
+    //  Messager.Debug('==================================');
     //end;
 
     Result := True;

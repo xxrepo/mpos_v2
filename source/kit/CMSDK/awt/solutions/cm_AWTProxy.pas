@@ -327,6 +327,7 @@ type
   public
     function GetFormBorderStyle: TFormBorderStyle;
     procedure SetFormBorderStyle(AValue: TFormBorderStyle);
+    procedure Close;
     function ShowModal: Integer;
   end;
 
@@ -1158,6 +1159,11 @@ end;
 procedure TProxyFormPeer.SetFormBorderStyle(AValue: TFormBorderStyle);
 begin
   GetDelegate.BorderStyle := Controls.TFormBorderStyle(AValue);
+end;
+
+procedure TProxyFormPeer.Close;
+begin
+  GetDelegate.Close;
 end;
 
 function TProxyFormPeer.ShowModal: Integer;

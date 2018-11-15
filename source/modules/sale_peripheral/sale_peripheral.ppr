@@ -1,0 +1,45 @@
+library sale_peripheral;
+
+{$mode objfpc}{$H+}
+
+uses
+  {$IFDEF UNIX}
+  {$IFDEF UseCThreads}cthreads,{$ENDIF}
+  {$ENDIF}
+  Classes, cm_InterfaceRegister, cm_InterfaceLoader, cm_plat, uSaleQuery
+  { you can add units after this / 你可以在这之后增加单元 },
+  cm_messager, uNavigator,
+  uSystem;
+
+function LoadExport(ARegister: ICMInterfaceRegister;
+                    const AInfo: ICMLibInfo): Boolean; stdcall;
+
+begin
+  Result := False;
+  if not SetInterfaceRegister(ARegister) then
+    Exit;
+  {--------------------------------------------
+  这里增加加载库时代码
+  ---------------------------------------------}
+  AppSystem.AddPreparedOneOffExecute(TNavigatorNodeListener.Create);
+  //TNavigatorNodeListener.Create;
+  Result := True;
+
+
+end;
+
+function UnloadExport(AStatus: Integer): Boolean; stdcall;
+begin
+  Result := False;
+  {--------------------------------------------
+  这里增加卸载库时代码
+  ---------------------------------------------}
+  Result := True;
+end;
+
+exports
+  LoadExport, UnloadExport;
+
+begin
+end.
+

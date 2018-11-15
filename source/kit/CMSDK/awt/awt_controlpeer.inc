@@ -128,6 +128,7 @@
     ['{5A8A620E-272E-4724-B339-282802CE878E}']
     function GetFormBorderStyle: TFormBorderStyle;
     procedure SetFormBorderStyle(AValue: TFormBorderStyle);
+    procedure Close;
     function ShowModal: Integer;
   end;
 

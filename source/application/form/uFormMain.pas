@@ -72,7 +72,7 @@ begin
   FSaleFrame.Align := alClient;
   InterfaceRegister.PutInterface('ISaleBoard', ISaleBoard, FSaleFrame);
   //
-  FNavigatorFrame := TNavigatorFrame.Create(Self);
+  FNavigatorFrame := TNavigatorFrame.Create(nil);
   FNavigatorFrame.Parent := PanelRight;
   FNavigatorFrame.Align := alClient;
   //
@@ -126,6 +126,8 @@ begin
   //TODO 登陆
   FNavigatorFrame.LoadConfig;
   PanelRightHint.Width := 12;
+  //
+  POSInitialize.NotifySystem('Prepared');
 end;
 
 procedure TMainForm.PanelRightHintDblClick(Sender: TObject);

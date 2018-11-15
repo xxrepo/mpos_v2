@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils,
   Generics.Collections, Generics.Defaults,
-  cm_interfaces, cm_messager,
+  cm_interfaces, cm_messager, cm_freegenerics,
   cm_InterfaceRegister;
 
 type
@@ -57,10 +57,13 @@ type
     function Next(out theIID: TGUID; out theIntf): Boolean; overload;
   end;
 
+  { TCMInterfaceRegister }
+
   TCMInterfaceRegister = class(TCMMessageableComponent, ICMInterfaceRegister)
   private
     FList: TCMInterfaceList;
     FLock: TRTLCriticalSection;
+    FListenerList: TCMInterfaceRegisterListener;
     function generateLogStr(const AIID: TGUID; const ACode: string): string;
   protected
     function  LockList: TCMInterfaceList;
@@ -74,6 +77,30 @@ type
     function OutInterface(const AIID: TGUID; out theIntf; const ACode: string=''): Boolean;
     function CutInterface(const AIID: TGUID; const ACode: string=''): Integer;
     function Iterator: ICMInterfaceIterator;
+    //----------------------------------------------------------------------------------------------
+    function IsExist(const AIID: TGUID; const ACode: string=''): Boolean;
+    procedure AddInterfaceRegisterListener(l: ICMInterfaceRegisterListener);
+    procedure RemoveInterfaceRegisterListener(l: ICMInterfaceRegisterListener);
+    function GetInterfaceRegisterListeners: TCMInterfaceRegisterListener;
+  end;
+
+  { TCMInterfaceRegisterEvent }
+
+  TCMInterfaceRegisterEvent = class(TCMEvent, ICMInterfaceRegisterEvent)
+  private
+    FDescription: string;
+    FIID: TGUID;
+    FIntf: IUnknown;
+    FCode: string;
+    FIsAble: Boolean;
+  public
+    constructor Create(ASource: TObject; const ADescription: string; AIID: TGUID; AIntf: IUnknown; const ACode: string); reintroduce;
+    function GetDescription: string;
+    function GetIID: TGUID;
+    function GetIntf: IUnknown;
+    function GetCode: string;
+    function IsAble: Boolean;
+    procedure SetAble(b: Boolean);
   end;
 
 implementation
@@ -231,6 +258,7 @@ begin
   inherited Create(AOwner);
   InitCriticalSection(FLock);
   Flist := TCMInterfaceList.Create;
+  FListenerList := TCMInterfaceRegisterListener.Create;
 end;
 
 destructor TCMInterfaceRegister.Destroy;
@@ -238,6 +266,7 @@ begin
   LockList;
   try
     Flist.Free;
+    FListenerList.Free;
     inherited Destroy;
   finally
     UnlockList;
@@ -264,12 +293,32 @@ end;
 function TCMInterfaceRegister.PutInterface(const ACell: TCMInterfaceCell): Integer;
 var
   str: string;
+  er: TFGInterfaceListEnumerator<ICMInterfaceRegisterListener>;
+  ire: ICMInterfaceRegisterEvent;
+  ertn: Boolean;
 begin
   Result := -1;
   str := ACell.ToString;
   try
     LockList;
     try
+      if FListenerList.Count > 0 then
+        begin
+          ertn := True;
+          er := FListenerList.GetEnumerator;
+          while er.MoveNext do
+            begin
+              ire := TCMInterfaceRegisterEvent.Create(Self, ACell.Description, ACell.IID, ACell.Intf, ACell.Code);
+              er.GetCurrent.Putting(ire);
+              ertn := ire.IsAble and ertn;
+            end;
+          if not ertn then
+            begin
+              Messager.Warning('Put failure(event Event handling is not allowed).' + str);
+              Exit;
+            end;
+        end;
+      //
       Result := Flist.Add(ACell);
     finally
       UnlockList;
@@ -308,6 +357,9 @@ var
   str: string;
   i: Integer;
   aCell: TCMInterfaceCell;
+  er: TFGInterfaceListEnumerator<ICMInterfaceRegisterListener>;
+  ire: ICMInterfaceRegisterEvent;
+  ertn: Boolean;
 begin
   Result := False;
   IUnknown(theIntf) := nil;
@@ -324,7 +376,25 @@ begin
                 begin
                   Result := aCell.Intf.QueryInterface(AIID, theIntf) = S_OK;
                   if Result then
-                    Messager.Custom('Out >> ' + aCell.ToString)
+                    begin
+                      if FListenerList.Count > 0 then
+                        begin
+                          ertn := True;
+                          er := FListenerList.GetEnumerator;
+                          while er.MoveNext do
+                            begin
+                              ire := TCMInterfaceRegisterEvent.Create(Self, ACell.Description, ACell.IID, ACell.Intf, ACell.Code);
+                              er.GetCurrent.Outting(ire);
+                              ertn := ire.IsAble and ertn;
+                            end;
+                          if not ertn then
+                            begin
+                              Messager.Warning('Out failure(event Event handling is not allowed).' + str);
+                              Exit;
+                            end;
+                        end;
+                      Messager.Custom('Out >> ' + aCell.ToString);
+                    end
                   else
                     Messager.Warning('Out failure. Not support ' + aCell.ToString);
                 end
@@ -349,12 +419,32 @@ end;
 function TCMInterfaceRegister.CutInterface(const AIID: TGUID; const ACode: string=''): Integer;
 var
   aCell: TCMInterfaceCell;
+  er: TFGInterfaceListEnumerator<ICMInterfaceRegisterListener>;
+  ire: ICMInterfaceRegisterEvent;
+  ertn: Boolean;
 begin
   Result := -1;
   aCell := TCMInterfaceCell.Create(AIID, nil, ACode, '');
   LockList;
   try
+    if (FListenerList.Count > 0) and (FList.IndexOf(aCell) > 0) then
+      begin
+        ertn := True;
+        er := FListenerList.GetEnumerator;
+        while er.MoveNext do
+          begin
+            ire := TCMInterfaceRegisterEvent.Create(Self, ACell.Description, ACell.IID, ACell.Intf, ACell.Code);
+            er.GetCurrent.Outting(ire);
+            ertn := ire.IsAble and ertn;
+          end;
+        if not ertn then
+          begin
+            Messager.Warning('Cut failure(event Event handling is not allowed).' + aCell.ToString);
+            Exit;
+          end;
+      end;
     Result := FList.Remove(aCell);
+    Messager.Custom('Cut >> ' + aCell.ToString)
   finally
     UnlockList;
     if Assigned(aCell) then
@@ -381,6 +471,112 @@ begin
     UnlockList;
   end;
   Result := TCMInterfaceIterator.Create(Self, cloneList);
+end;
+
+function TCMInterfaceRegister.IsExist(const AIID: TGUID; const ACode: string): Boolean;
+var
+  str: string;
+  i: Integer;
+  aCell: TCMInterfaceCell;
+begin
+  Result := False;
+  str := Self.generateLogStr(AIID, ACode);
+  try
+    LockList;
+    try
+      for i:=FList.Count-1 downto 0 do
+        begin
+          aCell := FList[i];
+          if (aCell.Code = ACode) and IsEqualGUID(ACell.IID, AIID) then
+            begin
+              Messager.Custom('Exists >> ' + aCell.ToString);
+              Result := True;
+              Exit;
+            end;
+        end;
+    finally
+      UnlockList;
+    end;
+  except
+    on e: Exception do
+      begin
+        Messager.Error('An error occurred while judgment exists. %s %s ' + str, e);
+        Exit;
+      end;
+  end;
+  Messager.Custom('Not exists (Not found).' + str);
+end;
+
+procedure TCMInterfaceRegister.AddInterfaceRegisterListener(l: ICMInterfaceRegisterListener);
+begin
+  LockList;
+  try
+    FListenerList.Add(l);
+  finally
+    UnlockList;
+  end;
+end;
+
+procedure TCMInterfaceRegister.RemoveInterfaceRegisterListener(l: ICMInterfaceRegisterListener);
+begin
+  LockList;
+  try
+    FListenerList.Remove(l);
+  finally
+    UnlockList;
+  end;
+end;
+
+function TCMInterfaceRegister.GetInterfaceRegisterListeners: TCMInterfaceRegisterListener;
+begin
+  LockList;
+  try
+    Result := FListenerList.Clone;
+  finally
+    UnlockList;
+  end;
+end;
+
+{ TCMInterfaceRegisterEvent }
+
+constructor TCMInterfaceRegisterEvent.Create(ASource: TObject; const ADescription: string; AIID: TGUID; AIntf: IUnknown; const ACode: string);
+begin
+  inherited Create(ASource);
+  FDescription := ADescription;
+  FIID := AIID;
+  FIntf := AIntf;
+  FCode := ACode;
+  FIsAble := True;
+end;
+
+function TCMInterfaceRegisterEvent.GetDescription: string;
+begin
+  Result := FDescription;
+end;
+
+function TCMInterfaceRegisterEvent.GetIID: TGUID;
+begin
+  Result := FIID;
+end;
+
+function TCMInterfaceRegisterEvent.GetIntf: IUnknown;
+begin
+  Result := FIntf;
+end;
+
+function TCMInterfaceRegisterEvent.GetCode: string;
+begin
+  Result := FCode;
+end;
+
+function TCMInterfaceRegisterEvent.IsAble: Boolean;
+begin
+  Result := FIsAble;
+end;
+
+procedure TCMInterfaceRegisterEvent.SetAble(b: Boolean);
+begin
+  FIsAble := b;
 end;
 
 
