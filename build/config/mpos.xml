@@ -6,11 +6,11 @@
 		<logo>resource/logo.png</logo>
 	</resources>  
 	<configFiles>	 
-		 <f>config/navigator.xml</f>
-		 <f>config/authlicense.xml</f>
-		 <f>config/company.xml</f>
-		 <f>config/server.xml</f>
-		 <f>config/datasync.xml</f> 
+		<navigator>config/navigator.xml</navigator>
+		<f>config/authlicense.xml</f>
+		<f>config/company.xml</f>
+	    <f>config/server.xml</f>
+	    <f>config/datasync.xml</f>  
 	</configFiles>
 
 </mpos>

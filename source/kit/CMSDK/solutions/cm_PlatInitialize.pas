@@ -125,7 +125,7 @@ procedure InitPlat(AHandler: ICMMessageHandler);
 begin
   cm_messager.TCMMessageManager.DefaultHandler := AHandler;
   {$IFDEF LCL}
-  aRegister := TCMInterfaceRegister.Create(Application);
+  aRegister := TCMInterfaceRegister.Create(nil);
   {$ELSE}
   aRegister := TCMInterfaceRegister.Create(nil);
   {$ENDIF}

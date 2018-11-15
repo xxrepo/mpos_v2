@@ -151,7 +151,7 @@ begin
   FListPanel.BevelOuter := bvNone;
   //
   _NavigatorFrame := Self;
-  InterfaceRegister.PutInterface(INavigator, Self);
+  InterfaceRegister.PutInterface('INavigator', INavigator, Self);
 end;
 
 procedure SetStyle(menu: TCMGridLayoutMenu; param: ICMParameter);

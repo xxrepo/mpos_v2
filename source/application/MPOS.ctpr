@@ -282,8 +282,9 @@
         <IsPartOfProject Value="True"/>
       </Unit55>
       <Unit56>
-        <Filename Value="..\kit\CMSDK\cm_plat.pas"/>
+        <Filename Value="..\kit\CMSDK\cm_Plat.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="cm_plat"/>
       </Unit56>
       <Unit57>
         <Filename Value="..\kit\CMSDK\awt\awt_base.inc"/>

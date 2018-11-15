@@ -168,6 +168,7 @@ begin
                 node.Free;
               end;
           end;
+        Messager.Info('结束加载配置的XML文件参数.');
       end;
   finally
     ns.Free;
