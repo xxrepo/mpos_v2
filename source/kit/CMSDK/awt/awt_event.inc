@@ -1,6 +1,14 @@
 
 type
 
+  {-----------------------------------------------------------
+
+       LCL 的事件模式是对类指定回调函数地址，这可能在不同编译中存在类型强制转换、
+   代码把控不严等而造成内存地址错乱的问题。同时其模式是耦合在一起的，且只能指定一个回调函数。
+   这里抛弃了 LCL 的这一模式。
+
+  -----------------------------------------------------------}
+
   IControlEvent = interface(ICMEvent)
     ['{50ABB64A-498C-4364-9E55-F4B5EE6860F0}']
     function GetAControl: TAControl;
@@ -9,13 +17,54 @@ type
   { IControlListener }
 
   IControlListener = interface(ICMListener)
-    ['{9E755FA8-F5D9-43B6-AF0A-1ACDDE80404A}']
+    ['{9AB1F294-33E8-43F1-800F-D3F3D2452713}']
     procedure ControlClick(e: IControlEvent);
-    procedure ControlDblClick(e: IControlEvent);
+    procedure ControlDblClick(e: IControlEvent); //Control 未公开，在公开的子类中使用。
     procedure ControlResize(e: IControlEvent);
   end;
 
   TControlListenerList = specialize TFGInterfaceList<IControlListener>;
+
+  IWinControlEvent = interface(IControlEvent)
+    ['{50ABB64A-498C-4364-9E55-F4B5EE6860F0}']
+    function GetAWinControl: TAWinControl;
+  end;
+
+  IWinControlListener = interface(IControlListener)
+    ['{D44601BB-6A97-4C39-8545-182B27224DAE}']
+    procedure ControlEnter(e: IWinControlEvent);
+    procedure ControlExit(e: IWinControlEvent);
+  end;
+
+  TWinControlListenerList = specialize TFGInterfaceList<IWinControlListener>;
+
+  ICustomControlEvent = interface(IWinControlEvent)
+    ['{C633D6A0-484D-48A4-BA6C-9A968EB336D8}']
+    function GetACustomControl: TACustomControl;
+  end;
+
+  ICustomControlListener = interface(IWinControlListener)
+    ['{E27DCA5F-6472-486D-AB59-8339AECE3CCE}']
+    procedure ControlPaint(e: ICustomControlEvent);
+  end;
+
+  TCustomControlListenerList = specialize TFGInterfaceList<ICustomControlListener>;
+
+  IFormEvent = interface(ICustomControlEvent)
+    ['{9BF85BE1-7BB4-4A08-AAE2-3C8C16B878C5}']
+    function GetAForm: TAForm;
+  end;
+
+  IFormListener = interface(ICustomControlListener)
+    ['{199F7D95-13C8-4BCB-995C-9D05F9A27240}']
+    procedure FormActivate(e: IFormEvent);
+    procedure FormClose(e: IFormEvent);
+    procedure FormCreate(e: IFormEvent);
+    procedure FormHide(e: IFormEvent);
+    procedure FormShow(e: IFormEvent);
+  end;
+
+  TFormListenerList = specialize TFGInterfaceList<IFormListener>;
 
   { IKeyEvent
     // 表示组件中发生键击的事件。

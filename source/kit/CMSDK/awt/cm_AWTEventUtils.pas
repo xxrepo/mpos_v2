@@ -20,6 +20,14 @@ type
     procedure ControlResize(e: IControlEvent); virtual;
   end;
 
+  { TWinControlAdapter }
+
+  TWinControlAdapter = class(TControlAdapter, IWinControlListener)
+  public
+    procedure ControlEnter(e: IWinControlEvent); virtual;
+    procedure ControlExit(e: IWinControlEvent); virtual;
+  end;
+
   { TKeyAdapter
     // 接收键盘事件的抽象适配器类。此类中的方法为空。此类存在的目的是方便创建侦听器对象。
     //扩展此类即可创建 KeyEvent 侦听器并重写所需事件的方法。（如果要实现 KeyListener 接口，则必须
@@ -52,6 +60,18 @@ begin
 
 end;
 
+{ TWinControlAdapter }
+
+procedure TWinControlAdapter.ControlEnter(e: IWinControlEvent);
+begin
+
+end;
+
+procedure TWinControlAdapter.ControlExit(e: IWinControlEvent);
+begin
+
+end;
+
 { TKeyAdapter }
 
 procedure TKeyAdapter.KeyPressed(e: IKeyEvent);
@@ -68,6 +88,7 @@ procedure TKeyAdapter.KeyTyped(e: IKeyEvent);
 begin
 
 end;
+
 
 end.
 

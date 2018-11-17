@@ -96,6 +96,8 @@ type
     function Clone: TCMInterfaceList;
   end;
 
+  TCMInterfaceListClass = class of TCMInterfaceList;
+
 implementation
 
 { TCMThreadList }

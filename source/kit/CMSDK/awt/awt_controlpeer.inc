@@ -25,6 +25,7 @@
   IAControlPeer = interface(IAComponentPeer)
     ['{E1192DCA-5D61-4D56-AB24-0D3CA216FE54}']
     function GetAlign: TAlign;
+    function GetAutoSize: Boolean;
     function GetBorderSpacing: TAControlBorderSpacing;
     function GetBoundsRect: TRect;
     function GetColor: TColor;
@@ -37,6 +38,7 @@
     function GetVisible: Boolean;
     function GetWidth: Integer;
     procedure SetAlign(AValue: TAlign);
+    procedure SetAutoSize(AValue: Boolean);
     procedure SetBorderSpacing(AValue: TAControlBorderSpacing);
     procedure SetBoundsRect(AValue: TRect);
     procedure SetColor(AValue: TColor);
@@ -72,9 +74,12 @@
   end;
 
   IAWinControlPeer = interface(IAControlPeer)
-    ['{F34E9CA5-AFE6-4AA0-8D35-FD81DC1A6956}']
+    ['{5E8453F9-0B30-4ECC-B465-B682826E392F}']
     function GetControl(AIndex: Integer): TAControl;
     function GetControlCount: Integer;
+    function GetShowing: Boolean;
+    function GetTabOrder: TTabOrder;
+    procedure SetTabOrder(AValue: TTabOrder);
     procedure InsertControl(AControl: TAControl);
     procedure RemoveControl(AControl: TAControl);
     //
@@ -82,18 +87,23 @@
     function CanSetFocus: Boolean;
     function Focused: Boolean;
     procedure SetFocus;
+    procedure AddWinControlListener(l: IWinControlListener);
+    procedure RemoveWinControlListener(l: IWinControlListener);
+    function GetWinControlListeners: TWinControlListenerList;
     procedure AddKeyListener(l: IKeyListener);
     procedure RemoveKeyListener(l: IKeyListener);
     function GetKeyListeners: TKeyListenerList;
   end;
 
   IACustomControlPeer = interface(IAWinControlPeer)
-    ['{78B50173-8CA7-4176-A6BD-404570BDD6DE}']
+    ['{59304415-85DA-463B-9335-625787C6DEC8}']
     function GetBorderStyle: TBorderStyle;
     function GetCanvas: TACanvas;
     procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetCanvas(AValue: TACanvas);
-    //property OnPaint: TNotifyEvent read FOnPaint write FOnPaint;
+    procedure AddCustomControlListener(l: ICustomControlListener);
+    procedure RemoveCustomControlListener(l: ICustomControlListener);
+    function GetCustomControlListeners: TCustomControlListenerList;
   end;
 
   IALabelPeer = interface(IAGraphicControlPeer)
@@ -125,11 +135,14 @@
   end;
 
   IAFormPeer = interface(IAWinControlPeer)
-    ['{5A8A620E-272E-4724-B339-282802CE878E}']
+    ['{C5BAADBB-C30B-4EE5-BA3B-53200EFC0729}']
     function GetFormBorderStyle: TFormBorderStyle;
     procedure SetFormBorderStyle(AValue: TFormBorderStyle);
     procedure Close;
     function ShowModal: Integer;
+    procedure AddFormListener(l: IFormListener);
+    procedure RemoveFormListener(l: IFormListener);
+    function GetFormListeners: TFormListenerList;
   end;
 
 

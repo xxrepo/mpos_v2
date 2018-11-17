@@ -17,8 +17,8 @@ unit cm_AWTProxy;
 interface
 
 uses
-  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics,
-  cm_interfaces, cm_messager, cm_dialogs,
+  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics, Dialogs,
+  cm_interfaces, cm_messager, cm_dialogs, cm_classes,
   cm_AWT, cm_AWTEventBuilder;
 
 type
@@ -176,8 +176,11 @@ type
   private
     FFont: TAFont;
     FBorderSpacing: TAControlBorderSpacing;
-    FControlListenerList: TControlListenerList;
     class var FControlPeerList: TFPList;
+  protected
+    FControlListenerList: TControlListenerList; //同时用于子类扩展
+    procedure ControlDblClickEvent(Sender: TObject); //Control 未公开，在公开的子类中使用。
+    procedure RegisterControlEvents; virtual;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
@@ -186,6 +189,7 @@ type
     procedure ControlResizeEvent(Sender: TObject);
   public
     function GetAlign: TAlign;
+    function GetAutoSize: Boolean;
     function GetBorderSpacing: TAControlBorderSpacing;
     function GetBoundsRect: TRect;
     function GetColor: TColor;
@@ -198,6 +202,7 @@ type
     function GetVisible: Boolean;
     function GetWidth: Integer;
     procedure SetAlign(AValue: TAlign);
+    procedure SetAutoSize(AValue: Boolean);
     procedure SetBorderSpacing(AValue: TAControlBorderSpacing);
     procedure SetBoundsRect(AValue: TRect);
     procedure SetColor(AValue: TColor);
@@ -237,16 +242,23 @@ type
   private
     FControls: TFPList;    // the child controls
     FKeyListenerList: TKeyListenerList;
+  protected
+    procedure RegisterWinControlEvents; virtual;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
     function GetDelegate: TWinControl;
+    procedure WinControlEnterEvent(Sender: TObject);
+    procedure WinControlExitEvent(Sender: TObject);
     procedure KeyDownEvent(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure KeyPressEvent(Sender: TObject; var Key: Char);
     procedure KeyUpEvent(Sender: TObject; var Key: Word; Shift: TShiftState);
   public
     function GetControl(AIndex: Integer): TAControl;
     function GetControlCount: Integer;
+    function GetShowing: Boolean;
+    function GetTabOrder: TTabOrder;
+    procedure SetTabOrder(AValue: TTabOrder);
     procedure InsertControl(AControl: TAControl);
     procedure RemoveControl(AControl: TAControl);
     //
@@ -254,6 +266,9 @@ type
     function CanSetFocus: Boolean;
     function Focused: Boolean;
     procedure SetFocus;
+    procedure AddWinControlListener(l: IWinControlListener);
+    procedure RemoveWinControlListener(l: IWinControlListener);
+    function GetWinControlListeners: TWinControlListenerList;
     procedure AddKeyListener(l: IKeyListener);
     procedure RemoveKeyListener(l: IKeyListener);
     function GetKeyListeners: TKeyListenerList;
@@ -264,20 +279,28 @@ type
   TProxyCustomControlPeer = class(TProxyWinControlPeer, IACustomControlPeer)
   private
     FCanvas: TACanvas;
+  protected
+    procedure RegisterCustomControlEvents;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
     function GetDelegate: TCustomControl;
+    procedure CustomControlPaintEvent(Sender: TObject);
   public
     function GetBorderStyle: TBorderStyle;
     function GetCanvas: TACanvas;
     procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetCanvas(AValue: TACanvas);
+    procedure AddCustomControlListener(l: ICustomControlListener);
+    procedure RemoveCustomControlListener(l: ICustomControlListener);
+    function GetCustomControlListeners: TCustomControlListenerList;
   end;
 
   { TProxyLabelPeer }
 
   TProxyLabelPeer = class(TProxyGraphicControlPeer, IALabelPeer)
+  protected
+    procedure RegisterControlEvents; override;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TLabel;
@@ -291,6 +314,8 @@ type
   { TProxyPanelPeer }
 
   TProxyPanelPeer = class(TProxyCustomControlPeer, IAPanelPeer)
+  protected
+    procedure RegisterWinControlEvents; override;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TPanel;
@@ -310,6 +335,8 @@ type
   { TProxyEditPeer }
 
   TProxyEditPeer = class(TProxyWinControlPeer, IAEditPeer)
+  protected
+    procedure RegisterWinControlEvents; override;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TEdit;
@@ -320,15 +347,26 @@ type
 
   { TProxyFormPeer }
 
-  TProxyFormPeer = class(TProxyWinControlPeer, IAFormPeer)
+  TProxyFormPeer = class(TProxyCustomControlPeer, IAFormPeer)
+  protected
+    procedure RegisterWinControlEvents; override;
+    procedure RegisterFormControlEvents;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TForm;
+    procedure FormActivateEvent(Sender: TObject);
+    procedure FormCloseEvent(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCreateEvent(Sender: TObject);
+    procedure FormHideEvent(Sender: TObject);
+    procedure FormShowEvent(Sender: TObject);
   public
     function GetFormBorderStyle: TFormBorderStyle;
     procedure SetFormBorderStyle(AValue: TFormBorderStyle);
     procedure Close;
     function ShowModal: Integer;
+    procedure AddFormListener(l: IFormListener);
+    procedure RemoveFormListener(l: IFormListener);
+    function GetFormListeners: TFormListenerList;
   end;
 
   { TProxyToolkit }
@@ -510,9 +548,22 @@ var
 begin
   if Assigned(FControlListenerList) then
     begin
-      ce := TControlEvent.BuildControlEvent(Sender, TAControl(Self.FTargetObj));
+      ce := TControlEvent.Create(Sender, TAControl(Self.FTargetObj));
       for i:=0 to FControlListenerList.Count-1 do
-        FControlListenerList[i].ControlClick(ce);
+        TControlListenerList(FControlListenerList)[i].ControlClick(ce);
+    end;
+end;
+
+procedure TProxyControlPeer.ControlDblClickEvent(Sender: TObject);
+var
+  i: Integer;
+  ce: IControlEvent;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      ce := TControlEvent.Create(Sender, TAControl(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        TControlListenerList(FControlListenerList)[i].ControlDblClick(ce);
     end;
 end;
 
@@ -523,15 +574,20 @@ var
 begin
   if Assigned(FControlListenerList) then
     begin
-      ce := TControlEvent.BuildControlEvent(Sender, TAControl(Self.FTargetObj));
+      ce := TControlEvent.Create(Sender, TAControl(Self.FTargetObj));
       for i:=0 to FControlListenerList.Count-1 do
-        FControlListenerList[i].ControlResize(ce);
+        TControlListenerList(FControlListenerList)[i].ControlResize(ce);
     end;
 end;
 
 function TProxyControlPeer.GetAlign: TAlign;
 begin
   Result := cm_AWT.TAlign(GetDelegate.Align);
+end;
+
+function TProxyControlPeer.GetAutoSize: Boolean;
+begin
+  Result := GetDelegate.AutoSize;
 end;
 
 function TProxyControlPeer.GetBorderSpacing: TAControlBorderSpacing;
@@ -656,6 +712,11 @@ begin
   GetDelegate.Align := Controls.TAlign(AValue);
 end;
 
+procedure TProxyControlPeer.SetAutoSize(AValue: Boolean);
+begin
+  GetDelegate.AutoSize := AValue;
+end;
+
 procedure TProxyControlPeer.SetBorderSpacing(AValue: TAControlBorderSpacing);
 begin
   if FBorderSpacing = AValue then
@@ -766,13 +827,18 @@ begin
   GetDelegate.Update;
 end;
 
+procedure TProxyControlPeer.RegisterControlEvents;
+begin
+  GetDelegate.OnClick := @ControlClickEvent;
+  GetDelegate.OnResize := @ControlResizeEvent;
+end;
+
 procedure TProxyControlPeer.AddControlListener(l: IControlListener);
 begin
   if not Assigned(FControlListenerList) then
     begin
       FControlListenerList := TControlListenerList.Create;
-      GetDelegate.OnClick := @ControlClickEvent;
-      GetDelegate.OnResize := @ControlResizeEvent;
+      RegisterControlEvents;
     end;
   FControlListenerList.Add(l);
 end;
@@ -788,10 +854,9 @@ begin
   if not Assigned(FControlListenerList) then
     begin
       FControlListenerList := TControlListenerList.Create;
-      GetDelegate.OnClick := @ControlClickEvent;
-      GetDelegate.OnResize := @ControlResizeEvent;
+      RegisterControlEvents;
     end;
-  Result := FControlListenerList;
+  Result := TControlListenerList(FControlListenerList).Clone;
 end;
 
 { TProxyWinControlPeer }
@@ -822,6 +887,36 @@ begin
   Result := TWinControl(FDelegateObj);
 end;
 
+procedure TProxyWinControlPeer.WinControlEnterEvent(Sender: TObject);
+var
+  i: Integer;
+  wce: IWinControlEvent;
+  wcl: IWinControlListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      wce := TWinControlEvent.Create(Sender, TAWinControl(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if FControlListenerList[i].QueryInterface(IWinControlListener, wcl) = S_OK then
+          wcl.ControlEnter(wce);
+    end;
+end;
+
+procedure TProxyWinControlPeer.WinControlExitEvent(Sender: TObject);
+var
+  i: Integer;
+  wce: IWinControlEvent;
+  wcl: IWinControlListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      wce := TWinControlEvent.Create(Sender, TAWinControl(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if FControlListenerList[i].QueryInterface(IWinControlListener, wcl) = S_OK then
+          wcl.ControlExit(wce);
+    end;
+end;
+
 procedure TProxyWinControlPeer.KeyDownEvent(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
   i: Integer;
@@ -829,7 +924,7 @@ var
 begin
   if Assigned(FKeyListenerList) then
     begin
-      ke := TKeyEvent.BuildKeyEvent(Sender, Char(Key), Key);
+      ke := TKeyEvent.Create(Sender, Key);
       for i:=0 to FKeyListenerList.Count-1 do
         begin
           FKeyListenerList[i].KeyPressed(ke);
@@ -845,7 +940,7 @@ var
 begin
   if Assigned(FKeyListenerList) then
     begin
-      ke := TKeyEvent.BuildKeyEvent(Sender, Key, Ord(Key));
+      ke := TKeyEvent.Create(Sender, Key);
       for i:=0 to FKeyListenerList.Count-1 do
         begin
           FKeyListenerList[i].KeyTyped(ke);
@@ -861,7 +956,7 @@ var
 begin
   if Assigned(FKeyListenerList) then
     begin
-      ke := TKeyEvent.BuildKeyEvent(Sender, Char(Key), Key);
+      ke := TKeyEvent.Create(Sender, Key);
       for i:=0 to FKeyListenerList.Count-1 do
         begin
           FKeyListenerList[i].KeyReleased(ke);
@@ -892,6 +987,21 @@ end;
 function TProxyWinControlPeer.GetControlCount: Integer;
 begin
   Result := GetDelegate.ControlCount;
+end;
+
+function TProxyWinControlPeer.GetShowing: Boolean;
+begin
+  Result := GetDelegate.Showing;
+end;
+
+function TProxyWinControlPeer.GetTabOrder: TTabOrder;
+begin
+  Result := GetDelegate.TabOrder;
+end;
+
+procedure TProxyWinControlPeer.SetTabOrder(AValue: TTabOrder);
+begin
+  GetDelegate.TabOrder := AValue;
 end;
 
 procedure TProxyWinControlPeer.InsertControl(AControl: TAControl);
@@ -932,6 +1042,39 @@ end;
 procedure TProxyWinControlPeer.SetFocus;
 begin
   GetDelegate.SetFocus;
+end;
+
+procedure TProxyWinControlPeer.RegisterWinControlEvents;
+begin
+  GetDelegate.OnEnter := @WinControlEnterEvent;
+  GetDelegate.OnExit := @WinControlExitEvent;
+end;
+
+procedure TProxyWinControlPeer.AddWinControlListener(l: IWinControlListener);
+begin
+  if not Assigned(FControlPeerList) then
+    begin
+      FControlListenerList := TControlListenerList.Create;
+      RegisterControlEvents;
+      RegisterWinControlEvents;
+    end;
+  FControlListenerList.Add(l);
+end;
+
+procedure TProxyWinControlPeer.RemoveWinControlListener(l: IWinControlListener);
+begin
+  Self.RemoveControlListener(l);
+end;
+
+function TProxyWinControlPeer.GetWinControlListeners: TWinControlListenerList;
+begin
+  if not Assigned(FControlListenerList) then
+    begin
+      FControlListenerList := TControlListenerList.Create;
+      RegisterControlEvents;
+      RegisterWinControlEvents;
+    end;
+  Result := TWinControlListenerList(FControlListenerList).Clone;
 end;
 
 procedure TProxyWinControlPeer.AddKeyListener(l: IKeyListener);
@@ -984,6 +1127,21 @@ begin
   Result := TCustomControl(FDelegateObj);
 end;
 
+procedure TProxyCustomControlPeer.CustomControlPaintEvent(Sender: TObject);
+var
+  i: Integer;
+  cce: ICustomControlEvent;
+  ccl: ICustomControlListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      cce := TCustomControlEvent.Create(Sender, TACustomControl(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if FControlListenerList[i].QueryInterface(ICustomControlListener, ccl) = S_OK then
+          ccl.ControlPaint(cce);
+    end;
+end;
+
 function TProxyCustomControlPeer.GetBorderStyle: TBorderStyle;
 begin
   Result := cm_AWT.TBorderStyle(GetDelegate.BorderStyle);
@@ -1018,7 +1176,46 @@ begin
     GetDelegate.Canvas := TCanvas(FCanvas.GetPeer.GetDelegate);
 end;
 
+procedure TProxyCustomControlPeer.RegisterCustomControlEvents;
+begin
+  GetDelegate.OnPaint := @CustomControlPaintEvent;
+end;
+
+procedure TProxyCustomControlPeer.AddCustomControlListener(l: ICustomControlListener);
+begin
+  if not Assigned(FControlPeerList) then
+    begin
+      FControlListenerList := TControlListenerList.Create;
+      RegisterControlEvents;
+      RegisterWinControlEvents;
+      RegisterCustomControlEvents;
+    end;
+  FControlListenerList.Add(l);
+end;
+
+procedure TProxyCustomControlPeer.RemoveCustomControlListener(l: ICustomControlListener);
+begin
+  Self.RemoveControlListener(l);
+end;
+
+function TProxyCustomControlPeer.GetCustomControlListeners: TCustomControlListenerList;
+begin
+  if not Assigned(FControlListenerList) then
+    begin
+      FControlListenerList := TControlListenerList.Create;
+      RegisterControlEvents;
+      RegisterWinControlEvents;
+      RegisterCustomControlEvents;
+    end;
+  Result := TCustomControlListenerList(FControlListenerList).Clone;
+end;
+
 { TProxyLabelPeer }
+
+procedure TProxyLabelPeer.RegisterControlEvents;
+begin
+  GetDelegate.OnDblClick := @ControlDblClickEvent;
+end;
 
 constructor TProxyLabelPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
@@ -1052,6 +1249,11 @@ begin
 end;
 
 { TProxyPanelPeer }
+
+procedure TProxyPanelPeer.RegisterWinControlEvents;
+begin
+  GetDelegate.OnDblClick := @ControlDblClickEvent;
+end;
 
 constructor TProxyPanelPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
@@ -1116,6 +1318,11 @@ end;
 
 { TProxyEditPeer }
 
+procedure TProxyEditPeer.RegisterWinControlEvents;
+begin
+  GetDelegate.OnDblClick := @ControlDblClickEvent;
+end;
+
 constructor TProxyEditPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
   inherited Create(TheTarget, AOwner);
@@ -1139,6 +1346,11 @@ end;
 
 { TProxyFormPeer }
 
+procedure TProxyFormPeer.RegisterWinControlEvents;
+begin
+  GetDelegate.OnDblClick := @ControlDblClickEvent;
+end;
+
 constructor TProxyFormPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
   inherited Create(TheTarget, AOwner);
@@ -1149,6 +1361,81 @@ end;
 function TProxyFormPeer.GetDelegate: TForm;
 begin
   Result := TForm(FDelegateObj);
+end;
+
+procedure TProxyFormPeer.FormActivateEvent(Sender: TObject);
+var
+  i: Integer;
+  fe: IFormEvent;
+  fl: IFormListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      fe := TFormEvent.Create(Sender, TAForm(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if FControlListenerList[i].QueryInterface(IFormListener, fl) = S_OK then
+          fl.FormActivate(fe);
+    end;
+end;
+
+procedure TProxyFormPeer.FormCloseEvent(Sender: TObject; var CloseAction: TCloseAction);
+var
+  i: Integer;
+  fe: IFormEvent;
+  fl: IFormListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      fe := TFormEvent.Create(Sender, TAForm(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if FControlListenerList[i].QueryInterface(IFormListener, fl) = S_OK then
+          fl.FormClose(fe);
+    end;
+end;
+
+procedure TProxyFormPeer.FormCreateEvent(Sender: TObject);
+var
+  i: Integer;
+  fe: IFormEvent;
+  fl: IFormListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      fe := TFormEvent.Create(Sender, TAForm(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if FControlListenerList[i].QueryInterface(IFormListener, fl) = S_OK then
+          fl.FormCreate(fe);
+    end;
+end;
+
+procedure TProxyFormPeer.FormHideEvent(Sender: TObject);
+var
+  i: Integer;
+  fe: IFormEvent;
+  fl: IFormListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      fe := TFormEvent.Create(Sender, TAForm(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if FControlListenerList[i].QueryInterface(IFormListener, fl) = S_OK then
+          fl.FormHide(fe);
+    end;
+end;
+
+procedure TProxyFormPeer.FormShowEvent(Sender: TObject);
+var
+  i: Integer;
+  fe: IFormEvent;
+  fl: IFormListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      fe := TFormEvent.Create(Sender, TAForm(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if FControlListenerList[i].QueryInterface(IFormListener, fl) = S_OK then
+          fl.FormShow(fe);
+    end;
 end;
 
 function TProxyFormPeer.GetFormBorderStyle: TFormBorderStyle;
@@ -1169,6 +1456,46 @@ end;
 function TProxyFormPeer.ShowModal: Integer;
 begin
   Result := GetDelegate.ShowModal;
+end;
+
+procedure TProxyFormPeer.RegisterFormControlEvents;
+begin
+  GetDelegate.OnActivate := @FormActivateEvent;
+  GetDelegate.OnClose := @FormCloseEvent;
+  GetDelegate.OnCreate := @FormCreateEvent;
+  GetDelegate.OnHide := @FormHideEvent;
+  GetDelegate.OnShow := @FormShowEvent;
+end;
+
+procedure TProxyFormPeer.AddFormListener(l: IFormListener);
+begin
+  if not Assigned(FControlListenerList) then
+    begin
+      FControlListenerList := TControlListenerList.Create;
+      RegisterControlEvents;
+      RegisterWinControlEvents;
+      RegisterCustomControlEvents;
+      RegisterFormControlEvents;
+    end;
+  FControlListenerList.Add(l);
+end;
+
+procedure TProxyFormPeer.RemoveFormListener(l: IFormListener);
+begin
+  Self.RemoveControlListener(l);
+end;
+
+function TProxyFormPeer.GetFormListeners: TFormListenerList;
+begin
+  if not Assigned(FControlListenerList) then
+    begin
+      FControlListenerList := TControlListenerList.Create;
+      RegisterControlEvents;
+      RegisterWinControlEvents;
+      RegisterCustomControlEvents;
+      RegisterFormControlEvents;
+    end;
+  Result := TFormListenerList(FControlListenerList).Clone;
 end;
 
 { TProxyToolkit }

@@ -25,7 +25,7 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <Units Count="10">
+    <Units Count="12">
       <Unit0>
         <Filename Value="sale_peripheral.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -66,6 +66,14 @@
         <Filename Value="..\..\public\uNavigator.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
+      <Unit10>
+        <Filename Value="..\..\kit\CMSDK\awt\cm_AWTLayoutUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\..\kit\CMSDK\awt\cm_AWTEventUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

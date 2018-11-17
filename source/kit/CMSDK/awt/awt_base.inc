@@ -9,6 +9,8 @@ type
   TAControlBorderSpacing = class;
   TAControl = class;
   TAWinControl = class;
+  TACustomControl = class;
+  TAForm = class;
   IAToolkit = interface;
 
   { IAPeer

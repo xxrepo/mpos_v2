@@ -9,7 +9,7 @@ uses
   Classes, cm_InterfaceRegister, cm_InterfaceLoader, cm_plat
   { you can add units after this / 你可以在这之后增加单元 },
   cm_messager, uNavigator, uSaleQuery,
-  uSystem;
+  uSystem, cm_AWTLayoutUtils, cm_AWTEventUtils;
 
 function LoadExport(ARegister: ICMInterfaceRegister;
                     const AInfo: ICMLibInfo): Boolean; stdcall;

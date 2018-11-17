@@ -1,3 +1,11 @@
+{
+    项目抽象的窗体单元
+
+        如果你采用 AWT 的方案实现图形界面功能的话，你应当引用这一单元。
+    并且项目中的所有窗体都应源自 TAPOSForm（加载和主窗体可以例外）。
+
+ **********************************************************************}
+
 unit uAForm;
 
 {$mode objfpc}{$H+}
@@ -10,7 +18,9 @@ uses
 
 type
 
-  { TAPOSForm }
+  { TAPOSForm
+    // POS 窗体
+  }
 
   TAPOSForm = class(TAForm, IThemeable)
   protected
@@ -21,19 +31,41 @@ type
     procedure SetTheme(ATheme: ITheme); virtual;
   end;
 
-  { TAServiceForm }
+  { TAServiceForm
+    // 业务窗体
+  }
 
-  TAServiceForm = class(TAPOSForm)
+  TAServiceForm = class(TAPOSForm, IFormListener, IKeyListener)
+  protected
+    FOpenDefaultFormEvent: Boolean;
+    FOpenDefaultKeyEvent: Boolean;
+    procedure ControlClick(e: IControlEvent); virtual;
+    procedure ControlDblClick(e: IControlEvent); virtual;
+    procedure ControlResize(e: IControlEvent); virtual;
+    procedure ControlEnter(e: IWinControlEvent); virtual;
+    procedure ControlExit(e: IWinControlEvent); virtual;
+    procedure ControlPaint(e: ICustomControlEvent); virtual;
+    procedure FormActivate(e: IFormEvent); virtual;
+    procedure FormClose(e: IFormEvent); virtual;
+    procedure FormCreate(e: IFormEvent); virtual;
+    procedure FormHide(e: IFormEvent); virtual;
+    procedure FormShow(e: IFormEvent); virtual;
+    procedure KeyPressed(e: IKeyEvent); virtual;
+    procedure KeyReleased(e: IKeyEvent); virtual;
+    procedure KeyTyped(e: IKeyEvent); virtual;
   protected
     FHeadPanel: TAPanel;
     FMainPanel: TAPanel;
     FFootPanel: TAPanel;
   public
     constructor Create(AOwner: TAComponent); override;
+    procedure AfterConstruction; override;
     procedure SetTheme(ATheme: ITheme); override;
   end;
 
-  { TATitledServiceForm }
+  { TATitledServiceForm
+    // 具备标题的业务窗体
+  }
 
   TATitledServiceForm = class(TAServiceForm)
   protected
@@ -45,9 +77,11 @@ type
     procedure SetTitle(const ATitle: string);
   end;
 
-  { TAControllableServiceForm }
+  { TAToolableServiceForm
+    // 具备工具栏功能的业务窗体
+  }
 
-  TAControllableServiceForm = class(TATitledServiceForm)
+  TAToolableServiceForm = class(TATitledServiceForm)
   public
     constructor Create(AOwner: TAComponent); override;
     procedure SetTheme(ATheme: ITheme); override;
@@ -55,11 +89,25 @@ type
     procedure AddButton(const ACaption: string);
   end;
 
+  { TACustomServiceForm
+    // 具备一个自动居中的 Panel
+  }
+
+  TACustomServiceForm = class(TAToolableServiceForm)
+  protected
+    FCenterPanel: TAPanel;
+    procedure FormShow(e: IFormEvent); override;
+  public
+    constructor Create(AOwner: TAComponent); override;
+  end;
+
   //Popup
 
-  { TAQueryServiceForm }
+  { TAQueryServiceForm
+    // 查询业务窗体
+  }
 
-  TAQueryServiceForm = class(TAControllableServiceForm)
+  TAQueryServiceForm = class(TAToolableServiceForm)
   protected
     FQueryPanel: TAPanel;
     FDataPanel: TAPanel;
@@ -95,9 +143,82 @@ end;
 
 { TAServiceForm }
 
+procedure TAServiceForm.ControlClick(e: IControlEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.ControlDblClick(e: IControlEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.ControlResize(e: IControlEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.ControlEnter(e: IWinControlEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.ControlExit(e: IWinControlEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.ControlPaint(e: ICustomControlEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.FormActivate(e: IFormEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.FormClose(e: IFormEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.FormCreate(e: IFormEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.FormHide(e: IFormEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.FormShow(e: IFormEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.KeyPressed(e: IKeyEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.KeyReleased(e: IKeyEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.KeyTyped(e: IKeyEvent);
+begin
+  //There's nothing to do here.
+end;
+
 constructor TAServiceForm.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
+  FOpenDefaultFormEvent := False;
+  FOpenDefaultKeyEvent := False;
+  //
   FHeadPanel := TAPanel.Create(Self);
   FHeadPanel.Parent := Self;
   FHeadPanel.Align := alTop;
@@ -112,6 +233,15 @@ begin
   FFootPanel.Align := alBottom;
   FFootPanel.BevelOuter := bvNone;
   FFootPanel.Visible := False;
+end;
+
+procedure TAServiceForm.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  if FOpenDefaultFormEvent then
+    Self.AddFormListener(Self);
+  if FOpenDefaultKeyEvent then
+    Self.AddKeyListener(Self);
 end;
 
 procedure TAServiceForm.SetTheme(ATheme: ITheme);
@@ -150,20 +280,20 @@ begin
   FTitleLab.Caption := ATitle;
 end;
 
-{ TAControllableServiceForm }
+{ TAToolableServiceForm }
 
-constructor TAControllableServiceForm.Create(AOwner: TAComponent);
+constructor TAToolableServiceForm.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
   FFootPanel.Visible := True;
 end;
 
-procedure TAControllableServiceForm.SetTheme(ATheme: ITheme);
+procedure TAToolableServiceForm.SetTheme(ATheme: ITheme);
 begin
   inherited SetTheme(ATheme);
 end;
 
-procedure TAControllableServiceForm.AddButton(const ACaption: string);
+procedure TAToolableServiceForm.AddButton(const ACaption: string);
 var
   p: TAPanel;
 begin
@@ -174,6 +304,22 @@ begin
   p.Height := FFootPanel.Height - 8;
   p.Width := 100;
   p.Caption := ACaption
+end;
+
+{ TACustomServiceForm }
+
+procedure TACustomServiceForm.FormShow(e: IFormEvent);
+begin
+  FCenterPanel.Left := (FMainPanel.Width - FCenterPanel.Width) div 2;
+  FCenterPanel.Top := (FMainPanel.Height - FCenterPanel.Height) div 2;
+end;
+
+constructor TACustomServiceForm.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FCenterPanel := TAPanel.Create(Self);
+  FCenterPanel.Parent := FMainPanel;
+  FCenterPanel.BevelOuter := bvNone;
 end;
 
 { TAQueryServiceForm }

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils,
   cm_interfaces, cm_plat, cm_messager,
-  cm_AWT, cm_AWTEventUtils,
+  cm_AWT, cm_AWTEventUtils, cm_AWTLayoutUtils,
   uNavigator,
   uAForm,
   uSystem;
@@ -19,7 +19,9 @@ type
   TASaleQueryForm = class(TAQueryServiceForm)
   private
     FLab: TALabel;
-    FEdt: TAEdit;
+    FEdt1: TAEdit;
+    FEdt2: TAEdit;
+    FFlowLayout: TAFlowLayout;
   public
     constructor Create(AOwner: TAComponent); override;
   end;
@@ -40,6 +42,14 @@ type
     procedure KeyPressed(e: IKeyEvent); override;
   end;
 
+  { TXWinControlAdapter }
+
+  TXWinControlAdapter = class(TWinControlAdapter)
+  public
+    procedure ControlDblClick(e: IControlEvent); override;
+    procedure ControlEnter(e: IWinControlEvent); override;
+  end;
+
 implementation
 
 { TASaleQueryForm }
@@ -52,12 +62,29 @@ begin
   FLab.Top := 10;
   FLab.Left := 20;
   FLab.Caption := '请输入';
-  //FLab.Font.Height := 20;
-  FEdt := TAEdit.Create(FQueryPanel);
-  FEdt.Parent := FQueryPanel;
-  FEdt.Left := 120;
-  FEdt.Top := 10;
+  FLab.Layout := tlBottom;
+  //
+  FEdt1 := TAEdit.Create(FQueryPanel);
+  FEdt1.Parent := FQueryPanel;
+  FEdt1.Left := 120;
+  FEdt1.Top := 10;
+  FEdt2 := TAEdit.Create(FQueryPanel);
+  FEdt2.Parent := FQueryPanel;
+  FEdt2.Left := 220;
+  FEdt2.Top := 10;
+  //
+  FLab.AutoSize := False;
+  FLab.Height := FEdt1.Height;
 
+  FEdt1.AddWinControlListener(TXWinControlAdapter.Create);
+  FEdt2.AddWinControlListener(TXWinControlAdapter.Create);
+
+  //
+  FFlowLayout := TAFlowLayout.Create(nil);
+  FFlowLayout.Container := FQueryPanel;
+  FFlowLayout.PutLayoutControl(FLab);
+  FFlowLayout.PutLayoutControl(FEdt1);
+  FFlowLayout.PutLayoutControl(FEdt2);
 end;
 
 { TNavigatorNodeListener }
@@ -102,6 +129,21 @@ procedure TFormKeyAdapter.KeyPressed(e: IKeyEvent);
 begin
   if e.GetKeyCode = 27 then
     f.Close;
+end;
+
+{ TXWinControlAdapter }
+
+procedure TXWinControlAdapter.ControlDblClick(e: IControlEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etError, IntToStr(e.GetAControl.GetHashCode) + #10 + e.GetAControl.Name);
+
+  f.FFlowLayout.ControlOrientation := coRightToLeft;
+  f.FFlowLayout.ReLayout;
+end;
+
+procedure TXWinControlAdapter.ControlEnter(e: IWinControlEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etInfo, IntToStr(e.GetAWinControl.GetHashCode) + #10 + e.GetAWinControl.ClassName);
 end;
 
 end.

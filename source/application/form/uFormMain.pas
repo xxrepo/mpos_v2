@@ -96,6 +96,11 @@ end;
 procedure TMainForm.FormResize(Sender: TObject);
 begin
   //FMsgBar.Top := pa;
+  //PanelWork.OnKeyDown := ;
+  //Self.OnEnter := ;
+  //TEdit.OnDblClick := ;
+  //TLabel.AutoSize := ;
+  //Self.OnClose := ;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

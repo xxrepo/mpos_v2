@@ -252,6 +252,7 @@ type
     procedure SetParent(AValue: TAWinControl);
   private
     function GetAlign: TAlign;
+    function GetAutoSize: Boolean;
     function GetBorderSpacing: TAControlBorderSpacing;
     function GetBoundsRect: TRect;
     function GetColor: TColor;
@@ -264,6 +265,7 @@ type
     function GetVisible: Boolean;
     function GetWidth: Integer;
     procedure SetAlign(AValue: TAlign);
+    procedure SetAutoSize(AValue: Boolean);
     procedure SetBorderSpacing(AValue: TAControlBorderSpacing);
     procedure SetBoundsRect(AValue: TRect);
     procedure SetColor(AValue: TColor);
@@ -287,6 +289,7 @@ type
     procedure Update; virtual;
   public
     property Align: TAlign read GetAlign write SetAlign;
+    property AutoSize: Boolean read GetAutoSize write SetAutoSize;
     property BoundsRect: TRect read GetBoundsRect write SetBoundsRect;
     property BorderSpacing: TAControlBorderSpacing read GetBorderSpacing write SetBorderSpacing;
     property Caption: TCaption read GetText write SetText;
@@ -315,6 +318,9 @@ type
   private
     function GetControl(AIndex: Integer): TAControl;
     function GetControlCount: Integer;
+    function GetShowing: Boolean;
+    function GetTabOrder: TTabOrder;
+    procedure SetTabOrder(AValue: TTabOrder);
   public
     function GetPeer: IAWinControlPeer;
   public
@@ -322,12 +328,17 @@ type
     procedure RemoveControl(AControl: TAControl);
     property ControlCount: Integer read GetControlCount;
     property Controls[AIndex: Integer]: TAControl read GetControl;
+    property TabOrder: TTabOrder read GetTabOrder write SetTabOrder;
+    property Showing: Boolean read GetShowing;
   public
     function CanFocus: Boolean;
     function CanSetFocus: Boolean;
     function Focused: Boolean;
     procedure SetFocus;
   public
+    procedure AddWinControlListener(l: IWinControlListener);
+    procedure RemoveWinControlListener(l: IWinControlListener);
+    function GetWinControlListeners: TWinControlListenerList;
     procedure AddKeyListener(l: IKeyListener); //添加指定的按键侦听器，以接收发自此 WinControl 的按键事件。
     procedure RemoveKeyListener(l: IKeyListener);
     function GetKeyListeners: TKeyListenerList;
@@ -346,6 +357,10 @@ type
   public
     property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle; //start at TWinControl
     property Canvas: TACanvas read GetCanvas write SetCanvas;
+  public
+    procedure AddCustomControlListener(l: ICustomControlListener);
+    procedure RemoveCustomControlListener(l: ICustomControlListener);
+    function GetCustomControlListeners: TCustomControlListenerList;
   end;
 
   { TALabel }
@@ -403,7 +418,7 @@ type
 
   { TAForm }
 
-  TAForm = class(TAWinControl)
+  TAForm = class(TACustomControl)
   private
     function GetFormBorderStyle: TFormBorderStyle;
     procedure SetFormBorderStyle(AValue: TFormBorderStyle);
@@ -414,6 +429,10 @@ type
     property BorderStyle: TFormBorderStyle read GetFormBorderStyle write SetFormBorderStyle;
     procedure Close;
     function ShowModal: Integer;
+  public
+    procedure AddFormListener(l: IFormListener);
+    procedure RemoveFormListener(l: IFormListener);
+    function GetFormListeners: TFormListenerList;
   end;
 
   {$i awt_toolkit.inc}
@@ -922,6 +941,11 @@ begin
   Result := GetPeer.GetAlign;
 end;
 
+function TAControl.GetAutoSize: Boolean;
+begin
+  Result := GetPeer.GetAutoSize;
+end;
+
 function TAControl.GetBorderSpacing: TAControlBorderSpacing;
 begin
   Result := GetPeer.GetBorderSpacing;
@@ -970,6 +994,11 @@ end;
 procedure TAControl.SetAlign(AValue: TAlign);
 begin
   GetPeer.SetAlign(AValue);
+end;
+
+procedure TAControl.SetAutoSize(AValue: Boolean);
+begin
+  GetPeer.SetAutoSize(AValue);
 end;
 
 procedure TAControl.SetBorderSpacing(AValue: TAControlBorderSpacing);
@@ -1034,6 +1063,21 @@ begin
   Result := GetPeer.GetControlCount;
 end;
 
+function TAWinControl.GetShowing: Boolean;
+begin
+  Result := GetPeer.GetShowing;
+end;
+
+function TAWinControl.GetTabOrder: TTabOrder;
+begin
+  Result := GetPeer.GetTabOrder;
+end;
+
+procedure TAWinControl.SetTabOrder(AValue: TTabOrder);
+begin
+  GetPeer.SetTabOrder(AValue);
+end;
+
 function TAWinControl.GetPeer: IAWinControlPeer;
 begin
   FPeer.QueryInterface(IAWinControlPeer, Result);
@@ -1067,6 +1111,21 @@ end;
 procedure TAWinControl.SetFocus;
 begin
   GetPeer.SetFocus;
+end;
+
+procedure TAWinControl.AddWinControlListener(l: IWinControlListener);
+begin
+  GetPeer.AddWinControlListener(l);
+end;
+
+procedure TAWinControl.RemoveWinControlListener(l: IWinControlListener);
+begin
+  GetPeer.RemoveWinControlListener(l);
+end;
+
+function TAWinControl.GetWinControlListeners: TWinControlListenerList;
+begin
+  Result := GetPeer.GetWinControlListeners;
 end;
 
 procedure TAWinControl.AddKeyListener(l: IKeyListener);
@@ -1109,6 +1168,21 @@ end;
 function TACustomControl.GetPeer: IACustomControlPeer;
 begin
   FPeer.QueryInterface(IACustomControlPeer, Result);
+end;
+
+procedure TACustomControl.AddCustomControlListener(l: ICustomControlListener);
+begin
+  GetPeer.AddCustomControlListener(l);
+end;
+
+procedure TACustomControl.RemoveCustomControlListener(l: ICustomControlListener);
+begin
+  GetPeer.RemoveCustomControlListener(l);
+end;
+
+function TACustomControl.GetCustomControlListeners: TCustomControlListenerList;
+begin
+  Result := GetPeer.GetCustomControlListeners;
 end;
 
 { TALabel }
@@ -1261,6 +1335,21 @@ end;
 function TAForm.ShowModal: Integer;
 begin
   Result := GetPeer.ShowModal;
+end;
+
+procedure TAForm.AddFormListener(l: IFormListener);
+begin
+  GetPeer.AddFormListener(l);
+end;
+
+procedure TAForm.RemoveFormListener(l: IFormListener);
+begin
+  GetPeer.RemoveFormListener(l);
+end;
+
+function TAForm.GetFormListeners: TFormListenerList;
+begin
+  Result := GetPeer.GetFormListeners;
 end;
 
 { TAControlBorderSpacing }

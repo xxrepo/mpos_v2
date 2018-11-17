@@ -19,6 +19,8 @@ type
   TPanelBevel = TGraphicsBevelCut;
   TBevelWidth = 1..Maxint;
 
+  TTabOrder = -1..32767;
+
 
 const
   // standard colors

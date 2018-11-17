@@ -5,6 +5,7 @@ object TestFrame: TTestFrame
   Width = 280
   ClientHeight = 436
   ClientWidth = 280
+  OnClick = FrameClick
   TabOrder = 0
   DesignLeft = 308
   DesignTop = 186
@@ -40,5 +41,14 @@ object TestFrame: TTestFrame
     ParentColor = False
     TabOrder = 2
     OnClick = Panel1Click
+  end
+  object Button1: TButton
+    Left = 77
+    Height = 25
+    Top = 123
+    Width = 75
+    Caption = 'Button1'
+    OnClick = Button1Click
+    TabOrder = 3
   end
 end

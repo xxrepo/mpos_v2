@@ -106,7 +106,7 @@ type
   private
     FSource: TObject;
   public
-    constructor Create(ASource: TObject); virtual;
+    constructor Create(ASource: TObject);
     function GetSource: TObject;
   end;
 

@@ -8,16 +8,20 @@ uses
   Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics,
   cm_theme, cm_plat,
   uSale, uSaleDTO,
-  uSystem;
+  uSystem,
+  uAForm, cm_AWT, cm_AWTEventUtils;
 
 type
 
   { TTestFrame }
 
   TTestFrame = class(TFrame)
+    Button1: TButton;
     Panel1: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
+    procedure Button1Click(Sender: TObject);
+    procedure FrameClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
     procedure Panel6Click(Sender: TObject);
     procedure Panel7Click(Sender: TObject);
@@ -25,6 +29,13 @@ type
 
   public
 
+  end;
+
+  { TX }
+
+  TX = class(TControlAdapter)
+  public
+    procedure ControlClick(e: IControlEvent); override;
   end;
 
 
@@ -58,6 +69,27 @@ begin
   end;
 end;
 
+procedure TTestFrame.FrameClick(Sender: TObject);
+begin
+  //Panel1.TabOrder := ;
+
+end;
+
+procedure TTestFrame.Button1Click(Sender: TObject);
+var
+  f: TACustomServiceForm;
+  e: TAEdit;
+begin
+  f := TACustomServiceForm.Create(nil);
+
+  e := TAEdit.Create(f);
+  e.Parent := f;
+
+  e.AddControlListener(TX.Create);
+  f.Left := 10;
+  f.Top := 10;
+  f.ShowModal;
+end;
 
 procedure TTestFrame.Panel6Click(Sender: TObject);
 var
@@ -93,6 +125,13 @@ begin
   vo.Quantity := Random(88);
   if InterfaceRegister.OutInterface(ISaleBoard, sb) then
     sb.AddShowItem(vo);
+end;
+
+{ TX }
+
+procedure TX.ControlClick(e: IControlEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etInfo, 'aaaaaaaaaa');
 end;
 
 
