@@ -1080,7 +1080,7 @@ end;
 
 function TAWinControl.GetPeer: IAWinControlPeer;
 begin
-  FPeer.QueryInterface(IAWinControlPeer, Result);
+  Result := IAWinControlPeer(FPeer);
 end;
 
 procedure TAWinControl.InsertControl(AControl: TAControl);

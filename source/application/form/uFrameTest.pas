@@ -17,6 +17,7 @@ type
 
   TTestFrame = class(TFrame)
     Button1: TButton;
+    Button2: TButton;
     Panel1: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
@@ -33,9 +34,10 @@ type
 
   { TX }
 
-  TX = class(TControlAdapter)
+  TX = class(TWinControlAdapter)
   public
     procedure ControlClick(e: IControlEvent); override;
+    procedure ControlEnter(e: IWinControlEvent); override;
   end;
 
 
@@ -78,14 +80,22 @@ end;
 procedure TTestFrame.Button1Click(Sender: TObject);
 var
   f: TACustomServiceForm;
-  e: TAEdit;
+  e, e2: TAEdit;
+  wl: IWinControlListener;
 begin
   f := TACustomServiceForm.Create(nil);
 
   e := TAEdit.Create(f);
   e.Parent := f;
+  e.GetPeer.GetName;
 
-  e.AddControlListener(TX.Create);
+  e2 := TAEdit.Create(f);
+  e2.Parent := f;
+  e2.Left := 200;
+
+  wl := TX.Create;
+  e.AddWinControlListener(wl);
+  e2.AddWinControlListener(wl);
   f.Left := 10;
   f.Top := 10;
   f.ShowModal;
@@ -131,7 +141,12 @@ end;
 
 procedure TX.ControlClick(e: IControlEvent);
 begin
-  AppSystem.GetMsgBar.ShowMessage(etInfo, 'aaaaaaaaaa');
+  //AppSystem.GetMsgBar.ShowMessage(etInfo, 'aaaaaaaaaa');
+end;
+
+procedure TX.ControlEnter(e: IWinControlEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etInfo, 'bbbbbb' + IntToStr(e.GetAControl.GetHashCode));
 end;
 
 

@@ -70,8 +70,8 @@ type
     // 表示组件中发生键击的事件。
   }
 
-  IKeyEvent = interface(ICMEvent)
-    ['{38F3CC3F-7786-4EBB-B372-872558527C1D}']
+  IKeyEvent = interface(IControlEvent)
+    ['{05C1EDCD-53BF-42FE-AA4C-216C61BF2F1E}']
     function GetKeyChar: Char; //返回与此事件中的键关联的字符。
     function GetKeyCode: Word; //返回与此事件中的键关联的整数 keyCode。
     procedure SetKeyChar(AKeyChar: Char); //设置 keyCode 值，以表示某个逻辑字符。

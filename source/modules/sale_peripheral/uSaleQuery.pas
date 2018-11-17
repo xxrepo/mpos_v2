@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils,
   cm_interfaces, cm_plat, cm_messager,
-  cm_AWT, cm_AWTEventUtils, cm_AWTLayoutUtils,
+  cm_AWT, cm_AWTLayoutUtils,
   uNavigator,
   uAForm,
   uSystem;
@@ -24,30 +24,17 @@ type
     FFlowLayout: TAFlowLayout;
   public
     constructor Create(AOwner: TAComponent); override;
+    procedure FormKeyPressed(e: IKeyEvent); override;
+    procedure FormDblClick(e: IControlEvent); override;
+    procedure FormEnter(e: IWinControlEvent); override;
   end;
 
   { TNavigatorNodeListener }
 
-  TNavigatorNodeListener = class(TCMBase, INavigatorNodeListener, IRunnable)
+  TNavigatorNodeListener = class(TNavigatorNodeAdapter, IRunnable)
   public
-    procedure Click(e: INavigatorNodeEvent);
-    procedure DblClick(e: INavigatorNodeEvent);
+    procedure Click(e: INavigatorNodeEvent); override;
     procedure Run;
-  end;
-
-  { TFormKeyAdapter }
-
-  TFormKeyAdapter = class(TKeyAdapter)
-  public
-    procedure KeyPressed(e: IKeyEvent); override;
-  end;
-
-  { TXWinControlAdapter }
-
-  TXWinControlAdapter = class(TWinControlAdapter)
-  public
-    procedure ControlDblClick(e: IControlEvent); override;
-    procedure ControlEnter(e: IWinControlEvent); override;
   end;
 
 implementation
@@ -76,15 +63,40 @@ begin
   FLab.AutoSize := False;
   FLab.Height := FEdt1.Height;
 
-  FEdt1.AddWinControlListener(TXWinControlAdapter.Create);
-  FEdt2.AddWinControlListener(TXWinControlAdapter.Create);
-
   //
   FFlowLayout := TAFlowLayout.Create(nil);
   FFlowLayout.Container := FQueryPanel;
   FFlowLayout.PutLayoutControl(FLab);
   FFlowLayout.PutLayoutControl(FEdt1);
   FFlowLayout.PutLayoutControl(FEdt2);
+
+  //
+  AddButton('测试1');
+  OpenDefaultFormEvent := True;
+  OpenDefaultKeyEvent := True;
+  //
+
+  FEdt1.AddWinControlListener(Self);
+  FEdt2.AddWinControlListener(Self);
+end;
+
+procedure TASaleQueryForm.FormKeyPressed(e: IKeyEvent);
+begin
+  if e.GetKeyCode = 27 then
+    Close;
+end;
+
+procedure TASaleQueryForm.FormDblClick(e: IControlEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etError, IntToStr(e.GetAControl.GetHashCode) + #10 + e.GetAControl.Name);
+
+  FFlowLayout.ControlOrientation := coRightToLeft;
+  FFlowLayout.ReLayout;
+end;
+
+procedure TASaleQueryForm.FormEnter(e: IWinControlEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etInfo, IntToStr(e.GetAWinControl.GetHashCode) + #10 + e.GetAWinControl.ClassName);
 end;
 
 { TNavigatorNodeListener }
@@ -98,18 +110,8 @@ begin
 
   f.SetTitle('你好，世界！');
   f.BoundsRect := AppSystem.GetServiceRect;
-  f.BorderStyle := TFormBorderStyle.bsNone;
-
-  f.AddButton('测试1');
-  f.AddKeyListener(TFormKeyAdapter.Create);
-
 
   f.ShowModal;
-end;
-
-procedure TNavigatorNodeListener.DblClick(e: INavigatorNodeEvent);
-begin
-
 end;
 
 procedure TNavigatorNodeListener.Run;
@@ -123,28 +125,6 @@ begin
     end;
 end;
 
-{ TFormKeyAdapter }
-
-procedure TFormKeyAdapter.KeyPressed(e: IKeyEvent);
-begin
-  if e.GetKeyCode = 27 then
-    f.Close;
-end;
-
-{ TXWinControlAdapter }
-
-procedure TXWinControlAdapter.ControlDblClick(e: IControlEvent);
-begin
-  AppSystem.GetMsgBar.ShowMessage(etError, IntToStr(e.GetAControl.GetHashCode) + #10 + e.GetAControl.Name);
-
-  f.FFlowLayout.ControlOrientation := coRightToLeft;
-  f.FFlowLayout.ReLayout;
-end;
-
-procedure TXWinControlAdapter.ControlEnter(e: IWinControlEvent);
-begin
-  AppSystem.GetMsgBar.ShowMessage(etInfo, IntToStr(e.GetAWinControl.GetHashCode) + #10 + e.GetAWinControl.ClassName);
-end;
 
 end.
 

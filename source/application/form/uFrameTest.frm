@@ -45,10 +45,18 @@ object TestFrame: TTestFrame
   object Button1: TButton
     Left = 77
     Height = 25
-    Top = 123
+    Top = 120
     Width = 75
     Caption = 'Button1'
     OnClick = Button1Click
     TabOrder = 3
+  end
+  object Button2: TButton
+    Left = 168
+    Height = 25
+    Top = 120
+    Width = 75
+    Caption = 'Button2'
+    TabOrder = 4
   end
 end

@@ -35,31 +35,44 @@ type
     // 业务窗体
   }
 
-  TAServiceForm = class(TAPOSForm, IFormListener, IKeyListener)
-  protected
+  TAServiceForm = class(TAPOSForm, IFormListener, ICustomControlListener, IWinControlListener, IControlListener, IKeyListener)
+  private
     FOpenDefaultFormEvent: Boolean;
     FOpenDefaultKeyEvent: Boolean;
-    procedure ControlClick(e: IControlEvent); virtual;
-    procedure ControlDblClick(e: IControlEvent); virtual;
-    procedure ControlResize(e: IControlEvent); virtual;
-    procedure ControlEnter(e: IWinControlEvent); virtual;
-    procedure ControlExit(e: IWinControlEvent); virtual;
-    procedure ControlPaint(e: ICustomControlEvent); virtual;
+    procedure SetOpenDefaultFormEvent(AValue: Boolean);
+    procedure SetOpenDefaultKeyEvent(AValue: Boolean);
+    procedure ControlClick(e: IControlEvent);
+    procedure ControlDblClick(e: IControlEvent);
+    procedure ControlResize(e: IControlEvent);
+    procedure ControlEnter(e: IWinControlEvent);
+    procedure ControlExit(e: IWinControlEvent);
+    procedure ControlPaint(e: ICustomControlEvent);
+    procedure KeyPressed(e: IKeyEvent);
+    procedure KeyReleased(e: IKeyEvent);
+    procedure KeyTyped(e: IKeyEvent);
+  protected
+    procedure FormClick(e: IControlEvent); virtual;
+    procedure FormDblClick(e: IControlEvent); virtual;
+    procedure FormResize(e: IControlEvent); virtual;
+    procedure FormEnter(e: IWinControlEvent); virtual;
+    procedure FormExit(e: IWinControlEvent); virtual;
+    procedure FormPaint(e: ICustomControlEvent); virtual;
     procedure FormActivate(e: IFormEvent); virtual;
     procedure FormClose(e: IFormEvent); virtual;
     procedure FormCreate(e: IFormEvent); virtual;
     procedure FormHide(e: IFormEvent); virtual;
     procedure FormShow(e: IFormEvent); virtual;
-    procedure KeyPressed(e: IKeyEvent); virtual;
-    procedure KeyReleased(e: IKeyEvent); virtual;
-    procedure KeyTyped(e: IKeyEvent); virtual;
+    procedure FormKeyPressed(e: IKeyEvent); virtual;
+    procedure FormKeyReleased(e: IKeyEvent); virtual;
+    procedure FormKeyTyped(e: IKeyEvent); virtual;
+    property OpenDefaultFormEvent: Boolean read FOpenDefaultFormEvent write SetOpenDefaultFormEvent;
+    property OpenDefaultKeyEvent: Boolean read FOpenDefaultKeyEvent write SetOpenDefaultKeyEvent;
   protected
     FHeadPanel: TAPanel;
     FMainPanel: TAPanel;
     FFootPanel: TAPanel;
   public
     constructor Create(AOwner: TAComponent); override;
-    procedure AfterConstruction; override;
     procedure SetTheme(ATheme: ITheme); override;
   end;
 
@@ -143,32 +156,97 @@ end;
 
 { TAServiceForm }
 
+procedure TAServiceForm.SetOpenDefaultFormEvent(AValue: Boolean);
+begin
+  if FOpenDefaultFormEvent = AValue then
+    Exit;
+  FOpenDefaultFormEvent := AValue;
+  Self.RemoveFormListener(Self);
+  if FOpenDefaultFormEvent then
+    Self.AddFormListener(Self);
+end;
+
+procedure TAServiceForm.SetOpenDefaultKeyEvent(AValue: Boolean);
+begin
+  if FOpenDefaultKeyEvent = AValue then
+    Exit;
+  FOpenDefaultKeyEvent := AValue;
+  Self.RemoveKeyListener(Self);
+  if FOpenDefaultKeyEvent then
+    Self.AddKeyListener(Self);
+end;
+
 procedure TAServiceForm.ControlClick(e: IControlEvent);
 begin
-  //There's nothing to do here.
+  FormClick(e);
 end;
 
 procedure TAServiceForm.ControlDblClick(e: IControlEvent);
 begin
-  //There's nothing to do here.
+  FormDblClick(e);
 end;
 
 procedure TAServiceForm.ControlResize(e: IControlEvent);
 begin
-  //There's nothing to do here.
+  FormResize(e);
 end;
 
 procedure TAServiceForm.ControlEnter(e: IWinControlEvent);
 begin
-  //There's nothing to do here.
+  FormEnter(e);
 end;
 
 procedure TAServiceForm.ControlExit(e: IWinControlEvent);
 begin
-  //There's nothing to do here.
+  FormExit(e);
 end;
 
 procedure TAServiceForm.ControlPaint(e: ICustomControlEvent);
+begin
+  FormPaint(e);
+end;
+
+procedure TAServiceForm.KeyPressed(e: IKeyEvent);
+begin
+  FormKeyPressed(e);
+end;
+
+procedure TAServiceForm.KeyReleased(e: IKeyEvent);
+begin
+  FormKeyReleased(e);
+end;
+
+procedure TAServiceForm.KeyTyped(e: IKeyEvent);
+begin
+  FormKeyTyped(e);
+end;
+
+procedure TAServiceForm.FormClick(e: IControlEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.FormDblClick(e: IControlEvent);
+begin
+
+end;
+
+procedure TAServiceForm.FormResize(e: IControlEvent);
+begin
+
+end;
+
+procedure TAServiceForm.FormEnter(e: IWinControlEvent);
+begin
+  //There's nothing to do here.
+end;
+
+procedure TAServiceForm.FormExit(e: IWinControlEvent);
+begin
+
+end;
+
+procedure TAServiceForm.FormPaint(e: ICustomControlEvent);
 begin
   //There's nothing to do here.
 end;
@@ -180,37 +258,37 @@ end;
 
 procedure TAServiceForm.FormClose(e: IFormEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
 procedure TAServiceForm.FormCreate(e: IFormEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
 procedure TAServiceForm.FormHide(e: IFormEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
 procedure TAServiceForm.FormShow(e: IFormEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
-procedure TAServiceForm.KeyPressed(e: IKeyEvent);
+procedure TAServiceForm.FormKeyPressed(e: IKeyEvent);
 begin
   //There's nothing to do here.
 end;
 
-procedure TAServiceForm.KeyReleased(e: IKeyEvent);
+procedure TAServiceForm.FormKeyReleased(e: IKeyEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
-procedure TAServiceForm.KeyTyped(e: IKeyEvent);
+procedure TAServiceForm.FormKeyTyped(e: IKeyEvent);
 begin
-  //There's nothing to do here.
+
 end;
 
 constructor TAServiceForm.Create(AOwner: TAComponent);
@@ -233,15 +311,8 @@ begin
   FFootPanel.Align := alBottom;
   FFootPanel.BevelOuter := bvNone;
   FFootPanel.Visible := False;
-end;
-
-procedure TAServiceForm.AfterConstruction;
-begin
-  inherited AfterConstruction;
-  if FOpenDefaultFormEvent then
-    Self.AddFormListener(Self);
-  if FOpenDefaultKeyEvent then
-    Self.AddKeyListener(Self);
+  //
+  Self.BorderStyle := bsNone;
 end;
 
 procedure TAServiceForm.SetTheme(ATheme: ITheme);

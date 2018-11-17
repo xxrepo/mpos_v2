@@ -46,13 +46,13 @@ type
 
   { TKeyEvent }
 
-  TKeyEvent = class(TCMEvent, IKeyEvent)
+  TKeyEvent = class(TControlEvent, IKeyEvent)
   private
     FKeyChar: Char;
     FKeyCode: Word;
   public
-    constructor Create(ASource: TObject; AChar: Char);
-    constructor Create(ASource: TObject; ACode: Word);
+    constructor Create(ASource: TObject; AAControl: TAControl; AChar: Char);
+    constructor Create(ASource: TObject; AAControl: TAControl; ACode: Word);
     function GetKeyChar: Char;
     function GetKeyCode: Word;
     procedure SetKeyChar(AKeyChar: Char);
@@ -112,15 +112,15 @@ end;
 
 { TKeyEvent }
 
-constructor TKeyEvent.Create(ASource: TObject; AChar: Char);
+constructor TKeyEvent.Create(ASource: TObject; AAControl: TAControl; AChar: Char);
 begin
-  inherited Create(ASource);
+  inherited Create(ASource, AAControl);
   SetKeyChar(AChar);
 end;
 
-constructor TKeyEvent.Create(ASource: TObject; ACode: Word);
+constructor TKeyEvent.Create(ASource: TObject; AAControl: TAControl; ACode: Word);
 begin
-  inherited Create(ASource);
+  inherited Create(ASource, AAControl);
   SetKeyCode(ACode);
 end;
 
