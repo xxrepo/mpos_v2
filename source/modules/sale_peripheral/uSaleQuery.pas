@@ -24,6 +24,7 @@ type
     FFlowLayout: TAFlowLayout;
   public
     constructor Create(AOwner: TAComponent); override;
+    procedure FormShow(e: IFormEvent); override;
     procedure FormKeyPressed(e: IKeyEvent); override;
     procedure FormDblClick(e: IControlEvent); override;
     procedure FormEnter(e: IWinControlEvent); override;
@@ -64,11 +65,8 @@ begin
   FLab.Height := FEdt1.Height;
 
   //
-  FFlowLayout := TAFlowLayout.Create(nil);
-  FFlowLayout.Container := FQueryPanel;
-  FFlowLayout.PutLayoutControl(FLab);
-  FFlowLayout.PutLayoutControl(FEdt1);
-  FFlowLayout.PutLayoutControl(FEdt2);
+  FFlowLayout := TAFlowLayout.Create(nil, FQueryPanel);
+  FFlowLayout.PutLayoutControls([FLab, FEdt1, FEdt2]);
 
   //
   AddButton('测试1');
@@ -80,6 +78,12 @@ begin
   FEdt2.AddWinControlListener(Self);
 end;
 
+procedure TASaleQueryForm.FormShow(e: IFormEvent);
+begin
+  FFlowLayout.ControlOrientation := coRightToLeft;
+  FFlowLayout.ReLayout;
+end;
+
 procedure TASaleQueryForm.FormKeyPressed(e: IKeyEvent);
 begin
   if e.GetKeyCode = 27 then
@@ -89,9 +93,6 @@ end;
 procedure TASaleQueryForm.FormDblClick(e: IControlEvent);
 begin
   AppSystem.GetMsgBar.ShowMessage(etError, IntToStr(e.GetAControl.GetHashCode) + #10 + e.GetAControl.Name);
-
-  FFlowLayout.ControlOrientation := coRightToLeft;
-  FFlowLayout.ReLayout;
 end;
 
 procedure TASaleQueryForm.FormEnter(e: IWinControlEvent);

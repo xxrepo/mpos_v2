@@ -8,6 +8,9 @@
 
     一种 AWT 的解决方案，通过简单代理的方式
 
+    NOTE:
+    20181119 add 鼠标事件、memo、datetimepicker
+
  **********************************************************************}
 
 unit cm_AWTProxy;
@@ -17,7 +20,7 @@ unit cm_AWTProxy;
 interface
 
 uses
-  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics,
+  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics, DateTimePicker,
   cm_interfaces, cm_messager, cm_dialogs, cm_classes,
   cm_AWT, cm_AWTEventBuilder;
 
@@ -176,17 +179,25 @@ type
   private
     FFont: TAFont;
     FBorderSpacing: TAControlBorderSpacing;
+    FMouseListenerList: TMouseListenerList;
     class var FControlPeerList: TFPList;
   protected
     FControlListenerList: TCMInterfaceList; //同时用于子类扩展
     procedure ControlDblClickEvent(Sender: TObject); //Control 未公开，在公开的子类中使用。
     procedure RegisterControlEvents; virtual;
+    procedure RegisterMouseEvents; virtual;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
     function GetDelegate: TControl;
     procedure ControlClickEvent(Sender: TObject);
     procedure ControlResizeEvent(Sender: TObject);
+    procedure MouseDownEvent(Sender: TObject; Button: Controls.TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure MouseUpEvent(Sender: TObject; Button: Controls.TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure MouseEnterEvent(Sender: TObject);
+    procedure MouseLeaveEvent(Sender: TObject);
+    procedure MouseMoveEvent(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure MouseWheelEvent(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
   public
     function GetAlign: TAlign;
     function GetAutoSize: Boolean;
@@ -230,6 +241,9 @@ type
     procedure AddControlListener(l: IControlListener);
     procedure RemoveControlListener(l: IControlListener);
     function GetControlListeners: TControlListenerList;
+    procedure AddMouseListener(l: IMouseListener);
+    procedure RemoveMouseListener(l: IMouseListener);
+    function GetMouseListeners: TMouseListenerList;
   end;
 
   TProxyGraphicControlPeer = class(TProxyControlPeer, IAGraphicControlPeer)
@@ -254,18 +268,21 @@ type
     procedure KeyPressEvent(Sender: TObject; var Key: Char);
     procedure KeyUpEvent(Sender: TObject; var Key: Word; Shift: TShiftState);
   public
+    function GetBorderStyle: TBorderStyle; virtual;
     function GetControl(AIndex: Integer): TAControl;
     function GetControlCount: Integer;
     function GetShowing: Boolean;
     function GetTabOrder: TTabOrder;
+    procedure SetBorderStyle(AValue: TBorderStyle); virtual;
     procedure SetTabOrder(AValue: TTabOrder);
+    //
     procedure InsertControl(AControl: TAControl);
     procedure RemoveControl(AControl: TAControl);
-    //
     function CanFocus: Boolean;
     function CanSetFocus: Boolean;
     function Focused: Boolean;
     procedure SetFocus;
+    //
     procedure AddWinControlListener(l: IWinControlListener);
     procedure RemoveWinControlListener(l: IWinControlListener);
     function GetWinControlListeners: TWinControlListenerList;
@@ -286,10 +303,10 @@ type
     destructor Destroy; override;
     function GetDelegate: TCustomControl;
     procedure CustomControlPaintEvent(Sender: TObject);
+    function GetBorderStyle: TBorderStyle; override;
+    procedure SetBorderStyle(AValue: TBorderStyle); override;
   public
-    function GetBorderStyle: TBorderStyle;
     function GetCanvas: TACanvas;
-    procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetCanvas(AValue: TACanvas);
     procedure AddCustomControlListener(l: ICustomControlListener);
     procedure RemoveCustomControlListener(l: ICustomControlListener);
@@ -301,6 +318,7 @@ type
   TProxyLabelPeer = class(TProxyGraphicControlPeer, IALabelPeer)
   protected
     procedure RegisterControlEvents; override;
+    procedure RegisterMouseEvents; override;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TLabel;
@@ -316,6 +334,7 @@ type
   TProxyPanelPeer = class(TProxyCustomControlPeer, IAPanelPeer)
   protected
     procedure RegisterControlEvents; override;
+    procedure RegisterMouseEvents; override;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TPanel;
@@ -337,12 +356,45 @@ type
   TProxyEditPeer = class(TProxyWinControlPeer, IAEditPeer)
   protected
     procedure RegisterControlEvents; override;
+    procedure RegisterMouseEvents; override;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TEdit;
+    procedure EditChangeEvent(Sender: TObject);
   public
     procedure Clear;
     procedure SelectAll;
+    function GetMaxLength: Integer;
+    function GetNumbersOnly: Boolean;
+    function GetPasswordChar: Char;
+    function GetReadOnly: Boolean;
+    function GetSelLength: integer;
+    function GetSelStart: integer;
+    function GetSelText: String;
+    procedure SetMaxLength(AValue: Integer);
+    procedure SetNumbersOnly(AValue: Boolean);
+    procedure SetPasswordChar(AValue: Char);
+    procedure SetReadOnly(AValue: Boolean);
+    procedure SetSelLength(AValue: integer);
+    procedure SetSelStart(AValue: integer);
+    procedure SetSelText(AValue: String);
+    //
+    procedure AddEditListener(l: IEditListener);
+    procedure RemoveEditListener(l: IEditListener);
+    function GetEditListeners: TEditListenerList;
+  end;
+
+  { TProxyMemoPeer }
+
+  TProxyMemoPeer = class(TProxyEditPeer, IAMemoPeer)
+  public
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
+    function GetDelegate: TMemo;
+  public
+    function GetLines: TStrings;
+    function GetScrollBars: TScrollStyle;
+    procedure SetLines(AValue: TStrings);
+    procedure SetScrollBars(AValue: TScrollStyle);
   end;
 
   { TProxyFormPeer }
@@ -351,6 +403,7 @@ type
   protected
     procedure RegisterControlEvents; override;
     procedure RegisterFormControlEvents;
+    procedure RegisterMouseEvents; override;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TForm;
@@ -369,6 +422,28 @@ type
     function GetFormListeners: TFormListenerList;
   end;
 
+  { TProxyDateTimePickerPeer }
+
+  TProxyDateTimePickerPeer = class(TProxyCustomControlPeer, IADateTimePickerPeer)
+  protected
+    procedure RegisterControlEvents; override;
+    procedure RegisterMouseEvents; override;
+  public
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
+    function GetDelegate: TDateTimePicker;
+  public
+    function GetDate: TDate;
+    function GetDateTime: TDateTime;
+    function GetMaxDate: TDate;
+    function GetMinDate: TDate;
+    function GetTime: TTime;
+    procedure SetDate(AValue: TDate);
+    procedure SetDateTime(AValue: TDateTime);
+    procedure SetMaxDate(AValue: TDate);
+    procedure SetMinDate(AValue: TDate);
+    procedure SetTime(AValue: TTime);
+  end;
+
   { TProxyToolkit }
 
   TProxyToolkit = class(TCMMessageable, IAToolkit)
@@ -381,7 +456,9 @@ type
     function CreateLabel(ATarget: TALabel): IALabelPeer;
     function CreatePanel(ATarget: TAPanel): IAPanelPeer;
     function CreateEdit(ATarget: TAEdit): IAEditPeer;
+    function CreateMemo(ATarget: TAMemo): IAMemoPeer;
     function CreateForm(ATarget: TAForm): IAFormPeer;
+    function CreateDateTimePicker(ATarget: TADateTimePicker): IADateTimePickerPeer;
   end;
 
 
@@ -523,6 +600,7 @@ begin
   FBorderSpacing := nil;
   FControlPeerList.Add(Self);
   FControlListenerList := nil;
+  FMouseListenerList := nil;
 end;
 
 destructor TProxyControlPeer.Destroy;
@@ -532,7 +610,10 @@ begin
   if Assigned(FBorderSpacing) then
     FBorderSpacing.Free;
   FControlPeerList.Remove(Self);
-  FControlListenerList.Free;
+  if Assigned(FControlListenerList) then
+    FControlListenerList.Free;
+  if Assigned(FMouseListenerList) then
+    FMouseListenerList.Free;
   inherited Destroy;
 end;
 
@@ -577,6 +658,99 @@ begin
       ce := TControlEvent.Create(Sender, TAControl(Self.FTargetObj));
       for i:=0 to FControlListenerList.Count-1 do
         IControlListener(FControlListenerList[i]).ControlResize(ce);
+    end;
+end;
+
+procedure TProxyControlPeer.MouseDownEvent(Sender: TObject; Button: Controls.TMouseButton; Shift: TShiftState; X, Y: Integer)
+  ;
+var
+  i: Integer;
+  me: IMouseEvent;
+  p: TPoint;
+begin
+  if Assigned(FMouseListenerList) then
+    begin
+      p.X := X;
+      p.Y := Y;
+      me := TMouseEvent.Create(Sender, TAControl(Self.FTargetObj), p, Mouse.CursorPos, Shift, cm_AWT.TMouseButton(Button));
+      for i:=0 to FMouseListenerList.Count-1 do
+        FMouseListenerList[i].MousePressed(me);
+    end;
+end;
+
+procedure TProxyControlPeer.MouseUpEvent(Sender: TObject; Button: Controls.TMouseButton; Shift: TShiftState; X, Y: Integer)
+  ;
+var
+  i: Integer;
+  me: IMouseEvent;
+  p: TPoint;
+begin
+  if Assigned(FMouseListenerList) then
+    begin
+      p.X := X;
+      p.Y := Y;
+      me := TMouseEvent.Create(Sender, TAControl(Self.FTargetObj), p, Mouse.CursorPos, Shift, cm_AWT.TMouseButton(Button));
+      for i:=0 to FMouseListenerList.Count-1 do
+        FMouseListenerList[i].MouseReleased(me);
+    end;
+end;
+
+procedure TProxyControlPeer.MouseEnterEvent(Sender: TObject);
+var
+  i: Integer;
+  me: IMouseEvent;
+  p: TPoint;
+begin
+  if Assigned(FMouseListenerList) then
+    begin
+      p := GetDelegate.ScreenToClient(Mouse.CursorPos);
+      me := TMouseEvent.Create(Sender, TAControl(Self.FTargetObj), p, Mouse.CursorPos, []);
+      for i:=0 to FMouseListenerList.Count-1 do
+        FMouseListenerList[i].MouseEntered(me);
+    end;
+end;
+
+procedure TProxyControlPeer.MouseLeaveEvent(Sender: TObject);
+var
+  i: Integer;
+  me: IMouseEvent;
+  p: TPoint;
+begin
+  if Assigned(FMouseListenerList) then
+    begin
+      p := GetDelegate.ScreenToClient(Mouse.CursorPos);
+      me := TMouseEvent.Create(Sender, TAControl(Self.FTargetObj), p, Mouse.CursorPos, []);
+      for i:=0 to FMouseListenerList.Count-1 do
+        FMouseListenerList[i].MouseExited(me);
+    end;
+end;
+
+procedure TProxyControlPeer.MouseMoveEvent(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+var
+  i: Integer;
+  me: IMouseEvent;
+  p: TPoint;
+begin
+  if Assigned(FMouseListenerList) then
+    begin
+      p.X := X;
+      p.Y := Y;
+      me := TMouseEvent.Create(Sender, TAControl(Self.FTargetObj), p, Mouse.CursorPos, Shift);
+      for i:=0 to FMouseListenerList.Count-1 do
+        FMouseListenerList[i].MouseMoved(me);
+    end;
+end;
+
+procedure TProxyControlPeer.MouseWheelEvent(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+var
+  i: Integer;
+  me: IMouseEvent;
+begin
+  if Assigned(FMouseListenerList) then
+    begin
+      me := TMouseEvent.Create(Sender, TAControl(Self.FTargetObj), MousePos, Mouse.CursorPos, Shift, WheelDelta);
+      for i:=0 to FMouseListenerList.Count-1 do
+        FMouseListenerList[i].MouseWheeled(me);
     end;
 end;
 
@@ -833,6 +1007,11 @@ begin
   GetDelegate.OnResize := @ControlResizeEvent;
 end;
 
+procedure TProxyControlPeer.RegisterMouseEvents;
+begin
+  // Control 未公开
+end;
+
 procedure TProxyControlPeer.AddControlListener(l: IControlListener);
 begin
   if not Assigned(FControlListenerList) then
@@ -857,6 +1036,32 @@ begin
       RegisterControlEvents;
     end;
   Result := TControlListenerList(FControlListenerList).Clone;
+end;
+
+procedure TProxyControlPeer.AddMouseListener(l: IMouseListener);
+begin
+  if not Assigned(FMouseListenerList) then
+    begin
+      FMouseListenerList := TMouseListenerList.Create;
+      RegisterMouseEvents;
+    end;
+  FMouseListenerList.Add(l);
+end;
+
+procedure TProxyControlPeer.RemoveMouseListener(l: IMouseListener);
+begin
+  if Assigned(FMouseListenerList) then
+    FMouseListenerList.Remove(l);
+end;
+
+function TProxyControlPeer.GetMouseListeners: TMouseListenerList;
+begin
+  if not Assigned(FMouseListenerList) then
+    begin
+      FMouseListenerList := TMouseListenerList.Create;
+      RegisterMouseEvents;
+    end;
+  Result := FMouseListenerList.Clone;
 end;
 
 { TProxyWinControlPeer }
@@ -924,7 +1129,7 @@ var
 begin
   if Assigned(FKeyListenerList) then
     begin
-      ke := TKeyEvent.Create(Sender, TAWinControl(Self.FTargetObj), Key);
+      ke := TKeyEvent.Create(Sender, TAWinControl(Self.FTargetObj), Key, Shift);
       for i:=0 to FKeyListenerList.Count-1 do
         begin
           FKeyListenerList[i].KeyPressed(ke);
@@ -940,7 +1145,7 @@ var
 begin
   if Assigned(FKeyListenerList) then
     begin
-      ke := TKeyEvent.Create(Sender, TAWinControl(Self.FTargetObj), Key);
+      ke := TKeyEvent.Create(Sender, TAWinControl(Self.FTargetObj), Key, []);
       for i:=0 to FKeyListenerList.Count-1 do
         begin
           FKeyListenerList[i].KeyTyped(ke);
@@ -956,13 +1161,18 @@ var
 begin
   if Assigned(FKeyListenerList) then
     begin
-      ke := TKeyEvent.Create(Sender, TAWinControl(Self.FTargetObj), Key);
+      ke := TKeyEvent.Create(Sender, TAWinControl(Self.FTargetObj), Key, Shift);
       for i:=0 to FKeyListenerList.Count-1 do
         begin
           FKeyListenerList[i].KeyReleased(ke);
           Key := ke.GetKeyCode;
         end;
     end;
+end;
+
+function TProxyWinControlPeer.GetBorderStyle: TBorderStyle;
+begin
+  Result := bsNone;
 end;
 
 function TProxyWinControlPeer.GetControl(AIndex: Integer): TAControl;
@@ -997,6 +1207,11 @@ end;
 function TProxyWinControlPeer.GetTabOrder: TTabOrder;
 begin
   Result := GetDelegate.TabOrder;
+end;
+
+procedure TProxyWinControlPeer.SetBorderStyle(AValue: TBorderStyle);
+begin
+
 end;
 
 procedure TProxyWinControlPeer.SetTabOrder(AValue: TTabOrder);
@@ -1063,7 +1278,7 @@ end;
 
 procedure TProxyWinControlPeer.RemoveWinControlListener(l: IWinControlListener);
 begin
-  Self.RemoveControlListener(l);
+  inherited RemoveControlListener(l);
 end;
 
 function TProxyWinControlPeer.GetWinControlListeners: TWinControlListenerList;
@@ -1195,7 +1410,7 @@ end;
 
 procedure TProxyCustomControlPeer.RemoveCustomControlListener(l: ICustomControlListener);
 begin
-  Self.RemoveControlListener(l);
+  inherited RemoveControlListener(l);
 end;
 
 function TProxyCustomControlPeer.GetCustomControlListeners: TCustomControlListenerList;
@@ -1216,6 +1431,17 @@ procedure TProxyLabelPeer.RegisterControlEvents;
 begin
   inherited RegisterControlEvents;
   GetDelegate.OnDblClick := @ControlDblClickEvent;
+end;
+
+procedure TProxyLabelPeer.RegisterMouseEvents;
+begin
+  inherited RegisterMouseEvents;
+  GetDelegate.OnMouseDown := @MouseDownEvent;
+  GetDelegate.OnMouseUp := @MouseUpEvent;
+  GetDelegate.OnMouseEnter := @MouseEnterEvent;
+  GetDelegate.OnMouseLeave := @MouseLeaveEvent;
+  GetDelegate.OnMouseMove := @MouseMoveEvent;
+  GetDelegate.OnMouseWheel:= @MouseWheelEvent;
 end;
 
 constructor TProxyLabelPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
@@ -1255,6 +1481,17 @@ procedure TProxyPanelPeer.RegisterControlEvents;
 begin
   inherited RegisterControlEvents;
   GetDelegate.OnDblClick := @ControlDblClickEvent;
+end;
+
+procedure TProxyPanelPeer.RegisterMouseEvents;
+begin
+  inherited RegisterMouseEvents;
+  GetDelegate.OnMouseDown := @MouseDownEvent;
+  GetDelegate.OnMouseUp := @MouseUpEvent;
+  GetDelegate.OnMouseEnter := @MouseEnterEvent;
+  GetDelegate.OnMouseLeave := @MouseLeaveEvent;
+  GetDelegate.OnMouseMove := @MouseMoveEvent;
+  GetDelegate.OnMouseWheel:= @MouseWheelEvent;
 end;
 
 constructor TProxyPanelPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
@@ -1326,6 +1563,17 @@ begin
   GetDelegate.OnDblClick := @ControlDblClickEvent;
 end;
 
+procedure TProxyEditPeer.RegisterMouseEvents;
+begin
+  inherited RegisterMouseEvents;
+  GetDelegate.OnMouseDown := @MouseDownEvent;
+  GetDelegate.OnMouseUp := @MouseUpEvent;
+  GetDelegate.OnMouseEnter := @MouseEnterEvent;
+  GetDelegate.OnMouseLeave := @MouseLeaveEvent;
+  GetDelegate.OnMouseMove := @MouseMoveEvent;
+  GetDelegate.OnMouseWheel:= @MouseWheelEvent;
+end;
+
 constructor TProxyEditPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
   inherited Create(TheTarget, AOwner);
@@ -1337,6 +1585,21 @@ begin
   Result := TEdit(FDelegateObj);
 end;
 
+procedure TProxyEditPeer.EditChangeEvent(Sender: TObject);
+var
+  i: Integer;
+  ee: IEditEvent;
+  el: IEditListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      ee := TEditEvent.Create(Sender, TACustomEdit(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if Supports(FControlListenerList[i], IEditListener, el) then
+          el.EditChanged(ee);
+    end;
+end;
+
 procedure TProxyEditPeer.Clear;
 begin
   GetDelegate.Clear;
@@ -1345,6 +1608,138 @@ end;
 procedure TProxyEditPeer.SelectAll;
 begin
   GetDelegate.SelectAll;
+end;
+
+function TProxyEditPeer.GetMaxLength: Integer;
+begin
+  Result := GetDelegate.MaxLength;
+end;
+
+function TProxyEditPeer.GetNumbersOnly: Boolean;
+begin
+  Result := GetDelegate.NumbersOnly;
+end;
+
+function TProxyEditPeer.GetPasswordChar: Char;
+begin
+  Result := GetDelegate.PasswordChar;
+end;
+
+function TProxyEditPeer.GetReadOnly: Boolean;
+begin
+  Result := GetDelegate.ReadOnly;
+end;
+
+function TProxyEditPeer.GetSelLength: integer;
+begin
+  Result := GetDelegate.SelLength;
+end;
+
+function TProxyEditPeer.GetSelStart: integer;
+begin
+  Result := GetDelegate.SelStart;
+end;
+
+function TProxyEditPeer.GetSelText: String;
+begin
+  Result := GetDelegate.SelText;
+end;
+
+procedure TProxyEditPeer.SetMaxLength(AValue: Integer);
+begin
+  GetDelegate.MaxLength := AValue;
+end;
+
+procedure TProxyEditPeer.SetNumbersOnly(AValue: Boolean);
+begin
+  GetDelegate.NumbersOnly := AValue;
+end;
+
+procedure TProxyEditPeer.SetPasswordChar(AValue: Char);
+begin
+  GetDelegate.PasswordChar := AValue;
+end;
+
+procedure TProxyEditPeer.SetReadOnly(AValue: Boolean);
+begin
+  GetDelegate.ReadOnly := AValue;
+end;
+
+procedure TProxyEditPeer.SetSelLength(AValue: integer);
+begin
+  GetDelegate.SelLength := AValue;
+end;
+
+procedure TProxyEditPeer.SetSelStart(AValue: integer);
+begin
+  GetDelegate.SelStart := AValue;
+end;
+
+procedure TProxyEditPeer.SetSelText(AValue: String);
+begin
+  GetDelegate.SelText := AValue;
+end;
+
+procedure TProxyEditPeer.AddEditListener(l: IEditListener);
+begin
+  if not Assigned(FControlListenerList) then
+    begin
+      FControlListenerList := TCMInterfaceList.Create;
+      RegisterControlEvents;
+      RegisterWinControlEvents;
+      GetDelegate.OnChange := @EditChangeEvent;
+    end;
+  FControlListenerList.Add(l);
+end;
+
+procedure TProxyEditPeer.RemoveEditListener(l: IEditListener);
+begin
+  inherited RemoveControlListener(l);
+end;
+
+function TProxyEditPeer.GetEditListeners: TEditListenerList;
+begin
+  if not Assigned(FControlListenerList) then
+    begin
+      FControlListenerList := TCMInterfaceList.Create;
+      RegisterControlEvents;
+      RegisterWinControlEvents;
+      GetDelegate.OnChange := @EditChangeEvent;
+    end;
+  Result := TEditListenerList(FControlListenerList).Clone;
+end;
+
+{ TProxyMemoPeer }
+
+constructor TProxyMemoPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
+begin
+  inherited Create(TheTarget, AOwner);
+  FDelegateObj := TMemo.Create(AOwner);
+end;
+
+function TProxyMemoPeer.GetDelegate: TMemo;
+begin
+  Result := TMemo(FDelegateObj);
+end;
+
+function TProxyMemoPeer.GetLines: TStrings;
+begin
+  Result := GetDelegate.Lines;
+end;
+
+function TProxyMemoPeer.GetScrollBars: TScrollStyle;
+begin
+  Result := cm_AWT.TScrollStyle(GetDelegate.ScrollBars);
+end;
+
+procedure TProxyMemoPeer.SetLines(AValue: TStrings);
+begin
+  GetDelegate.Lines := AValue;
+end;
+
+procedure TProxyMemoPeer.SetScrollBars(AValue: TScrollStyle);
+begin
+  GetDelegate.ScrollBars := StdCtrls.TScrollStyle(AValue);
 end;
 
 { TProxyFormPeer }
@@ -1471,6 +1866,17 @@ begin
   GetDelegate.OnShow := @FormShowEvent;
 end;
 
+procedure TProxyFormPeer.RegisterMouseEvents;
+begin
+  inherited RegisterMouseEvents;
+  GetDelegate.OnMouseDown := @MouseDownEvent;
+  GetDelegate.OnMouseUp := @MouseUpEvent;
+  GetDelegate.OnMouseEnter := @MouseEnterEvent;
+  GetDelegate.OnMouseLeave := @MouseLeaveEvent;
+  GetDelegate.OnMouseMove := @MouseMoveEvent;
+  GetDelegate.OnMouseWheel:= @MouseWheelEvent;
+end;
+
 procedure TProxyFormPeer.AddFormListener(l: IFormListener);
 begin
   if not Assigned(FControlListenerList) then
@@ -1486,7 +1892,7 @@ end;
 
 procedure TProxyFormPeer.RemoveFormListener(l: IFormListener);
 begin
-  Self.RemoveControlListener(l);
+  inherited RemoveControlListener(l);
 end;
 
 function TProxyFormPeer.GetFormListeners: TFormListenerList;
@@ -1500,6 +1906,88 @@ begin
       RegisterFormControlEvents;
     end;
   Result := TFormListenerList(FControlListenerList).Clone;
+end;
+
+{ TProxyDateTimePickerPeer }
+
+procedure TProxyDateTimePickerPeer.RegisterControlEvents;
+begin
+  inherited RegisterControlEvents;
+  GetDelegate.OnDblClick := @ControlDblClickEvent;
+end;
+
+procedure TProxyDateTimePickerPeer.RegisterMouseEvents;
+begin
+  inherited RegisterMouseEvents;
+  GetDelegate.OnMouseDown := @MouseDownEvent;
+  GetDelegate.OnMouseUp := @MouseUpEvent;
+  GetDelegate.OnMouseEnter := @MouseEnterEvent;
+  GetDelegate.OnMouseLeave := @MouseLeaveEvent;
+  GetDelegate.OnMouseMove := @MouseMoveEvent;
+  GetDelegate.OnMouseWheel:= @MouseWheelEvent;
+end;
+
+constructor TProxyDateTimePickerPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
+begin
+  inherited Create(TheTarget, AOwner);
+  FDelegateObj := TDateTimePicker.Create(AOwner);
+  GetDelegate.Kind := dtkDateTime;
+  GetDelegate.DateMode := dmUpDown;
+end;
+
+function TProxyDateTimePickerPeer.GetDelegate: TDateTimePicker;
+begin
+  Result := TDateTimePicker(FDelegateObj);
+end;
+
+function TProxyDateTimePickerPeer.GetDate: TDate;
+begin
+  Result := GetDelegate.Date;
+end;
+
+function TProxyDateTimePickerPeer.GetDateTime: TDateTime;
+begin
+  Result := GetDelegate.DateTime;
+end;
+
+function TProxyDateTimePickerPeer.GetMaxDate: TDate;
+begin
+  Result := GetDelegate.MaxDate;
+end;
+
+function TProxyDateTimePickerPeer.GetMinDate: TDate;
+begin
+  Result := GetDelegate.MinDate;
+end;
+
+function TProxyDateTimePickerPeer.GetTime: TTime;
+begin
+  Result := GetDelegate.Time;
+end;
+
+procedure TProxyDateTimePickerPeer.SetDate(AValue: TDate);
+begin
+  GetDelegate.Date := AValue;
+end;
+
+procedure TProxyDateTimePickerPeer.SetDateTime(AValue: TDateTime);
+begin
+  GetDelegate.DateTime := AValue;
+end;
+
+procedure TProxyDateTimePickerPeer.SetMaxDate(AValue: TDate);
+begin
+  GetDelegate.MaxDate := AValue;
+end;
+
+procedure TProxyDateTimePickerPeer.SetMinDate(AValue: TDate);
+begin
+  GetDelegate.MinDate := AValue;
+end;
+
+procedure TProxyDateTimePickerPeer.SetTime(AValue: TTime);
+begin
+  GetDelegate.Time := AValue;
 end;
 
 { TProxyToolkit }
@@ -1568,9 +2056,19 @@ begin
   Result := TProxyEditPeer.Create(ATarget, nil);
 end;
 
+function TProxyToolkit.CreateMemo(ATarget: TAMemo): IAMemoPeer;
+begin
+  Result := TProxyMemoPeer.Create(ATarget, nil);
+end;
+
 function TProxyToolkit.CreateForm(ATarget: TAForm): IAFormPeer;
 begin
   Result := TProxyFormPeer.Create(ATarget, nil);
+end;
+
+function TProxyToolkit.CreateDateTimePicker(ATarget: TADateTimePicker): IADateTimePickerPeer;
+begin
+  Result := TProxyDateTimePickerPeer.Create(ATarget, nil);
 end;
 
 

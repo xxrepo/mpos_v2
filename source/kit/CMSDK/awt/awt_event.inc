@@ -38,6 +38,23 @@ type
 
   TWinControlListenerList = specialize TFGInterfaceList<IWinControlListener>;
 
+  { IEditEvent }
+
+  IEditEvent = interface(IWinControlEvent)
+    ['{EF1F1598-848E-4727-8A92-F002D4AA1F5F}']
+    function GetAEdit: TACustomEdit;
+  end;
+
+  IEditListener = interface(IWinControlListener)
+    ['{9C805BD9-620F-44E4-B208-A6F59D15797D}']
+    procedure EditChanged(e: IEditEvent);
+  end;
+
+  TEditListenerList = specialize TFGInterfaceList<IEditListener>;
+
+
+  { ICustomControlEvent }
+
   ICustomControlEvent = interface(IWinControlEvent)
     ['{C633D6A0-484D-48A4-BA6C-9A968EB336D8}']
     function GetACustomControl: TACustomControl;
@@ -71,11 +88,13 @@ type
   }
 
   IKeyEvent = interface(IControlEvent)
-    ['{05C1EDCD-53BF-42FE-AA4C-216C61BF2F1E}']
+    ['{935AB8D2-7383-4B1E-933D-C0D8AA30F377}']
     function GetKeyChar: Char; //返回与此事件中的键关联的字符。
     function GetKeyCode: Word; //返回与此事件中的键关联的整数 keyCode。
     procedure SetKeyChar(AKeyChar: Char); //设置 keyCode 值，以表示某个逻辑字符。
     procedure SetKeyCode(AKeyCode: Word); //设置 keyCode 值，以表示某个物理键。
+    function GetKeyText: string; //返回按键的描述。
+    function GetShiftState: TShiftState;
   end;
 
   { IKeyListener
@@ -93,5 +112,32 @@ type
   end;
 
   TKeyListenerList = specialize TFGInterfaceList<IKeyListener>;
+
+  { IMouseEvent }
+
+  IMouseEvent = interface(IControlEvent)
+    ['{D2F43C65-C8BC-476B-94B6-AFA44848575A}']
+    function GetPoint: TPoint;
+    function GetX: Integer;
+    function GetY: Integer;
+    function GetXOnScreen: Integer;
+    function GetYOnScreen: Integer;
+    function GetWheelDelta: Integer;
+    function GetButton: TMouseButton;
+    function GetShiftState: TShiftState;
+  end;
+
+  IMouseListener = interface(ICMListener)
+    ['{E3D23FD3-D93F-49D0-B8BE-2806C5F08CE6}']
+    procedure MouseEntered(e: IMouseEvent); //鼠标进入到组件上时调用。
+    procedure MouseExited(e: IMouseEvent); //鼠标离开组件时调用。
+    procedure MousePressed(e: IMouseEvent);  //鼠标按键在组件上按下时调用。
+    procedure MouseReleased(e: IMouseEvent); //鼠标按钮在组件上释放时调用。
+    procedure MouseMoved(e: IMouseEvent); //鼠标在组件上移动时调用。
+    procedure MouseWheeled(e: IMouseEvent); //鼠标在组件上滚动时调用。
+  end;
+
+  TMouseListenerList = specialize TFGInterfaceList<IMouseListener>;
+
 
 

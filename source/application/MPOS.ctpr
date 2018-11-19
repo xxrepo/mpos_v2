@@ -35,7 +35,7 @@
         <PackageName Value="adLCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="67">
+    <Units Count="68">
       <Unit0>
         <Filename Value="MPOS.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -326,6 +326,10 @@
         <Filename Value="..\kit\CMSDK\awt\solutions\cm_AWTProxy.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit66>
+      <Unit67>
+        <Filename Value="..\kit\CMSDK\awt\awt_extctrls.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit67>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

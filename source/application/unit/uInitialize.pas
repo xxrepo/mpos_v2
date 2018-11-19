@@ -289,7 +289,7 @@ begin
         end;
       ds := ds + '[' + Sender.UnitName + '.' + Sender.ClassName + ']';
     end;
-  Messager.Debug('%s:%s', [ds, GetKeyCodeCHName(Key)]);
+  Messager.Debug('%s:%s', [ds, GetKeyCodeText(Key)]);
 end;
 
 procedure TPOSInitialize.LibLoading(Sender: TObject; const TheFileName: string);

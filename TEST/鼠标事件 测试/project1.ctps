@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="13">
+      <Unit0>
+        <Filename Value="project1.ppr"/>
+        <IsPartOfProject Value="True"/>
+        <CursorPos X="4" Y="10"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="82"/>
+        <CursorPos X="62" Y="85"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="C:\codetyphon\typhon\lcl\controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="12"/>
+        <TopLine Value="182"/>
+        <CursorPos X="41" Y="196"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="11"/>
+        <TopLine Value="89"/>
+        <CursorPos X="17" Y="106"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\rtl-console\src\win\mouse.pp"/>
+        <UnitName Value="Mouse"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="19"/>
+        <CursorPos X="9" Y="19"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\rtl-console\src\inc\mouseh.inc"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="67"/>
+        <CursorPos X="20" Y="74"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\rtl-console\src\inc\mouse.inc"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="28"/>
+        <CursorPos X="20" Y="37"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\control.inc"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="2919"/>
+        <CursorPos Y="2933"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\buttoncontrol.inc"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="9"/>
+        <CursorPos Y="22"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\buttons.inc"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="157"/>
+        <CursorPos Y="170"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="C:\codetyphon\typhon\lcl\lcltype.pp"/>
+        <UnitName Value="LCLType"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="71"/>
+        <CursorPos X="23" Y="87"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <UnitName Value="Forms"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="173"/>
+        <CursorPos X="14" Y="185"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="C:\codetyphon\typhon\lcl\interfacebase.pp"/>
+        <UnitName Value="InterfaceBase"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="202"/>
+        <CursorPos X="39" Y="212"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit12>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <Caret Line="533" Column="31" TopLine="512"/>
+      </Position1>
+      <Position2>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <Caret Line="534" Column="25" TopLine="513"/>
+      </Position2>
+      <Position3>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <Caret Line="562" Column="43" TopLine="544"/>
+      </Position3>
+      <Position4>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <Caret Line="574" Column="43" TopLine="557"/>
+      </Position4>
+      <Position5>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <Caret Line="594" Column="43" TopLine="577"/>
+      </Position5>
+      <Position6>
+        <Filename Value="C:\codetyphon\typhon\lcl\forms.pp"/>
+        <Caret Line="38" Column="73" TopLine="24"/>
+      </Position6>
+      <Position7>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="11" Column="35" TopLine="49"/>
+      </Position7>
+      <Position8>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="100" Column="33" TopLine="87"/>
+      </Position8>
+      <Position9>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="8" Column="83"/>
+      </Position9>
+      <Position10>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="105" Column="12" TopLine="85"/>
+      </Position10>
+      <Position11>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="100" Column="37" TopLine="87"/>
+      </Position11>
+      <Position12>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="107" Column="26" TopLine="87"/>
+      </Position12>
+      <Position13>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="106" Column="15" TopLine="93"/>
+      </Position13>
+      <Position14>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="54" Column="84" TopLine="51"/>
+      </Position14>
+      <Position15>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="59" Column="33" TopLine="51"/>
+      </Position15>
+      <Position16>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="33" Column="112" TopLine="14"/>
+      </Position16>
+      <Position17>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="78" Column="26" TopLine="72"/>
+      </Position17>
+      <Position18>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="29" Column="26" TopLine="17"/>
+      </Position18>
+      <Position19>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="66" Column="13" TopLine="59"/>
+      </Position19>
+      <Position20>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="84" Column="81" TopLine="69"/>
+      </Position20>
+      <Position21>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="149" Column="3" TopLine="127"/>
+      </Position21>
+      <Position22>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="142" Column="74" TopLine="127"/>
+      </Position22>
+      <Position23>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
+        <Caret Line="105" Column="7" TopLine="93"/>
+      </Position23>
+      <Position24>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="142" Column="74" TopLine="127"/>
+      </Position24>
+      <Position25>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="149" Column="74" TopLine="129"/>
+      </Position25>
+      <Position26>
+        <Filename Value="C:\codetyphon\typhon\lcl\lcltype.pp"/>
+        <Caret Line="667" Column="33" TopLine="662"/>
+      </Position26>
+      <Position27>
+        <Filename Value="C:\codetyphon\typhon\lcl\lcltype.pp"/>
+        <Caret Line="389" Column="126" TopLine="379"/>
+      </Position27>
+      <Position28>
+        <Filename Value="C:\codetyphon\typhon\lcl\lcltype.pp"/>
+        <Caret Line="387" Column="61" TopLine="379"/>
+      </Position28>
+      <Position29>
+        <Filename Value="C:\codetyphon\typhon\lcl\lcltype.pp"/>
+        <Caret Line="389" Column="126" TopLine="379"/>
+      </Position29>
+      <Position30>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="85" Column="62" TopLine="82"/>
+      </Position30>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

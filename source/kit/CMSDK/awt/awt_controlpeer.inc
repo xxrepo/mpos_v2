@@ -23,7 +23,7 @@
   end;
 
   IAControlPeer = interface(IAComponentPeer)
-    ['{E1192DCA-5D61-4D56-AB24-0D3CA216FE54}']
+    ['{D89E2EB1-E7CF-4B6B-B172-D25D755E2C44}']
     function GetAlign: TAlign;
     function GetAutoSize: Boolean;
     function GetBorderSpacing: TAControlBorderSpacing;
@@ -66,6 +66,9 @@
     procedure AddControlListener(l: IControlListener);
     procedure RemoveControlListener(l: IControlListener);
     function GetControlListeners: TControlListenerList;
+    procedure AddMouseListener(l: IMouseListener);
+    procedure RemoveMouseListener(l: IMouseListener);
+    function GetMouseListeners: TMouseListenerList;
   end;
 
   IAGraphicControlPeer = interface(IAControlPeer)
@@ -75,18 +78,21 @@
 
   IAWinControlPeer = interface(IAControlPeer)
     ['{5E8453F9-0B30-4ECC-B465-B682826E392F}']
+    function GetBorderStyle: TBorderStyle;
     function GetControl(AIndex: Integer): TAControl;
     function GetControlCount: Integer;
     function GetShowing: Boolean;
     function GetTabOrder: TTabOrder;
+    procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetTabOrder(AValue: TTabOrder);
+    //
     procedure InsertControl(AControl: TAControl);
     procedure RemoveControl(AControl: TAControl);
-    //
     function CanFocus: Boolean;
     function CanSetFocus: Boolean;
     function Focused: Boolean;
     procedure SetFocus;
+    //
     procedure AddWinControlListener(l: IWinControlListener);
     procedure RemoveWinControlListener(l: IWinControlListener);
     function GetWinControlListeners: TWinControlListenerList;
@@ -96,10 +102,8 @@
   end;
 
   IACustomControlPeer = interface(IAWinControlPeer)
-    ['{59304415-85DA-463B-9335-625787C6DEC8}']
-    function GetBorderStyle: TBorderStyle;
+    ['{0B94070A-4213-45E4-BF07-86824295F02E}']
     function GetCanvas: TACanvas;
-    procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetCanvas(AValue: TACanvas);
     procedure AddCustomControlListener(l: ICustomControlListener);
     procedure RemoveCustomControlListener(l: ICustomControlListener);
@@ -129,9 +133,35 @@
   end;
 
   IAEditPeer = interface(IAWinControlPeer)
-    ['{3A9FCF75-9370-4F05-B737-B5A08266C40F}']
+    ['{683F4DD2-AAAF-4D53-930A-8D237AC6DF54}']
     procedure Clear;
     procedure SelectAll;
+    function GetMaxLength: Integer;
+    function GetNumbersOnly: Boolean;
+    function GetPasswordChar: Char;
+    function GetReadOnly: Boolean;
+    function GetSelLength: integer;
+    function GetSelStart: integer;
+    function GetSelText: String;
+    procedure SetMaxLength(AValue: Integer);
+    procedure SetNumbersOnly(AValue: Boolean);
+    procedure SetPasswordChar(AValue: Char);
+    procedure SetReadOnly(AValue: Boolean);
+    procedure SetSelLength(AValue: integer);
+    procedure SetSelStart(AValue: integer);
+    procedure SetSelText(AValue: String);
+    //
+    procedure AddEditListener(l: IEditListener);
+    procedure RemoveEditListener(l: IEditListener);
+    function GetEditListeners: TEditListenerList;
+  end;
+
+  IAMemoPeer = interface(IAEditPeer)
+    ['{4A02B20C-73D0-433D-9A67-9C72D09FF50B}']
+    function GetLines: TStrings;
+    function GetScrollBars: TScrollStyle;
+    procedure SetLines(AValue: TStrings);
+    procedure SetScrollBars(AValue: TScrollStyle);
   end;
 
   IAFormPeer = interface(IAWinControlPeer)
@@ -144,6 +174,22 @@
     procedure RemoveFormListener(l: IFormListener);
     function GetFormListeners: TFormListenerList;
   end;
+
+  IADateTimePickerPeer = interface(IAWinControlPeer)
+    ['{4CBDC79F-746D-4809-B247-2D89B3D1C5B1}']
+    function GetDate: TDate;
+    function GetDateTime: TDateTime;
+    function GetMaxDate: TDate;
+    function GetMinDate: TDate;
+    function GetTime: TTime;
+    procedure SetDate(AValue: TDate);
+    procedure SetDateTime(AValue: TDateTime);
+    procedure SetMaxDate(AValue: TDate);
+    procedure SetMinDate(AValue: TDate);
+    procedure SetTime(AValue: TTime);
+  end;
+
+
 
 
 

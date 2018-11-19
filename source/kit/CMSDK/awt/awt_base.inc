@@ -10,6 +10,7 @@ type
   TAControl = class;
   TAWinControl = class;
   TACustomControl = class;
+  TACustomEdit = class;
   TAForm = class;
   IAToolkit = interface;
 

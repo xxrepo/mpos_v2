@@ -11,7 +11,7 @@
   }
 
   IAToolkit = interface(IUnknown)
-    ['{39A81EE2-2BBF-48D4-8389-2085F826707A}']
+    ['{D246FB82-BFEA-4A2A-B77E-C48EDC73CF78}']
     function CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
     function CreateFont(ATarget: TAFont): IAFontPeer;
     function CreateCanvas(ATarget: TACanvas): IACanvasPeer;
@@ -20,7 +20,9 @@
     function CreateLabel(ATarget: TALabel): IALabelPeer;
     function CreatePanel(ATarget: TAPanel): IAPanelPeer;
     function CreateEdit(ATarget: TAEdit): IAEditPeer;
+    function CreateMemo(ATarget: TAMemo): IAMemoPeer;
     function CreateForm(ATarget: TAForm): IAFormPeer;
+    function CreateDateTimePicker(ATarget: TADateTimePicker): IADateTimePickerPeer;
   end;
 
   { TAWTManager

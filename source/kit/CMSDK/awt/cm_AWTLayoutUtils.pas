@@ -25,7 +25,7 @@ type
   protected
     FItems: TFPHashObjectList;
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent; AContainer: TAControl); virtual; reintroduce;
     destructor Destroy; override;
     property Container: TAControl read FContainer write SetContainer; //布置指定容器
   protected type
@@ -44,6 +44,7 @@ type
   public
     function AddLayoutControl(AControl: TAControl): Boolean;
     function PutLayoutControl(AControl: TAControl): Boolean;
+    procedure PutLayoutControls(AControls: array of TAControl);
     procedure RemoveLayoutControl(AControl: TAControl); virtual;
     function Count: Integer;
     procedure Clear; virtual;
@@ -63,7 +64,7 @@ type
     procedure SetControlOrientation(AValue: TControlOrientation);
     procedure SetLineMaxCount(AValue: Integer);
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent; AContainer: TAControl); override;
   protected type
     TFlowLayoutItem = class(TLayoutItem)
       FNewLine: Boolean; //用于指定新行
@@ -77,6 +78,52 @@ type
     property LineMaxCount: Integer read FLineMaxCount write SetLineMaxCount; //流动线中的最大布局数量
     function PutLayoutControl(AControl: TAControl; IsNewLine: Boolean): Boolean; overload;
     procedure ReLayout; override;
+  end;
+
+  { TAGridLayout }
+
+  TAGridLayout = class(TALayoutManager)
+  private
+    FDefaultColWidth: Integer;
+    FDefaultRowHeight: Integer;
+    FColWidths: array of Integer;
+    FRowHeights: array of Integer;
+    function GetColCount: Integer;
+    function GetColWidth(ACol: Integer): Integer;
+    function GetRowCount: Integer;
+    function GetRowHeight(ARow: Integer): Integer;
+    procedure SetColCount(AValue: Integer);
+    procedure SetColWidth(ACol: Integer; AValue: Integer);
+    procedure SetRowCount(AValue: Integer);
+    procedure SetRowHeight(ARow: Integer; AValue: Integer);
+  protected type
+    TGridLayoutItem = class(TLayoutItem)
+      FCol: Integer;
+      FRow: Integer;
+      FControlWidth: Integer;
+      FControlHeight: Integer;
+      FSizeStored: Boolean;
+      //FAlignAtGrid: Boolean;
+      //constructor Create;
+    end;
+  public
+    constructor Create(AOwner: TComponent; AContainer: TAControl); override;
+    //constructor Create(AOwner: TComponent); override; overload;
+    //constructor Create(AOwner: TComponent; ACols, ARows: Integer); virtual; overload;
+    //destructor Destroy; override;
+    property ColCount: Integer read GetColCount write SetColCount;
+    property RowCount: Integer read GetRowCount write SetRowCount;
+    property ColWidths[ACol: Integer]: Integer read GetColWidth write SetColWidth;
+    property RowHeights[ARow: Integer]: Integer read GetRowHeight write SetRowHeight;
+    property DefaultColWidth: Integer read FDefaultColWidth write FDefaultColWidth;
+    property DefaultRowHeight: Integer read FDefaultRowHeight write FDefaultRowHeight;
+    //procedure SetColWidth(AValue: Integer);
+    //procedure SetRowHeight(AValue: Integer);
+    //property AlignAtGrid: Boolean read FAlignAtGrid write setAlignAtGrid;
+    //function PutLayoutControl(AControl: TControl): TCMLayoutItem; override;
+    //function PutLayoutControl(AControl: TControl; ACol, ARow: Integer): TCMLayoutItem; overload;
+    //procedure RemoveLayoutControl(AControl: TControl); override;
+    //procedure ReLayout; override;
   end;
 
 implementation
@@ -115,10 +162,10 @@ begin
   ReLayout;
 end;
 
-constructor TALayoutManager.Create(AOwner: TComponent);
+constructor TALayoutManager.Create(AOwner: TComponent; AContainer: TAControl);
 begin
   inherited Create(AOwner);
-  FContainer := nil;
+  FContainer := AContainer;
   FItemClass := TLayoutItem;
   FItems := TFPHashObjectList.Create(True);
   FBorderSpacing := 10;
@@ -167,6 +214,14 @@ begin
     end;
 end;
 
+procedure TALayoutManager.PutLayoutControls(AControls: array of TAControl);
+var
+  i: Integer;
+begin
+  for i:=Low(AControls) to High(AControls) do
+    PutLayoutControl(AControls[i]);
+end;
+
 procedure TALayoutManager.RemoveLayoutControl(AControl: TAControl);
 var
   i: Integer;
@@ -212,9 +267,9 @@ begin
   ReLayout;
 end;
 
-constructor TAFlowLayout.Create(AOwner: TComponent);
+constructor TAFlowLayout.Create(AOwner: TComponent; AContainer: TAControl);
 begin
-  inherited Create(AOwner);
+  inherited Create(AOwner, AContainer);
   FItemClass := TFlowLayoutItem;
   FControlOrientation := coLeftToRight;
   FLineMaxCount := 256;
@@ -359,6 +414,81 @@ begin
           lineControlCount := lineControlCount + 1;
         end;
     end;
+end;
+
+{ TAGridLayout }
+
+function TAGridLayout.GetColCount: Integer;
+begin
+  Result := Length(FColWidths);
+end;
+
+function TAGridLayout.GetColWidth(ACol: Integer): Integer;
+begin
+  Result := FColWidths[ACol];
+end;
+
+function TAGridLayout.GetRowCount: Integer;
+begin
+  Result := Length(FRowHeights);
+end;
+
+function TAGridLayout.GetRowHeight(ARow: Integer): Integer;
+begin
+  Result := FRowHeights[ARow];
+end;
+
+procedure TAGridLayout.SetColCount(AValue: Integer);
+var
+  l, i: Integer;
+begin
+  if AValue >= 0 then
+    begin
+      l := Length(FColWidths);
+      SetLength(FColWidths, AValue);
+      for i:=l to High(FColWidths) do
+        FColWidths[i] := FDefaultColWidth;
+      ReLayout;
+    end;
+end;
+
+procedure TAGridLayout.SetColWidth(ACol: Integer; AValue: Integer);
+begin
+  if FColWidths[ACol] = AValue then
+    Exit;
+  FColWidths[ACol] := AValue;
+  ReLayout;
+end;
+
+procedure TAGridLayout.SetRowCount(AValue: Integer);
+var
+  l, i: Integer;
+begin
+  if AValue >= 0 then
+    begin
+      l := Length(FRowHeights);
+      SetLength(FRowHeights, AValue);
+      for i:=l to High(FRowHeights) do
+        FRowHeights[i] := FDefaultRowHeight;
+      ReLayout;
+    end;
+end;
+
+procedure TAGridLayout.SetRowHeight(ARow: Integer; AValue: Integer);
+begin
+  if FRowHeights[ARow] = AValue then
+    Exit;
+  FRowHeights[ARow] := AValue;
+  ReLayout;
+end;
+
+constructor TAGridLayout.Create(AOwner: TComponent; AContainer: TAControl);
+begin
+  inherited Create(AOwner, AContainer);
+  FDefaultColWidth := 100;
+  FDefaultRowHeight := 100;
+  ColCount := 2;
+  RowCount := 2;
 end;
 
 end.

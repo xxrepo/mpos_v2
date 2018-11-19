@@ -307,6 +307,9 @@ type
     procedure AddControlListener(l: IControlListener);
     procedure RemoveControlListener(l: IControlListener);
     function GetControlListeners: TControlListenerList;
+    procedure AddMouseListener(l: IMouseListener);
+    procedure RemoveMouseListener(l: IMouseListener);
+    function GetMouseListeners: TMouseListenerList;
   end;
 
   TAGraphicControl = class abstract(TAControl)
@@ -316,13 +319,17 @@ type
 
   TAWinControl = class abstract(TAControl)
   private
+    function GetBorderStyle: TBorderStyle;
     function GetControl(AIndex: Integer): TAControl;
     function GetControlCount: Integer;
     function GetShowing: Boolean;
     function GetTabOrder: TTabOrder;
+    procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetTabOrder(AValue: TTabOrder);
   public
     function GetPeer: IAWinControlPeer;
+  protected
+    property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle; //start at TWinControl
   public
     procedure InsertControl(AControl: TAControl);
     procedure RemoveControl(AControl: TAControl);
@@ -348,14 +355,12 @@ type
 
   TACustomControl = class abstract(TAWinControl)
   private
-    function GetBorderStyle: TBorderStyle;
     function GetCanvas: TACanvas;
-    procedure SetBorderStyle(AValue: TBorderStyle);
     procedure SetCanvas(AValue: TACanvas);
   public
     function GetPeer: IACustomControlPeer;
   public
-    property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle; //start at TWinControl
+    property BorderStyle;
     property Canvas: TACanvas read GetCanvas write SetCanvas;
   public
     procedure AddCustomControlListener(l: ICustomControlListener);
@@ -404,16 +409,64 @@ type
     property BevelWidth: TBevelWidth read GetBevelWidth write SetBevelWidth;
   end;
 
-  { TAEdit }
+  { TACustomEdit }
 
-  TAEdit = class(TAWinControl)
+  TACustomEdit = class abstract(TAWinControl)
+  private
+    function GetMaxLength: Integer;
+    function GetNumbersOnly: Boolean;
+    function GetPasswordChar: Char;
+    function GetReadOnly: Boolean;
+    function GetSelLength: integer;
+    function GetSelStart: integer;
+    function GetSelText: String;
+    procedure SetMaxLength(AValue: Integer);
+    procedure SetNumbersOnly(AValue: Boolean);
+    procedure SetPasswordChar(AValue: Char);
+    procedure SetReadOnly(AValue: Boolean);
+    procedure SetSelLength(AValue: integer);
+    procedure SetSelStart(AValue: integer);
+    procedure SetSelText(AValue: String);
   public
-    constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAEditPeer;
   public
     procedure Clear;
     procedure SelectAll;
+    property MaxLength: Integer read GetMaxLength write SetMaxLength;
+    property NumbersOnly: Boolean read GetNumbersOnly write SetNumbersOnly;
+    property PasswordChar: Char read GetPasswordChar write SetPasswordChar;
+    property ReadOnly: Boolean read GetReadOnly write SetReadOnly;
+    property SelLength: integer read GetSelLength write SetSelLength;
+    property SelStart: integer read GetSelStart write SetSelStart;
+    property SelText: String read GetSelText write SetSelText;
     property Text: TCaption read GetText write SetText;
+  public
+    procedure AddEditListener(l: IEditListener);
+    procedure RemoveEditListener(l: IEditListener);
+    function GetEditListeners: TEditListenerList;
+  end;
+
+  { TAEdit }
+
+  TAEdit = class(TACustomEdit)
+  public
+    constructor Create(AOwner: TAComponent); override;
+  end;
+
+  { TAMemo }
+
+  TAMemo = class(TACustomEdit)
+  private
+    function GetLines: TStrings;
+    function GetScrollBars: TScrollStyle;
+    procedure SetLines(AValue: TStrings);
+    procedure SetScrollBars(AValue: TScrollStyle);
+  public
+    constructor Create(AOwner: TAComponent); override;
+    function GetPeer: IAMemoPeer;
+  public
+    property Lines: TStrings read GetLines write SetLines;
+    property ScrollBars: TScrollStyle read GetScrollBars write SetScrollBars;
   end;
 
   { TAForm }
@@ -435,6 +488,7 @@ type
     function GetFormListeners: TFormListenerList;
   end;
 
+  {$i awt_extctrls.inc}
   {$i awt_toolkit.inc}
 
 implementation
@@ -754,6 +808,75 @@ begin
   GetPeer.TextOut(X, Y, Text);
 end;
 
+{ TAControlBorderSpacing }
+
+function TAControlBorderSpacing.GetAround: Integer;
+begin
+  Result := GetPeer.GetAround;
+end;
+
+function TAControlBorderSpacing.GetBottom: Integer;
+begin
+  Result := GetPeer.GetBottom;
+end;
+
+function TAControlBorderSpacing.GetLeft: Integer;
+begin
+  Result := GetPeer.GetLeft;
+end;
+
+function TAControlBorderSpacing.GetRight: Integer;
+begin
+  Result := GetPeer.GetRight;
+end;
+
+function TAControlBorderSpacing.GetTop: Integer;
+begin
+  Result := GetPeer.GetTop;
+end;
+
+procedure TAControlBorderSpacing.SetAround(AValue: Integer);
+begin
+  GetPeer.SetAround(AValue);
+end;
+
+procedure TAControlBorderSpacing.SetBottom(AValue: Integer);
+begin
+  GetPeer.SetBottom(AValue);
+end;
+
+procedure TAControlBorderSpacing.SetLeft(AValue: Integer);
+begin
+  GetPeer.SetLeft(AValue);
+end;
+
+procedure TAControlBorderSpacing.SetRight(AValue: Integer);
+begin
+  GetPeer.SetRight(AValue);
+end;
+
+procedure TAControlBorderSpacing.SetTop(AValue: Integer);
+begin
+  GetPeer.SetTop(AValue);
+end;
+
+constructor TAControlBorderSpacing.Create(OwnerControl: TAControl);
+begin
+  inherited Create;
+  FPeer := TAWTManager.DefaultToolkit.CreateBorderSpacing(Self, OwnerControl);
+end;
+
+constructor TAControlBorderSpacing.Create(APeer: IAControlBorderSpacingPeer);
+begin
+  inherited Create;
+  FPeer := APeer;
+end;
+
+function TAControlBorderSpacing.GetPeer: IAControlBorderSpacingPeer;
+begin
+  Result := IAControlBorderSpacingPeer(FPeer);
+end;
+
 { TAComponent }
 
 function TAComponent.GetComponent(AIndex: Integer): TAComponent;
@@ -931,6 +1054,21 @@ begin
   Result := GetPeer.GetControlListeners;
 end;
 
+procedure TAControl.AddMouseListener(l: IMouseListener);
+begin
+  GetPeer.AddMouseListener(l);
+end;
+
+procedure TAControl.RemoveMouseListener(l: IMouseListener);
+begin
+  GetPeer.RemoveMouseListener(l);
+end;
+
+function TAControl.GetMouseListeners: TMouseListenerList;
+begin
+  Result := GetPeer.GetMouseListeners;
+end;
+
 function TAControl.GetBoundsRect: TRect;
 begin
   Result := GetPeer.GetBoundsRect;
@@ -1053,6 +1191,11 @@ end;
 
 { TAWinControl }
 
+function TAWinControl.GetBorderStyle: TBorderStyle;
+begin
+  Result := GetPeer.GetBorderStyle;
+end;
+
 function TAWinControl.GetControl(AIndex: Integer): TAControl;
 begin
   Result := GetPeer.GetControl(AIndex);
@@ -1071,6 +1214,11 @@ end;
 function TAWinControl.GetTabOrder: TTabOrder;
 begin
   Result := GetPeer.GetTabOrder;
+end;
+
+procedure TAWinControl.SetBorderStyle(AValue: TBorderStyle);
+begin
+  GetPeer.SetBorderStyle(AValue);
 end;
 
 procedure TAWinControl.SetTabOrder(AValue: TTabOrder);
@@ -1145,19 +1293,9 @@ end;
 
 { TACustomControl }
 
-function TACustomControl.GetBorderStyle: TBorderStyle;
-begin
-  Result := GetPeer.GetBorderStyle;
-end;
-
 function TACustomControl.GetCanvas: TACanvas;
 begin
   Result := GetPeer.GetCanvas;
-end;
-
-procedure TACustomControl.SetBorderStyle(AValue: TBorderStyle);
-begin
-  GetPeer.SetBorderStyle(AValue);
 end;
 
 procedure TACustomControl.SetCanvas(AValue: TACanvas);
@@ -1281,6 +1419,108 @@ begin
   FPeer.QueryInterface(IAPanelPeer, Result);
 end;
 
+{ TACustomEdit }
+
+function TACustomEdit.GetMaxLength: Integer;
+begin
+  Result := GetPeer.GetMaxLength;
+end;
+
+function TACustomEdit.GetNumbersOnly: Boolean;
+begin
+  Result := GetPeer.GetNumbersOnly;
+end;
+
+function TACustomEdit.GetPasswordChar: Char;
+begin
+  Result := GetPeer.GetPasswordChar;
+end;
+
+function TACustomEdit.GetReadOnly: Boolean;
+begin
+  Result := GetPeer.GetReadOnly;
+end;
+
+function TACustomEdit.GetSelLength: integer;
+begin
+  Result := GetPeer.GetSelLength;
+end;
+
+function TACustomEdit.GetSelStart: integer;
+begin
+  Result := GetPeer.GetSelStart;
+end;
+
+function TACustomEdit.GetSelText: String;
+begin
+  Result := GetPeer.GetSelText;
+end;
+
+procedure TACustomEdit.SetMaxLength(AValue: Integer);
+begin
+  GetPeer.SetMaxLength(AValue);
+end;
+
+procedure TACustomEdit.SetNumbersOnly(AValue: Boolean);
+begin
+  GetPeer.SetNumbersOnly(AValue);
+end;
+
+procedure TACustomEdit.SetPasswordChar(AValue: Char);
+begin
+  GetPeer.SetPasswordChar(AValue);
+end;
+
+procedure TACustomEdit.SetReadOnly(AValue: Boolean);
+begin
+  GetPeer.SetReadOnly(AValue);
+end;
+
+procedure TACustomEdit.SetSelLength(AValue: integer);
+begin
+  GetPeer.SetSelLength(AValue);
+end;
+
+procedure TACustomEdit.SetSelStart(AValue: integer);
+begin
+  GetPeer.SetSelStart(AValue);
+end;
+
+procedure TACustomEdit.SetSelText(AValue: String);
+begin
+  GetPeer.SetSelText(AValue);
+end;
+
+function TACustomEdit.GetPeer: IAEditPeer;
+begin
+  FPeer.QueryInterface(IAEditPeer, Result);
+end;
+
+procedure TACustomEdit.Clear;
+begin
+  GetPeer.Clear;
+end;
+
+procedure TACustomEdit.SelectAll;
+begin
+  GetPeer.SelectAll;
+end;
+
+procedure TACustomEdit.AddEditListener(l: IEditListener);
+begin
+  GetPeer.AddEditListener(l);
+end;
+
+procedure TACustomEdit.RemoveEditListener(l: IEditListener);
+begin
+  GetPeer.RemoveEditListener(l);
+end;
+
+function TACustomEdit.GetEditListeners: TEditListenerList;
+begin
+  Result := GetPeer.GetEditListeners;
+end;
+
 { TAEdit }
 
 constructor TAEdit.Create(AOwner: TAComponent);
@@ -1289,19 +1529,37 @@ begin
   FPeer := TAWTManager.DefaultToolkit.CreateEdit(Self);
 end;
 
-function TAEdit.GetPeer: IAEditPeer;
+{ TAMemo }
+
+function TAMemo.GetLines: TStrings;
 begin
-  FPeer.QueryInterface(IAEditPeer, Result);
+  Result := GetPeer.GetLines;
 end;
 
-procedure TAEdit.Clear;
+function TAMemo.GetScrollBars: TScrollStyle;
 begin
-  GetPeer.Clear;
+  Result := GetPeer.GetScrollBars;
 end;
 
-procedure TAEdit.SelectAll;
+procedure TAMemo.SetLines(AValue: TStrings);
 begin
-  GetPeer.SelectAll;
+  GetPeer.SetLines(AValue);
+end;
+
+procedure TAMemo.SetScrollBars(AValue: TScrollStyle);
+begin
+  GetPeer.SetScrollBars(AValue);
+end;
+
+constructor TAMemo.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FPeer := TAWTManager.DefaultToolkit.CreateMemo(Self);
+end;
+
+function TAMemo.GetPeer: IAMemoPeer;
+begin
+  Result := IAMemoPeer(FPeer);
 end;
 
 { TAForm }
@@ -1352,74 +1610,69 @@ begin
   Result := GetPeer.GetFormListeners;
 end;
 
-{ TAControlBorderSpacing }
+{ TADateTimePicker }
 
-function TAControlBorderSpacing.GetAround: Integer;
+function TADateTimePicker.GetDate: TDate;
 begin
-  Result := GetPeer.GetAround;
+  Result := GetPeer.GetDate;
 end;
 
-function TAControlBorderSpacing.GetBottom: Integer;
+function TADateTimePicker.GetDateTime: TDateTime;
 begin
-  Result := GetPeer.GetBottom;
+  Result := GetPeer.GetDateTime;
 end;
 
-function TAControlBorderSpacing.GetLeft: Integer;
+function TADateTimePicker.GetMaxDate: TDate;
 begin
-  Result := GetPeer.GetLeft;
+  Result := GetPeer.GetMaxDate;
 end;
 
-function TAControlBorderSpacing.GetRight: Integer;
+function TADateTimePicker.GetMinDate: TDate;
 begin
-  Result := GetPeer.GetRight;
+  Result := GetPeer.GetMinDate;
 end;
 
-function TAControlBorderSpacing.GetTop: Integer;
+function TADateTimePicker.GetTime: TTime;
 begin
-  Result := GetPeer.GetTop;
+  Result := GetPeer.GetTime;
 end;
 
-procedure TAControlBorderSpacing.SetAround(AValue: Integer);
+procedure TADateTimePicker.SetDate(AValue: TDate);
 begin
-  GetPeer.SetAround(AValue);
+  GetPeer.SetDate(AValue);
 end;
 
-procedure TAControlBorderSpacing.SetBottom(AValue: Integer);
+procedure TADateTimePicker.SetDateTime(AValue: TDateTime);
 begin
-  GetPeer.SetBottom(AValue);
+  GetPeer.SetDateTime(AValue);
 end;
 
-procedure TAControlBorderSpacing.SetLeft(AValue: Integer);
+procedure TADateTimePicker.SetMaxDate(AValue: TDate);
 begin
-  GetPeer.SetLeft(AValue);
+  GetPeer.SetMaxDate(AValue);
 end;
 
-procedure TAControlBorderSpacing.SetRight(AValue: Integer);
+procedure TADateTimePicker.SetMinDate(AValue: TDate);
 begin
-  GetPeer.SetRight(AValue);
+  GetPeer.SetMinDate(AValue);
 end;
 
-procedure TAControlBorderSpacing.SetTop(AValue: Integer);
+procedure TADateTimePicker.SetTime(AValue: TTime);
 begin
-  GetPeer.SetTop(AValue);
+  GetPeer.SetTime(AValue);
 end;
 
-constructor TAControlBorderSpacing.Create(OwnerControl: TAControl);
+constructor TADateTimePicker.Create(AOwner: TAComponent);
 begin
-  inherited Create;
-  FPeer := TAWTManager.DefaultToolkit.CreateBorderSpacing(Self, OwnerControl);
+  inherited Create(AOwner);
+  FPeer := TAWTManager.DefaultToolkit.CreateDateTimePicker(Self);
 end;
 
-constructor TAControlBorderSpacing.Create(APeer: IAControlBorderSpacingPeer);
+function TADateTimePicker.GetPeer: IADateTimePickerPeer;
 begin
-  inherited Create;
-  FPeer := APeer;
+  Result := IADateTimePickerPeer(FPeer);
 end;
 
-function TAControlBorderSpacing.GetPeer: IAControlBorderSpacingPeer;
-begin
-  Result := IAControlBorderSpacingPeer(FPeer);
-end;
 
 initialization
   TAWTManager.DefaultToolkit := nil;

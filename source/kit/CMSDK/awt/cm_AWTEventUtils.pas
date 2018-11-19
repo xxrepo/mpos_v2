@@ -41,6 +41,18 @@ type
     procedure KeyTyped(e: IKeyEvent); virtual;
   end;
 
+  { TMouseAdapter }
+
+  TMouseAdapter = class(TCMBase, IMouseListener)
+  public
+    procedure MouseEntered(e: IMouseEvent); virtual;
+    procedure MouseExited(e: IMouseEvent); virtual;
+    procedure MousePressed(e: IMouseEvent); virtual;
+    procedure MouseReleased(e: IMouseEvent); virtual;
+    procedure MouseMoved(e: IMouseEvent); virtual;
+    procedure MouseWheeled(e: IMouseEvent); virtual;
+  end;
+
 implementation
 
 { TControlAdapter }
@@ -85,6 +97,38 @@ begin
 end;
 
 procedure TKeyAdapter.KeyTyped(e: IKeyEvent);
+begin
+
+end;
+
+{ TMouseAdapter }
+
+procedure TMouseAdapter.MouseEntered(e: IMouseEvent);
+begin
+
+end;
+
+procedure TMouseAdapter.MouseExited(e: IMouseEvent);
+begin
+
+end;
+
+procedure TMouseAdapter.MousePressed(e: IMouseEvent);
+begin
+
+end;
+
+procedure TMouseAdapter.MouseReleased(e: IMouseEvent);
+begin
+
+end;
+
+procedure TMouseAdapter.MouseMoved(e: IMouseEvent);
+begin
+
+end;
+
+procedure TMouseAdapter.MouseWheeled(e: IMouseEvent);
 begin
 
 end;

@@ -5,7 +5,7 @@ unit uFrameTest;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics,
+  Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics, Grids, DateTimePicker,
   cm_theme, cm_plat,
   uSale, uSaleDTO,
   uSystem,
@@ -17,10 +17,13 @@ type
 
   TTestFrame = class(TFrame)
     Button1: TButton;
-    Button2: TButton;
+    DateTimePicker1: TDateTimePicker;
+    Label1: TLabel;
+    Memo1: TMemo;
     Panel1: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
+    StringGrid1: TStringGrid;
     procedure Button1Click(Sender: TObject);
     procedure FrameClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
@@ -38,6 +41,13 @@ type
   public
     procedure ControlClick(e: IControlEvent); override;
     procedure ControlEnter(e: IWinControlEvent); override;
+  end;
+
+  { TMouseL }
+
+  TMouseL = class(TMouseAdapter)
+  public
+    procedure MouseMoved(e: IMouseEvent); override;
   end;
 
 
@@ -74,7 +84,11 @@ end;
 procedure TTestFrame.FrameClick(Sender: TObject);
 begin
   //Panel1.TabOrder := ;
-
+  //Panel1.OnMouseDown := ;
+  //Label1.OnMouseDown := ;
+  //Memo1.
+  //Memo1.ReadOnly := ;
+  //Memo1.NumbersOnly := ;
 end;
 
 procedure TTestFrame.Button1Click(Sender: TObject);
@@ -82,6 +96,7 @@ var
   f: TACustomServiceForm;
   e, e2: TAEdit;
   wl: IWinControlListener;
+  p: TADateTimePicker;
 begin
   f := TACustomServiceForm.Create(nil);
 
@@ -96,6 +111,12 @@ begin
   wl := TX.Create;
   e.AddWinControlListener(wl);
   e2.AddWinControlListener(wl);
+
+  p := TADateTimePicker.Create(f);
+  p.Parent := f;
+  p.AddMouseListener(TMouseL.Create);
+
+
   f.Left := 10;
   f.Top := 10;
   f.ShowModal;
@@ -147,6 +168,13 @@ end;
 procedure TX.ControlEnter(e: IWinControlEvent);
 begin
   AppSystem.GetMsgBar.ShowMessage(etInfo, 'bbbbbb' + IntToStr(e.GetAControl.GetHashCode));
+end;
+
+{ TMouseL }
+
+procedure TMouseL.MouseMoved(e: IMouseEvent);
+begin
+  AppSystem.GetMsgBar.ShowMessage(etInfo, Format('%d - %d', [e.GetX, e.GetY]));
 end;
 
 

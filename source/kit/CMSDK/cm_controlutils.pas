@@ -240,7 +240,7 @@ type
     procedure DelClick; overload;
   end;
 
-  function GetKeyCodeCHName(const AKeyCode: Word; IsNeedCode: Boolean=True): string;
+  function GetKeyCodeText(const AKeyCode: Word; IsNeedCode: Boolean=True): string;
 
 implementation
 
@@ -1261,10 +1261,9 @@ begin
 end;
 
 
-
 {-------------------------------------------------------------------------------------------------}
 
-function GetKeyCodeCHName(const AKeyCode: Word; IsNeedCode: Boolean=True): string;
+function GetKeyCodeText(const AKeyCode: Word; IsNeedCode: Boolean=True): string;
 begin
   case AKeyCode of
   VK_LBUTTON: Result := '鼠标左键';     //	01	1	鼠标的左键
