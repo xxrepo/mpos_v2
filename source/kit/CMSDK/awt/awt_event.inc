@@ -73,10 +73,10 @@ type
   end;
 
   IFormListener = interface(ICustomControlListener)
-    ['{199F7D95-13C8-4BCB-995C-9D05F9A27240}']
+    ['{7F6E577F-6FF0-47CA-AB16-8DAD96DFCB6F}']
     procedure FormActivate(e: IFormEvent);
     procedure FormClose(e: IFormEvent);
-    procedure FormCreate(e: IFormEvent);
+    procedure FormDeactivate(e: IFormEvent);
     procedure FormHide(e: IFormEvent);
     procedure FormShow(e: IFormEvent);
   end;

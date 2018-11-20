@@ -5,7 +5,7 @@ unit cm_AWTLayoutUtils;
 interface
 
 uses
-  Classes, SysUtils, Contnrs,
+  Classes, SysUtils, Contnrs, Dialogs,
   cm_AWT;
 
 type
@@ -36,7 +36,9 @@ type
   protected
     FItemClass: TLayoutItemClass;
     function CreateItem(AControl: TAControl): TLayoutItem;
+    procedure AfterCreateItem(AControl: TAControl; AItem: TLayoutItem); virtual;
     function AddItem(AItem: TLayoutItem): Integer;
+    procedure BeforeRemoveItem(AControl: TAControl; AItem: TLayoutItem); virtual;
   protected
     property BorderSpacing: Integer read FBorderSpacing write SetBorderSpacing;
     property LeftSpacing: Integer read FLeftSpacing write SetLeftSpacing;
@@ -45,7 +47,7 @@ type
     function AddLayoutControl(AControl: TAControl): Boolean;
     function PutLayoutControl(AControl: TAControl): Boolean;
     procedure PutLayoutControls(AControls: array of TAControl);
-    procedure RemoveLayoutControl(AControl: TAControl); virtual;
+    procedure RemoveLayoutControl(AControl: TAControl);
     function Count: Integer;
     procedure Clear; virtual;
     procedure ReLayout; virtual; abstract;
@@ -61,7 +63,9 @@ type
   private
     FControlOrientation: TControlOrientation;
     FLineMaxCount: Integer;
+    FItemLength: Integer;
     procedure SetControlOrientation(AValue: TControlOrientation);
+    procedure SetItemLength(AValue: Integer);
     procedure SetLineMaxCount(AValue: Integer);
   public
     constructor Create(AOwner: TComponent; AContainer: TAControl); override;
@@ -76,7 +80,9 @@ type
     property TopSpacing;
     property ControlOrientation: TControlOrientation read FControlOrientation write SetControlOrientation;
     property LineMaxCount: Integer read FLineMaxCount write SetLineMaxCount; //流动线中的最大布局数量
-    function PutLayoutControl(AControl: TAControl; IsNewLine: Boolean): Boolean; overload;
+    property ItemLength: Integer read FItemLength write SetItemLength; //当值大于-1时布局为指定长度
+    function PutLayoutControlToNewLine(AControl: TAControl): Boolean;
+    procedure PutLayoutControlsToNewLine(AControls: array of TAControl);
     procedure ReLayout; override;
   end;
 
@@ -84,33 +90,47 @@ type
 
   TAGridLayout = class(TALayoutManager)
   private
+    //FColRowRecList: TFPHashObjectList;
     FDefaultColWidth: Integer;
     FDefaultRowHeight: Integer;
     FColWidths: array of Integer;
     FRowHeights: array of Integer;
+    FAlignAtGrid: Boolean;
+    FSetPosSL: TStrings;
     function GetColCount: Integer;
     function GetColWidth(ACol: Integer): Integer;
     function GetRowCount: Integer;
     function GetRowHeight(ARow: Integer): Integer;
+    procedure SetAlignAtGrid(AValue: Boolean);
     procedure SetColCount(AValue: Integer);
     procedure SetColWidth(ACol: Integer; AValue: Integer);
     procedure SetRowCount(AValue: Integer);
     procedure SetRowHeight(ARow: Integer; AValue: Integer);
+    function GetColRowRecStr(ACol, ARow: Integer): string;
   protected type
+
+    { TGridLayoutItem }
+
     TGridLayoutItem = class(TLayoutItem)
-      FCol: Integer;
+      FCol: Integer;    //实现分配的位置
       FRow: Integer;
-      FControlWidth: Integer;
+      FControlWidth: Integer;  //AtGrid 前的尺寸
       FControlHeight: Integer;
+      procedure AfterConstruction; override;
+    private
+      FSetCol: Integer; //放入时设置的位置，未设置为-1
+      FSetRow: Integer;
+      //FSetAlignAtGrid: Boolean;  //
       FSizeStored: Boolean;
-      //FAlignAtGrid: Boolean;
-      //constructor Create;
     end;
+  protected
+    procedure AfterCreateItem(AControl: TAControl; AItem: TLayoutItem); override;
+    procedure BeforeRemoveItem(AControl: TAControl; AItem: TLayoutItem); override;
   public
     constructor Create(AOwner: TComponent; AContainer: TAControl); override;
     //constructor Create(AOwner: TComponent); override; overload;
     //constructor Create(AOwner: TComponent; ACols, ARows: Integer); virtual; overload;
-    //destructor Destroy; override;
+    destructor Destroy; override;
     property ColCount: Integer read GetColCount write SetColCount;
     property RowCount: Integer read GetRowCount write SetRowCount;
     property ColWidths[ACol: Integer]: Integer read GetColWidth write SetColWidth;
@@ -119,11 +139,11 @@ type
     property DefaultRowHeight: Integer read FDefaultRowHeight write FDefaultRowHeight;
     //procedure SetColWidth(AValue: Integer);
     //procedure SetRowHeight(AValue: Integer);
-    //property AlignAtGrid: Boolean read FAlignAtGrid write setAlignAtGrid;
+    property AlignAtGrid: Boolean read FAlignAtGrid write SetAlignAtGrid;
     //function PutLayoutControl(AControl: TControl): TCMLayoutItem; override;
     //function PutLayoutControl(AControl: TControl; ACol, ARow: Integer): TCMLayoutItem; overload;
     //procedure RemoveLayoutControl(AControl: TControl); override;
-    //procedure ReLayout; override;
+    procedure ReLayout; override;
   end;
 
 implementation
@@ -182,15 +202,27 @@ end;
 function TALayoutManager.CreateItem(AControl: TAControl): TLayoutItem;
 begin
   Result := nil;
+  if not Assigned(AControl) then
+    Exit;
   if FItems.FindIndexOf(IntToStr(AControl.GetHashCode)) >= 0 then
     Exit;
   Result := FItemClass.Create;
   Result.FControl := AControl;
 end;
 
+procedure TALayoutManager.AfterCreateItem(AControl: TAControl; AItem: TLayoutItem);
+begin
+  //
+end;
+
 function TALayoutManager.AddItem(AItem: TLayoutItem): Integer;
 begin
   Result := FItems.Add(IntToStr(AItem.FControl.GetHashCode), AItem);
+end;
+
+procedure TALayoutManager.BeforeRemoveItem(AControl: TAControl; AItem: TLayoutItem);
+begin
+  //
 end;
 
 function TALayoutManager.AddLayoutControl(AControl: TAControl): Boolean;
@@ -205,12 +237,11 @@ var
   item: TLayoutItem;
 begin
   Result := False;
-  if Assigned(AControl) then
+  item := Self.CreateItem(AControl);
+  if Assigned(item) then
     begin
-      item := Self.CreateItem(AControl);
-      if Assigned(item) then
-        Self.AddItem(item);
-      Result := True;
+      AfterCreateItem(AControl, item);
+      Result := Self.AddItem(item) >= 0;
     end;
 end;
 
@@ -224,11 +255,14 @@ end;
 
 procedure TALayoutManager.RemoveLayoutControl(AControl: TAControl);
 var
-  i: Integer;
+  item: TLayoutItem;
 begin
-  i := FItems.FindIndexOf(IntToStr(AControl.GetHashCode));
-  if i >= 0 then
-    FItems.Delete(i);
+  item := TLayoutItem(FItems.Find(IntToStr(AControl.GetHashCode)));
+  if Assigned(item) then
+    begin
+      BeforeRemoveItem(AControl, item);
+      FItems.Remove(item);
+    end;
 end;
 
 function TALayoutManager.Count: Integer;
@@ -259,6 +293,14 @@ begin
   ReLayout;
 end;
 
+procedure TAFlowLayout.SetItemLength(AValue: Integer);
+begin
+  if FItemLength = AValue then
+    Exit;
+  FItemLength := AValue;
+  ReLayout;
+end;
+
 procedure TAFlowLayout.SetLineMaxCount(AValue: Integer);
 begin
   if FLineMaxCount = AValue then
@@ -273,22 +315,31 @@ begin
   FItemClass := TFlowLayoutItem;
   FControlOrientation := coLeftToRight;
   FLineMaxCount := 256;
+  FItemLength := -1;
 end;
 
-function TAFlowLayout.PutLayoutControl(AControl: TAControl; IsNewLine: Boolean): Boolean;
+function TAFlowLayout.PutLayoutControlToNewLine(AControl: TAControl): Boolean;
 var
   item: TFlowLayoutItem;
 begin
   Result := False;
-  if Assigned(AControl) then
+  item := TFlowLayoutItem(Self.CreateItem(AControl));
+  if Assigned(item) then
     begin
-      item := TFlowLayoutItem(Self.CreateItem(AControl));
-      if Assigned(item) then
-        begin
-          Self.AddItem(item);
-          item.FNewLine := IsNewLine;
-          Result := True;
-        end;
+      item.FNewLine := True;
+      Result := Self.AddItem(item) >= 0;
+    end;
+end;
+
+procedure TAFlowLayout.PutLayoutControlsToNewLine(AControls: array of TAControl);
+var
+  i: Integer;
+begin
+  if Length(AControls) > 0 then
+    begin
+      Self.PutLayoutControlToNewLine(AControls[Low(AControls)]);
+      for i:= Low(AControls) + 1 to High(AControls) do
+        Self.PutLayoutControl(AControls[i]);
     end;
 end;
 
@@ -340,7 +391,10 @@ begin
                   lineControlCount := 0;
                 end;
               x := nextLineX;
-              nextLineX := x + theControl.Width + LeftSpacing;
+              if FItemLength > -1 then
+                nextLineX := x + FItemLength + LeftSpacing
+              else
+                nextLineX := x + theControl.Width + LeftSpacing;
               y := nextLineY;
               //
               if theControl.Height > currMaxLineMark then
@@ -360,7 +414,10 @@ begin
                   currMaxLineMark := 0;
                   lineControlCount := 0;
                 end;
-              x := nextLineX - theControl.Width;
+              if FItemLength > -1 then
+                x := nextLineX - FItemLength
+              else
+                x := nextLineX - theControl.Width;
               nextLineX := x - LeftSpacing;
               y := nextLineY;
               //
@@ -383,7 +440,10 @@ begin
                 end;
               x := nextLineX;
               y := nextLineY;
-              nextLineY := y + theControl.Height + TopSpacing;
+              if FItemLength > -1 then
+                nextLineY := y + FItemLength + TopSpacing
+              else
+                nextLineY := y + theControl.Height + TopSpacing;
               //
               if theControl.Width > currMaxLineMark then
                 currMaxLineMark := theControl.Width;
@@ -404,7 +464,10 @@ begin
                 end;
               x := nextLineX - theControl.Width;
               y := nextLineY;
-              nextLineY := y + theControl.Height + TopSpacing;
+              if FItemLength > -1 then
+                nextLineY := y + FItemLength + TopSpacing
+              else
+                nextLineY := y + theControl.Height + TopSpacing;
               //
               if theControl.Width > currMaxLineMark then
                 currMaxLineMark := theControl.Width;
@@ -414,6 +477,18 @@ begin
           lineControlCount := lineControlCount + 1;
         end;
     end;
+end;
+
+{ TAGridLayout.TGridLayoutItem }
+
+procedure TAGridLayout.TGridLayoutItem.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  FCol := -1;
+  FRow := -1;
+  FSetCol := -1;
+  FSetRow := -1;
+  FSizeStored := False;
 end;
 
 { TAGridLayout }
@@ -436,6 +511,14 @@ end;
 function TAGridLayout.GetRowHeight(ARow: Integer): Integer;
 begin
   Result := FRowHeights[ARow];
+end;
+
+procedure TAGridLayout.SetAlignAtGrid(AValue: Boolean);
+begin
+  if FAlignAtGrid = AValue then
+    Exit;
+  FAlignAtGrid := AValue;
+  ReLayout;
 end;
 
 procedure TAGridLayout.SetColCount(AValue: Integer);
@@ -482,13 +565,147 @@ begin
   ReLayout;
 end;
 
+function TAGridLayout.GetColRowRecStr(ACol, ARow: Integer): string;
+begin
+  Result := Format('%d-%d', [ACol, ARow]);
+end;
+
+procedure TAGridLayout.AfterCreateItem(AControl: TAControl; AItem: TLayoutItem);
+begin
+  inherited AfterCreateItem(AControl, AItem);
+  TGridLayoutItem(AItem).FControlWidth := AControl.Width;
+  TGridLayoutItem(AItem).FControlHeight := AControl.Height;
+end;
+
+procedure TAGridLayout.BeforeRemoveItem(AControl: TAControl; AItem: TLayoutItem);
+begin
+  inherited BeforeRemoveItem(AControl, AItem);
+end;
+
 constructor TAGridLayout.Create(AOwner: TComponent; AContainer: TAControl);
 begin
   inherited Create(AOwner, AContainer);
-  FDefaultColWidth := 100;
-  FDefaultRowHeight := 100;
-  ColCount := 2;
+  FItemClass := TGridLayoutItem;
+  //FColRowRecList := TFPHashObjectList.Create(False);
+  FDefaultColWidth := 80;
+  FDefaultRowHeight := 60;
+  FAlignAtGrid := False;
+  //
+  ColCount := 4;
   RowCount := 2;
+  //
+  FSetPosSL := TStringList.Create;
+end;
+
+destructor TAGridLayout.Destroy;
+begin
+  FSetPosSL.Free;
+  //FColRowRecList.Free;
+  inherited Destroy;
+end;
+
+procedure TAGridLayout.ReLayout;
+var
+  tabOrderInt: Integer;
+  i, tempInt: Integer;
+  theItem: TGridLayoutItem;
+  theControl: TAControl;
+  lefts, tops: array of Integer;
+  rCol, rRow: Integer;
+begin
+  if not Assigned(FContainer) then
+    Exit;
+  if (FContainer is TAWinControl) and (not TAWinControl(FContainer).Showing) then
+    Exit;
+  if (ColCount <= 0) or (RowCount <= 0) then
+    Exit;
+  //先计算出所有行列的起点
+  SetLength(lefts, ColCount);
+  SetLength(tops, RowCount);
+  tempInt := BorderSpacing;
+  for i:=Low(FColWidths) to High(FColWidths) do
+    begin
+      lefts[i] := tempInt;
+      tempInt := tempInt + FColWidths[i];
+    end;
+  tempInt := BorderSpacing;
+  for i:=Low(FRowHeights) to High(FRowHeights) do
+    begin
+      tops[i] := tempInt;
+      tempInt := tempInt + FRowHeights[i];
+    end;
+  //找出指定位置的
+  FSetPosSL.Clear;
+  for i:=0 to FItems.Count-1 do
+    begin
+      theItem := TGridLayoutItem(FItems[i]);
+      if (theItem.FSetCol >= 0) or (theItem.FSetRow >= 0) then
+        begin
+          FSetPosSL.Add(GetColRowRecStr(theItem.FSetCol, theItem.FSetRow));
+          if (theItem.FSetCol < ColCount) and (theItem.FSetRow < RowCount) then
+            begin
+              theItem.FCol := rCol;
+              theItem.FRow := rRow;
+              theControl.Left := lefts[rCol];
+              theControl.Top := tops[rRow];
+            end;
+        end;
+    end;
+  //
+  tabOrderInt := 0;
+  rCol := 0;
+  rRow := 0;
+  for i:=0 to FItems.Count-1 do
+    begin
+      theItem := TGridLayoutItem(FItems[i]);
+      theControl := theItem.FControl;
+      if not Assigned(theControl) then
+        Continue;
+      //
+      if theControl is TAWinControl then
+        begin
+          TAWinControl(theControl).TabOrder := tabOrderInt;
+          tabOrderInt := tabOrderInt + 1;
+        end;
+      // 如果指定了位置
+      if FSetPosSL.IndexOf(GetColRowRecStr(rCol, rRow)) >= 0 then
+        Continue;
+      //
+      theItem.FCol := rCol;
+      theItem.FRow := rRow;
+      theControl.Left := lefts[rCol];
+      theControl.Top := tops[rRow];
+      //
+      if AlignAtGrid then
+        begin
+          if not theItem.FSizeStored then
+            begin
+              theItem.FControlWidth := theControl.Width;
+              theItem.FControlHeight := theControl.Height;
+              theItem.FSizeStored := True;
+            end;
+          theControl.Width := FColWidths[rCol] - LeftSpacing;
+          theControl.Height := FRowHeights[rRow] - TopSpacing;
+        end
+      else
+        begin
+          if theItem.FSizeStored then
+            begin
+              theControl.Width := theItem.FControlWidth;
+              theControl.Height := theItem.FControlHeight;
+              theItem.FSizeStored := False;
+            end;
+        end;
+      //计算下一步位置
+      rCol := rCol + 1;
+      if rCol >= ColCount then
+        begin
+          rCol := 0;
+          rRow := rRow + 1;
+          if rRow >= RowCount then
+            rRow := 0;
+        end;
+    end;
 end;
 
 end.

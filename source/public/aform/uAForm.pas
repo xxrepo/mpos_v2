@@ -14,7 +14,7 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_theme, cm_AWT;
+  cm_theme, cm_AWT, cm_messager;
 
 type
 
@@ -59,7 +59,7 @@ type
     procedure FormPaint(e: ICustomControlEvent); virtual;
     procedure FormActivate(e: IFormEvent); virtual;
     procedure FormClose(e: IFormEvent); virtual;
-    procedure FormCreate(e: IFormEvent); virtual;
+    procedure FormDeactivate(e: IFormEvent); virtual;
     procedure FormHide(e: IFormEvent); virtual;
     procedure FormShow(e: IFormEvent); virtual;
     procedure FormKeyPressed(e: IKeyEvent); virtual;
@@ -76,11 +76,22 @@ type
     procedure SetTheme(ATheme: ITheme); override;
   end;
 
+  { TAMessageableServiceForm }
+
+  TAMessageableServiceForm = class(TAServiceForm, ICMMessageable)
+  private
+    FMessager: TCMMessager;
+  protected
+    function Messager: TCMMessager;
+  public
+    constructor Create(AOwner: TAComponent); override;
+  end;
+
   { TATitledServiceForm
     // 具备标题的业务窗体
   }
 
-  TATitledServiceForm = class(TAServiceForm)
+  TATitledServiceForm = class(TAMessageableServiceForm)
   protected
     FTitleLab: TALabel;
   public
@@ -110,6 +121,7 @@ type
   protected
     FCenterPanel: TAPanel;
     procedure FormShow(e: IFormEvent); override;
+    procedure FormKeyPressed(e: IKeyEvent); override;
   public
     constructor Create(AOwner: TAComponent); override;
   end;
@@ -261,7 +273,7 @@ begin
 
 end;
 
-procedure TAServiceForm.FormCreate(e: IFormEvent);
+procedure TAServiceForm.FormDeactivate(e: IFormEvent);
 begin
 
 end;
@@ -385,12 +397,23 @@ begin
   FCenterPanel.Top := (FMainPanel.Height - FCenterPanel.Height) div 2;
 end;
 
+procedure TACustomServiceForm.FormKeyPressed(e: IKeyEvent);
+begin
+  if e.GetKeyCode = 27 then
+    Close;
+end;
+
 constructor TACustomServiceForm.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
   FCenterPanel := TAPanel.Create(Self);
   FCenterPanel.Parent := FMainPanel;
   FCenterPanel.BevelOuter := bvNone;
+  FCenterPanel.Width := 300;
+  FCenterPanel.Height := 200;
+  //
+  OpenDefaultFormEvent := True;
+  OpenDefaultKeyEvent := True;
 end;
 
 { TAQueryServiceForm }
@@ -412,6 +435,19 @@ procedure TAQueryServiceForm.SetTheme(ATheme: ITheme);
 begin
   inherited SetTheme(ATheme);
   FDataPanel.Color := ATheme.GetParameter.Get('boardColor').AsInteger;
+end;
+
+{ TAMessageableServiceForm }
+
+function TAMessageableServiceForm.Messager: TCMMessager;
+begin
+  Result := FMessager;
+end;
+
+constructor TAMessageableServiceForm.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FMessager := TCMMessageManager.GetInstance.GetMessager(Self);
 end;
 
 

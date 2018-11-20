@@ -39,5 +39,10 @@
 		    <Name>SaleQuery</Name>
 		    <Caption>交易查询</Caption>
 		</Item>
+
+		<Item>
+		    <Name>Test</Name>
+		    <Caption>测试</Caption>
+		</Item>
 	</Items>
 </Navigator>

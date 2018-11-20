@@ -43,9 +43,9 @@ object TestFrame: TTestFrame
     OnClick = Panel1Click
   end
   object Button1: TButton
-    Left = 104
+    Left = 64
     Height = 25
-    Top = 72
+    Top = 48
     Width = 75
     Caption = 'Button1'
     OnClick = Button1Click
@@ -69,13 +69,6 @@ object TestFrame: TTestFrame
     )
     TabOrder = 4
   end
-  object StringGrid1: TStringGrid
-    Left = 128
-    Height = 100
-    Top = 136
-    Width = 200
-    TabOrder = 5
-  end
   object DateTimePicker1: TDateTimePicker
     Left = 16
     Height = 48
@@ -87,7 +80,7 @@ object TestFrame: TTestFrame
     AutoSize = False
     Font.Height = -19
     ParentFont = False
-    TabOrder = 6
+    TabOrder = 5
     TrailingSeparator = False
     TextForNullDate = 'NULL'
     LeadingZeros = True
@@ -100,5 +93,14 @@ object TestFrame: TTestFrame
     UseDefaultSeparators = True
     HideDateTimeParts = []
     MonthNames = 'Long'
+  end
+  object Button2: TButton
+    Left = 104
+    Height = 25
+    Top = 104
+    Width = 75
+    Caption = 'Button2'
+    OnClick = Button2Click
+    TabOrder = 6
   end
 end

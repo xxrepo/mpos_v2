@@ -9,10 +9,10 @@ inherited MainForm: TMainForm
   ClientWidth = 1024
   Color = clWhite
   KeyPreview = True
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
-  OnResize = FormResize
   OnShow = FormShow
   Position = poScreenCenter
   WindowState = wsMaximized

@@ -9,7 +9,7 @@ uses
   cm_theme, cm_plat,
   uSale, uSaleDTO,
   uSystem,
-  uAForm, cm_AWT, cm_AWTEventUtils;
+  uAForm, cm_AWT, cm_AWTEventUtils, cm_AWTLayoutUtils;
 
 type
 
@@ -17,14 +17,15 @@ type
 
   TTestFrame = class(TFrame)
     Button1: TButton;
+    Button2: TButton;
     DateTimePicker1: TDateTimePicker;
     Label1: TLabel;
     Memo1: TMemo;
     Panel1: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
-    StringGrid1: TStringGrid;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure FrameClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
     procedure Panel6Click(Sender: TObject);
@@ -48,6 +49,18 @@ type
   TMouseL = class(TMouseAdapter)
   public
     procedure MouseMoved(e: IMouseEvent); override;
+  end;
+
+  { TTestForm }
+
+  TTestForm = class(TACustomServiceForm)
+  private
+    FGridLayout: TAGridLayout;
+  protected
+    procedure FormShow(e: IFormEvent); override;
+    procedure FormKeyPressed(e: IKeyEvent); override;
+  public
+    constructor Create(AOwner: TAComponent); override;
   end;
 
 
@@ -89,6 +102,7 @@ begin
   //Memo1.
   //Memo1.ReadOnly := ;
   //Memo1.NumbersOnly := ;
+  //TForm.OnClose := ;
 end;
 
 procedure TTestFrame.Button1Click(Sender: TObject);
@@ -119,6 +133,16 @@ begin
 
   f.Left := 10;
   f.Top := 10;
+  f.ShowModal;
+end;
+
+procedure TTestFrame.Button2Click(Sender: TObject);
+var
+  f: TTestForm;
+begin
+  f := TTestForm.Create(nil);
+  f.BoundsRect := AppSystem.GetServiceRect;
+
   f.ShowModal;
 end;
 
@@ -175,6 +199,51 @@ end;
 procedure TMouseL.MouseMoved(e: IMouseEvent);
 begin
   AppSystem.GetMsgBar.ShowMessage(etInfo, Format('%d - %d', [e.GetX, e.GetY]));
+end;
+
+{ TTestForm }
+
+procedure TTestForm.FormShow(e: IFormEvent);
+begin
+  inherited FormShow(e);
+  FGridLayout.ReLayout;
+end;
+
+procedure TTestForm.FormKeyPressed(e: IKeyEvent);
+begin
+  inherited FormKeyPressed(e);
+  case e.GetKeyCode of
+  VK_F1: FGridLayout.ColCount := 2;
+  VK_F2: FGridLayout.ColCount := 4;
+  VK_F3: begin FGridLayout.ColCount := 2; FGridLayout.RowCount := 4; end;
+  VK_F4: FGridLayout.AlignAtGrid := not FGridLayout.AlignAtGrid;
+  end;
+end;
+
+constructor TTestForm.Create(AOwner: TAComponent);
+var
+  p: TAPanel;
+  i: Integer;
+begin
+  inherited Create(AOwner);
+  FCenterPanel.Width := 400;
+  FCenterPanel.Height := 300;
+  FCenterPanel.Color := clGray;
+  FGridLayout := TAGridLayout.Create(nil, FCenterPanel);
+
+  for i:=0 to 6 do
+    begin
+      p := TAPanel.Create(Self);
+      p.Parent := FCenterPanel;
+      p.Width := 50;
+      if i mod 2 = 0 then
+        p.Height := 30
+      else
+        p.Height := 40;
+      p.Color := clLime;
+      p.Caption := IntToStr(i);
+      FGridLayout.PutLayoutControl(p);
+    end;
 end;
 
 

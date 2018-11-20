@@ -26,10 +26,10 @@ type
     PanelClient: TPanel;
     PanelBottom: TPanel;
     PanelTop: TPanel;
+    procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure PanelRightHintDblClick(Sender: TObject);
   private
@@ -86,21 +86,25 @@ begin
   POSInitialize.NotifySystem('Closing');
 end;
 
+var
+  _Prepared: Boolean = False;
+
+procedure TMainForm.FormActivate(Sender: TObject);
+begin
+  // TODO
+  if not _Prepared then
+    POSInitialize.NotifySystem('Prepared');
+  _Prepared := True;
+
+  if not AppSystem.IsLogined then
+    POSInitialize.NotifySystem('Logined');
+end;
+
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   FMsgBar.Visible := False;
   if Key = 27 then
     Close;
-end;
-
-procedure TMainForm.FormResize(Sender: TObject);
-begin
-  //FMsgBar.Top := pa;
-  //PanelWork.OnKeyDown := ;
-  //Self.OnEnter := ;
-  //TEdit.OnDblClick := ;
-  //TLabel.AutoSize := ;
-  //Self.OnClose := ;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -131,8 +135,6 @@ begin
   //TODO 登陆
   FNavigatorFrame.LoadConfig;
   PanelRightHint.Width := 12;
-  //
-  POSInitialize.NotifySystem('Prepared');
 end;
 
 procedure TMainForm.PanelRightHintDblClick(Sender: TObject);

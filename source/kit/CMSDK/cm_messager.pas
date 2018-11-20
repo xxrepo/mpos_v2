@@ -482,6 +482,7 @@ end;
 procedure TCMMessageable.AfterConstruction;
 begin
   inherited AfterConstruction;
+  // TODO
   if not Assigned(FMessager) then
     FMessager := TCMMessageManager.GetInstance.GetMessager(Self);
 end;

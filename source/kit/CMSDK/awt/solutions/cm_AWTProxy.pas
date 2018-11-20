@@ -185,7 +185,7 @@ type
     FControlListenerList: TCMInterfaceList; //同时用于子类扩展
     procedure ControlDblClickEvent(Sender: TObject); //Control 未公开，在公开的子类中使用。
     procedure RegisterControlEvents; virtual;
-    procedure RegisterMouseEvents; virtual;
+    procedure RegisterMouseEvents; virtual; //Control 未公开,需要子类操作
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
@@ -257,7 +257,7 @@ type
     FControls: TFPList;    // the child controls
     FKeyListenerList: TKeyListenerList;
   protected
-    procedure RegisterWinControlEvents;
+    procedure CheckWinControlEvents;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
@@ -297,7 +297,7 @@ type
   private
     FCanvas: TACanvas;
   protected
-    procedure RegisterCustomControlEvents;
+    procedure CheckCustomControlEvents;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
@@ -402,14 +402,14 @@ type
   TProxyFormPeer = class(TProxyCustomControlPeer, IAFormPeer)
   protected
     procedure RegisterControlEvents; override;
-    procedure RegisterFormControlEvents;
+    procedure CheckFormControlEvents;
     procedure RegisterMouseEvents; override;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TForm;
     procedure FormActivateEvent(Sender: TObject);
     procedure FormCloseEvent(Sender: TObject; var CloseAction: TCloseAction);
-    procedure FormCreateEvent(Sender: TObject);
+    procedure FormDeactivateEvent(Sender: TObject);
     procedure FormHideEvent(Sender: TObject);
     procedure FormShowEvent(Sender: TObject);
   public
@@ -1259,37 +1259,31 @@ begin
   GetDelegate.SetFocus;
 end;
 
-procedure TProxyWinControlPeer.RegisterWinControlEvents;
+procedure TProxyWinControlPeer.CheckWinControlEvents;
 begin
-  GetDelegate.OnEnter := @WinControlEnterEvent;
-  GetDelegate.OnExit := @WinControlExitEvent;
+  if GetDelegate.OnEnter <> @WinControlEnterEvent then
+    GetDelegate.OnEnter := @WinControlEnterEvent;
+  if GetDelegate.OnExit <> @WinControlExitEvent then
+    GetDelegate.OnExit := @WinControlExitEvent;
 end;
 
 procedure TProxyWinControlPeer.AddWinControlListener(l: IWinControlListener);
 begin
-  if not Assigned(FControlListenerList) then
-    begin
-      FControlListenerList := TCMInterfaceList.Create;
-      RegisterControlEvents;
-      RegisterWinControlEvents;
-    end;
-  FControlListenerList.Add(l);
+  CheckWinControlEvents;
+  Self.AddControlListener(l);
 end;
 
 procedure TProxyWinControlPeer.RemoveWinControlListener(l: IWinControlListener);
 begin
-  inherited RemoveControlListener(l);
+  Self.RemoveControlListener(l);
 end;
 
 function TProxyWinControlPeer.GetWinControlListeners: TWinControlListenerList;
 begin
   if not Assigned(FControlListenerList) then
-    begin
-      FControlListenerList := TCMInterfaceList.Create;
-      RegisterControlEvents;
-      RegisterWinControlEvents;
-    end;
-  Result := TWinControlListenerList(FControlListenerList).Clone;
+    Result := TWinControlListenerList.Create
+  else
+    Result := TWinControlListenerList(FControlListenerList).Clone;
 end;
 
 procedure TProxyWinControlPeer.AddKeyListener(l: IKeyListener);
@@ -1391,38 +1385,29 @@ begin
     GetDelegate.Canvas := TCanvas(FCanvas.GetPeer.GetDelegate);
 end;
 
-procedure TProxyCustomControlPeer.RegisterCustomControlEvents;
+procedure TProxyCustomControlPeer.CheckCustomControlEvents;
 begin
-  GetDelegate.OnPaint := @CustomControlPaintEvent;
+  if GetDelegate.OnPaint <> @CustomControlPaintEvent then
+    GetDelegate.OnPaint := @CustomControlPaintEvent;
 end;
 
 procedure TProxyCustomControlPeer.AddCustomControlListener(l: ICustomControlListener);
 begin
-  if not Assigned(FControlListenerList) then
-    begin
-      FControlListenerList := TCMInterfaceList.Create;
-      RegisterControlEvents;
-      RegisterWinControlEvents;
-      RegisterCustomControlEvents;
-    end;
-  FControlListenerList.Add(l);
+  CheckCustomControlEvents;
+  Self.AddWinControlListener(l);
 end;
 
 procedure TProxyCustomControlPeer.RemoveCustomControlListener(l: ICustomControlListener);
 begin
-  inherited RemoveControlListener(l);
+  Self.RemoveControlListener(l);
 end;
 
 function TProxyCustomControlPeer.GetCustomControlListeners: TCustomControlListenerList;
 begin
   if not Assigned(FControlListenerList) then
-    begin
-      FControlListenerList := TCMInterfaceList.Create;
-      RegisterControlEvents;
-      RegisterWinControlEvents;
-      RegisterCustomControlEvents;
-    end;
-  Result := TCustomControlListenerList(FControlListenerList).Clone;
+    Result := TCustomControlListenerList.Create
+  else
+    Result := TCustomControlListenerList(FControlListenerList).Clone;
 end;
 
 { TProxyLabelPeer }
@@ -1682,31 +1667,22 @@ end;
 
 procedure TProxyEditPeer.AddEditListener(l: IEditListener);
 begin
-  if not Assigned(FControlListenerList) then
-    begin
-      FControlListenerList := TCMInterfaceList.Create;
-      RegisterControlEvents;
-      RegisterWinControlEvents;
-      GetDelegate.OnChange := @EditChangeEvent;
-    end;
-  FControlListenerList.Add(l);
+  if GetDelegate.OnChange <> @EditChangeEvent then
+    GetDelegate.OnChange := @EditChangeEvent;
+  Self.AddWinControlListener(l);
 end;
 
 procedure TProxyEditPeer.RemoveEditListener(l: IEditListener);
 begin
-  inherited RemoveControlListener(l);
+  Self.RemoveControlListener(l);
 end;
 
 function TProxyEditPeer.GetEditListeners: TEditListenerList;
 begin
   if not Assigned(FControlListenerList) then
-    begin
-      FControlListenerList := TCMInterfaceList.Create;
-      RegisterControlEvents;
-      RegisterWinControlEvents;
-      GetDelegate.OnChange := @EditChangeEvent;
-    end;
-  Result := TEditListenerList(FControlListenerList).Clone;
+    Result := TEditListenerList.Create
+  else
+    Result := TEditListenerList(FControlListenerList).Clone;
 end;
 
 { TProxyMemoPeer }
@@ -1792,7 +1768,7 @@ begin
     end;
 end;
 
-procedure TProxyFormPeer.FormCreateEvent(Sender: TObject);
+procedure TProxyFormPeer.FormDeactivateEvent(Sender: TObject);
 var
   i: Integer;
   fe: IFormEvent;
@@ -1803,7 +1779,7 @@ begin
       fe := TFormEvent.Create(Sender, TAForm(Self.FTargetObj));
       for i:=0 to FControlListenerList.Count-1 do
         if Supports(FControlListenerList[i], IFormListener, fl) then
-          fl.FormCreate(fe);
+          fl.FormDeactivate(fe);
     end;
 end;
 
@@ -1857,13 +1833,18 @@ begin
   Result := GetDelegate.ShowModal;
 end;
 
-procedure TProxyFormPeer.RegisterFormControlEvents;
+procedure TProxyFormPeer.CheckFormControlEvents;
 begin
-  GetDelegate.OnActivate := @FormActivateEvent;
-  GetDelegate.OnClose := @FormCloseEvent;
-  GetDelegate.OnCreate := @FormCreateEvent;
-  GetDelegate.OnHide := @FormHideEvent;
-  GetDelegate.OnShow := @FormShowEvent;
+  if GetDelegate.OnActivate <> @FormActivateEvent then
+    GetDelegate.OnActivate := @FormActivateEvent;
+  if GetDelegate.OnClose <> @FormCloseEvent then
+    GetDelegate.OnClose := @FormCloseEvent;
+  if GetDelegate.OnDeactivate <> @FormDeactivateEvent then
+    GetDelegate.OnDeactivate := @FormDeactivateEvent;
+  if GetDelegate.OnHide <> @FormHideEvent then
+    GetDelegate.OnHide := @FormHideEvent;
+  if GetDelegate.OnShow <> @FormShowEvent then
+    GetDelegate.OnShow := @FormShowEvent;
 end;
 
 procedure TProxyFormPeer.RegisterMouseEvents;
@@ -1879,33 +1860,21 @@ end;
 
 procedure TProxyFormPeer.AddFormListener(l: IFormListener);
 begin
-  if not Assigned(FControlListenerList) then
-    begin
-      FControlListenerList := TCMInterfaceList.Create;
-      RegisterControlEvents;
-      RegisterWinControlEvents;
-      RegisterCustomControlEvents;
-      RegisterFormControlEvents;
-    end;
-  FControlListenerList.Add(l);
+  CheckFormControlEvents;
+  Self.AddCustomControlListener(l);
 end;
 
 procedure TProxyFormPeer.RemoveFormListener(l: IFormListener);
 begin
-  inherited RemoveControlListener(l);
+  Self.RemoveControlListener(l);
 end;
 
 function TProxyFormPeer.GetFormListeners: TFormListenerList;
 begin
   if not Assigned(FControlListenerList) then
-    begin
-      FControlListenerList := TCMInterfaceList.Create;
-      RegisterControlEvents;
-      RegisterWinControlEvents;
-      RegisterCustomControlEvents;
-      RegisterFormControlEvents;
-    end;
-  Result := TFormListenerList(FControlListenerList).Clone;
+    TFormListenerList.Create
+  else
+    Result := TFormListenerList(FControlListenerList).Clone;
 end;
 
 { TProxyDateTimePickerPeer }
