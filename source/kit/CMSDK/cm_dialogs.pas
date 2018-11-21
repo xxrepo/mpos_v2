@@ -26,8 +26,9 @@ type
     // 信息提示条。
   }
   ICMMsgBar = interface
-    ['{4A3D21D0-7929-49B8-B401-1F99F5C14675}']
-    procedure ShowMessage(AEventType: TEventType; const AMsg: string); overload;
+    ['{56EF39D4-99BB-4490-A911-369583C674AE}']
+    procedure ShowMessage(AEventType: TEventType; const AMsg: string);
+    procedure Hide;
   end;
 
   { ICMMsgBox

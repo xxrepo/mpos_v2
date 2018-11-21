@@ -18,16 +18,18 @@ type
 
   TASaleQueryForm = class(TAQueryServiceForm)
   private
-    FLab: TALabel;
-    FEdt1: TAEdit;
-    FEdt2: TAEdit;
-    FFlowLayout: TAFlowLayout;
+    FSNLab: TALabel;
+    FCodeLab: TALabel;
+    FSNEdt: TAEdit;
+    FCodeEdt: TAEdit;
+    FGridLayout: TAGridLayout;
   public
     constructor Create(AOwner: TAComponent); override;
     procedure FormShow(e: IFormEvent); override;
+    procedure FormClick(e: IControlEvent); override;
     procedure FormKeyPressed(e: IKeyEvent); override;
-    procedure FormDblClick(e: IControlEvent); override;
-    procedure FormEnter(e: IWinControlEvent); override;
+  private
+    procedure DoQuery;
   end;
 
   { TNavigatorNodeListener }
@@ -40,64 +42,72 @@ type
 
 implementation
 
+uses cm_AWTControlUtils;
+
 { TASaleQueryForm }
 
 constructor TASaleQueryForm.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
-  FLab := TALabel.Create(FQueryPanel);
-  FLab.Parent := FQueryPanel;
-  FLab.Top := 10;
-  FLab.Left := 20;
-  FLab.Caption := '请输入';
-  FLab.Layout := tlBottom;
+  FSNLab := TALabel.Create(FQueryPanel);
+  FSNLab.Parent := FQueryPanel;
+  FSNLab.Caption := '单据编号：';
+  FCodeLab := TALabel.Create(FQueryPanel);
+  FCodeLab.Parent := FQueryPanel;
+  FCodeLab.Caption := '商品编码：';
   //
-  FEdt1 := TAEdit.Create(FQueryPanel);
-  FEdt1.Parent := FQueryPanel;
-  FEdt1.Left := 120;
-  FEdt1.Top := 10;
-  FEdt2 := TAEdit.Create(FQueryPanel);
-  FEdt2.Parent := FQueryPanel;
-  FEdt2.Left := 220;
-  FEdt2.Top := 10;
+  FSNEdt := TAEdit.Create(FQueryPanel);
+  FSNEdt.Parent := FQueryPanel;
+  FCodeEdt := TAEdit.Create(FQueryPanel);
+  FCodeEdt.Parent := FQueryPanel;
   //
-  FLab.AutoSize := False;
-  FLab.Height := FEdt1.Height;
-
+  FQueryPanel.Height := 100;
+  SetLabelHeightAndToBottom(20, [FSNLab, FCodeLab]);
+  FGridLayout := TAGridLayout.Create(nil, FQueryPanel, 2, 2);
+  FGridLayout.PutLayoutControls([FSNLab, FSNEdt, FCodeLab, FCodeEdt]);
   //
-  FFlowLayout := TAFlowLayout.Create(nil, FQueryPanel);
-  FFlowLayout.PutLayoutControls([FLab, FEdt1, FEdt2]);
-
-  //
-  AddButton('测试1');
-  OpenDefaultFormEvent := True;
-  OpenDefaultKeyEvent := True;
-  //
-
-  FEdt1.AddWinControlListener(Self);
-  FEdt2.AddWinControlListener(Self);
+  AddButton('退出').AddControlListener(Self);
+  AddButton('查询').AddControlListener(Self);
 end;
 
 procedure TASaleQueryForm.FormShow(e: IFormEvent);
 begin
-  FFlowLayout.ControlOrientation := coRightToLeft;
-  FFlowLayout.ReLayout;
+  inherited FormShow(e);
+  FGridLayout.ReLayout;
+end;
+
+procedure TASaleQueryForm.FormClick(e: IControlEvent);
+begin
+  inherited FormClick(e);
+  if ButtonCount >= 2 then
+    begin
+      if e.GetAControl = Buttons[0] then
+        Close
+      else if e.GetAControl = Buttons[1] then
+        DoQuery;
+    end;
 end;
 
 procedure TASaleQueryForm.FormKeyPressed(e: IKeyEvent);
 begin
-  if e.GetKeyCode = 27 then
-    Close;
+  inherited FormKeyPressed(e);
+  if e.GetKeyCode = VK_RETURN then
+    begin
+      if FSNEdt.Focused then
+        begin
+          if FCodeEdt.CanFocus then
+            FCodeEdt.SetFocus;
+        end
+      else if FCodeEdt.Focused then
+        DoQuery;
+    end
+  else
+    AppSystem.GetMsgBar.Hide;
 end;
 
-procedure TASaleQueryForm.FormDblClick(e: IControlEvent);
+procedure TASaleQueryForm.DoQuery;
 begin
-  AppSystem.GetMsgBar.ShowMessage(etError, IntToStr(e.GetAControl.GetHashCode) + #10 + e.GetAControl.Name);
-end;
-
-procedure TASaleQueryForm.FormEnter(e: IWinControlEvent);
-begin
-  AppSystem.GetMsgBar.ShowMessage(etInfo, IntToStr(e.GetAWinControl.GetHashCode) + #10 + e.GetAWinControl.ClassName);
+  AppSystem.GetMsgBar.ShowMessage(etWarning, '功能尚未开发！');
 end;
 
 { TNavigatorNodeListener }
@@ -108,11 +118,10 @@ var
 procedure TNavigatorNodeListener.Click(e: INavigatorNodeEvent);
 begin
   f := TASaleQueryForm.Create(nil);
-
-  f.SetTitle('你好，世界！');
+  f.SetTitle('交易查询');
   f.BoundsRect := AppSystem.GetServiceRect;
-
   f.ShowModal;
+  f.Free;
 end;
 
 procedure TNavigatorNodeListener.Run;
@@ -121,7 +130,7 @@ var
 begin
   if InterfaceRegister.OutInterface(INavigator, n) then
     begin
-      DefaultMessager.Error('11111111111');
+      DefaultMessager.Error('INavigator.GetNode(''SaleQuery'')...');
       n.GetNode('SaleQuery').SetListener(Self);
     end;
 end;

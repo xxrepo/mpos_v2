@@ -12,6 +12,7 @@ type
   TACustomControl = class;
   TACustomEdit = class;
   TAForm = class;
+  TACustomGrid = class;
   IAToolkit = interface;
 
   { IAPeer

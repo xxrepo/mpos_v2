@@ -4,12 +4,13 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="19">
+    <Units Count="22">
       <Unit0>
         <Filename Value="sale_peripheral.ppr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="39" Y="20"/>
-        <UsageCount Value="63"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="97" Y="13"/>
+        <UsageCount Value="64"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -19,7 +20,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="63"/>
+        <UsageCount Value="64"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\..\kit\CMSDK\cm_InterfaceRegister.pas"/>
@@ -28,7 +29,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="63"/>
+        <UsageCount Value="64"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\..\kit\CMSDK\cm_interfaces.pas"/>
@@ -36,7 +37,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="110"/>
         <CursorPos X="20" Y="127"/>
-        <UsageCount Value="63"/>
+        <UsageCount Value="64"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\..\kit\CMSDK\cm_messager.pas"/>
@@ -45,7 +46,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="63"/>
+        <UsageCount Value="64"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\..\kit\CMSDK\cm_plat.pas"/>
@@ -53,51 +54,48 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="41"/>
         <CursorPos X="22" Y="31"/>
-        <UsageCount Value="63"/>
+        <UsageCount Value="64"/>
       </Unit5>
       <Unit6>
         <Filename Value="uSaleQuery.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="42"/>
-        <CursorPos X="67" Y="113"/>
-        <UsageCount Value="63"/>
+        <TopLine Value="12"/>
+        <CursorPos X="38" Y="19"/>
+        <UsageCount Value="64"/>
         <Loaded Value="True"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\..\public\aform\uAForm.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="53"/>
-        <CursorPos X="50" Y="64"/>
-        <UsageCount Value="63"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="450"/>
+        <CursorPos X="3" Y="382"/>
+        <UsageCount Value="64"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\..\kit\CMSDK\awt\cm_AWT.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="413"/>
-        <CursorPos X="15" Y="426"/>
-        <UsageCount Value="63"/>
+        <TopLine Value="397"/>
+        <CursorPos X="55" Y="400"/>
+        <UsageCount Value="64"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\..\public\uNavigator.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="69"/>
         <CursorPos X="23" Y="70"/>
-        <UsageCount Value="63"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="64"/>
       </Unit9>
       <Unit10>
         <Filename Value="..\..\kit\CMSDK\awt\cm_AWTLayoutUtils.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="277"/>
-        <CursorPos X="3" Y="282"/>
-        <UsageCount Value="59"/>
+        <TopLine Value="494"/>
+        <CursorPos X="40" Y="497"/>
+        <UsageCount Value="60"/>
       </Unit10>
       <Unit11>
         <Filename Value="..\..\kit\CMSDK\awt\cm_AWTEventUtils.pas"/>
@@ -105,68 +103,134 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="6"/>
         <CursorPos X="15" Y="19"/>
-        <UsageCount Value="55"/>
+        <UsageCount Value="56"/>
       </Unit11>
       <Unit12>
+        <Filename Value="..\..\kit\CMSDK\awt\cm_AWTControlUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="36" Y="12"/>
+        <UsageCount Value="20"/>
+      </Unit12>
+      <Unit13>
         <Filename Value="..\..\kit\CMSDK\cm_tree.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="39" Y="6"/>
         <UsageCount Value="50"/>
-      </Unit12>
-      <Unit13>
+      </Unit13>
+      <Unit14>
         <Filename Value="..\..\kit\CMSDK\cm_controlutils.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="694"/>
         <CursorPos X="40" Y="695"/>
         <UsageCount Value="29"/>
-      </Unit13>
-      <Unit14>
+      </Unit14>
+      <Unit15>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\classes\classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1815"/>
         <CursorPos X="3" Y="1828"/>
         <UsageCount Value="7"/>
-      </Unit14>
-      <Unit15>
+      </Unit15>
+      <Unit16>
         <Filename Value="..\..\kit\CMSDK\awt\awt_event.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
         <CursorPos X="51" Y="33"/>
         <UsageCount Value="7"/>
-      </Unit15>
-      <Unit16>
-        <Filename Value="..\..\kit\CMSDK\awt\awt_type.inc"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="43" Y="14"/>
-        <UsageCount Value="7"/>
       </Unit16>
       <Unit17>
+        <Filename Value="..\..\kit\CMSDK\awt\awt_type.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="92"/>
+        <CursorPos X="12" Y="106"/>
+        <UsageCount Value="10"/>
+      </Unit17>
+      <Unit18>
         <Filename Value="..\..\kit\CMSDK\cm_classes.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="316"/>
         <CursorPos Y="329"/>
         <UsageCount Value="7"/>
-      </Unit17>
-      <Unit18>
+      </Unit18>
+      <Unit19>
         <Filename Value="..\..\kit\CMSDK\cm_DOM.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="116"/>
         <CursorPos X="55" Y="129"/>
         <UsageCount Value="25"/>
-      </Unit18>
+      </Unit19>
+      <Unit20>
+        <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\osutilsh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="45"/>
+        <CursorPos X="42" Y="62"/>
+        <UsageCount Value="10"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="..\..\kit\CMSDK\cm_dialogs.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="20"/>
+        <CursorPos X="5" Y="31"/>
+        <UsageCount Value="10"/>
+      </Unit21>
     </Units>
     <OtherDefines Count="1">
       <Define0 Value="UseAWT"/>
     </OtherDefines>
-    <JumpHistory Count="2" HistoryIndex="1">
+    <JumpHistory Count="13" HistoryIndex="12">
       <Position1>
-        <Filename Value="sale_peripheral.ppr"/>
-        <Caret Line="24" Column="52" TopLine="6"/>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="66" Column="7" TopLine="49"/>
       </Position1>
       <Position2>
         <Filename Value="uSaleQuery.pas"/>
-        <Caret Line="38" Column="16" TopLine="28"/>
+        <Caret Line="70" Column="30" TopLine="54"/>
       </Position2>
+      <Position3>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="30" Column="25" TopLine="12"/>
+      </Position3>
+      <Position4>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="92" Column="24" TopLine="77"/>
+      </Position4>
+      <Position5>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="32" Column="19" TopLine="17"/>
+      </Position5>
+      <Position6>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="108" Column="25" TopLine="88"/>
+      </Position6>
+      <Position7>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="103" Column="49" TopLine="88"/>
+      </Position7>
+      <Position8>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="101" Column="14"/>
+      </Position8>
+      <Position9>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="49" Column="21" TopLine="34"/>
+      </Position9>
+      <Position10>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="19" Column="35" TopLine="6"/>
+      </Position10>
+      <Position11>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="19" Column="35" TopLine="6"/>
+      </Position11>
+      <Position12>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="49" Column="19" TopLine="37"/>
+      </Position12>
+      <Position13>
+        <Filename Value="uSaleQuery.pas"/>
+        <Caret Line="19" Column="38" TopLine="12"/>
+      </Position13>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

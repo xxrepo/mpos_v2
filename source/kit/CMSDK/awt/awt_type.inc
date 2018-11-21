@@ -21,9 +21,48 @@ type
 
   TTabOrder = -1..32767;
 
+  // for StdCtrls
   TScrollStyle = (ssNone, ssHorizontal, ssVertical, ssBoth, ssAutoHorizontal, ssAutoVertical, ssAutoBoth);
 
   TMouseButton = (mbLeft, mbRight, mbMiddle, mbExtra1, mbExtra2, mbUnknown);
+
+  // for Grids
+  TGridOption = (
+    goFixedVertLine,      // Ya
+    goFixedHorzLine,      // Ya
+    goVertLine,           // Ya
+    goHorzLine,           // Ya
+    goRangeSelect,        // Ya
+    goDrawFocusSelected,  // Ya
+    goRowSizing,          // Ya
+    goColSizing,          // Ya
+    goRowMoving,          // Ya
+    goColMoving,          // Ya
+    goEditing,            // Ya
+    goAutoAddRows,        // JuMa
+    goTabs,               // Ya
+    goRowSelect,          // Ya
+    goAlwaysShowEditor,   // Ya
+    goThumbTracking,      // ya
+    // Additional Options
+    goColSpanning,        // Enable cellextent calcs
+    goRelaxedRowSelect,   // User can see focused cell on goRowSelect
+    goDblClickAutoSize,   // dblclicking columns borders (on hdrs) resize col.
+    goSmoothScroll,       // Switch scrolling mode (pixel scroll is by default)
+    goFixedRowNumbering,  // Ya
+    goScrollKeepVisible,  // keeps focused cell visible while scrolling
+    goHeaderHotTracking,  // Header cells change look when mouse is over them
+    goHeaderPushedLook,   // Header cells looks pushed when clicked
+    goSelectionActive,    // Setting grid.Selection moves also cell cursor
+    goFixedColSizing,     // Allow to resize fixed columns
+    goDontScrollPartCell, // clicking partially visible cells will not scroll
+    goCellHints,          // show individual cell hints
+    goTruncCellHints,     // show cell hints if cell text is too long
+    goCellEllipsis,       // show "..." if cell text is too long
+    goAutoAddRowsSkipContentCheck,//BB Also add a row (if AutoAddRows in Options) if last row is empty
+    goRowHighlight        // Highlight the current Row
+  );
+  TGridOptions = set of TGridOption;
 
 
 const

@@ -1673,6 +1673,283 @@ begin
   Result := IADateTimePickerPeer(FPeer);
 end;
 
+{ TACustomGrid }
+
+function TACustomGrid.GetBorderColor: TColor;
+begin
+  Result := GetPeer.GetBorderColor;
+end;
+
+function TACustomGrid.GetCol: Integer;
+begin
+  Result := GetPeer.GetCol;
+end;
+
+function TACustomGrid.GetColCount: Integer;
+begin
+  Result := GetPeer.GetColCount;
+end;
+
+function TACustomGrid.GetColWidths(ACol: Integer): Integer;
+begin
+  Result := GetPeer.GetColWidths(ACol);
+end;
+
+function TACustomGrid.GetDefColWidth: Integer;
+begin
+  Result := GetPeer.GetDefColWidth;
+end;
+
+function TACustomGrid.GetDefRowHeight: Integer;
+begin
+  Result := GetPeer.GetDefRowHeight;
+end;
+
+function TACustomGrid.GetFixedColor: TColor;
+begin
+  Result := GetPeer.GetFixedColor;
+end;
+
+function TACustomGrid.GetFixedCols: Integer;
+begin
+  Result := GetPeer.GetFixedCols;
+end;
+
+function TACustomGrid.GetFixedRows: Integer;
+begin
+  Result := GetPeer.GetFixedRows;
+end;
+
+function TACustomGrid.GetGridBorderStyle: TBorderStyle;
+begin
+  Result := GetPeer.GetGridBorderStyle;
+end;
+
+function TACustomGrid.GetOptions: TGridOptions;
+begin
+  Result := GetPeer.GetOptions;
+end;
+
+function TACustomGrid.GetRow: Integer;
+begin
+  Result := GetPeer.GetRow;
+end;
+
+function TACustomGrid.GetRowCount: Integer;
+begin
+  Result := GetPeer.GetRowCount;
+end;
+
+function TACustomGrid.GetRowHeights(ARow: Integer): Integer;
+begin
+  Result := GetPeer.GetRowHeights(ARow);
+end;
+
+function TACustomGrid.GetScrollBars: TScrollStyle;
+begin
+  Result := GetPeer.GetScrollBars;
+end;
+
+function TACustomGrid.GetTitleFont: TAFont;
+begin
+  Result := GetPeer.GetTitleFont;
+end;
+
+procedure TACustomGrid.SetBorderColor(AValue: TColor);
+begin
+  GetPeer.SetBorderColor(AValue);
+end;
+
+procedure TACustomGrid.SetCol(AValue: Integer);
+begin
+  GetPeer.SetCol(AValue);
+end;
+
+procedure TACustomGrid.SetColCount(AValue: Integer);
+begin
+  GetPeer.SetColCount(AValue);
+end;
+
+procedure TACustomGrid.SetColWidths(ACol: Integer; AValue: Integer);
+begin
+  GetPeer.SetColWidths(ACol, AValue);
+end;
+
+procedure TACustomGrid.SetDefColWidth(AValue: Integer);
+begin
+  GetPeer.SetDefColWidth(AValue);
+end;
+
+procedure TACustomGrid.SetDefRowHeight(AValue: Integer);
+begin
+  GetPeer.SetDefRowHeight(AValue);
+end;
+
+procedure TACustomGrid.SetFixedcolor(AValue: TColor);
+begin
+  GetPeer.SetFixedcolor(AValue);
+end;
+
+procedure TACustomGrid.SetFixedCols(AValue: Integer);
+begin
+  GetPeer.SetFixedCols(AValue);
+end;
+
+procedure TACustomGrid.SetFixedRows(AValue: Integer);
+begin
+  GetPeer.SetFixedRows(AValue);
+end;
+
+procedure TACustomGrid.SetGridBorderStyle(AValue: TBorderStyle);
+begin
+  GetPeer.SetGridBorderStyle(AValue);
+end;
+
+procedure TACustomGrid.SetOptions(AValue: TGridOptions);
+begin
+  GetPeer.SetOptions(AValue);
+end;
+
+procedure TACustomGrid.SetRow(AValue: Integer);
+begin
+  GetPeer.SetRow(AValue);
+end;
+
+procedure TACustomGrid.SetRowCount(AValue: Integer);
+begin
+  GetPeer.SetRowCount(AValue);
+end;
+
+procedure TACustomGrid.SetRowHeights(ARow: Integer; AValue: Integer);
+begin
+  GetPeer.SetRowHeights(ARow, AValue);
+end;
+
+procedure TACustomGrid.SetScrollBars(AValue: TScrollStyle);
+begin
+  GetPeer.SetScrollBars(AValue);
+end;
+
+procedure TACustomGrid.SetTitleFont(AValue: TAFont);
+begin
+  GetPeer.SetTitleFont(AValue);
+end;
+
+function TACustomGrid.GetPeer: IACustomGridPeer;
+begin
+  Result := IACustomGridPeer(FPeer);
+end;
+
+procedure TACustomGrid.BeginUpdate;
+begin
+  GetPeer.BeginUpdate;
+end;
+
+function TACustomGrid.CellRect(ACol, ARow: Integer): TRect;
+begin
+  Result := GetPeer.CellRect(ACol, ARow);
+end;
+
+procedure TACustomGrid.Clear;
+begin
+  GetPeer.Clear;
+end;
+
+procedure TACustomGrid.EndUpdate(ARefresh: Boolean);
+begin
+  GetPeer.EndUpdate(ARefresh);
+end;
+
+procedure TACustomGrid.InvalidateCell(ACol, ARow: Integer);
+begin
+  GetPeer.InvalidateCell(ACol, ARow);
+end;
+
+procedure TACustomGrid.InvalidateCol(ACol: Integer);
+begin
+  GetPeer.InvalidateCol(ACol);
+end;
+
+procedure TACustomGrid.InvalidateRow(ARow: Integer);
+begin
+  GetPeer.InvalidateRow(ARow);
+end;
+
+{ TACustomDrawGrid }
+
+function TACustomDrawGrid.GetPeer: IACustomDrawGridPeer;
+begin
+  Result := IACustomDrawGridPeer(FPeer);
+end;
+
+procedure TACustomDrawGrid.AddDrawGridListener(l: IDrawGridListener);
+begin
+  GetPeer.AddDrawGridListener(l);
+end;
+
+procedure TACustomDrawGrid.RemoveDrawGridListener(l: IDrawGridListener);
+begin
+  GetPeer.RemoveDrawGridListener(l);
+end;
+
+function TACustomDrawGrid.GetDrawGridListeners: TDrawGridListenerList;
+begin
+  Result := GetPeer.GetDrawGridListeners;
+end;
+
+{ TAStringGrid }
+
+function TAStringGrid.GetCells(ACol, ARow: Integer): string;
+begin
+  Result := GetPeer.GetCells(ACol, ARow);
+end;
+
+function TAStringGrid.GetCols(Index: Integer): TStrings;
+begin
+  Result := GetPeer.GetCols(Index);
+end;
+
+function TAStringGrid.GetRows(Index: Integer): TStrings;
+begin
+  Result := GetPeer.GetRows(Index);
+end;
+
+procedure TAStringGrid.SetCells(ACol, ARow: Integer; AValue: string);
+begin
+  GetPeer.SetCells(ACol, ARow, AValue);
+end;
+
+procedure TAStringGrid.SetCols(Index: Integer; AValue: TStrings);
+begin
+  GetPeer.SetCols(Index, AValue);
+end;
+
+procedure TAStringGrid.SetRows(Index: Integer; AValue: TStrings);
+begin
+  GetPeer.SetRows(Index, AValue);
+end;
+
+constructor TAStringGrid.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FPeer := TAWTManager.DefaultToolkit.CreateStringGrid(Self);
+end;
+
+function TAStringGrid.GetPeer: IAStringGridPeer;
+begin
+  Result := IAStringGridPeer(FPeer);
+end;
+
+procedure TAStringGrid.AutoSizeColumn(ACol: Integer);
+begin
+  GetPeer.AutoSizeColumn(ACol);
+end;
+
+procedure TAStringGrid.AutoSizeColumns;
+begin
+  GetPeer.AutoSizeColumns;
+end;
+
 
 initialization
   TAWTManager.DefaultToolkit := nil;

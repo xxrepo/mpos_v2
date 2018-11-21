@@ -20,7 +20,8 @@ unit cm_AWTProxy;
 interface
 
 uses
-  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics, DateTimePicker,
+  Classes, SysUtils, Controls, StdCtrls, ExtCtrls, Forms, Graphics,
+  DateTimePicker, Grids,
   cm_interfaces, cm_messager, cm_dialogs, cm_classes,
   cm_AWT, cm_AWTEventBuilder;
 
@@ -252,7 +253,7 @@ type
 
   { TProxyWinControlPeer }
 
-  TProxyWinControlPeer = class(TProxyControlPeer, IAWinControlPeer)
+  TProxyWinControlPeer = class abstract(TProxyControlPeer, IAWinControlPeer)
   private
     FControls: TFPList;    // the child controls
     FKeyListenerList: TKeyListenerList;
@@ -268,12 +269,12 @@ type
     procedure KeyPressEvent(Sender: TObject; var Key: Char);
     procedure KeyUpEvent(Sender: TObject; var Key: Word; Shift: TShiftState);
   public
-    function GetBorderStyle: TBorderStyle; virtual;
+    function GetBorderStyle: TBorderStyle; virtual; abstract; //WinControl未公开
     function GetControl(AIndex: Integer): TAControl;
     function GetControlCount: Integer;
     function GetShowing: Boolean;
     function GetTabOrder: TTabOrder;
-    procedure SetBorderStyle(AValue: TBorderStyle); virtual;
+    procedure SetBorderStyle(AValue: TBorderStyle); virtual; abstract;
     procedure SetTabOrder(AValue: TTabOrder);
     //
     procedure InsertControl(AControl: TAControl);
@@ -362,6 +363,9 @@ type
     function GetDelegate: TEdit;
     procedure EditChangeEvent(Sender: TObject);
   public
+    function GetBorderStyle: TBorderStyle; override;
+    procedure SetBorderStyle(AValue: TBorderStyle); override;
+  public
     procedure Clear;
     procedure SelectAll;
     function GetMaxLength: Integer;
@@ -444,6 +448,127 @@ type
     procedure SetTime(AValue: TTime);
   end;
 
+  { TProxyCustomGridPeer }
+
+  TProxyCustomGridPeer = class abstract(TProxyCustomControlPeer, IACustomGridPeer)
+  public
+    function GetDelegate: TCustomGrid;
+  protected  //以下皆因 CustomGrid 未公开
+    function GetBorderColor: TColor; virtual; abstract;
+    function GetCol: Integer; virtual; abstract;
+    function GetColCount: Integer; virtual; abstract;
+    function GetColWidths(ACol: Integer): Integer; virtual; abstract;
+    function GetDefColWidth: Integer; virtual; abstract;
+    function GetDefRowHeight: Integer; virtual; abstract;
+    function GetFixedColor: TColor; virtual; abstract;
+    function GetFixedCols: Integer; virtual; abstract;
+    function GetFixedRows: Integer; virtual; abstract;
+    function GetGridBorderStyle: TBorderStyle; virtual; abstract;
+    function GetOptions: TGridOptions; virtual; abstract;
+    function GetRow: Integer; virtual; abstract;
+    function GetRowCount: Integer; virtual; abstract;
+    function GetRowHeights(ARow: Integer): Integer; virtual; abstract;
+    function GetScrollBars: TScrollStyle; virtual; abstract;
+    function GetTitleFont: TAFont; virtual; abstract;
+    procedure SetBorderColor(AValue: TColor); virtual; abstract;
+    procedure SetCol(AValue: Integer); virtual; abstract;
+    procedure SetColCount(AValue: Integer); virtual; abstract;
+    procedure SetColWidths(ACol: Integer; AValue: Integer); virtual; abstract;
+    procedure SetDefColWidth(AValue: Integer); virtual; abstract;
+    procedure SetDefRowHeight(AValue: Integer); virtual; abstract;
+    procedure SetFixedcolor(AValue: TColor); virtual; abstract;
+    procedure SetFixedCols(AValue: Integer); virtual; abstract;
+    procedure SetFixedRows(AValue: Integer); virtual; abstract;
+    procedure SetGridBorderStyle(AValue: TBorderStyle); virtual; abstract;
+    procedure SetOptions(AValue: TGridOptions); virtual; abstract;
+    procedure SetRow(AValue: Integer); virtual; abstract;
+    procedure SetRowCount(AValue: Integer); virtual; abstract;
+    procedure SetRowHeights(ARow: Integer; AValue: Integer); virtual; abstract;
+    procedure SetScrollBars(AValue: TScrollStyle); virtual; abstract;
+    procedure SetTitleFont(AValue: TAFont); virtual; abstract;
+  public
+    procedure BeginUpdate;
+    function  CellRect(ACol, ARow: Integer): TRect;
+    procedure Clear;
+    procedure EndUpdate(ARefresh: Boolean=True);
+    procedure InvalidateCell(ACol, ARow: Integer);
+    procedure InvalidateCol(ACol: Integer);
+    procedure InvalidateRow(ARow: Integer);
+  end;
+
+  { TProxyCustomDrawGridPeer }
+
+  TProxyCustomDrawGridPeer = class abstract(TProxyCustomGridPeer, IACustomDrawGridPeer)
+  protected
+    procedure RegisterControlEvents; override;
+    procedure CheckCustomDrawGridControlEvents;
+    procedure RegisterMouseEvents; override;
+  public
+    function GetDelegate: TCustomDrawGrid;
+    procedure CustomDrawGridDrawCellEvent(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState:TGridDrawState);
+    procedure CustomDrawGridSelectionEvent(Sender: TObject; aCol, aRow: Integer);
+    procedure CustomDrawGridSelectCellEvent(Sender: TObject; aCol, aRow: Integer; var CanSelect: Boolean);
+  public //覆盖 TProxyCustomGridPeer
+    function GetBorderColor: TColor; override;
+    function GetCol: Integer; override;
+    function GetColCount: Integer; override;
+    function GetColWidths(ACol: Integer): Integer; override;
+    function GetDefColWidth: Integer; override;
+    function GetDefRowHeight: Integer; override;
+    function GetFixedColor: TColor; override;
+    function GetFixedCols: Integer; override;
+    function GetFixedRows: Integer; override;
+    function GetGridBorderStyle: TBorderStyle; override;
+    function GetOptions: TGridOptions; override;
+    function GetRow: Integer; override;
+    function GetRowCount: Integer; override;
+    function GetRowHeights(ARow: Integer): Integer; override;
+    function GetScrollBars: TScrollStyle; override;
+    procedure SetBorderColor(AValue: TColor); override;
+    procedure SetCol(AValue: Integer); override;
+    procedure SetColCount(AValue: Integer); override;
+    procedure SetColWidths(ACol: Integer; AValue: Integer); override;
+    procedure SetDefColWidth(AValue: Integer); override;
+    procedure SetDefRowHeight(AValue: Integer); override;
+    procedure SetFixedcolor(AValue: TColor); override;
+    procedure SetFixedCols(AValue: Integer); override;
+    procedure SetFixedRows(AValue: Integer); override;
+    procedure SetGridBorderStyle(AValue: TBorderStyle); override;
+    procedure SetOptions(AValue: TGridOptions); override;
+    procedure SetRow(AValue: Integer); override;
+    procedure SetRowCount(AValue: Integer); override;
+    procedure SetRowHeights(ARow: Integer; AValue: Integer); override;
+    procedure SetScrollBars(AValue: TScrollStyle); override;
+  public
+    procedure AddDrawGridListener(l: IDrawGridListener);
+    procedure RemoveDrawGridListener(l: IDrawGridListener);
+    function GetDrawGridListeners: TDrawGridListenerList;
+  end;
+
+  { TProxyStringGridPeer }
+
+  TProxyStringGridPeer = class(TProxyCustomDrawGridPeer, IAStringGridPeer)
+  private
+    FTitleFont: TAFont;
+  public
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
+    destructor Destroy; override;
+    function GetDelegate: TStringGrid;
+  public //覆盖 TProxyCustomGridPeer
+    function GetTitleFont: TAFont; override;
+    procedure SetTitleFont(AValue: TAFont); override;
+  public
+    function GetCells(ACol, ARow: Integer): string;
+    function GetCols(Index: Integer): TStrings;
+    function GetRows(Index: Integer): TStrings;
+    procedure SetCells(ACol, ARow: Integer; AValue: string);
+    procedure SetCols(Index: Integer; AValue: TStrings);
+    procedure SetRows(Index: Integer; AValue: TStrings);
+    procedure AutoSizeColumn(ACol: Integer);
+    procedure AutoSizeColumns;
+  end;
+
+
   { TProxyToolkit }
 
   TProxyToolkit = class(TCMMessageable, IAToolkit)
@@ -459,6 +584,7 @@ type
     function CreateMemo(ATarget: TAMemo): IAMemoPeer;
     function CreateForm(ATarget: TAForm): IAFormPeer;
     function CreateDateTimePicker(ATarget: TADateTimePicker): IADateTimePickerPeer;
+    function CreateStringGrid(ATarget: TAStringGrid): IAStringGridPeer;
   end;
 
 
@@ -1170,11 +1296,6 @@ begin
     end;
 end;
 
-function TProxyWinControlPeer.GetBorderStyle: TBorderStyle;
-begin
-  Result := bsNone;
-end;
-
 function TProxyWinControlPeer.GetControl(AIndex: Integer): TAControl;
 var
   c: TControl;
@@ -1207,11 +1328,6 @@ end;
 function TProxyWinControlPeer.GetTabOrder: TTabOrder;
 begin
   Result := GetDelegate.TabOrder;
-end;
-
-procedure TProxyWinControlPeer.SetBorderStyle(AValue: TBorderStyle);
-begin
-
 end;
 
 procedure TProxyWinControlPeer.SetTabOrder(AValue: TTabOrder);
@@ -1279,11 +1395,15 @@ begin
 end;
 
 function TProxyWinControlPeer.GetWinControlListeners: TWinControlListenerList;
+var
+  i: Integer;
 begin
-  if not Assigned(FControlListenerList) then
-    Result := TWinControlListenerList.Create
-  else
-    Result := TWinControlListenerList(FControlListenerList).Clone;
+  // TODO 线程安全
+  Result := TWinControlListenerList.Create;
+  if Assigned(FControlListenerList) then
+    for i:=0 to FControlListenerList.Count-1 do
+      if Supports(FControlListenerList[i], IWinControlListener) then
+        Result.Add(IWinControlListener(FControlListenerList[i]));
 end;
 
 procedure TProxyWinControlPeer.AddKeyListener(l: IKeyListener);
@@ -1403,11 +1523,15 @@ begin
 end;
 
 function TProxyCustomControlPeer.GetCustomControlListeners: TCustomControlListenerList;
+var
+  i: Integer;
 begin
-  if not Assigned(FControlListenerList) then
-    Result := TCustomControlListenerList.Create
-  else
-    Result := TCustomControlListenerList(FControlListenerList).Clone;
+  // TODO 线程安全
+  Result := TCustomControlListenerList.Create;
+  if Assigned(FControlListenerList) then
+    for i:=0 to FControlListenerList.Count-1 do
+      if Supports(FControlListenerList[i], ICustomControlListener) then
+        Result.Add(ICustomControlListener(FControlListenerList[i]));
 end;
 
 { TProxyLabelPeer }
@@ -1585,6 +1709,16 @@ begin
     end;
 end;
 
+function TProxyEditPeer.GetBorderStyle: TBorderStyle;
+begin
+  Result := cm_AWT.TBorderStyle(GetDelegate.BorderStyle);
+end;
+
+procedure TProxyEditPeer.SetBorderStyle(AValue: TBorderStyle);
+begin
+  GetDelegate.BorderStyle := Controls.TBorderStyle(AValue);
+end;
+
 procedure TProxyEditPeer.Clear;
 begin
   GetDelegate.Clear;
@@ -1678,11 +1812,15 @@ begin
 end;
 
 function TProxyEditPeer.GetEditListeners: TEditListenerList;
+var
+  i: Integer;
 begin
-  if not Assigned(FControlListenerList) then
-    Result := TEditListenerList.Create
-  else
-    Result := TEditListenerList(FControlListenerList).Clone;
+  // TODO 线程安全
+  Result := TEditListenerList.Create;
+  if Assigned(FControlListenerList) then
+    for i:=0 to FControlListenerList.Count-1 do
+      if Supports(FControlListenerList[i], IEditListener) then
+        Result.Add(IEditListener(FControlListenerList[i]));
 end;
 
 { TProxyMemoPeer }
@@ -1870,176 +2008,21 @@ begin
 end;
 
 function TProxyFormPeer.GetFormListeners: TFormListenerList;
-begin
-  if not Assigned(FControlListenerList) then
-    TFormListenerList.Create
-  else
-    Result := TFormListenerList(FControlListenerList).Clone;
-end;
-
-{ TProxyDateTimePickerPeer }
-
-procedure TProxyDateTimePickerPeer.RegisterControlEvents;
-begin
-  inherited RegisterControlEvents;
-  GetDelegate.OnDblClick := @ControlDblClickEvent;
-end;
-
-procedure TProxyDateTimePickerPeer.RegisterMouseEvents;
-begin
-  inherited RegisterMouseEvents;
-  GetDelegate.OnMouseDown := @MouseDownEvent;
-  GetDelegate.OnMouseUp := @MouseUpEvent;
-  GetDelegate.OnMouseEnter := @MouseEnterEvent;
-  GetDelegate.OnMouseLeave := @MouseLeaveEvent;
-  GetDelegate.OnMouseMove := @MouseMoveEvent;
-  GetDelegate.OnMouseWheel:= @MouseWheelEvent;
-end;
-
-constructor TProxyDateTimePickerPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
-begin
-  inherited Create(TheTarget, AOwner);
-  FDelegateObj := TDateTimePicker.Create(AOwner);
-  GetDelegate.Kind := dtkDateTime;
-  GetDelegate.DateMode := dmUpDown;
-end;
-
-function TProxyDateTimePickerPeer.GetDelegate: TDateTimePicker;
-begin
-  Result := TDateTimePicker(FDelegateObj);
-end;
-
-function TProxyDateTimePickerPeer.GetDate: TDate;
-begin
-  Result := GetDelegate.Date;
-end;
-
-function TProxyDateTimePickerPeer.GetDateTime: TDateTime;
-begin
-  Result := GetDelegate.DateTime;
-end;
-
-function TProxyDateTimePickerPeer.GetMaxDate: TDate;
-begin
-  Result := GetDelegate.MaxDate;
-end;
-
-function TProxyDateTimePickerPeer.GetMinDate: TDate;
-begin
-  Result := GetDelegate.MinDate;
-end;
-
-function TProxyDateTimePickerPeer.GetTime: TTime;
-begin
-  Result := GetDelegate.Time;
-end;
-
-procedure TProxyDateTimePickerPeer.SetDate(AValue: TDate);
-begin
-  GetDelegate.Date := AValue;
-end;
-
-procedure TProxyDateTimePickerPeer.SetDateTime(AValue: TDateTime);
-begin
-  GetDelegate.DateTime := AValue;
-end;
-
-procedure TProxyDateTimePickerPeer.SetMaxDate(AValue: TDate);
-begin
-  GetDelegate.MaxDate := AValue;
-end;
-
-procedure TProxyDateTimePickerPeer.SetMinDate(AValue: TDate);
-begin
-  GetDelegate.MinDate := AValue;
-end;
-
-procedure TProxyDateTimePickerPeer.SetTime(AValue: TTime);
-begin
-  GetDelegate.Time := AValue;
-end;
-
-{ TProxyToolkit }
-
-type
-
-  // TGIFImage 未实现抽象方法，为消除警告，声明此私有类型
-  TGIFImageEx = class(TGIFImage)
-  protected
-    class function GetWriterClass: TFPCustomImageWriterClass; override;
-  end;
-  class function TGIFImageEx.GetWriterClass: TFPCustomImageWriterClass;
-  begin
-    Result := nil;
-  end;
-
-function TProxyToolkit.CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
 var
-  classStr: string;
+  i: Integer;
 begin
-  Result := nil;
-  // 无法判断类型信息
-  classStr := Format('%s.%s', [ATarget.UnitName, ATarget.ClassName]);
-  if classStr = 'cm_AWT.TABitmap' then
-    Result := TProxyCustomBitmapPeer.Create(TBitmap.Create)
-  else if classStr = 'cm_AWT.TAJPEGImage' then
-    Result := TProxyCustomBitmapPeer.Create(TJPEGImage.Create)
-  else if classStr = 'cm_AWT.TAGIFImage' then
-    Result := TProxyCustomBitmapPeer.Create(TGIFImageEx.Create)
-  else if classStr = 'cm_AWT.TAPortableNetworkGraphic' then
-    Result := TProxyCustomBitmapPeer.Create(TPortableNetworkGraphic.Create);
+  // TODO 线程安全
+  Result := TFormListenerList.Create;
+  if Assigned(FControlListenerList) then
+    for i:=0 to FControlListenerList.Count-1 do
+      if Supports(FControlListenerList[i], IFormListener) then
+        Result.Add(IFormListener(FControlListenerList[i]));
 end;
 
-function TProxyToolkit.CreateFont(ATarget: TAFont): IAFontPeer;
-begin
-  Result := TProxyFontPeer.Create;
-end;
 
-function TProxyToolkit.CreateCanvas(ATarget: TACanvas): IACanvasPeer;
-begin
-  Result := TProxyCanvasPeer.Create;
-end;
 
-function TProxyToolkit.CreateBorderSpacing(ATarget: TAControlBorderSpacing; OwnerControl: TAControl): IAControlBorderSpacingPeer;
-var
-  c: TObject;
-begin
-  Result := nil;
-  c := OwnerControl.GetPeer.GetDelegate;
-  if c is TControl then
-    Result := TProxyControlBorderSpacingPeer.Create(TControl(c));
-end;
-
-function TProxyToolkit.CreateLabel(ATarget: TALabel): IALabelPeer;
-begin
-  Result := TProxyLabelPeer.Create(ATarget, nil);
-end;
-
-function TProxyToolkit.CreatePanel(ATarget: TAPanel): IAPanelPeer;
-begin
-  Result := TProxyPanelPeer.Create(ATarget, nil);
-end;
-
-function TProxyToolkit.CreateEdit(ATarget: TAEdit): IAEditPeer;
-begin
-  Result := TProxyEditPeer.Create(ATarget, nil);
-end;
-
-function TProxyToolkit.CreateMemo(ATarget: TAMemo): IAMemoPeer;
-begin
-  Result := TProxyMemoPeer.Create(ATarget, nil);
-end;
-
-function TProxyToolkit.CreateForm(ATarget: TAForm): IAFormPeer;
-begin
-  Result := TProxyFormPeer.Create(ATarget, nil);
-end;
-
-function TProxyToolkit.CreateDateTimePicker(ATarget: TADateTimePicker): IADateTimePickerPeer;
-begin
-  Result := TProxyDateTimePickerPeer.Create(ATarget, nil);
-end;
-
+{$i extctrls_proxy.inc}
+{$i toolkit_proxy.inc}
 
 initialization
   TProxyControlPeer.FControlPeerList := TFPList.Create;

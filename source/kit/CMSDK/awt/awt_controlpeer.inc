@@ -164,8 +164,8 @@
     procedure SetScrollBars(AValue: TScrollStyle);
   end;
 
-  IAFormPeer = interface(IAWinControlPeer)
-    ['{C5BAADBB-C30B-4EE5-BA3B-53200EFC0729}']
+  IAFormPeer = interface(IACustomControlPeer)
+    ['{4970C5E8-A665-4553-8E83-FAC3D0A52643}']
     function GetFormBorderStyle: TFormBorderStyle;
     procedure SetFormBorderStyle(AValue: TFormBorderStyle);
     procedure Close;
@@ -189,7 +189,72 @@
     procedure SetTime(AValue: TTime);
   end;
 
+  IACustomGridPeer = interface(IACustomControlPeer)
+    ['{3AA80C10-953C-4B0F-B6E5-4557DCEC0913}']
+    function GetBorderColor: TColor;
+    function GetCol: Integer;
+    function GetColCount: Integer;
+    function GetColWidths(ACol: Integer): Integer;
+    function GetDefColWidth: Integer;
+    function GetDefRowHeight: Integer;
+    function GetFixedColor: TColor;
+    function GetFixedCols: Integer;
+    function GetFixedRows: Integer;
+    function GetGridBorderStyle: TBorderStyle;
+    function GetOptions: TGridOptions;
+    function GetRow: Integer;
+    function GetRowCount: Integer;
+    function GetRowHeights(ARow: Integer): Integer;
+    function GetScrollBars: TScrollStyle;
+    function GetTitleFont: TAFont;
+    procedure SetBorderColor(AValue: TColor);
+    procedure SetCol(AValue: Integer);
+    procedure SetColCount(AValue: Integer);
+    procedure SetColWidths(ACol: Integer; AValue: Integer);
+    procedure SetDefColWidth(AValue: Integer);
+    procedure SetDefRowHeight(AValue: Integer);
+    procedure SetFixedcolor(AValue: TColor);
+    procedure SetFixedCols(AValue: Integer);
+    procedure SetFixedRows(AValue: Integer);
+    procedure SetGridBorderStyle(AValue: TBorderStyle);
+    procedure SetOptions(AValue: TGridOptions);
+    procedure SetRow(AValue: Integer);
+    procedure SetRowCount(AValue: Integer);
+    procedure SetRowHeights(aRow: Integer; AValue: Integer);
+    procedure SetScrollBars(AValue: TScrollStyle);
+    procedure SetTitleFont(AValue: TAFont);
+    //
+    procedure BeginUpdate;
+    function  CellRect(ACol, ARow: Integer): TRect;
+    procedure Clear;
+    procedure EndUpdate(ARefresh: Boolean=True);
+    procedure InvalidateCell(ACol, ARow: Integer);
+    procedure InvalidateCol(ACol: Integer);
+    procedure InvalidateRow(ARow: Integer);
+    // ???
+    //procedure AddGridListener(l: IGridListener);
+    //procedure RemoveGridListener(l: IGridListener);
+    //function GetGridListeners: TGridListenerList;
+  end;
 
+  IACustomDrawGridPeer = interface(IACustomGridPeer)
+    ['{A6430878-8297-4FAC-BE74-D8C6CA3A169A}']
+    procedure AddDrawGridListener(l: IDrawGridListener);
+    procedure RemoveDrawGridListener(l: IDrawGridListener);
+    function GetDrawGridListeners: TDrawGridListenerList;
+  end;
+
+  IAStringGridPeer = interface(IACustomDrawGridPeer)
+    ['{B71FEAD1-9A0A-4650-8277-ADB9FF98FEB2}']
+    function GetCells(ACol, ARow: Integer): string;
+    function GetCols(Index: Integer): TStrings;
+    function GetRows(Index: Integer): TStrings;
+    procedure SetCells(ACol, ARow: Integer; AValue: string);
+    procedure SetCols(Index: Integer; AValue: TStrings);
+    procedure SetRows(Index: Integer; AValue: TStrings);
+    procedure AutoSizeColumn(ACol: Integer);
+    procedure AutoSizeColumns;
+  end;
 
 
 

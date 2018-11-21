@@ -106,11 +106,19 @@ type
   }
 
   TAToolableServiceForm = class(TATitledServiceForm)
+  private
+    FButtonList: TFPList;
+    FNextLeft: Integer;
+    function GetButton(Index: Integer): TAPanel;
   public
     constructor Create(AOwner: TAComponent); override;
-    procedure SetTheme(ATheme: ITheme); override;
+    destructor Destroy; override;
+  protected
+    procedure FormKeyPressed(e: IKeyEvent); override;
   public
-    procedure AddButton(const ACaption: string);
+    function AddButton(const ACaption: string): TAPanel;
+    function ButtonCount: Integer;
+    property Buttons[Index: Integer]: TAPanel read GetButton;
   end;
 
   { TACustomServiceForm
@@ -121,7 +129,6 @@ type
   protected
     FCenterPanel: TAPanel;
     procedure FormShow(e: IFormEvent); override;
-    procedure FormKeyPressed(e: IKeyEvent); override;
   public
     constructor Create(AOwner: TAComponent); override;
   end;
@@ -365,28 +372,51 @@ end;
 
 { TAToolableServiceForm }
 
+function TAToolableServiceForm.GetButton(Index: Integer): TAPanel;
+begin
+  Result := TAPanel(FButtonList[Index]);
+end;
+
 constructor TAToolableServiceForm.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
+  FButtonList := TFPList.Create;
+  FNextLeft := 10;
   FFootPanel.Visible := True;
+  //
+  OpenDefaultFormEvent := True;
+  OpenDefaultKeyEvent := True;
 end;
 
-procedure TAToolableServiceForm.SetTheme(ATheme: ITheme);
+destructor TAToolableServiceForm.Destroy;
 begin
-  inherited SetTheme(ATheme);
+  FButtonList.Free;
+  inherited Destroy;
 end;
 
-procedure TAToolableServiceForm.AddButton(const ACaption: string);
-var
-  p: TAPanel;
+procedure TAToolableServiceForm.FormKeyPressed(e: IKeyEvent);
 begin
-  p := TAPanel.Create(FFootPanel);
-  p.Parent := FFootPanel;
-  p.Left := 10;
-  p.Top := 4;
-  p.Height := FFootPanel.Height - 8;
-  p.Width := 100;
-  p.Caption := ACaption
+  if e.GetKeyCode = 27 then
+    Close;
+end;
+
+function TAToolableServiceForm.AddButton(const ACaption: string): TAPanel;
+begin
+  Result := TAPanel.Create(FFootPanel);
+  Result.Parent := FFootPanel;
+  FButtonList.Add(Result);
+  Result.Left := FNextLeft;
+  Result.Top := 4;
+  Result.Height := FFootPanel.Height - 8;
+  Result.Width := 100;
+  Result.Caption := ACaption;
+  //
+  FNextLeft := Result.Left + Result.Width + 10;
+end;
+
+function TAToolableServiceForm.ButtonCount: Integer;
+begin
+  Result := FButtonList.Count;
 end;
 
 { TACustomServiceForm }
@@ -397,12 +427,6 @@ begin
   FCenterPanel.Top := (FMainPanel.Height - FCenterPanel.Height) div 2;
 end;
 
-procedure TACustomServiceForm.FormKeyPressed(e: IKeyEvent);
-begin
-  if e.GetKeyCode = 27 then
-    Close;
-end;
-
 constructor TACustomServiceForm.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
@@ -411,9 +435,6 @@ begin
   FCenterPanel.BevelOuter := bvNone;
   FCenterPanel.Width := 300;
   FCenterPanel.Height := 200;
-  //
-  OpenDefaultFormEvent := True;
-  OpenDefaultKeyEvent := True;
 end;
 
 { TAQueryServiceForm }

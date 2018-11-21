@@ -53,6 +53,20 @@ type
     function GetAForm: TAForm;
   end;
 
+  { TGridEvent }
+
+  TGridEvent = class(TCustomControlEvent, IGridEvent)
+  private
+    FCol, FRow: Integer;
+  public
+    constructor Create(ASource: TObject; AAGrid: TACustomGrid; ACol, ARow: Integer);
+    function GetAGrid: TACustomGrid;
+    function GetCol: Integer;
+    function GetRow: Integer;
+  end;
+
+  //------------------------------------- 以上为控件事件 -------------------------------------------
+
   { TKeyEvent }
 
   TKeyEvent = class(TControlEvent, IKeyEvent)
@@ -157,6 +171,30 @@ end;
 function TFormEvent.GetAForm: TAForm;
 begin
   Result := TAForm(FAControl);
+end;
+
+{ TGridEvent }
+
+constructor TGridEvent.Create(ASource: TObject; AAGrid: TACustomGrid; ACol, ARow: Integer);
+begin
+  inherited Create(ASource, AAGrid);
+  FCol := ACol;
+  FRow := ARow;
+end;
+
+function TGridEvent.GetAGrid: TACustomGrid;
+begin
+  Result := TACustomGrid(FAControl);
+end;
+
+function TGridEvent.GetCol: Integer;
+begin
+  Result := FCol;
+end;
+
+function TGridEvent.GetRow: Integer;
+begin
+  Result := FRow;
 end;
 
 { TKeyEvent }
@@ -285,6 +323,8 @@ function TMouseEvent.GetShiftState: TShiftState;
 begin
   Result := FShiftState;
 end;
+
+
 
 
 end.

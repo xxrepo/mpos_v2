@@ -9,12 +9,12 @@ type
 
   -----------------------------------------------------------}
 
+  { IControlEvent }
+
   IControlEvent = interface(ICMEvent)
     ['{50ABB64A-498C-4364-9E55-F4B5EE6860F0}']
     function GetAControl: TAControl;
   end;
-
-  { IControlListener }
 
   IControlListener = interface(ICMListener)
     ['{9AB1F294-33E8-43F1-800F-D3F3D2452713}']
@@ -24,6 +24,8 @@ type
   end;
 
   TControlListenerList = specialize TFGInterfaceList<IControlListener>;
+
+  { IWinControlEvent }
 
   IWinControlEvent = interface(IControlEvent)
     ['{50ABB64A-498C-4364-9E55-F4B5EE6860F0}']
@@ -52,7 +54,6 @@ type
 
   TEditListenerList = specialize TFGInterfaceList<IEditListener>;
 
-
   { ICustomControlEvent }
 
   ICustomControlEvent = interface(IWinControlEvent)
@@ -66,6 +67,8 @@ type
   end;
 
   TCustomControlListenerList = specialize TFGInterfaceList<ICustomControlListener>;
+
+  { IFormEvent }
 
   IFormEvent = interface(ICustomControlEvent)
     ['{9BF85BE1-7BB4-4A08-AAE2-3C8C16B878C5}']
@@ -82,6 +85,30 @@ type
   end;
 
   TFormListenerList = specialize TFGInterfaceList<IFormListener>;
+
+  { IGridEvent }
+
+  IGridEvent = interface(ICustomControlEvent)
+    ['{360A315C-4D82-4D4B-A97C-E4C4632563FD}']
+    function GetAGrid: TACustomGrid;
+    function GetCol: Integer;
+    function GetRow: Integer;
+  end;
+
+  ICustomGridListener = interface(ICustomControlListener)
+    ['{A3FA1B1C-0AB6-42AD-914F-75E6DEF342CC}']
+    procedure GridDrawCell(e: IGridEvent);
+    procedure GridSelection(e: IGridEvent);
+  end;
+
+  IDrawGridListener = interface(ICustomGridListener)
+    ['{09A21DCA-9082-46CC-A673-78FB5592A08A}']
+    procedure GridSelectCell(e: IGridEvent);
+  end;
+
+  TDrawGridListenerList = specialize TFGInterfaceList<IDrawGridListener>;
+
+  // --------------------------------- 以上是控件的 -----------------------------------------
 
   { IKeyEvent
     // 表示组件中发生键击的事件。

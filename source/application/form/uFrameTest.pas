@@ -5,7 +5,7 @@ unit uFrameTest;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics, Grids, DateTimePicker,
+  Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics, Grids, DBGrids, DateTimePicker,
   cm_theme, cm_plat,
   uSale, uSaleDTO,
   uSystem,
@@ -19,11 +19,14 @@ type
     Button1: TButton;
     Button2: TButton;
     DateTimePicker1: TDateTimePicker;
+    DBGrid1: TDBGrid;
+    DrawGrid1: TDrawGrid;
     Label1: TLabel;
     Memo1: TMemo;
     Panel1: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
+    StringGrid1: TStringGrid;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FrameClick(Sender: TObject);
@@ -103,6 +106,9 @@ begin
   //Memo1.ReadOnly := ;
   //Memo1.NumbersOnly := ;
   //TForm.OnClose := ;
+  StringGrid1.FocusColor := clRed;
+  StringGrid1.Editor := Memo1;
+  //StringGrid1.TitleFont;
 end;
 
 procedure TTestFrame.Button1Click(Sender: TObject);
@@ -142,6 +148,8 @@ var
 begin
   f := TTestForm.Create(nil);
   f.BoundsRect := AppSystem.GetServiceRect;
+
+
 
   f.ShowModal;
 end;
@@ -204,9 +212,20 @@ end;
 { TTestForm }
 
 procedure TTestForm.FormShow(e: IFormEvent);
+var
+  g: TAStringGrid;
 begin
   inherited FormShow(e);
   FGridLayout.ReLayout;
+
+  g := TAStringGrid.Create(Self);
+  g.Parent := Self;
+  g.Width := 300;
+  g.Height := 200;
+  g.Options := g.Options + [goEditing];
+  g.Cells[3,3] := 'haha';
+
+
 end;
 
 procedure TTestForm.FormKeyPressed(e: IKeyEvent);
@@ -217,6 +236,7 @@ begin
   VK_F2: FGridLayout.ColCount := 4;
   VK_F3: begin FGridLayout.ColCount := 2; FGridLayout.RowCount := 4; end;
   VK_F4: FGridLayout.AlignAtGrid := not FGridLayout.AlignAtGrid;
+  VK_F5: FGridLayout.SetColsWidth(120);
   end;
 end;
 
@@ -229,21 +249,37 @@ begin
   FCenterPanel.Width := 400;
   FCenterPanel.Height := 300;
   FCenterPanel.Color := clGray;
-  FGridLayout := TAGridLayout.Create(nil, FCenterPanel);
+  FGridLayout := TAGridLayout.Create(nil, FCenterPanel, 3, 4);
 
   for i:=0 to 6 do
     begin
       p := TAPanel.Create(Self);
       p.Parent := FCenterPanel;
-      p.Width := 50;
+      p.Width := 70;
+      p.Color := clLime;
+
       if i mod 2 = 0 then
         p.Height := 30
       else
-        p.Height := 40;
-      p.Color := clLime;
+        begin
+          p.Height := 40;
+          p.Color := clGreen;
+        end;
+
       p.Caption := IntToStr(i);
-      FGridLayout.PutLayoutControl(p);
+
+      if i=4 then
+        begin
+          FGridLayout.PutLayoutControl(p, 1, 0);
+          p.Caption := p.Caption + ' [1,0]';
+        end
+      else if i=3 then
+        FGridLayout.PutLayoutControl(p, False)
+      else
+        FGridLayout.PutLayoutControl(p);
     end;
+
+  FGridLayout.ColWidths[1] := 120;
 end;
 
 

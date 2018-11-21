@@ -8,12 +8,9 @@ uses
   {$ENDIF}
   Classes, cm_InterfaceRegister, cm_InterfaceLoader, cm_plat
   { you can add units after this / 你可以在这之后增加单元 },
-  cm_messager, uNavigator, uSaleQuery,
-  uSystem, cm_AWTLayoutUtils, cm_AWTEventUtils;
+  cm_messager, uNavigator, uSaleQuery, uSystem;
 
-function LoadExport(ARegister: ICMInterfaceRegister;
-                    const AInfo: ICMLibInfo): Boolean; stdcall;
-
+function LoadExport(ARegister: ICMInterfaceRegister; const AInfo: ICMLibInfo): Boolean; stdcall;
 begin
   Result := False;
   if not SetInterfaceRegister(ARegister) then
@@ -22,10 +19,8 @@ begin
   这里增加加载库时代码
   ---------------------------------------------}
   AppSystem.AddPreparedOneOffExecute(TNavigatorNodeListener.Create);
-  //TNavigatorNodeListener.Create;
+
   Result := True;
-
-
 end;
 
 function UnloadExport(AStatus: Integer): Boolean; stdcall;
