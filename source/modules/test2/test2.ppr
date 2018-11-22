@@ -8,8 +8,8 @@ uses
   {$ENDIF}
   Classes, cm_InterfaceRegister, cm_InterfaceLoader, cm_plat
   { you can add units after this / 你可以在这之后增加单元 },
-  cm_messager,
-  uSystem, uTest;
+  cm_messager, cm_tree,
+  uSystem, uTest, uNavigatorFrame;
 
 function LoadExport(ARegister: ICMInterfaceRegister;
                     const AInfo: ICMLibInfo): Boolean; stdcall;
@@ -21,7 +21,7 @@ begin
   {--------------------------------------------
   这里增加加载库时代码
   ---------------------------------------------}
-  AppSystem.AddPreparedOneOffExecute(TNavigatorNodeListener.Create);
+  AppSystem.AddPreparedOneOffExecute(TTestForm.Create(nil));
 
 
   Result := True;

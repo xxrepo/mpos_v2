@@ -18,6 +18,18 @@ uses
 
 type
 
+
+  { TAPOSFrame }
+
+  TAPOSFrame = class(TAFrame, IThemeable)
+  protected
+    FTheme: ITheme;
+  public
+    destructor Destroy; override;
+    procedure AfterConstruction; override;
+    procedure SetTheme(ATheme: ITheme); virtual;
+  end;
+
   { TAPOSForm
     // POS 窗体
   }
@@ -150,6 +162,29 @@ type
   end;
 
 implementation
+
+{ TAPOSFrame }
+
+destructor TAPOSFrame.Destroy;
+begin
+  GetThemeableManager.RemoveThemeable(Self);
+  inherited Destroy;
+end;
+
+procedure TAPOSFrame.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  GetThemeableManager.AddThemeable(Self);
+end;
+
+procedure TAPOSFrame.SetTheme(ATheme: ITheme);
+begin
+  FTheme := ATheme;
+  //应由 frame 的载体决定，下行注释
+  //Self.Color := ATheme.GetParameter.Get('boardColor').AsInteger;
+  Self.Font.Size := ATheme.GetParameter.Get('defaultFont').Get('size').AsInteger;
+  Self.Font.Name := ATheme.GetParameter.Get('defaultFont').Get('name').AsString;
+end;
 
 { TAPOSForm }
 

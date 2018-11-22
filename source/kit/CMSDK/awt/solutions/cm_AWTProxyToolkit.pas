@@ -1,9 +1,42 @@
+unit cm_AWTProxyToolkit;
 
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, Controls, Graphics,
+  cm_messager,
+  cm_AWT, cm_AWTProxy;
+
+type
+
+  { TProxyToolkit }
+
+  TProxyToolkit = class(TCMMessageable, IAToolkit)
+  public
+    function CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
+    function CreateFont(ATarget: TAFont): IAFontPeer;
+    function CreateCanvas(ATarget: TACanvas): IACanvasPeer;
+    function CreateBorderSpacing(ATarget: TAControlBorderSpacing; OwnerControl: TAControl): IAControlBorderSpacingPeer;
+    //
+    function CreateLabel(ATarget: TALabel): IALabelPeer;
+    function CreatePanel(ATarget: TAPanel): IAPanelPeer;
+    function CreateEdit(ATarget: TAEdit): IAEditPeer;
+    function CreateMemo(ATarget: TAMemo): IAMemoPeer;
+    function CreateForm(ATarget: TAForm): IAFormPeer;
+    function CreateFrame(ATarget: TAFrame): IAFramePeer;
+    function CreateDateTimePicker(ATarget: TADateTimePicker): IADateTimePickerPeer;
+    function CreateStringGrid(ATarget: TAStringGrid): IAStringGridPeer;
+  end;
+
+implementation
+
+uses FPImage;
 
 { TProxyToolkit }
 
 type
-
   // TGIFImage 未实现抽象方法，为消除警告，声明此私有类型
   TGIFImageEx = class(TGIFImage)
   protected
@@ -76,6 +109,11 @@ begin
   Result := TProxyFormPeer.Create(ATarget, nil);
 end;
 
+function TProxyToolkit.CreateFrame(ATarget: TAFrame): IAFramePeer;
+begin
+  Result := TProxyFramePeer.Create(ATarget, nil);
+end;
+
 function TProxyToolkit.CreateDateTimePicker(ATarget: TADateTimePicker): IADateTimePickerPeer;
 begin
   Result := TProxyDateTimePickerPeer.Create(ATarget, nil);
@@ -86,5 +124,5 @@ begin
   Result := TProxyStringGridPeer.Create(ATarget, nil);
 end;
 
-
+end.
 

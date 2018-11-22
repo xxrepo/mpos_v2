@@ -27,9 +27,7 @@
 		</header>
 
 		<!-- 底 -->
-		<footer>
-		    <color>$1f0d1f</color>
-		</footer>
+		<footer color="$1f0d1f"/>
 
 		<!-- 广告 -->
 		<banner/>

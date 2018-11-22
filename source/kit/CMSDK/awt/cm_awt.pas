@@ -260,6 +260,8 @@ type
     function GetFont: TAFont;
     function GetHeight: Integer;
     function GetLeft: Integer;
+    function GetParentColor: Boolean;
+    function GetParentFont: Boolean;
     function GetText: TCaption;
     function GetTop: Integer;
     function GetVisible: Boolean;
@@ -273,26 +275,34 @@ type
     procedure SetFont(AValue: TAFont);
     procedure SetHeight(AValue: Integer);
     procedure SetLeft(AValue: Integer);
+    procedure SetParentColor(AValue: Boolean);
+    procedure SetParentFont(AValue: Boolean);
     procedure SetText(AValue: TCaption);
     procedure SetTop(AValue: Integer);
     procedure SetVisible(AValue: Boolean);
     procedure SetWidth(AValue: Integer);
+  protected //control 未公开
+    procedure Click; virtual;
+    procedure DblClick; virtual;
+    property ParentColor: Boolean read GetParentColor write SetParentColor;
+    property ParentFont: Boolean  read GetParentFont write SetParentFont;
+    property Text: TCaption read GetText write SetText; //LCL 中 Text 和 Caption 内容一致
   public
-    procedure AdjustSize; virtual;
-    procedure InvalidatePreferredSize; virtual;
+    procedure AdjustSize;
+    procedure InvalidatePreferredSize;
   public
     procedure BringToFront;
     procedure Hide;
-    procedure Invalidate; virtual;
+    procedure Invalidate;
     procedure SendToBack;
     procedure Show;
-    procedure Update; virtual;
+    procedure Update;
   public
     property Align: TAlign read GetAlign write SetAlign;
     property AutoSize: Boolean read GetAutoSize write SetAutoSize;
     property BoundsRect: TRect read GetBoundsRect write SetBoundsRect;
     property BorderSpacing: TAControlBorderSpacing read GetBorderSpacing write SetBorderSpacing;
-    property Caption: TCaption read GetText write SetText;
+    property Caption: TCaption read GetText write SetText; //LCL 中 Text 和 Caption 内容一致
     property Color: TColor read GetColor write SetColor;
     property Enabled: Boolean read GetEnabled write SetEnabled;
     property Font: TAFont read GetFont write SetFont;
@@ -401,6 +411,9 @@ type
   public
     constructor Create(AOwner: TAComponent); override;
     function GetPeer: IAPanelPeer;
+  published
+    property ParentColor;
+    property ParentFont;
   public
     property Alignment: TAlignment read GetAlignment write SetAlignment;
     property BevelColor: TColor read GetBevelColor write SetBevelColor;
@@ -439,7 +452,6 @@ type
     property SelLength: integer read GetSelLength write SetSelLength;
     property SelStart: integer read GetSelStart write SetSelStart;
     property SelText: String read GetSelText write SetSelText;
-    property Text: TCaption read GetText write SetText;
   public
     procedure AddEditListener(l: IEditListener);
     procedure RemoveEditListener(l: IEditListener);
@@ -451,6 +463,10 @@ type
   TAEdit = class(TACustomEdit)
   public
     constructor Create(AOwner: TAComponent); override;
+  published
+    property ParentColor;
+    property ParentFont;
+    property Text;
   end;
 
   { TAMemo }
@@ -467,6 +483,10 @@ type
   public
     property Lines: TStrings read GetLines write SetLines;
     property ScrollBars: TScrollStyle read GetScrollBars write SetScrollBars;
+  published
+    property ParentColor;
+    property ParentFont;
+    property Text;
   end;
 
   { TAForm }
@@ -486,6 +506,20 @@ type
     procedure AddFormListener(l: IFormListener);
     procedure RemoveFormListener(l: IFormListener);
     function GetFormListeners: TFormListenerList;
+  published
+    property ParentColor;
+    property ParentFont;
+  end;
+
+  { TAFrame }
+
+  TAFrame = class(TACustomControl)
+  public
+    constructor Create(AOwner: TAComponent); override;
+    function GetPeer: IAFramePeer;
+  published
+    property ParentColor;
+    property ParentFont;
   end;
 
   {$i awt_extctrls.inc}
@@ -999,6 +1033,16 @@ begin
   GetPeer.SetWidth(AValue);
 end;
 
+procedure TAControl.Click;
+begin
+  GetPeer.Click;
+end;
+
+procedure TAControl.DblClick;
+begin
+  GetPeer.DblClick;
+end;
+
 procedure TAControl.AdjustSize;
 begin
   GetPeer.AdjustSize;
@@ -1114,6 +1158,16 @@ begin
   Result := GetPeer.GetLeft;
 end;
 
+function TAControl.GetParentColor: Boolean;
+begin
+  Result := GetPeer.GetParentColor;
+end;
+
+function TAControl.GetParentFont: Boolean;
+begin
+  Result := GetPeer.GetParentFont;
+end;
+
 function TAControl.GetText: TCaption;
 begin
   Result := GetPeer.GetText;
@@ -1167,6 +1221,16 @@ end;
 procedure TAControl.SetLeft(AValue: Integer);
 begin
   GetPeer.SetLeft(AValue);
+end;
+
+procedure TAControl.SetParentColor(AValue: Boolean);
+begin
+  GetPeer.SetParentColor(AValue);
+end;
+
+procedure TAControl.SetParentFont(AValue: Boolean);
+begin
+  GetPeer.SetParentFont(AValue);
 end;
 
 procedure TAControl.SetText(AValue: TCaption);
@@ -1608,6 +1672,19 @@ end;
 function TAForm.GetFormListeners: TFormListenerList;
 begin
   Result := GetPeer.GetFormListeners;
+end;
+
+{ TAFrame }
+
+constructor TAFrame.Create(AOwner: TAComponent);
+begin
+  inherited Create(AOwner);
+  FPeer := TAWTManager.DefaultToolkit.CreateFrame(Self);
+end;
+
+function TAFrame.GetPeer: IAFramePeer;
+begin
+  FPeer.QueryInterface(IAFramePeer, Result);
 end;
 
 { TADateTimePicker }

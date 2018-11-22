@@ -25,7 +25,7 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <Units Count="13">
+    <Units Count="14">
       <Unit0>
         <Filename Value="test2.ppr"/>
         <IsPartOfProject Value="True"/>
@@ -78,6 +78,10 @@
         <Filename Value="..\..\kit\CMSDK\cm_generics.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit12>
+      <Unit13>
+        <Filename Value="..\..\library\mainFrameSet\uNavigatorFrame.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit13>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -88,7 +92,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\public;..\..\kit\CMSDK;..\..\kit\CMSDK\awt;..\..\public\aform"/>
+      <OtherUnitFiles Value="..\..\public;..\..\kit\CMSDK;..\..\kit\CMSDK\awt;..\..\public\aform;..\..\library\mainFrameSet"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>

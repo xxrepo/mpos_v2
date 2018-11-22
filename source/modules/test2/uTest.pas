@@ -8,28 +8,21 @@ uses
   Classes, SysUtils,
   cm_interfaces, cm_plat, cm_messager,
   cm_AWT, cm_AWTLayoutUtils,
-  uNavigator,
   uAForm,
-  uSystem;
+  uSystem,
+  uNavigatorFrame;
 
 type
 
-  { TNavigatorNodeListener }
-
-  TNavigatorNodeListener = class(TNavigatorNodeAdapter, IRunnable)
-  public
-    procedure Click(e: INavigatorNodeEvent); override;
-    procedure Run;
-  end;
-
-
   { TTestForm }
 
-  TTestForm = class(TACustomServiceForm)
+  TTestForm = class(TACustomServiceForm, IRunnable)
   private
     FFlowLayout: TAFlowLayout;
     FGridLayout: TAGridLayout;
+    nf: TNavigatorFrame;
   protected
+    procedure Run;
     procedure FormShow(e: IFormEvent); override;
     procedure FormKeyPressed(e: IKeyEvent); override;
   public
@@ -37,36 +30,6 @@ type
   end;
 
 implementation
-
-{ TNavigatorNodeListener }
-
-procedure TNavigatorNodeListener.Click(e: INavigatorNodeEvent);
-var
-  f: TTestForm;
-begin
-  DefaultMessager.Error('TTestForm----------------------------------');
-  f := TTestForm.Create(nil);
-  f.SetTitle('你好吗？');
-
-  DefaultMessager.Error('TTestForm bbb');
-  f.BoundsRect := AppSystem.GetServiceRect;
-
-
-  DefaultMessager.Error('TTestForm cc');
-  f.ShowModal;
-  f.Free;
-end;
-
-procedure TNavigatorNodeListener.Run;
-var
-  n: INavigator;
-begin
-  if InterfaceRegister.OutInterface(INavigator, n) then
-    begin
-      DefaultMessager.Error('11111111111');
-      n.GetNode('Test').SetListener(Self);
-    end;
-end;
 
 { TTestForm }
 
@@ -79,7 +42,7 @@ begin
   //
   Messager.Info('Create()...');
   FFlowLayout := TAFlowLayout.Create(nil, FCenterPanel);
-  FGridLayout := TAGridLayout.Create(nil, FCenterPanel);
+  FGridLayout := TAGridLayout.Create(nil, FCenterPanel, 2, 4);
   FCenterPanel.Color := clYellow;
 
   l1 := TALabel.Create(Self);
@@ -104,7 +67,22 @@ begin
 
   FGridLayout.PutLayoutControls([l1, e1, l2, e2]);
 
+
+  nf := TNavigatorFrame.Create(Self);
+  nf.Parent := FMainPanel;
+  nf.Left := 0;
+  nf.ParentColor := False;
+  nf.Color := $0;
+
+  //AppSystem.GetMsgBox.ShowMessage(IntToStr(nf.Color));
+
   Messager.Info('Create().');
+end;
+
+procedure TTestForm.Run;
+begin
+  BoundsRect := AppSystem.GetServiceRect;
+  ShowModal;
 end;
 
 procedure TTestForm.FormShow(e: IFormEvent);
@@ -112,8 +90,15 @@ begin
   inherited FormShow(e);
   Messager.Info('FormShow()...');
   //FFlowLayout.ReLayout;
+  FGridLayout.ReLayout;
 
   Self.AddButton('AAA');
+
+  nf.AutoSize := False;
+  nf.Height := 200;
+  nf.Width := 200;
+
+  //AppSystem.GetMsgBox.ShowMessage( AppSystem.GetParameter.Get('navigator.nodes.node$2.nodes.colWidth').AsString );
 end;
 
 procedure TTestForm.FormKeyPressed(e: IKeyEvent);

@@ -64,7 +64,9 @@ var
 
 implementation
 
-uses LazFileUtils, TypInfo, cm_controlutils, uDialogs, uConstant, uVersion, uSystemUtils, cm_AWT, cm_AWTProxy;
+uses
+  LazFileUtils, TypInfo, cm_controlutils, uDialogs, uConstant, uVersion, uSystemUtils,
+  cm_AWT, cm_AWTProxy, cm_AWTProxyToolkit;
 
 function MessageBoxFunc(Text, Caption :PChar; Flags: Longint): Integer;
 begin
@@ -164,7 +166,12 @@ begin
             if ns.ReadXML(node, fn) then
               begin
                 Messager.Debug('开始加载XML文件:%s...', [fn]);
-                FParameterLoader.LoadParameters(paramObj, node);
+                try
+                  FParameterLoader.LoadParameters(paramObj, node);
+                except
+                  on e: Exception do
+                    GetMsgBox.ShowMessage(Format('加载XML文件:%s出错！'#10'%s %s', [fn, e.ClassName, e.Message]));
+                end;
                 node.Free;
               end;
           end;
@@ -201,52 +208,39 @@ end;
 
 function TPOSInitialize.InitTheme: Boolean;
 var
-  ns: TCMDOMNodeStreamer;
-  node: TCMDOMNode;
   i: Integer;
   themeName, themeTitle: string;
   theme: TCMTheme;
-  themesParameter: ICMParameter;
+  themesParameter, themeParam: ICMParameter;
 begin
   Result := False;
   Messager.Info('开始初始化主题工具...');
-  //
-  themesParameter := AppSystem.GetParameter.AddString('themes', '');
-  //
-  if not FileExistsUTF8(ThemeConfigFileName) then
+  themesParameter := AppSystem.GetParameter.Get('themes');
+  if themesParameter.IsNull then
     begin
-      Messager.Error('主题配置文件:%s不存在.', [ThemeConfigFileName]);
+      Messager.Error('主题配置参数加载失败.');
       Exit;
     end;
-  ns := TCMDOMNodeStreamer.Create(nil);
-  try
-    if ns.ReadXML(node, ThemeConfigFileName) then
-      begin
-        //寄存主题控制器
-        InterfaceRegister.PutInterface(IThemeableSet, IThemeableSet(FThemeUtil));
-        InterfaceRegister.PutInterface(IThemeController, IThemeController(FThemeUtil));
-        for i:=0 to node.ChildCount-1 do
-          begin
-            if node.ChildNodes[i].Name = 'theme' then
-              begin
-                themeName := node.ChildNodes[i].GetAttribute('name');
-                themeTitle := node.ChildNodes[i].GetAttribute('title');
-                //加入配置参数
-                FParameterLoader.LoadParameters(themesParameter, node.ChildNodes[i]);
-                //构建主题
-                theme := TCMTheme.Create(themeName, themeTitle, FParameter.Get('themes').Get(themeName));
-                //加入控制器
-                FThemeUtil.AddTheme(theme);
-              end;
-          end;
-        //
-        LoadingForm.SetLoadMsg('开始设置默认主题...');
-        FThemeUtil.SetFirstTheme;
-        Result := True;
-      end;
-  finally
-    ns.Free;
-  end;
+  //寄存主题控制器
+  InterfaceRegister.PutInterface(IThemeableSet, IThemeableSet(FThemeUtil));
+  InterfaceRegister.PutInterface(IThemeController, IThemeController(FThemeUtil));
+  //
+  for i:=0 to themesParameter.ItemCount-1 do
+    begin
+      themeParam := themesParameter.GetItem(i);
+      if themeParam.Name = 'theme' then
+        begin
+          themeName := themeParam.Get('name').AsString;
+          themeTitle := themeParam.Get('title').AsString;
+          //构建主题
+          theme := TCMTheme.Create(themeName, themeTitle, themeParam);
+          //加入控制器
+          FThemeUtil.AddTheme(theme);
+        end;
+    end;
+  LoadingForm.SetLoadMsg('开始设置默认主题...');
+  FThemeUtil.SetFirstTheme;
+  Result := True;
 end;
 
 function TPOSInitialize.InitDBMessageHandler: Boolean;

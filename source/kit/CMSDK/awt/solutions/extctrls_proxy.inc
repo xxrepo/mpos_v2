@@ -32,6 +32,26 @@ begin
   Result := TDateTimePicker(FDelegateObj);
 end;
 
+function TProxyDateTimePickerPeer.GetParentColor: Boolean;
+begin
+  Result := GetDelegate.ParentColor;
+end;
+
+function TProxyDateTimePickerPeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyDateTimePickerPeer.SetParentColor(AValue: Boolean);
+begin
+  GetDelegate.ParentColor := AValue;
+end;
+
+procedure TProxyDateTimePickerPeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
+end;
+
 function TProxyDateTimePickerPeer.GetDate: TDate;
 begin
   Result := GetDelegate.Date;
@@ -395,6 +415,26 @@ end;
 function TProxyStringGridPeer.GetDelegate: TStringGrid;
 begin
   Result := TStringGrid(FDelegateObj);
+end;
+
+function TProxyStringGridPeer.GetParentColor: Boolean;
+begin
+  Result := GetDelegate.ParentColor;
+end;
+
+function TProxyStringGridPeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyStringGridPeer.SetParentColor(AValue: Boolean);
+begin
+  GetDelegate.ParentColor := AValue;
+end;
+
+procedure TProxyStringGridPeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
 end;
 
 function TProxyStringGridPeer.GetTitleFont: TAFont;

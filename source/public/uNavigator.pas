@@ -10,94 +10,61 @@ uses
 
 type
 
-  // 导航栏的简单解决方案
+  INavsCfg = interface
+    ['{035B3A37-B02B-4336-8805-DEFD56B04BFF}']
+    function GetColCount: Integer;
+    function GetRowCount: Integer;
+    function GetColWidth: Integer;
+    function GetRowHeight: Integer;
+    function GetAlign: Boolean;
+  end;
 
-  INavigatorNodeListener = interface;
-
-  { INavigatorNodeConfig
-    // 导航节点的配置
-  }
-
-  INavigationNodeConfig = interface
-    ['{2AC6C25B-C10E-4384-AF28-236F96112ECF}']
+  INavNodeCfg = interface
+    ['{CAFC4D36-F850-402C-B9BC-043DC96A952F}']
     function GetName: string;  //名字应唯一
     function GetCaption: string;
     function GetCol: Integer;  //未配置时返回实现分配
     function GetRow: Integer;
     function GetWidth: Integer;
     function GetHeight: Integer;
-    function GetCall: string;  //保留
-    function GetChildrenColWidth: Integer;
-    function GetChildrenRowHeight: Integer;
-    function GetChildrenColCount: Integer;
-    function GetChildrenRowCount: Integer;
-    function GetChildrenAlignAtGrid: Boolean;
   end;
 
-  { INavigationNode
-    // 导航节点，能够获得配置和节点信息
-  }
+  INavNodeListener = interface;
+  INavigator = interface;
 
-  INavigationNode = interface
-    ['{4DE9E4BC-6568-4325-875E-B848027CF0E8}']
-    function GetConfig: INavigationNodeConfig;
+  INavNode = interface
+    ['{65BE3B79-9C92-4667-927B-2FB4DC70E26E}']
+    function GetName: string;   //名字应唯一
     function GetLevel: Integer;
     function GetParentName: string;
     function GetChildrenNames: TStrings;
-    procedure SetDblOpenChildren(b: Boolean); //设置双击打开子项
-    function IsDblOpenChildren: Boolean;
-    procedure Show;
-    procedure SetListener(l: INavigatorNodeListener);
+    procedure SetListener(l: INavNodeListener);
+    function GetCfg: INavNodeCfg;
+    //procedure Show;
   end;
 
-  INavigator = interface;
-
-  { INavigatorNodeEvent }
-
-  INavigatorNodeEvent = interface(ICMEvent)
-    ['{4DE9E4BC-6568-4325-875E-B848027CF0E8}']
+  INavNodeEvent = interface(ICMEvent)
+    ['{93409BB9-432E-4452-B9AD-6CB57218FACD}']
     function GetNavigator: INavigator;
-    function GetNode: INavigationNode;
-    // TODO
+    function GetNode: INavNode;
   end;
 
-  { INavigatorNodeListener }
-
-  INavigatorNodeListener = interface(ICMListener)
-    ['{34312F7F-F777-4906-AA08-4D0783ACBFF4}']
-    procedure Click(e: INavigatorNodeEvent);
-    procedure DblClick(e: INavigatorNodeEvent);
+  INavNodeListener = interface(ICMListener)
+    ['{FAF46D80-DD92-4620-9ABD-2E70DF640547}']
+    procedure Opened(e: INavNodeEvent);
+    //
   end;
 
   INavigator = interface(ICMBase)
     ['{422F5AEA-5FC0-44ED-A28E-5CD4FB2D526F}']
-    function AddNode(AParentNode: INavigationNode; ANewNodeConfig: INavigationNodeConfig): Boolean;
-    function RemoveNode(ANode: INavigationNode): Boolean;
-    function GetNode(const ANodeName: string): INavigationNode;
+    function AddNode(const AParentNodeName: string; INavNodeCfg: INavNodeCfg): Boolean;
+    function RemoveNode(const ANodeName: string): Boolean;
+    function FindNode(const ANodeName: string): INavNode;
     function GetRootNames: TStrings;
-  end;
-
-  { TNavigatorNodeAdapter }
-
-  TNavigatorNodeAdapter = class(TCMListener, INavigatorNodeListener)
-  public
-    procedure Click(e: INavigatorNodeEvent); virtual;
-    procedure DblClick(e: INavigatorNodeEvent); virtual;
   end;
 
 implementation
 
-{ TNavigatorNodeAdapter }
-
-procedure TNavigatorNodeAdapter.Click(e: INavigatorNodeEvent);
-begin
-
-end;
-
-procedure TNavigatorNodeAdapter.DblClick(e: INavigatorNodeEvent);
-begin
-
-end;
 
 end.
 

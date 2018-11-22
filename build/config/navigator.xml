@@ -1,48 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Navigator>
-    <Items>
-	    <Style>
-			<ColWidth>160</ColWidth>
-			<RowHeight>40</RowHeight>  
-			<ColCount>1</ColCount>
-			<RowCount>10</RowCount>
-			<AlignAtGrid>True</AlignAtGrid>
-		</Style>
 
-	    <Item>
-		    <Name>A</Name>
-		    <Caption>first</Caption>
-			<Call>mpos/btn/first</Call>
-			<Width>160</Width>
-			<Height>40</Height>
+<!--tab缩进请设置为4格-->
+<navigator>
+	<nodes colCount="1" rowCount="10" colWidth="160" rowHeight="40">
+
+	    <node name="SaleQuery" caption="交易查询"/>
+
+		<node>
+			<name>test</name>
+			<caption>测试</caption>
 			
-			<Items>
-			   <Style>
-					<ColWidth>80</ColWidth>
-					<RowHeight>40</RowHeight>  
-					<ColCount>2</ColCount>
-					<RowCount>10</RowCount>
-					<AlignAtGrid>True</AlignAtGrid>
-				</Style>
-			   <Item>
-					<Name>A1</Name>
-					<Caption>A__1</Caption>
-			   </Item>
-			   <Item>
-					<Name>A2</Name>
-					<Caption>A__2</Caption>
-			   </Item>
-		    </Items>
-		</Item>
+			<nodes colCount="2" rowCount="10" colWidth="160" rowHeight="40" align="True">
+				<node name="test_sub1" caption="测试 子1"/>
+				<node>
+				    <name>test_sub2</name>
+				    <caption>测试 子2</caption>
+				</node>
+			</nodes>
+		</node>
 
-	    <Item>
-		    <Name>SaleQuery</Name>
-		    <Caption>交易查询</Caption>
-		</Item>
+		<node name="test2" width="160">
+			<caption>测试2</caption>
+			<height>100</height>
+		</node>
 
-		<Item>
-		    <Name>Test</Name>
-		    <Caption>测试</Caption>
-		</Item>
-	</Items>
-</Navigator>
+	</nodes>
+</navigator>

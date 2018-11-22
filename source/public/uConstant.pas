@@ -13,7 +13,6 @@ const
   LogFileNamePrefix: string = 'mpos_';
   //config file name
   DefaultConfigFileName: string = 'config' + PathDelim + 'mpos.xml';
-  ThemeConfigFileName: string = 'config' + PathDelim + 'themes.xml';
   LibrariesConfigFileName: string = 'config' + PathDelim + 'libraries.xml';
   //parameter name
   MessageLevelParameterName: string = 'mpos.messageLevel';

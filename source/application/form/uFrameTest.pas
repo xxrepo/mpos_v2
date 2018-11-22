@@ -86,15 +86,15 @@ var
   index: integer;
 begin
   if InterfaceRegister.OutInterface(IThemeController, ic) then
-  begin
-    currName := ic.GetCurrTheme.GetName;
-    tnl := ic.GetThemeNames;
-    index := tnl.IndexOf(currName);
-    if (index >= 0) and (index < tnl.Count - 1) then
-      ic.SwitchTheme(tnl[index + 1])
-    else if tnl.Count > 0 then
-      ic.SwitchTheme(tnl[0]);
-  end;
+    begin
+      currName := ic.GetCurrTheme.GetName;
+      tnl := ic.GetThemeNames;
+      index := tnl.IndexOf(currName);
+      if (index >= 0) and (index < tnl.Count - 1) then
+        ic.SwitchTheme(tnl[index + 1])
+      else if tnl.Count > 0 then
+        ic.SwitchTheme(tnl[0]);
+    end;
 end;
 
 procedure TTestFrame.FrameClick(Sender: TObject);
@@ -109,6 +109,9 @@ begin
   StringGrid1.FocusColor := clRed;
   StringGrid1.Editor := Memo1;
   //StringGrid1.TitleFont;
+  //TButton.Click;
+  //Label1.ParentColor := ;
+  //TEdit.ParentFont := ;
 end;
 
 procedure TTestFrame.Button1Click(Sender: TObject);

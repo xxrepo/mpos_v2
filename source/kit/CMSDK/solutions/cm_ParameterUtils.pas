@@ -6,8 +6,12 @@
 
     This is not a complete unit, for testing
 
+    同等级节点重名时，从第二个同名参数起用“$”加序号作为参数名，可逐一取出；
+    DOM 属性以属性为参数名。
+
     20181005  NOTE 1: ADD 子参数重名处理（主要应对 DOM 相同类型子节点，在应用时不建议较多的使用同名参数，这可能遇到意想不到的状况）。
     20181023  NOTE 2: ADD 不可变参数
+    20181122  NOTE 3: ADD DOM 属性参数
 
  **********************************************************************}
 
@@ -1151,12 +1155,23 @@ var
   begin
     for i:=0 to node.ChildCount-1 do
       begin
-        if node.ChildNodes[i].AttributeExists('name') then
-          param := TCMParameter.Create(pParam, node.ChildNodes[i].GetAttribute('name'), node.ChildNodes[i].Text)
-        else
+        //存在 name 属性，也不再以 name 属性作为参数名，下面注释。
+        //if node.ChildNodes[i].AttributeExists('name') then
+        //  param := TCMParameter.Create(pParam, node.ChildNodes[i].GetAttribute('name'), node.ChildNodes[i].Text)
+        //else
           param := TCMParameter.Create(pParam, node.ChildNodes[i].Name, node.ChildNodes[i].Text);
         Result := Result + 1;
         addChildren(param, node.ChildNodes[i]);
+      end;
+    //属性
+    for i:=0 to node.Attributes.Count-1 do
+      begin
+        //存在 name 属性，也不再以 name 属性作为参数名，下面注释。
+        //if node.Attributes.Names[i] <> 'name' then
+          begin
+            param := TCMParameter.Create(pParam, node.Attributes.Names[i], node.Attributes.ValueFromIndex[i]);
+            Result := Result + 1;
+          end;
       end;
   end;
 begin
@@ -1168,9 +1183,10 @@ begin
           raise EParameterError.CreateFmt(SInvalidBaseParameter, [ABase.Clue]);
           Exit;
         end;
-      if ANode.AttributeExists('name') then
-        name := ANode.GetAttribute('name')
-      else
+      //存在 name 属性，也不再以 name 属性作为参数名，下面注释。
+      //if ANode.AttributeExists('name') then
+      //  name := ANode.GetAttribute('name')
+      //else
         name := ANode.Name;
       value := ANode.Text;
       //

@@ -23,7 +23,7 @@
   end;
 
   IAControlPeer = interface(IAComponentPeer)
-    ['{D89E2EB1-E7CF-4B6B-B172-D25D755E2C44}']
+    ['{503182A1-3BD8-4D32-AAD9-99A807FAC774}']
     function GetAlign: TAlign;
     function GetAutoSize: Boolean;
     function GetBorderSpacing: TAControlBorderSpacing;
@@ -33,6 +33,8 @@
     function GetFont: TAFont;
     function GetHeight: Integer;
     function GetLeft: Integer;
+    function GetParentColor: Boolean;
+    function GetParentFont: Boolean;
     function GetText: TCaption;
     function GetTop: Integer;
     function GetVisible: Boolean;
@@ -46,6 +48,8 @@
     procedure SetFont(AValue: TAFont);
     procedure SetHeight(AValue: Integer);
     procedure SetLeft(AValue: Integer);
+    procedure SetParentColor(AValue: Boolean);
+    procedure SetParentFont(AValue: Boolean);
     procedure SetText(AValue: TCaption);
     procedure SetTop(AValue: Integer);
     procedure SetVisible(AValue: Boolean);
@@ -54,6 +58,8 @@
     function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
     //
+    procedure Click;
+    procedure DblClick;
     procedure AdjustSize;
     procedure InvalidatePreferredSize;
     procedure BringToFront;
@@ -173,6 +179,10 @@
     procedure AddFormListener(l: IFormListener);
     procedure RemoveFormListener(l: IFormListener);
     function GetFormListeners: TFormListenerList;
+  end;
+
+  IAFramePeer = interface(IACustomControlPeer)
+    ['{ECAF3794-1637-46DB-9231-B0DE1A79CF70}']
   end;
 
   IADateTimePickerPeer = interface(IAWinControlPeer)

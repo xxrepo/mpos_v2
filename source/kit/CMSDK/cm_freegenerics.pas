@@ -19,7 +19,7 @@ unit cm_freegenerics;
 interface
 
 uses
-  Classes, SysUtils,
+  Classes, SysUtils, Contnrs,
   cm_classes;
 
 
@@ -61,6 +61,40 @@ type
     function Remove(Item: t): Integer;
     procedure Pack;
     property Items[Index: Integer]: T read Get write Put; default;
+  end;
+
+  { TFGFPHashList }
+
+  generic TFGFPHashList<T> = class(TFPHashList)
+  protected
+    function Get(Index: Integer): T;
+    procedure Put(Index: Integer; AValue: T);
+  public
+    function Add(const AName: shortstring; Item: T): Integer;
+    function Expand: specialize TFGFPHashList<T>;
+    function Extract(Item: T): T;
+    function IndexOf(Item: T): Integer;
+    function Find(const AName: shortstring): T;
+    function FindWithHash(const AName: shortstring; AHash: LongWord): T;
+    function Remove(Item: T): Integer;
+    property Items[Index: Integer]: T read Get write Put; default;
+  end;
+
+  { TFGFPHashObjectList }
+
+  generic TFGFPHashObjectList<T: class> = class(TFPHashObjectList)
+  protected
+    function GetItem(Index: Integer): T;
+    procedure SetItem(Index: Integer; AValue: T);
+  public
+    function Add(const AName: shortstring; Item: T): Integer;
+    function Expand: specialize TFGFPHashObjectList<T>;
+    function Extract(Item: T): T;
+    function IndexOf(Item: T): Integer;
+    function Find(const AName: shortstring): T;
+    function FindWithHash(const AName: shortstring; AHash: LongWord): T;
+    function Remove(Item: T): Integer;
+    property Items[Index: Integer]: T read GetItem write SetItem; default;
   end;
 
   { TFGInterfaceListEnumerator }
@@ -168,6 +202,101 @@ begin
   inherited Pack;
 end;
 
+{ TFGFPHashList }
+
+function TFGFPHashList.Get(Index: Integer): T;
+begin
+  Result := T(inherited Get(Index));
+end;
+
+procedure TFGFPHashList.Put(Index: Integer; AValue: T);
+begin
+  inherited Put(Index, AValue);
+end;
+
+function TFGFPHashList.Add(const AName: shortstring; Item: T): Integer;
+begin
+  Result := inherited Add(AName, Item);
+end;
+
+function TFGFPHashList.Expand: specialize TFGFPHashList<T>;
+begin
+  Result := TFGFPHashList<T>(inherited Expand);
+end;
+
+function TFGFPHashList.Extract(Item: T): T;
+begin
+  Result := T(inherited Extract(Item));
+end;
+
+function TFGFPHashList.IndexOf(Item: T): Integer;
+begin
+  Result := inherited IndexOf(Item);
+end;
+
+function TFGFPHashList.Find(const AName: shortstring): T;
+begin
+  Result := T(inherited Find(AName));
+end;
+
+function TFGFPHashList.FindWithHash(const AName: shortstring; AHash: LongWord): T;
+begin
+  Result := T(FindWithHash(AName, AHash));
+end;
+
+function TFGFPHashList.Remove(Item: T): Integer;
+begin
+  Result := inherited Remove(Item);
+end;
+
+{ TFGFPHashObjectList }
+
+function TFGFPHashObjectList.GetItem(Index: Integer): T;
+begin
+  Result := T(inherited GetItem(Index));
+end;
+
+procedure TFGFPHashObjectList.SetItem(Index: Integer; AValue: T);
+begin
+  inherited SetItem(Index, AValue);
+end;
+
+function TFGFPHashObjectList.Add(const AName: shortstring; Item: T): Integer;
+begin
+  Result := inherited Add(AName, Item);
+end;
+
+function TFGFPHashObjectList.Expand: specialize TFGFPHashObjectList<T>;
+begin
+  // TODO
+  Result := TFGFPHashObjectList(inherited Expand);
+end;
+
+function TFGFPHashObjectList.Extract(Item: T): T;
+begin
+  Result := T(inherited Extract(Item));
+end;
+
+function TFGFPHashObjectList.IndexOf(Item: T): Integer;
+begin
+  Result := inherited IndexOf(Item);
+end;
+
+function TFGFPHashObjectList.Find(const AName: shortstring): T;
+begin
+  Result := T(inherited Find(AName));
+end;
+
+function TFGFPHashObjectList.FindWithHash(const AName: shortstring; AHash: LongWord): T;
+begin
+  Result := T(FindWithHash(AName, AHash));
+end;
+
+function TFGFPHashObjectList.Remove(Item: T): Integer;
+begin
+  Result := inherited Remove(Item);
+end;
+
 { TFGFPListEnumerator }
 
 constructor TFGFPListEnumerator.Create(AList: TFPList);
@@ -264,6 +393,8 @@ begin
   Inc(FPosition);
   Result := FPosition < FList.Count;
 end;
+
+
 
 end.
 

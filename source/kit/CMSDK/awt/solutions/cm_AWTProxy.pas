@@ -209,6 +209,10 @@ type
     function GetFont: TAFont;
     function GetHeight: Integer;
     function GetLeft: Integer;
+  protected
+    function GetParentColor: Boolean; virtual; abstract;
+    function GetParentFont: Boolean; virtual; abstract;
+  public
     function GetText: TCaption;
     function GetTop: Integer;
     function GetVisible: Boolean;
@@ -222,6 +226,10 @@ type
     procedure SetFont(AValue: TAFont);
     procedure SetHeight(AValue: Integer);
     procedure SetLeft(AValue: Integer);
+  protected
+    procedure SetParentColor(AValue: Boolean); virtual; abstract;
+    procedure SetParentFont(AValue: Boolean); virtual; abstract;
+  public
     procedure SetText(AValue: TCaption);
     procedure SetTop(AValue: Integer);
     procedure SetVisible(AValue: Boolean);
@@ -229,7 +237,10 @@ type
     //
     function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
-    //
+  protected
+    procedure Click; virtual;
+    procedure DblClick; virtual;
+  public
     procedure AdjustSize;
     procedure InvalidatePreferredSize;
     procedure BringToFront;
@@ -323,6 +334,11 @@ type
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TLabel;
+  public // override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
   public
     function GetAlignment: TAlignment;
     function GetLayout: TTextLayout;
@@ -339,6 +355,11 @@ type
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TPanel;
+  public // override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
   public
     function GetAlignment: TAlignment;
     function GetBevelColor: TColor;
@@ -362,7 +383,12 @@ type
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TEdit;
     procedure EditChangeEvent(Sender: TObject);
-  public
+  public // override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
+  public // override TProxyWinControlPeer
     function GetBorderStyle: TBorderStyle; override;
     procedure SetBorderStyle(AValue: TBorderStyle); override;
   public
@@ -416,6 +442,12 @@ type
     procedure FormDeactivateEvent(Sender: TObject);
     procedure FormHideEvent(Sender: TObject);
     procedure FormShowEvent(Sender: TObject);
+  protected // override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+  public // override TProxyControlPeer
+    function GetParentFont: Boolean; override;
+    procedure SetParentFont(AValue: Boolean); override;
   public
     function GetFormBorderStyle: TFormBorderStyle;
     procedure SetFormBorderStyle(AValue: TFormBorderStyle);
@@ -424,6 +456,22 @@ type
     procedure AddFormListener(l: IFormListener);
     procedure RemoveFormListener(l: IFormListener);
     function GetFormListeners: TFormListenerList;
+  end;
+
+  { TProxyFramePeer }
+
+  TProxyFramePeer = class(TProxyCustomControlPeer, IAFramePeer)
+  protected
+    procedure RegisterControlEvents; override;
+    procedure RegisterMouseEvents; override;
+  public
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
+    function GetDelegate: TFrame;
+  public // override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
   end;
 
   { TProxyDateTimePickerPeer }
@@ -435,6 +483,11 @@ type
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TDateTimePicker;
+  public // override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
   public
     function GetDate: TDate;
     function GetDateTime: TDateTime;
@@ -554,6 +607,11 @@ type
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     destructor Destroy; override;
     function GetDelegate: TStringGrid;
+  public // override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
   public //覆盖 TProxyCustomGridPeer
     function GetTitleFont: TAFont; override;
     procedure SetTitleFont(AValue: TAFont); override;
@@ -568,29 +626,7 @@ type
     procedure AutoSizeColumns;
   end;
 
-
-  { TProxyToolkit }
-
-  TProxyToolkit = class(TCMMessageable, IAToolkit)
-  public
-    function CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
-    function CreateFont(ATarget: TAFont): IAFontPeer;
-    function CreateCanvas(ATarget: TACanvas): IACanvasPeer;
-    function CreateBorderSpacing(ATarget: TAControlBorderSpacing; OwnerControl: TAControl): IAControlBorderSpacingPeer;
-    //
-    function CreateLabel(ATarget: TALabel): IALabelPeer;
-    function CreatePanel(ATarget: TAPanel): IAPanelPeer;
-    function CreateEdit(ATarget: TAEdit): IAEditPeer;
-    function CreateMemo(ATarget: TAMemo): IAMemoPeer;
-    function CreateForm(ATarget: TAForm): IAFormPeer;
-    function CreateDateTimePicker(ATarget: TADateTimePicker): IADateTimePickerPeer;
-    function CreateStringGrid(ATarget: TAStringGrid): IAStringGridPeer;
-  end;
-
-
 implementation
-
-uses FPImage;
 
 {$i graphics_proxy.inc}
 
@@ -908,16 +944,6 @@ begin
   Result := GetDelegate.BoundsRect;
 end;
 
-function TProxyControlPeer.GetText: TCaption;
-begin
-  Result := GetDelegate.Caption;
-end;
-
-procedure TProxyControlPeer.SetText(AValue: TCaption);
-begin
-  GetDelegate.Caption := AValue;
-end;
-
 function TProxyControlPeer.GetColor: TColor;
 begin
   Result := GetDelegate.Color;
@@ -967,9 +993,19 @@ begin
   Result := GetDelegate.Left;
 end;
 
+function TProxyControlPeer.GetText: TCaption;
+begin
+  Result := GetDelegate.Caption; //LCL 中 Text 和 Caption 内容一致
+end;
+
 procedure TProxyControlPeer.SetLeft(AValue: Integer);
 begin
   GetDelegate.Left := AValue;
+end;
+
+procedure TProxyControlPeer.SetText(AValue: TCaption);
+begin
+  GetDelegate.Caption := AValue;  //LCL 中 Text 和 Caption 内容一致
 end;
 
 function TProxyControlPeer.GetHeight: Integer;
@@ -1085,6 +1121,16 @@ begin
     on e: Exception do
       DefaultMsgBox.MessageBox(e.ClassName + #10 + e.Message, Self.ClassName + ' output error');
   end;
+end;
+
+procedure TProxyControlPeer.Click;
+begin
+  //
+end;
+
+procedure TProxyControlPeer.DblClick;
+begin
+  //
 end;
 
 procedure TProxyControlPeer.AdjustSize;
@@ -1564,6 +1610,26 @@ begin
   Result := TLabel(FDelegateObj);
 end;
 
+function TProxyLabelPeer.GetParentColor: Boolean;
+begin
+  Result := GetDelegate.ParentColor;
+end;
+
+function TProxyLabelPeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyLabelPeer.SetParentColor(AValue: Boolean);
+begin
+  GetDelegate.ParentColor := AValue;
+end;
+
+procedure TProxyLabelPeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
+end;
+
 function TProxyLabelPeer.GetAlignment: TAlignment;
 begin
   Result := GetDelegate.Alignment;
@@ -1612,6 +1678,26 @@ end;
 function TProxyPanelPeer.GetDelegate: TPanel;
 begin
   Result := TPanel(FDelegateObj);
+end;
+
+function TProxyPanelPeer.GetParentColor: Boolean;
+begin
+  Result := GetDelegate.ParentColor;
+end;
+
+function TProxyPanelPeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyPanelPeer.SetParentColor(AValue: Boolean);
+begin
+  GetDelegate.ParentColor := AValue;
+end;
+
+procedure TProxyPanelPeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
 end;
 
 function TProxyPanelPeer.GetAlignment: TAlignment;
@@ -1707,6 +1793,26 @@ begin
         if Supports(FControlListenerList[i], IEditListener, el) then
           el.EditChanged(ee);
     end;
+end;
+
+function TProxyEditPeer.GetParentColor: Boolean;
+begin
+  Result := GetDelegate.ParentColor;
+end;
+
+function TProxyEditPeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyEditPeer.SetParentColor(AValue: Boolean);
+begin
+  GetDelegate.ParentColor := AValue;
+end;
+
+procedure TProxyEditPeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
 end;
 
 function TProxyEditPeer.GetBorderStyle: TBorderStyle;
@@ -1951,6 +2057,27 @@ begin
     end;
 end;
 
+function TProxyFormPeer.GetParentColor: Boolean;
+begin
+  // Form ParentColor 未公开
+  Result := False;
+end;
+
+function TProxyFormPeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyFormPeer.SetParentColor(AValue: Boolean);
+begin
+  // Form ParentColor 未公开
+end;
+
+procedure TProxyFormPeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
+end;
+
 function TProxyFormPeer.GetFormBorderStyle: TFormBorderStyle;
 begin
   Result := cm_AWT.TFormBorderStyle(GetDelegate.BorderStyle);
@@ -2019,10 +2146,59 @@ begin
         Result.Add(IFormListener(FControlListenerList[i]));
 end;
 
+{ TProxyFramePeer }
 
+procedure TProxyFramePeer.RegisterControlEvents;
+begin
+  inherited RegisterControlEvents;
+  GetDelegate.OnDblClick := @ControlDblClickEvent;
+end;
+
+procedure TProxyFramePeer.RegisterMouseEvents;
+begin
+  inherited RegisterMouseEvents;
+  GetDelegate.OnMouseDown := @MouseDownEvent;
+  GetDelegate.OnMouseUp := @MouseUpEvent;
+  GetDelegate.OnMouseEnter := @MouseEnterEvent;
+  GetDelegate.OnMouseLeave := @MouseLeaveEvent;
+  GetDelegate.OnMouseMove := @MouseMoveEvent;
+  GetDelegate.OnMouseWheel:= @MouseWheelEvent;
+end;
+
+constructor TProxyFramePeer.Create(TheTarget: TAComponent; AOwner: TComponent);
+begin
+  inherited Create(TheTarget, AOwner);
+  FDelegateObj := TFrame.Create(AOwner);
+end;
+
+function TProxyFramePeer.GetDelegate: TFrame;
+begin
+  Result := TFrame(FDelegateObj);
+end;
+
+function TProxyFramePeer.GetParentColor: Boolean;
+begin
+  Result := GetDelegate.ParentColor;
+end;
+
+function TProxyFramePeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyFramePeer.SetParentColor(AValue: Boolean);
+begin
+  GetDelegate.ParentColor := AValue;
+end;
+
+procedure TProxyFramePeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
+end;
 
 {$i extctrls_proxy.inc}
-{$i toolkit_proxy.inc}
+
+
 
 initialization
   TProxyControlPeer.FControlPeerList := TFPList.Create;

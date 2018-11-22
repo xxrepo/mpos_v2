@@ -6,6 +6,7 @@
 		<logo>resource/logo.png</logo>
 	</resources>  
 	<configFiles>	 
+	    <themes>config/themes.xml</themes>
 		<navigator>config/navigator.xml</navigator>
 		<f>config/authlicense.xml</f>
 		<f>config/company.xml</f>
