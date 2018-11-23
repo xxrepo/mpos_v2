@@ -181,6 +181,7 @@ type
     FFont: TAFont;
     FBorderSpacing: TAControlBorderSpacing;
     FMouseListenerList: TMouseListenerList;
+    FMark: string;
     class var FControlPeerList: TFPList;
   protected
     FControlListenerList: TCMInterfaceList; //同时用于子类扩展
@@ -208,11 +209,9 @@ type
     function GetEnabled: Boolean;
     function GetFont: TAFont;
     function GetHeight: Integer;
+    function GetHint: TCaption;
     function GetLeft: Integer;
-  protected
-    function GetParentColor: Boolean; virtual; abstract;
-    function GetParentFont: Boolean; virtual; abstract;
-  public
+    function GetMark: TCaption;
     function GetText: TCaption;
     function GetTop: Integer;
     function GetVisible: Boolean;
@@ -225,16 +224,19 @@ type
     procedure SetEnabled(AValue: Boolean);
     procedure SetFont(AValue: TAFont);
     procedure SetHeight(AValue: Integer);
+    procedure SetHint(AValue: TCaption);
     procedure SetLeft(AValue: Integer);
-  protected
-    procedure SetParentColor(AValue: Boolean); virtual; abstract;
-    procedure SetParentFont(AValue: Boolean); virtual; abstract;
-  public
+    procedure SetMark(AValue: TCaption);
     procedure SetText(AValue: TCaption);
     procedure SetTop(AValue: Integer);
     procedure SetVisible(AValue: Boolean);
     procedure SetWidth(AValue: Integer);
-    //
+  protected
+    function GetParentColor: Boolean; virtual; abstract;
+    function GetParentFont: Boolean; virtual; abstract;
+    procedure SetParentColor(AValue: Boolean); virtual; abstract;
+    procedure SetParentFont(AValue: Boolean); virtual; abstract;
+  public
     function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
   protected
@@ -373,21 +375,12 @@ type
     procedure SetBevelWidth(AValue: TBevelWidth);
   end;
 
-  { TProxyEditPeer }
+  { TProxyCustomEditPeer }
 
-  TProxyEditPeer = class(TProxyWinControlPeer, IAEditPeer)
-  protected
-    procedure RegisterControlEvents; override;
-    procedure RegisterMouseEvents; override;
+  TProxyCustomEditPeer = class abstract(TProxyWinControlPeer, IACustomEditPeer)
   public
-    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
-    function GetDelegate: TEdit;
+    function GetDelegate: TCustomEdit;
     procedure EditChangeEvent(Sender: TObject);
-  public // override TProxyControlPeer
-    function GetParentColor: Boolean; override;
-    function GetParentFont: Boolean; override;
-    procedure SetParentColor(AValue: Boolean); override;
-    procedure SetParentFont(AValue: Boolean); override;
   public // override TProxyWinControlPeer
     function GetBorderStyle: TBorderStyle; override;
     procedure SetBorderStyle(AValue: TBorderStyle); override;
@@ -414,12 +407,36 @@ type
     function GetEditListeners: TEditListenerList;
   end;
 
+  { TProxyEditPeer }
+
+  TProxyEditPeer = class(TProxyCustomEditPeer, IAEditPeer)
+  protected
+    procedure RegisterControlEvents; override;
+    procedure RegisterMouseEvents; override;
+  public
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
+    function GetDelegate: TEdit;
+  public // override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
+  end;
+
   { TProxyMemoPeer }
 
-  TProxyMemoPeer = class(TProxyEditPeer, IAMemoPeer)
+  TProxyMemoPeer = class(TProxyCustomEditPeer, IAMemoPeer)
+  protected
+    procedure RegisterControlEvents; override;
+    procedure RegisterMouseEvents; override;
   public
     constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
     function GetDelegate: TMemo;
+  public // override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
   public
     function GetLines: TStrings;
     function GetScrollBars: TScrollStyle;
@@ -763,6 +780,7 @@ begin
   FControlPeerList.Add(Self);
   FControlListenerList := nil;
   FMouseListenerList := nil;
+  FMark := '';
 end;
 
 destructor TProxyControlPeer.Destroy;
@@ -993,6 +1011,11 @@ begin
   Result := GetDelegate.Left;
 end;
 
+function TProxyControlPeer.GetMark: TCaption;
+begin
+  Result := FMark;
+end;
+
 function TProxyControlPeer.GetText: TCaption;
 begin
   Result := GetDelegate.Caption; //LCL 中 Text 和 Caption 内容一致
@@ -1001,6 +1024,11 @@ end;
 procedure TProxyControlPeer.SetLeft(AValue: Integer);
 begin
   GetDelegate.Left := AValue;
+end;
+
+procedure TProxyControlPeer.SetMark(AValue: TCaption);
+begin
+  FMark := AValue;
 end;
 
 procedure TProxyControlPeer.SetText(AValue: TCaption);
@@ -1013,9 +1041,19 @@ begin
   Result := GetDelegate.Height;
 end;
 
+function TProxyControlPeer.GetHint: TCaption;
+begin
+  Result := GetDelegate.Hint;
+end;
+
 procedure TProxyControlPeer.SetHeight(AValue: Integer);
 begin
   GetDelegate.Height := AValue;
+end;
+
+procedure TProxyControlPeer.SetHint(AValue: TCaption);
+begin
+  GetDelegate.Hint := AValue;
 end;
 
 function TProxyControlPeer.GetTop: Integer;
@@ -1750,6 +1788,142 @@ begin
   GetDelegate.BevelWidth := AValue;
 end;
 
+{ TProxyCustomEditPeer }
+
+function TProxyCustomEditPeer.GetDelegate: TCustomEdit;
+begin
+  Result := TCustomEdit(FDelegateObj);
+end;
+
+procedure TProxyCustomEditPeer.EditChangeEvent(Sender: TObject);
+var
+  i: Integer;
+  ee: IEditEvent;
+  el: IEditListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      ee := TEditEvent.Create(Sender, TACustomEdit(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if Supports(FControlListenerList[i], IEditListener, el) then
+          el.EditChanged(ee);
+    end;
+end;
+
+function TProxyCustomEditPeer.GetBorderStyle: TBorderStyle;
+begin
+  Result := cm_AWT.TBorderStyle(GetDelegate.BorderStyle);
+end;
+
+procedure TProxyCustomEditPeer.SetBorderStyle(AValue: TBorderStyle);
+begin
+  GetDelegate.BorderStyle := Controls.TBorderStyle(AValue);
+end;
+
+procedure TProxyCustomEditPeer.Clear;
+begin
+  GetDelegate.Clear;
+end;
+
+procedure TProxyCustomEditPeer.SelectAll;
+begin
+  GetDelegate.SelectAll;
+end;
+
+function TProxyCustomEditPeer.GetMaxLength: Integer;
+begin
+  Result := GetDelegate.MaxLength;
+end;
+
+function TProxyCustomEditPeer.GetNumbersOnly: Boolean;
+begin
+  Result := GetDelegate.NumbersOnly;
+end;
+
+function TProxyCustomEditPeer.GetPasswordChar: Char;
+begin
+  Result := GetDelegate.PasswordChar;
+end;
+
+function TProxyCustomEditPeer.GetReadOnly: Boolean;
+begin
+  Result := GetDelegate.ReadOnly;
+end;
+
+function TProxyCustomEditPeer.GetSelLength: integer;
+begin
+  Result := GetDelegate.SelLength;
+end;
+
+function TProxyCustomEditPeer.GetSelStart: integer;
+begin
+  Result := GetDelegate.SelStart;
+end;
+
+function TProxyCustomEditPeer.GetSelText: String;
+begin
+  Result := GetDelegate.SelText;
+end;
+
+procedure TProxyCustomEditPeer.SetMaxLength(AValue: Integer);
+begin
+  GetDelegate.MaxLength := AValue;
+end;
+
+procedure TProxyCustomEditPeer.SetNumbersOnly(AValue: Boolean);
+begin
+  GetDelegate.NumbersOnly := AValue;
+end;
+
+procedure TProxyCustomEditPeer.SetPasswordChar(AValue: Char);
+begin
+  GetDelegate.PasswordChar := AValue;
+end;
+
+procedure TProxyCustomEditPeer.SetReadOnly(AValue: Boolean);
+begin
+  GetDelegate.ReadOnly := AValue;
+end;
+
+procedure TProxyCustomEditPeer.SetSelLength(AValue: integer);
+begin
+  GetDelegate.SelLength := AValue;
+end;
+
+procedure TProxyCustomEditPeer.SetSelStart(AValue: integer);
+begin
+  GetDelegate.SelStart := AValue;
+end;
+
+procedure TProxyCustomEditPeer.SetSelText(AValue: String);
+begin
+  GetDelegate.SelText := AValue;
+end;
+
+procedure TProxyCustomEditPeer.AddEditListener(l: IEditListener);
+begin
+  if GetDelegate.OnChange <> @EditChangeEvent then
+    GetDelegate.OnChange := @EditChangeEvent;
+  Self.AddWinControlListener(l);
+end;
+
+procedure TProxyCustomEditPeer.RemoveEditListener(l: IEditListener);
+begin
+  Self.RemoveControlListener(l);
+end;
+
+function TProxyCustomEditPeer.GetEditListeners: TEditListenerList;
+var
+  i: Integer;
+begin
+  // TODO 线程安全
+  Result := TEditListenerList.Create;
+  if Assigned(FControlListenerList) then
+    for i:=0 to FControlListenerList.Count-1 do
+      if Supports(FControlListenerList[i], IEditListener) then
+        Result.Add(IEditListener(FControlListenerList[i]));
+end;
+
 { TProxyEditPeer }
 
 procedure TProxyEditPeer.RegisterControlEvents;
@@ -1780,21 +1954,6 @@ begin
   Result := TEdit(FDelegateObj);
 end;
 
-procedure TProxyEditPeer.EditChangeEvent(Sender: TObject);
-var
-  i: Integer;
-  ee: IEditEvent;
-  el: IEditListener;
-begin
-  if Assigned(FControlListenerList) then
-    begin
-      ee := TEditEvent.Create(Sender, TACustomEdit(Self.FTargetObj));
-      for i:=0 to FControlListenerList.Count-1 do
-        if Supports(FControlListenerList[i], IEditListener, el) then
-          el.EditChanged(ee);
-    end;
-end;
-
 function TProxyEditPeer.GetParentColor: Boolean;
 begin
   Result := GetDelegate.ParentColor;
@@ -1815,121 +1974,24 @@ begin
   GetDelegate.ParentFont := AValue;
 end;
 
-function TProxyEditPeer.GetBorderStyle: TBorderStyle;
-begin
-  Result := cm_AWT.TBorderStyle(GetDelegate.BorderStyle);
-end;
-
-procedure TProxyEditPeer.SetBorderStyle(AValue: TBorderStyle);
-begin
-  GetDelegate.BorderStyle := Controls.TBorderStyle(AValue);
-end;
-
-procedure TProxyEditPeer.Clear;
-begin
-  GetDelegate.Clear;
-end;
-
-procedure TProxyEditPeer.SelectAll;
-begin
-  GetDelegate.SelectAll;
-end;
-
-function TProxyEditPeer.GetMaxLength: Integer;
-begin
-  Result := GetDelegate.MaxLength;
-end;
-
-function TProxyEditPeer.GetNumbersOnly: Boolean;
-begin
-  Result := GetDelegate.NumbersOnly;
-end;
-
-function TProxyEditPeer.GetPasswordChar: Char;
-begin
-  Result := GetDelegate.PasswordChar;
-end;
-
-function TProxyEditPeer.GetReadOnly: Boolean;
-begin
-  Result := GetDelegate.ReadOnly;
-end;
-
-function TProxyEditPeer.GetSelLength: integer;
-begin
-  Result := GetDelegate.SelLength;
-end;
-
-function TProxyEditPeer.GetSelStart: integer;
-begin
-  Result := GetDelegate.SelStart;
-end;
-
-function TProxyEditPeer.GetSelText: String;
-begin
-  Result := GetDelegate.SelText;
-end;
-
-procedure TProxyEditPeer.SetMaxLength(AValue: Integer);
-begin
-  GetDelegate.MaxLength := AValue;
-end;
-
-procedure TProxyEditPeer.SetNumbersOnly(AValue: Boolean);
-begin
-  GetDelegate.NumbersOnly := AValue;
-end;
-
-procedure TProxyEditPeer.SetPasswordChar(AValue: Char);
-begin
-  GetDelegate.PasswordChar := AValue;
-end;
-
-procedure TProxyEditPeer.SetReadOnly(AValue: Boolean);
-begin
-  GetDelegate.ReadOnly := AValue;
-end;
-
-procedure TProxyEditPeer.SetSelLength(AValue: integer);
-begin
-  GetDelegate.SelLength := AValue;
-end;
-
-procedure TProxyEditPeer.SetSelStart(AValue: integer);
-begin
-  GetDelegate.SelStart := AValue;
-end;
-
-procedure TProxyEditPeer.SetSelText(AValue: String);
-begin
-  GetDelegate.SelText := AValue;
-end;
-
-procedure TProxyEditPeer.AddEditListener(l: IEditListener);
-begin
-  if GetDelegate.OnChange <> @EditChangeEvent then
-    GetDelegate.OnChange := @EditChangeEvent;
-  Self.AddWinControlListener(l);
-end;
-
-procedure TProxyEditPeer.RemoveEditListener(l: IEditListener);
-begin
-  Self.RemoveControlListener(l);
-end;
-
-function TProxyEditPeer.GetEditListeners: TEditListenerList;
-var
-  i: Integer;
-begin
-  // TODO 线程安全
-  Result := TEditListenerList.Create;
-  if Assigned(FControlListenerList) then
-    for i:=0 to FControlListenerList.Count-1 do
-      if Supports(FControlListenerList[i], IEditListener) then
-        Result.Add(IEditListener(FControlListenerList[i]));
-end;
-
 { TProxyMemoPeer }
+
+procedure TProxyMemoPeer.RegisterControlEvents;
+begin
+  inherited RegisterControlEvents;
+  GetDelegate.OnDblClick := @ControlDblClickEvent;
+end;
+
+procedure TProxyMemoPeer.RegisterMouseEvents;
+begin
+  inherited RegisterMouseEvents;
+  GetDelegate.OnMouseDown := @MouseDownEvent;
+  GetDelegate.OnMouseUp := @MouseUpEvent;
+  GetDelegate.OnMouseEnter := @MouseEnterEvent;
+  GetDelegate.OnMouseLeave := @MouseLeaveEvent;
+  GetDelegate.OnMouseMove := @MouseMoveEvent;
+  GetDelegate.OnMouseWheel:= @MouseWheelEvent;
+end;
 
 constructor TProxyMemoPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
 begin
@@ -1940,6 +2002,26 @@ end;
 function TProxyMemoPeer.GetDelegate: TMemo;
 begin
   Result := TMemo(FDelegateObj);
+end;
+
+function TProxyMemoPeer.GetParentColor: Boolean;
+begin
+  Result := GetDelegate.ParentColor;
+end;
+
+function TProxyMemoPeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyMemoPeer.SetParentColor(AValue: Boolean);
+begin
+  GetDelegate.ParentColor := AValue;
+end;
+
+procedure TProxyMemoPeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
 end;
 
 function TProxyMemoPeer.GetLines: TStrings;

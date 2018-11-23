@@ -2,24 +2,26 @@
 
 <!--tab缩进请设置为4格-->
 <navigator>
-	<nodes colCount="1" rowCount="10" colWidth="160" rowHeight="40">
+	<nodes colCount="1" rowCount="10" colWidth="160" rowHeight="40" align="True">
 
 	    <node name="SaleQuery" caption="交易查询"/>
 
 		<node>
-			<name>test</name>
-			<caption>测试</caption>
-			
-			<nodes colCount="2" rowCount="10" colWidth="160" rowHeight="40" align="True">
+			<name>SystemSet</name>
+			<caption>系统设置</caption>
+		</node>
+
+		<node name="test" caption="测试" color="$e7bf66">
+			<nodes colCount="2" rowCount="10" colWidth="80" rowHeight="40" align="True">
 				<node name="test_sub1" caption="测试 子1"/>
-				<node>
-				    <name>test_sub2</name>
-				    <caption>测试 子2</caption>
-				</node>
+				<node name="test_sub2" caption="测试 子2"/>
+				<node name="test_sub2" caption="测试 子3"/>
+				<node name="test_sub2" caption="测试 子4"/>
+				<node name="test_sub2" caption="测试 子5" col="1" row="6"/>
 			</nodes>
 		</node>
 
-		<node name="test2" width="160">
+		<node name="test2" width="100" color="$748de3">
 			<caption>测试2</caption>
 			<height>100</height>
 		</node>

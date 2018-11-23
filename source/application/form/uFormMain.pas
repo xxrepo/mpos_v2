@@ -37,7 +37,7 @@ type
     FMsgBar: TCMMsgBar;
     FHasSet: Boolean;
     FSaleFrame: TSaleFrame;
-    FNavigatorFrame: TNavigatorFrame;
+    //FNavigatorFrame: TNavigatorFrame;
     FTestFrame: TTestFrame;
   public
     procedure SetTheme(ATheme: ITheme); override;
@@ -48,7 +48,7 @@ var
 
 implementation
 
-uses uConstant;
+uses uConstant, uMain, uMainTool;
 
 {$R *.frm}
 
@@ -72,13 +72,15 @@ begin
   FSaleFrame.Align := alClient;
   InterfaceRegister.PutInterface('ISaleBoard', ISaleBoard, FSaleFrame);
   //
-  FNavigatorFrame := TNavigatorFrame.Create(nil);
-  FNavigatorFrame.Parent := PanelRight;
-  FNavigatorFrame.Align := alClient;
+  //FNavigatorFrame := TNavigatorFrame.Create(nil);
+  //FNavigatorFrame.Parent := PanelRight;
+  //FNavigatorFrame.Align := alClient;
   //
   FTestFrame := TTestFrame.Create(Self);
   FTestFrame.Parent := PanelTest;
   FTestFrame.Align := alClient;
+  //
+  InterfaceRegister.PutInterface('IMain', IMain, TMainTool.Create(PanelRight, PanelBottom));
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -133,7 +135,7 @@ begin
       POSInitialize.ServiceRectControl := PanelService;
     end;
   //TODO 登陆
-  FNavigatorFrame.LoadConfig;
+  //FNavigatorFrame.LoadConfig;
   PanelRightHint.Width := 12;
 end;
 
@@ -154,6 +156,7 @@ begin
   if not ATheme.GetParameter.Get('mainForm').IsNull then
     PanelRight.Width := ATheme.GetParameter.Get('mainForm.rightWidth').AsInteger;
 end;
+
 
 end.
 

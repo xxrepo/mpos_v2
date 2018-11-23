@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils,
-  cm_AWT, cm_freegenerics, cm_tree, cm_AWTLayoutUtils,
-  uAForm, uNavigator;
+  cm_sysutils, cm_interfaces, cm_parameter, cm_AWT, cm_freegenerics, cm_tree, cm_AWTLayoutUtils,
+  uAForm, uNavigator, uSystem;
 
 type
 
@@ -17,12 +17,11 @@ type
   private
     FCfg: INavNodeCfg;
     FListener: INavNodeListener;
-    FGridLayout: TAGridLayout;
+    FNodesStyleCfg: INodesStyleCfg;
   public
     constructor Create(ACfg: INavNodeCfg; ASubsidiary: TAPanel; AParentNode: TNavNode);
     destructor Destroy; override;
     function GetBtn: TAPanel;
-    procedure ReLayoutChildren;
   public
     function GetName: string;
     function GetLevel: Integer;
@@ -30,37 +29,61 @@ type
     function GetChildrenNames: TStrings;
     procedure SetListener(l: INavNodeListener);
     function GetCfg: INavNodeCfg;
+    procedure SetNodesStyle(nsc: INodesStyleCfg);
   end;
 
   TNavNodeList = specialize TFGFPHashObjectList<TNavNode>;
 
-  { TNavigatorFrame }
+  { TNavigatorFrame
+    以 root node 作最顶层
 
-  TNavigatorFrame = class(TAPOSFrame, INavigator)
+  }
+
+  TNavigatorFrame = class(TAPOSFrame, INavigator, IControlListener)
   private
+    FRootNav: TNavNode;
     FNavNodeList: TNavNodeList;
     FGridLayout: TAGridLayout;
+  private
+    FBackBtn: TAPanel;
   public
     constructor Create(AOwner: TAComponent); override;
     destructor Destroy; override;
+  private
+    function LoadNavCfg(p: ICMParameter): INavNodeCfg;
+    function LoadNodesStyleCfg(p: ICMParameter): INodesStyleCfg;
+    procedure SetLayoutStyle(nsc: INodesStyleCfg);
+  public
+    procedure LoadConfig;
   public //INavigator
-    function AddNode(const AParentNodeName: string; INavNodeCfg: INavNodeCfg): Boolean;
+    function AddNode(const AParentNodeName: string; ANodeCfg: INavNodeCfg): Boolean;
     function RemoveNode(const ANodeName: string): Boolean;
     function FindNode(const ANodeName: string): INavNode;
     function GetRootNames: TStrings;
+    procedure RefreshDisplay;
+  public //IControlListener
+    procedure ControlClick(e: IControlEvent);
+    procedure ControlDblClick(e: IControlEvent);
+    procedure ControlResize(e: IControlEvent);
   end;
 
-  { TCfg }
+  { TNavNodeEvent }
 
-  TCfg = class(TInterfacedObject, INavNodeCfg)
+  TNavNodeEvent = class(TCMEvent, INavNodeEvent)
+  private
+    FNavigator: INavigator;
+    FNode: INavNode;
   public
-    function GetName: string;
-    function GetCaption: string;
-    function GetCol: Integer;
-    function GetRow: Integer;
-    function GetWidth: Integer;
-    function GetHeight: Integer;
+    constructor Create(ASource: TObject; ANavtor: INavigator; ANode: INavNode);
+    destructor Destroy; override;
+  public
+    function GetNavigator: INavigator;
+    function GetNode: INavNode;
   end;
+
+const
+  DEF_BtnWidth: Integer=160;
+  DEF_BtnHeight: Integer=40;
 
 implementation
 
@@ -71,24 +94,20 @@ begin
   inherited Create(ACfg.GetName, ASubsidiary, AParentNode);
   FCfg := ACfg;
   FListener := nil;
-  FGridLayout := TAGridLayout.Create(nil, ASubsidiary);
+  FNodesStyleCfg := nil;
 end;
 
 destructor TNavNode.Destroy;
 begin
+  FCfg := nil;
   FListener := nil;
-  FGridLayout.Free;
+  FNodesStyleCfg := nil;
   inherited Destroy;
 end;
 
 function TNavNode.GetBtn: TAPanel;
 begin
   Result := TAPanel(Self.Subsidiary);
-end;
-
-procedure TNavNode.ReLayoutChildren;
-begin
-  FGridLayout.ReLayout;
 end;
 
 function TNavNode.GetName: string;
@@ -127,65 +146,183 @@ begin
   Result := FCfg;
 end;
 
+procedure TNavNode.SetNodesStyle(nsc: INodesStyleCfg);
+begin
+  FNodesStyleCfg := nsc;
+end;
+
 { TNavigatorFrame }
 
 constructor TNavigatorFrame.Create(AOwner: TAComponent);
-var
-  e: TAEdit;
 begin
   inherited Create(AOwner);
   FNavNodeList := TNavNodeList.Create(False);
-  FGridLayout := TAGridLayout.Create(nil, Self);
+  FGridLayout := TAGridLayout.Create(nil, Self, 2, 10);
+  FGridLayout.SetColsWidth(160);
   //
-  Self.Caption := 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-  e := TAEdit.Create(Self);
-  e.Parent := Self;
-  e.Left := 0;
-
-  Self.AddNode('', TCfg.Create);
+  FBackBtn := TAPanel.Create(Self);
+  FBackBtn.Parent := Self;
+  FBackBtn.Visible := False;
+  FBackBtn.Color := $cfc76c;
+  FGridLayout.PutLayoutControl(FBackBtn);
+  FBackBtn.Width := DEF_BtnWidth;
+  FBackBtn.Height := DEF_BtnHeight;
+  FBackBtn.Caption := '返回';
+  FBackBtn.AddControlListener(Self);
+  //
+  FRootNav := TNavNode.Create(TNavNodeCfg.Create('root', ''), nil, nil);
+  FNavNodeList.Add('root', FRootNav);
+  //load config
+  LoadConfig;
 end;
 
 destructor TNavigatorFrame.Destroy;
 begin
   FNavNodeList.Free;
   FGridLayout.Free;
+  FRootNav.Free;
   inherited Destroy;
 end;
 
-function TNavigatorFrame.AddNode(const AParentNodeName: string; INavNodeCfg: INavNodeCfg): Boolean;
+function TNavigatorFrame.LoadNavCfg(p: ICMParameter): INavNodeCfg;
+var
+  nc: TNavNodeCfg;
+begin
+  Result := nil;
+  nc := TNavNodeCfg.Create(p.Get('name').AsString, p.Get('caption').AsString);
+  Result := nc;
+  if (not p.Get('col').IsNull) and (not p.Get('row').IsNull) then
+    nc.SetPos(p.Get('col').AsInteger, p.Get('row').AsInteger);
+  if (not p.Get('width').IsNull) and (not p.Get('height').IsNull) then
+    nc.SetSize(p.Get('width').AsInteger, p.Get('height').AsInteger);
+  if (not p.Get('color').IsNull) then
+    nc.SetColor(p.Get('color').AsInteger);
+end;
+
+function TNavigatorFrame.LoadNodesStyleCfg(p: ICMParameter): INodesStyleCfg;
+var
+  nsc: TNodesStyleCfg;
+begin
+  Result := nil;
+  nsc := TNodesStyleCfg.Create;
+  Result := nsc;
+  if (not p.Get('colCount').IsNull) and (not p.Get('rowCount').IsNull) then
+    nsc.SetCount(p.Get('colCount').AsInteger, p.Get('rowCount').AsInteger);
+  if (not p.Get('colWidth').IsNull) and (not p.Get('rowHeight').IsNull) then
+    nsc.SetSize(p.Get('colWidth').AsInteger, p.Get('rowHeight').AsInteger);
+  nsc.SetAlign(p.Get('align').AsBoolean);
+end;
+
+procedure TNavigatorFrame.SetLayoutStyle(nsc: INodesStyleCfg);
+begin
+  if not Assigned(nsc) then
+    Exit;
+  if nsc.GetColCount > -1 then
+    FGridLayout.ColCount := nsc.GetColCount;
+  if nsc.GetRowCount > -1 then
+    FGridLayout.RowCount := nsc.GetRowCount;
+  if nsc.GetColWidth > -1 then
+    FGridLayout.SetColsWidth(nsc.GetColWidth);
+  if nsc.GetRowHeight > -1 then
+    FGridLayout.SetRowsHeight(nsc.GetRowHeight);
+  FGridLayout.AlignAtGrid := nsc.GetAlign;
+  //AppSystem.GetMsgBox.ShowMessage( BoolToStr(FGridLayout.AlignAtGrid, True) );
+end;
+
+procedure TNavigatorFrame.LoadConfig;
+var
+  navParam: ICMParameter;
+  nodesStyleCfg: INodesStyleCfg;
+  i: Integer;
+  procedure load(const parentName: string; nodeParam: ICMParameter);
+  var
+    nodeCfg: INavNodeCfg;
+    nav: TNavNode;
+    j: Integer;
+  begin
+    if nodeParam.Name <> 'node' then
+      Exit;
+    nodeCfg := Self.LoadNavCfg(nodeParam);
+    Self.AddNode(parentName, nodeCfg);
+    if not nodeParam.Get('nodes').IsNull then
+      begin
+        nav := FNavNodeList.Find(nodeCfg.GetName);
+        if Assigned(nav) then
+          begin
+            nodesStyleCfg := Self.LoadNodesStyleCfg(nodeParam.Get('nodes'));
+            nav.FNodesStyleCfg := nodesStyleCfg;
+          end;
+        for j:=0 to nodeParam.Get('nodes').ItemCount-1 do
+          load(nodeCfg.GetName, nodeParam.Get('nodes').GetItem(j));
+      end;
+  end;
+begin
+  navParam := AppSystem.GetParameter.Get('navigator.nodes');
+  if not navParam.IsNull then
+    begin
+      nodesStyleCfg := Self.LoadNodesStyleCfg(navParam);
+      FRootNav.FNodesStyleCfg := nodesStyleCfg;
+      Self.SetLayoutStyle(nodesStyleCfg);
+      //
+      for i:=0 to navParam.ItemCount-1 do
+        load('', navParam.GetItem(i));
+    end;
+end;
+
+function TNavigatorFrame.AddNode(const AParentNodeName: string; ANodeCfg: INavNodeCfg): Boolean;
 var
   navPanel: TAPanel;
   pNav, nav: TNavNode;
 begin
   Result := False;
-  navPanel := TAPanel.Create(Self);
-  pNav := nil;
-  if (AParentNodeName <> '') then
+  //找父节点
+  if AParentNodeName = '' then
+    pNav := FRootNav
+  else
     begin
       pNav := FNavNodeList.Find(AParentNodeName);
       if not Assigned(pNav) then
-        begin
-          navPanel.Free;
-          Exit;
-        end;
-      navPanel.Parent := pNav.GetBtn;
+        Exit;
+    end;
+  //创建板
+  navPanel := TAPanel.Create(Self);
+  if AParentNodeName <> '' then
+    navPanel.Visible := False;
+  navPanel.Parent := Self;
+  navPanel.Mark := ANodeCfg.GetName;
+  navPanel.Caption := ANodeCfg.GetCaption;
+  navPanel.AddControlListener(Self);
+  //创建节点
+  nav := TNavNode.Create(ANodeCfg, navPanel, pNav);
+  FNavNodeList.Add(ANodeCfg.GetName, nav);
+  //使用配置
+  if (ANodeCfg.GetCol > -1) and (ANodeCfg.GetRow > -1) then
+    FGridLayout.PutLayoutControl(navPanel, ANodeCfg.GetCol, ANodeCfg.GetRow)
+  else
+    FGridLayout.PutLayoutControl(navPanel);
+  if (ANodeCfg.GetWidth > -1) and (ANodeCfg.GetHeight > -1) then
+    begin
+      navPanel.Width := ANodeCfg.GetWidth;
+      navPanel.Height := ANodeCfg.GetHeight;
     end
   else
-    navPanel.Parent := Self;
-  //
-  nav := TNavNode.Create(INavNodeCfg, navPanel, pNav);
-  FNavNodeList.Add(INavNodeCfg.GetName, nav);
-  navPanel.Caption := INavNodeCfg.GetCaption;
-  if (INavNodeCfg.GetWidth > -1) and (INavNodeCfg.GetHeight > -1) then
     begin
-      navPanel.Width := INavNodeCfg.GetWidth;
-      navPanel.Height := INavNodeCfg.GetHeight;
+      navPanel.Width := DEF_BtnWidth;
+      navPanel.Height := DEF_BtnHeight;
     end;
+  if ANodeCfg.GetColor > -1 then
+    navPanel.Color := ANodeCfg.GetColor;
+  //
+  if Self.Showing then
+    Self.RefreshDisplay;
 end;
 
 function TNavigatorFrame.RemoveNode(const ANodeName: string): Boolean;
 begin
   Result := FNavNodeList.Remove(FNavNodeList.Find(ANodeName)) >= 0;
+  //
+  if Self.Showing then
+    Self.RefreshDisplay;
 end;
 
 function TNavigatorFrame.FindNode(const ANodeName: string): INavNode;
@@ -198,41 +335,97 @@ var
   i: Integer;
 begin
   Result := TStringList.Create;
-  for i:=0 to FNavNodeList.Count-1 do
-    if Assigned(FNavNodeList[i].ParentNode) then
-      Result.Add(FNavNodeList[i].GetName);
+  for i:=0 to FRootNav.ChildrenCount-1 do
+    Result.Add(TNavNode(FRootNav.Children[i]).GetName);
 end;
 
-{ TCfg }
-
-function TCfg.GetName: string;
+procedure TNavigatorFrame.RefreshDisplay;
 begin
-  Result := 'haha';
+  FGridLayout.ReLayout;
 end;
 
-function TCfg.GetCaption: string;
+procedure TNavigatorFrame.ControlClick(e: IControlEvent);
+var
+  nav: TNavNode;
+  i: Integer;
 begin
-  Result := 'haha vv';
+  nav := FNavNodeList.Find(e.GetAControl.Mark);
+  if Assigned(nav) then
+    begin
+      if Assigned(nav.FListener) then
+        nav.FListener.Selected(TNavNodeEvent.Create(Self, Self, nav));
+      //
+      if e.GetAControl = FBackBtn then
+        begin
+          //AppSystem.GetMsgBox.ShowMessage('<<' + IntToStr(TNavNode(nav.ParentNode).FNodesStyleCfg.GetColCount)
+          //                              + #10  + IntToStr(TNavNode(nav.ParentNode).FNodesStyleCfg.GetColWidth));
+          Self.SetLayoutStyle(TNavNode(nav.ParentNode).FNodesStyleCfg);
+          //1、显示兄弟们
+          FBackBtn.Mark := TNavNode(nav.ParentNode).GetName;
+          if FBackBtn.Mark = 'root' then
+            FBackBtn.Visible := False;
+          FBackBtn.Caption := Format('%s返回%s', [StringOfChar('.', TNavNode(nav.ParentNode).Level-1), TNavNode(nav.ParentNode).GetCfg.GetCaption]);
+          for i:=0 to nav.ParentNode.ChildrenCount-1 do
+            TNavNode(nav.ParentNode.Children[i]).GetBtn.Visible := True;
+          //2、隐藏孩子们
+          for i:=0 to nav.ChildrenCount-1 do
+            TNavNode(nav.Children[i]).GetBtn.Visible := False;
+        end
+      else if nav.HasChildren then
+        begin
+          Self.SetLayoutStyle(nav.FNodesStyleCfg);
+          //1、隐藏兄弟们
+          for i:=0 to nav.ParentNode.ChildrenCount-1 do
+            TNavNode(nav.ParentNode.Children[i]).GetBtn.Visible := False;
+          //2、显示孩子们
+          FBackBtn.Mark := nav.GetName;
+          FBackBtn.Caption := Format('%s返回%s', [StringOfChar('.', nav.Level-1), nav.GetCfg.GetCaption]);
+          FBackBtn.Visible := True;
+          for i:=0 to nav.ChildrenCount-1 do
+            TNavNode(nav.Children[i]).GetBtn.Visible := True;
+          //
+          if Assigned(nav.FListener) then
+            nav.FListener.Opened(TNavNodeEvent.Create(Self, Self, nav));
+        end;
+      //重新布局
+      FGridLayout.ReLayout;
+    end;
 end;
 
-function TCfg.GetCol: Integer;
+procedure TNavigatorFrame.ControlDblClick(e: IControlEvent);
 begin
-  Result := 1;
+
 end;
 
-function TCfg.GetRow: Integer;
+procedure TNavigatorFrame.ControlResize(e: IControlEvent);
 begin
-  Result := 1;
+
 end;
 
-function TCfg.GetWidth: Integer;
+{ TNavNodeEvent }
+
+constructor TNavNodeEvent.Create(ASource: TObject; ANavtor: INavigator; ANode: INavNode);
 begin
-  Result := 60;
+  inherited Create(ASource);
+  FNavigator := ANavtor;
+  FNode := ANode;
 end;
 
-function TCfg.GetHeight: Integer;
+destructor TNavNodeEvent.Destroy;
 begin
-  Result := 40;
+  FNavigator := nil;
+  FNode := nil;
+  inherited Destroy;
+end;
+
+function TNavNodeEvent.GetNavigator: INavigator;
+begin
+  Result := FNavigator;
+end;
+
+function TNavNodeEvent.GetNode: INavNode;
+begin
+  Result := FNode;
 end;
 
 

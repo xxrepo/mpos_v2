@@ -23,7 +23,7 @@
   end;
 
   IAControlPeer = interface(IAComponentPeer)
-    ['{503182A1-3BD8-4D32-AAD9-99A807FAC774}']
+    ['{53BFEB8E-E34E-4500-9535-F2D6FEF50DDA}']
     function GetAlign: TAlign;
     function GetAutoSize: Boolean;
     function GetBorderSpacing: TAControlBorderSpacing;
@@ -32,7 +32,9 @@
     function GetEnabled: Boolean;
     function GetFont: TAFont;
     function GetHeight: Integer;
+    function GetHint: TCaption;
     function GetLeft: Integer;
+    function GetMark: TCaption;
     function GetParentColor: Boolean;
     function GetParentFont: Boolean;
     function GetText: TCaption;
@@ -47,7 +49,9 @@
     procedure SetEnabled(AValue: Boolean);
     procedure SetFont(AValue: TAFont);
     procedure SetHeight(AValue: Integer);
+    procedure SetHint(AValue: TCaption);
     procedure SetLeft(AValue: Integer);
+    procedure SetMark(AValue: TCaption);
     procedure SetParentColor(AValue: Boolean);
     procedure SetParentFont(AValue: Boolean);
     procedure SetText(AValue: TCaption);
@@ -138,8 +142,8 @@
     procedure SetBevelWidth(AValue: TBevelWidth);
   end;
 
-  IAEditPeer = interface(IAWinControlPeer)
-    ['{683F4DD2-AAAF-4D53-930A-8D237AC6DF54}']
+  IACustomEditPeer = interface(IAWinControlPeer)
+    ['{F7A19E1B-6D51-418E-806F-F4FD6F24B0AE}']
     procedure Clear;
     procedure SelectAll;
     function GetMaxLength: Integer;
@@ -162,8 +166,12 @@
     function GetEditListeners: TEditListenerList;
   end;
 
-  IAMemoPeer = interface(IAEditPeer)
-    ['{4A02B20C-73D0-433D-9A67-9C72D09FF50B}']
+  IAEditPeer = interface(IACustomEditPeer)
+    ['{2CEAB4FD-826C-43D1-B195-8FE16EC0CE25}']
+  end;
+
+  IAMemoPeer = interface(IACustomEditPeer)
+    ['{4A213FBE-DC13-4B85-B718-97C1309B3F8C}']
     function GetLines: TStrings;
     function GetScrollBars: TScrollStyle;
     procedure SetLines(AValue: TStrings);

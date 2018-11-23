@@ -259,7 +259,9 @@ type
     function GetEnabled: Boolean;
     function GetFont: TAFont;
     function GetHeight: Integer;
+    function GetHint: TCaption;
     function GetLeft: Integer;
+    function GetMark: TCaption;
     function GetParentColor: Boolean;
     function GetParentFont: Boolean;
     function GetText: TCaption;
@@ -274,7 +276,9 @@ type
     procedure SetEnabled(AValue: Boolean);
     procedure SetFont(AValue: TAFont);
     procedure SetHeight(AValue: Integer);
+    procedure SetHint(AValue: TCaption);
     procedure SetLeft(AValue: Integer);
+    procedure SetMark(AValue: TCaption);
     procedure SetParentColor(AValue: Boolean);
     procedure SetParentFont(AValue: Boolean);
     procedure SetText(AValue: TCaption);
@@ -309,6 +313,7 @@ type
   public
     property Left: Integer read GetLeft write SetLeft;
     property Height: Integer read GetHeight write SetHeight;
+    property Hint: TCaption read GetHint write SetHint;
     property Top: Integer read GetTop write SetTop;
     property Width: Integer read GetWidth write SetWidth;
     property Parent: TAWinControl read GetParent write SetParent;
@@ -320,6 +325,8 @@ type
     procedure AddMouseListener(l: IMouseListener);
     procedure RemoveMouseListener(l: IMouseListener);
     function GetMouseListeners: TMouseListenerList;
+  public // AWT 特有的
+    property Mark: TCaption read GetMark write SetMark;
   end;
 
   TAGraphicControl = class abstract(TAControl)
@@ -441,7 +448,7 @@ type
     procedure SetSelStart(AValue: integer);
     procedure SetSelText(AValue: String);
   public
-    function GetPeer: IAEditPeer;
+    function GetPeer: IACustomEditPeer;
   public
     procedure Clear;
     procedure SelectAll;
@@ -463,6 +470,7 @@ type
   TAEdit = class(TACustomEdit)
   public
     constructor Create(AOwner: TAComponent); override;
+    function GetPeer: IAEditPeer;
   published
     property ParentColor;
     property ParentFont;
@@ -1153,9 +1161,19 @@ begin
   Result := GetPeer.GetHeight;
 end;
 
+function TAControl.GetHint: TCaption;
+begin
+  Result := GetPeer.GetHint;
+end;
+
 function TAControl.GetLeft: Integer;
 begin
   Result := GetPeer.GetLeft;
+end;
+
+function TAControl.GetMark: TCaption;
+begin
+  Result := GetPeer.GetMark;
 end;
 
 function TAControl.GetParentColor: Boolean;
@@ -1218,9 +1236,19 @@ begin
   GetPeer.SetHeight(AValue);
 end;
 
+procedure TAControl.SetHint(AValue: TCaption);
+begin
+  GetPeer.SetHint(AValue);
+end;
+
 procedure TAControl.SetLeft(AValue: Integer);
 begin
   GetPeer.SetLeft(AValue);
+end;
+
+procedure TAControl.SetMark(AValue: TCaption);
+begin
+  GetPeer.SetMark(AValue);
 end;
 
 procedure TAControl.SetParentColor(AValue: Boolean);
@@ -1555,9 +1583,9 @@ begin
   GetPeer.SetSelText(AValue);
 end;
 
-function TACustomEdit.GetPeer: IAEditPeer;
+function TACustomEdit.GetPeer: IACustomEditPeer;
 begin
-  FPeer.QueryInterface(IAEditPeer, Result);
+  FPeer.QueryInterface(IACustomEditPeer, Result);
 end;
 
 procedure TACustomEdit.Clear;
@@ -1591,6 +1619,11 @@ constructor TAEdit.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
   FPeer := TAWTManager.DefaultToolkit.CreateEdit(Self);
+end;
+
+function TAEdit.GetPeer: IAEditPeer;
+begin
+  Result := IAEditPeer(FPeer);
 end;
 
 { TAMemo }

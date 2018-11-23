@@ -500,3 +500,6 @@ procedure TProxyStringGridPeer.AutoSizeColumns;
 begin
   GetDelegate.AutoSizeColumns;
 end;
+
+
+

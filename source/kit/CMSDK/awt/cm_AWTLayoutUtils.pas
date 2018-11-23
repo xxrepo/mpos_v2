@@ -361,6 +361,8 @@ begin
       theControl := theItem.FControl;
       if Assigned(theControl) then
         begin
+          if not theControl.Visible then
+            Continue;
           if theControl is TAWinControl then
             begin
               TAWinControl(theControl).TabOrder := tabOrderInt;
@@ -746,6 +748,8 @@ begin
     begin
       theItem := TGridLayoutItem(FItems[i]);
       theControl := theItem.FControl;
+      if not theControl.Visible then
+        Continue;
       if (theItem.FSetCol >= 0) or (theItem.FSetRow >= 0) then
         begin
           FSetPosSL.Add(GetColRowRecStr(theItem.FSetCol, theItem.FSetRow));
@@ -762,6 +766,8 @@ begin
       theItem := TGridLayoutItem(FItems[i]);
       theControl := theItem.FControl;
       if not Assigned(theControl) then
+        Continue;
+      if not theControl.Visible then
         Continue;
       //TabOrder的设置包含了指定位置的
       if theControl is TAWinControl then

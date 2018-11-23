@@ -10,7 +10,8 @@ uses
   cm_AWT, cm_AWTLayoutUtils,
   uAForm,
   uSystem,
-  uNavigatorFrame;
+  uNavigatorFrame,
+  uMain;
 
 type
 
@@ -71,8 +72,6 @@ begin
   nf := TNavigatorFrame.Create(Self);
   nf.Parent := FMainPanel;
   nf.Left := 0;
-  nf.ParentColor := False;
-  nf.Color := $0;
 
   //AppSystem.GetMsgBox.ShowMessage(IntToStr(nf.Color));
 
@@ -86,6 +85,8 @@ begin
 end;
 
 procedure TTestForm.FormShow(e: IFormEvent);
+var
+  main: IMain;
 begin
   inherited FormShow(e);
   Messager.Info('FormShow()...');
@@ -94,11 +95,23 @@ begin
 
   Self.AddButton('AAA');
 
-  nf.AutoSize := False;
-  nf.Height := 200;
-  nf.Width := 200;
+  //nf.AutoSize := False;
+  //nf.Height := Self.he;
+  //nf.Width := 200;
+  nf.Align := alClient;
 
+  //nf.AddNode('', TCfg.Create('a', 'a v'));
+  //nf.AddNode('', TCfg.Create('b', 'b v'));
+  //nf.AddNode('a', TCfg.Create('aa', 'aa v'));
+  //nf.AddNode('a', TCfg.Create('ab', 'ab v'));
+  //nf.AddNode('aa', TCfg.Create('aaa', 'aaa v'));
+
+  nf.RefreshDisplay;
   //AppSystem.GetMsgBox.ShowMessage( AppSystem.GetParameter.Get('navigator.nodes.node$2.nodes.colWidth').AsString );
+
+  if InterfaceRegister.OutInterface(IMain, main) then
+    nf.Parent := main.GetNavigation;
+
 end;
 
 procedure TTestForm.FormKeyPressed(e: IKeyEvent);

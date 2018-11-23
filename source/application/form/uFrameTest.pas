@@ -112,6 +112,7 @@ begin
   //TButton.Click;
   //Label1.ParentColor := ;
   //TEdit.ParentFont := ;
+  //Self.Hint := ;
 end;
 
 procedure TTestFrame.Button1Click(Sender: TObject);
