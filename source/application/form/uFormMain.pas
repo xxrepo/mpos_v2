@@ -10,7 +10,7 @@ uses
   cm_theme, cm_Plat, cm_dialogs,
   uForm, uConmponents,
   uSale, uFrameSale,
-  uFrameNavigator, uFrameTest,
+  uFrameTest,
   uDAO, uSystem, uInitialize;
 
 type
@@ -18,6 +18,7 @@ type
   { TMainForm }
 
   TMainForm = class(TPOSForm)
+    PanelLeft: TPanel;
     PanelWork: TPanel;
     PanelTest: TPanel;
     PanelService: TPanel;
@@ -37,7 +38,6 @@ type
     FMsgBar: TCMMsgBar;
     FHasSet: Boolean;
     FSaleFrame: TSaleFrame;
-    //FNavigatorFrame: TNavigatorFrame;
     FTestFrame: TTestFrame;
   public
     procedure SetTheme(ATheme: ITheme); override;
@@ -55,6 +55,8 @@ uses uConstant, uMain, uMainTool;
 { TMainForm }
 
 procedure TMainForm.FormCreate(Sender: TObject);
+var
+  mainBlock: IMainBlock;
 begin
   FPOSTitlePanel := TPOSTitlePanel.Create(Self);
   FPOSTitlePanel.Parent := PanelTop;
@@ -66,21 +68,18 @@ begin
   FMsgBar.Font.Size := 10;
   POSInitialize.MsgBar := FMsgBar;
   FHasSet := False;
+  // 加入主区块
+  mainBlock := TMainTool.Create(PanelTop, PanelLeft, PanelClient, PanelRight, PanelRightHint, PanelBottom);
+  InterfaceRegister.PutInterface('IMainBlock', IMainBlock, mainBlock);
   //
   FSaleFrame := TSaleFrame.Create(Self);
   FSaleFrame.Parent := PanelClient;
   FSaleFrame.Align := alClient;
   InterfaceRegister.PutInterface('ISaleBoard', ISaleBoard, FSaleFrame);
   //
-  //FNavigatorFrame := TNavigatorFrame.Create(nil);
-  //FNavigatorFrame.Parent := PanelRight;
-  //FNavigatorFrame.Align := alClient;
-  //
   FTestFrame := TTestFrame.Create(Self);
   FTestFrame.Parent := PanelTest;
   FTestFrame.Align := alClient;
-  //
-  InterfaceRegister.PutInterface('IMain', IMain, TMainTool.Create(PanelRight, PanelBottom));
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);

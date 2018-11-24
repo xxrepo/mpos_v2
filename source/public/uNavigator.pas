@@ -24,6 +24,8 @@ type
     function GetColWidth: Integer;
     function GetRowHeight: Integer;
     function GetAlign: Boolean;
+    function GetLeftSpacing: Integer;
+    function GetTopSpacing: Integer;
   end;
 
   { INavNodeCfg
@@ -92,17 +94,25 @@ type
     FColWidth: Integer;
     FRowHeight: Integer;
     FAlign: Boolean;
+    FLeftSpacing: Integer;
+    FTopSpacing: Integer;
   public
     constructor Create;
-    procedure SetCount(c, r: Integer);
-    procedure SetSize(w, h: Integer);
-    procedure SetAlign(b: Boolean);
+    property ColCount: Integer write FColCount;
+    property RowCount: Integer write FRowCount;
+    property ColWidth: Integer write FColWidth;
+    property RowHeight: Integer write FRowHeight;
+    property Align: Boolean write FAlign;
+    property LeftSpacing: Integer write FLeftSpacing;
+    property TopSpacing: Integer write FTopSpacing;
   public
     function GetColCount: Integer;
     function GetRowCount: Integer;
     function GetColWidth: Integer;
     function GetRowHeight: Integer;
     function GetAlign: Boolean;
+    function GetLeftSpacing: Integer;
+    function GetTopSpacing: Integer;
   end;
 
   { TNavNodeCfg }
@@ -119,8 +129,9 @@ type
   public
     constructor Create(const AName, ACaption: string);
     procedure SetPos(c, r: Integer);
-    procedure SetSize(w, h: Integer);
-    procedure SetColor(c: Integer);
+    property Width: Integer write FWidth;
+    property Height: Integer write FHeight;
+    property Color: Integer write FColor;
   public
     function GetName: string;
     function GetCaption: string;
@@ -152,23 +163,8 @@ begin
   FColWidth := -1;
   FRowHeight := -1;
   FAlign := False;
-end;
-
-procedure TNodesStyleCfg.SetCount(c, r: Integer);
-begin
-  FColCount := c;
-  FRowCount := r;
-end;
-
-procedure TNodesStyleCfg.SetSize(w, h: Integer);
-begin
-  FColWidth := w;
-  FRowHeight := h;
-end;
-
-procedure TNodesStyleCfg.SetAlign(b: Boolean);
-begin
-  FAlign := b;
+  FLeftSpacing := -1;
+  FTopSpacing := -1;
 end;
 
 function TNodesStyleCfg.GetColCount: Integer;
@@ -196,6 +192,16 @@ begin
   Result := FAlign;
 end;
 
+function TNodesStyleCfg.GetLeftSpacing: Integer;
+begin
+  Result := FLeftSpacing;
+end;
+
+function TNodesStyleCfg.GetTopSpacing: Integer;
+begin
+  Result := FTopSpacing;
+end;
+
 { TNavNodeCfg }
 
 constructor TNavNodeCfg.Create(const AName, ACaption: string);
@@ -214,17 +220,6 @@ procedure TNavNodeCfg.SetPos(c, r: Integer);
 begin
   FCol := c;
   FRow := r;
-end;
-
-procedure TNavNodeCfg.SetSize(w, h: Integer);
-begin
-  FWidth := w;
-  FHeight := h;
-end;
-
-procedure TNavNodeCfg.SetColor(c: Integer);
-begin
-  FColor := c;
 end;
 
 function TNavNodeCfg.GetName: string;

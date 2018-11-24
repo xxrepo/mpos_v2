@@ -11,7 +11,7 @@ uses
   uAForm,
   uSystem,
   uNavigatorFrame,
-  uMain;
+  uMain, cm_dialogs;
 
 type
 
@@ -107,11 +107,13 @@ begin
   //nf.AddNode('aa', TCfg.Create('aaa', 'aaa v'));
 
   nf.RefreshDisplay;
+
   //AppSystem.GetMsgBox.ShowMessage( AppSystem.GetParameter.Get('navigator.nodes.node$2.nodes.colWidth').AsString );
 
   if InterfaceRegister.OutInterface(IMain, main) then
     nf.Parent := main.GetNavigation;
 
+  Close;
 end;
 
 procedure TTestForm.FormKeyPressed(e: IKeyEvent);

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="8">
+      <Unit0>
+        <Filename Value="project1.ppr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="23"/>
+        <CursorPos X="50" Y="38"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <UnitName Value="ExtCtrls"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="525"/>
+        <CursorPos X="27" Y="539"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\customimage.inc"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="57"/>
+        <CursorPos X="11" Y="92"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="C:\codetyphon\typhon\lcl\controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="2348"/>
+        <CursorPos X="3" Y="2350"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="909"/>
+        <CursorPos X="38" Y="918"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\fpimagebitmap.inc"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="128"/>
+        <CursorPos X="35" Y="142"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\picture.inc"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="419"/>
+        <CursorPos X="3" Y="421"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit7>
+    </Units>
+    <JumpHistory Count="23" HistoryIndex="20">
+      <Position1>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="562" Column="23" TopLine="557"/>
+      </Position1>
+      <Position2>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="524" Column="18" TopLine="520"/>
+      </Position2>
+      <Position3>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="490" Column="32" TopLine="482"/>
+      </Position3>
+      <Position4>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="596" Column="18" TopLine="584"/>
+      </Position4>
+      <Position5>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="539" Column="57" TopLine="525"/>
+      </Position5>
+      <Position6>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="508" Column="16" TopLine="496"/>
+      </Position6>
+      <Position7>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="714" Column="28" TopLine="701"/>
+      </Position7>
+      <Position8>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="420" Column="11" TopLine="406"/>
+      </Position8>
+      <Position9>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="1351" Column="32" TopLine="1337"/>
+      </Position9>
+      <Position10>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="596" Column="18" TopLine="582"/>
+      </Position10>
+      <Position11>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="539" Column="26" TopLine="525"/>
+      </Position11>
+      <Position12>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="858" Column="29" TopLine="847"/>
+      </Position12>
+      <Position13>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="860" Column="36" TopLine="847"/>
+      </Position13>
+      <Position14>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="426" Column="17" TopLine="412"/>
+      </Position14>
+      <Position15>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="596" Column="19" TopLine="583"/>
+      </Position15>
+      <Position16>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="539" Column="27" TopLine="525"/>
+      </Position16>
+      <Position17>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="848" Column="11" TopLine="835"/>
+      </Position17>
+      <Position18>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="714" Column="28" TopLine="701"/>
+      </Position18>
+      <Position19>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="420" Column="11" TopLine="406"/>
+      </Position19>
+      <Position20>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="1351" Column="33" TopLine="1337"/>
+      </Position20>
+      <Position21>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="918" Column="38" TopLine="908"/>
+      </Position21>
+      <Position22>
+        <Filename Value="C:\codetyphon\typhon\lcl\graphics.pp"/>
+        <Caret Line="855" Column="15" TopLine="841"/>
+      </Position22>
+      <Position23>
+        <Filename Value="C:\codetyphon\typhon\lcl\include\picture.inc"/>
+        <Caret Line="421" Column="3" TopLine="419"/>
+      </Position23>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

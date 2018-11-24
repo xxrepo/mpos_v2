@@ -307,6 +307,7 @@ begin
   Messager.Debug('NotifySystem(%s)...', [AEventName]);
   for i:=0 to FSystemListenerList.Count-1 do
     begin
+      Messager.Debug('NotifySystem() 执行 FSystemListenerList[%d]', [i]);
       sl := FSystemListenerList[i];
       se := TSystemEvent.Create(Self, Self);
       case AEventName of
@@ -322,24 +323,28 @@ begin
   'Loaded':
      begin
        for i:=0 to FLoadedExecuteList.Count-1 do
-         FLoadedExecuteList[i].Run;
+         begin
+           Messager.Debug('NotifySystem() 执行 FLoadedExecuteList[%d]', [i]);
+           FLoadedExecuteList[i].Run;
+         end;
        FLoadedExecuteList.Clear;
      end;
   'Prepared':
      begin
        for i:=0 to FPreparedExecuteList.Count-1 do
-         FPreparedExecuteList[i].Run;
+         begin
+           Messager.Debug('NotifySystem() 执行 PreparedExecuteList[%d]', [i]);
+           FPreparedExecuteList[i].Run;
+         end;
        FPreparedExecuteList.Clear;
-       //if Assigned(FLoginHandler) then
-       //  if FLoginHandler.DoLogin then
-       //    NotifySystem('Logined')
-       //  else
-       //    AppSystem.Close;
      end;
   'Logined':
      begin
        for i:=0 to FLoginedExecuteList.Count-1 do
-         FLoginedExecuteList[i].Run;
+         begin
+           Messager.Debug('NotifySystem() 执行 FLoginedExecuteList[%d]', [i]);
+           FLoginedExecuteList[i].Run;
+         end;
        FLoginedExecuteList.Clear;
      end;
   end;

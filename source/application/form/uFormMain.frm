@@ -1,7 +1,7 @@
 inherited MainForm: TMainForm
-  Left = 368
+  Left = 86
   Height = 448
-  Top = 368
+  Top = 86
   Width = 1024
   BorderStyle = bsNone
   Caption = 'MainForm'
@@ -84,13 +84,25 @@ inherited MainForm: TMainForm
         TabOrder = 0
       end
       object PanelClient: TPanel
-        Left = 0
+        Left = 20
         Height = 362
         Top = 0
-        Width = 576
+        Width = 556
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
+      end
+      object PanelLeft: TPanel
+        Left = 0
+        Height = 362
+        Top = 0
+        Width = 20
+        Align = alLeft
+        BevelOuter = bvNone
+        Color = clSkyBlue
+        ParentColor = False
+        TabOrder = 2
+        Visible = False
       end
     end
     object PanelRightHint: TPanel

@@ -126,6 +126,10 @@ type
     constructor Create(AOwner: TComponent; AContainer: TAControl); override;
     constructor Create(AOwner: TComponent; AContainer: TAControl; ACols, ARows: Integer); overload;
     destructor Destroy; override;
+    property BorderSpacing;
+    property LeftSpacing;
+    property TopSpacing;
+  public
     property ColCount: Integer read GetColCount write SetColCount;
     property RowCount: Integer read GetRowCount write SetRowCount;
     property ColWidths[ACol: Integer]: Integer read GetColWidth write SetColWidth;
@@ -141,6 +145,15 @@ type
     function PutLayoutControl(AControl: TAControl; IsAlign: Boolean): Boolean; overload;
     procedure ReLayout; override;
   end;
+
+const
+  DEF_BorderSpacing: Integer=10;
+  DEF_LeftSpacing: Integer=0;
+  DEF_Toppacing: Integer=0;
+  INIT_GridColWidth: Integer=80;
+  INIT_GridRowHeight: Integer=40;
+  DEF_GridColCount: Integer=4;
+  DEF_GridRowCount: Integer=4;
 
 implementation
 
@@ -184,9 +197,9 @@ begin
   FContainer := AContainer;
   FItemClass := TLayoutItem;
   FItems := TFPHashObjectList.Create(True);
-  FBorderSpacing := 10;
-  FLeftSpacing := 10;
-  FTopSpacing := 10;
+  FBorderSpacing := DEF_BorderSpacing;
+  FLeftSpacing := DEF_LeftSpacing;
+  FTopSpacing := DEF_Toppacing;
 end;
 
 destructor TALayoutManager.Destroy;
@@ -492,12 +505,12 @@ begin
   inherited Create(AOwner, AContainer);
   FItemClass := TGridLayoutItem;
   //FLayoutRecList := TFPHashObjectList.Create(False);
-  FDefaultColWidth := 80;
-  FDefaultRowHeight := 40;
+  FDefaultColWidth := INIT_GridColWidth;
+  FDefaultRowHeight := INIT_GridRowHeight;
   FAlignAtGrid := False;
   //
-  ColCount := 4;
-  RowCount := 2;
+  ColCount := DEF_GridColCount;
+  RowCount := DEF_GridRowCount;
   //
   FSetPosSL := TStringList.Create;
 end;
@@ -733,13 +746,13 @@ begin
   for i:=Low(FColWidths) to High(FColWidths) do
     begin
       lefts[i] := tempInt;
-      tempInt := tempInt + FColWidths[i];
+      tempInt := tempInt + LeftSpacing + FColWidths[i];
     end;
   tempInt := BorderSpacing;
   for i:=Low(FRowHeights) to High(FRowHeights) do
     begin
       tops[i] := tempInt;
-      tempInt := tempInt + FRowHeights[i];
+      tempInt := tempInt + TopSpacing + FRowHeights[i];
     end;
   //FLayoutRecList.Clear;
   //先布局指定位置的

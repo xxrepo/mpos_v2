@@ -1,4 +1,4 @@
-library sale_peripheral;
+library mpos_mfs;
 
 {$mode objfpc}{$H+}
 
@@ -8,15 +8,22 @@ uses
   {$ENDIF}
   Classes, cm_InterfaceRegister, cm_InterfaceLoader, cm_plat
   { you can add units after this / 你可以在这之后增加单元 },
-  uSystem, uSaleQuery;
+  cm_AWT, uSystem, uMain, uNavigator, uNavigatorFrame;
 
 function LoadExport(ARegister: ICMInterfaceRegister; const AInfo: ICMLibInfo): Boolean; stdcall;
+var
+  nf: TNavigatorFrame;
 begin
   Result := False;
   if not SetInterfaceRegister(ARegister) then
     Exit;
-  AppSystem.AddPreparedOneOffExecute(TASaleQueryForm.Create(nil));
-
+  //
+  nf := TNavigatorFrame.Create(nil);
+  nf.Parent := GetMainBlock.GetRight;
+  nf.Align := alClient;
+  AppSystem.AddPreparedOneOffExecute(nf);
+  InterfaceRegister.PutInterface('INavigator', INavigator, nf);
+  //
   Result := True;
 end;
 

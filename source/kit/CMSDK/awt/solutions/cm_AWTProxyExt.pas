@@ -1,4 +1,4 @@
-unit cm_AWTProxyUtils;
+unit cm_AWTProxyExt;
 
 {$mode objfpc}{$H+}
 

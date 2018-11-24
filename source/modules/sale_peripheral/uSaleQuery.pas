@@ -16,7 +16,7 @@ type
 
   { TASaleQueryForm }
 
-  TASaleQueryForm = class(TAQueryServiceForm)
+  TASaleQueryForm = class(TAQueryServiceForm, IRunnable, INavNodeListener)
   private
     FSNLab: TALabel;
     FCodeLab: TALabel;
@@ -25,6 +25,10 @@ type
     FGridLayout: TAGridLayout;
   public
     constructor Create(AOwner: TAComponent); override;
+    procedure Run;
+    procedure Selected(e: INavNodeEvent);
+    procedure Opened(e: INavNodeEvent);
+  public
     procedure FormShow(e: IFormEvent); override;
     procedure FormClick(e: IControlEvent); override;
     procedure FormKeyPressed(e: IKeyEvent); override;
@@ -32,13 +36,8 @@ type
     procedure DoQuery;
   end;
 
-  { TNavigatorNodeListener }
-
-  TNavigatorNodeListener = class(TNavigatorNodeAdapter, IRunnable)
-  public
-    procedure Click(e: INavigatorNodeEvent); override;
-    procedure Run;
-  end;
+const
+  SaleQueryNodeName: string = 'SaleQuery';
 
 implementation
 
@@ -49,6 +48,7 @@ uses cm_AWTControlUtils;
 constructor TASaleQueryForm.Create(AOwner: TAComponent);
 begin
   inherited Create(AOwner);
+  Self.SetTitle('交易查询');
   FSNLab := TALabel.Create(FQueryPanel);
   FSNLab.Parent := FQueryPanel;
   FSNLab.Caption := '单据编号：';
@@ -68,6 +68,31 @@ begin
   //
   AddButton('退出').AddControlListener(Self);
   AddButton('查询').AddControlListener(Self);
+end;
+
+procedure TASaleQueryForm.Run;
+var
+  n: INavigator;
+  navNode: INavNode;
+begin
+  Messager.Error('Run()...');
+  if InterfaceRegister.OutInterface(INavigator, n) then
+    begin
+      navNode := n.FindNode(SaleQueryNodeName);
+      if Assigned(navNode) then
+        navNode.SetListener(Self);
+    end;
+end;
+
+procedure TASaleQueryForm.Selected(e: INavNodeEvent);
+begin
+  Self.BoundsRect := AppSystem.GetServiceRect;
+  Self.ShowModal;
+end;
+
+procedure TASaleQueryForm.Opened(e: INavNodeEvent);
+begin
+
 end;
 
 procedure TASaleQueryForm.FormShow(e: IFormEvent);
@@ -108,31 +133,6 @@ end;
 procedure TASaleQueryForm.DoQuery;
 begin
   AppSystem.GetMsgBar.ShowMessage(etWarning, '功能尚未开发！');
-end;
-
-{ TNavigatorNodeListener }
-
-var
-  f: TASaleQueryForm;
-
-procedure TNavigatorNodeListener.Click(e: INavigatorNodeEvent);
-begin
-  f := TASaleQueryForm.Create(nil);
-  f.SetTitle('交易查询');
-  f.BoundsRect := AppSystem.GetServiceRect;
-  f.ShowModal;
-  f.Free;
-end;
-
-procedure TNavigatorNodeListener.Run;
-var
-  n: INavigator;
-begin
-  if InterfaceRegister.OutInterface(INavigator, n) then
-    begin
-      DefaultMessager.Error('INavigator.GetNode(''SaleQuery'')...');
-      n.GetNode('SaleQuery').SetListener(Self);
-    end;
 end;
 
 
