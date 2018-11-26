@@ -24,6 +24,16 @@ type
   // for StdCtrls
   TScrollStyle = (ssNone, ssHorizontal, ssVertical, ssBoth, ssAutoHorizontal, ssAutoVertical, ssAutoBoth);
 
+  TComboBoxStyle = (
+    csDropDown,
+    csSimple,
+    csDropDownList,
+    csOwnerDrawFixed,
+    csOwnerDrawVariable,
+    csOwnerDrawEditableFixed,
+    csOwnerDrawEditableVariable
+  );
+
   TMouseButton = (mbLeft, mbRight, mbMiddle, mbExtra1, mbExtra2, mbUnknown);
 
   // for Grids

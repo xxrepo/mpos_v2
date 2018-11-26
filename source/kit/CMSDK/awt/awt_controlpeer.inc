@@ -23,7 +23,7 @@
   end;
 
   IAControlPeer = interface(IAComponentPeer)
-    ['{53BFEB8E-E34E-4500-9535-F2D6FEF50DDA}']
+    ['{98DA4F74-E24A-4167-86BF-08CF841A4E7C}']
     function GetAlign: TAlign;
     function GetAutoSize: Boolean;
     function GetBorderSpacing: TAControlBorderSpacing;
@@ -118,6 +118,58 @@
     procedure AddCustomControlListener(l: ICustomControlListener);
     procedure RemoveCustomControlListener(l: ICustomControlListener);
     function GetCustomControlListeners: TCustomControlListenerList;
+  end;
+
+  IAListBoxPeer = interface(IAWinControlPeer)
+    ['{199CECD4-7ED2-4E84-B1AC-AED8CEB824E9}']
+    function GetCanvas: TACanvas;
+    function GetCount: Integer;
+    function GetItemHeight: Integer;
+    function GetItemIndex: Integer;
+    function GetItems: TStrings;
+    function GetSelected(Index: Integer): Boolean;
+    function GetSorted: Boolean;
+    procedure SetItemHeight(AValue: Integer);
+    procedure SetItemIndex(AValue: Integer);
+    procedure SetItems(AValue: TStrings);
+    procedure SetSelected(Index: Integer; AValue: Boolean);
+    procedure SetSorted(AValue: Boolean);
+    procedure Clear;
+    function GetSelectedText: string;
+    function ItemRect(Index: Integer): TRect;
+    procedure AddListBoxListener(l: IListBoxListener);
+    procedure RemoveListBoxListener(l: IListBoxListener);
+    function GetListBoxListeners: TListBoxListenerList;
+  end;
+
+  IAComboBoxPeer = interface(IAWinControlPeer)
+    ['{06106264-E9AD-48ED-B8AD-303CDE2B1854}']
+    function GetMaxLength: Integer;
+    function GetSorted: Boolean;
+    procedure SetMaxLength(AValue: Integer);
+    procedure SetSorted(AValue: Boolean);
+    procedure AddComboBoxListener(l: IComboBoxListener);
+    procedure RemoveComboBoxListener(l: IComboBoxListener);
+    function GetComboBoxListeners: TComboBoxListenerList;
+    //
+    function GetCanvas: TACanvas;
+    function GetDropDownCount: Integer;
+    function GetItemIndex: Integer;
+    function GetItems: TStrings;
+    function GetSelLength: Integer;
+    function GetSelStart: Integer;
+    function GetSelText: string;
+    function GetStyle: TComboBoxStyle;
+    procedure SetDropDownCount(AValue: Integer);
+    procedure SetItemIndex(AValue: Integer);
+    procedure SetItems(AValue: TStrings);
+    procedure SetSelLength(AValue: Integer);
+    procedure SetSelStart(AValue: Integer);
+    procedure SetSelText(AValue: string);
+    procedure SetStyle(AValue: TComboBoxStyle);
+    //
+    procedure Clear;
+    procedure SelectAll;
   end;
 
   IALabelPeer = interface(IAGraphicControlPeer)

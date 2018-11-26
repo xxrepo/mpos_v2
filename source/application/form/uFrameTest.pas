@@ -5,7 +5,7 @@ unit uFrameTest;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics, Grids, DBGrids, DateTimePicker,
+  Classes, SysUtils, Forms, Controls, ExtCtrls, StdCtrls, Graphics, DBGrids,
   cm_theme, cm_plat,
   uSale, uSaleDTO,
   uSystem,
@@ -18,17 +18,16 @@ type
   TTestFrame = class(TFrame)
     Button1: TButton;
     Button2: TButton;
-    DateTimePicker1: TDateTimePicker;
-    DBGrid1: TDBGrid;
-    DrawGrid1: TDrawGrid;
+    Button3: TButton;
+    ComboBox1: TComboBox;
     Label1: TLabel;
-    Memo1: TMemo;
+    ListBox1: TListBox;
     Panel1: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
-    StringGrid1: TStringGrid;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
     procedure FrameClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
     procedure Panel6Click(Sender: TObject);
@@ -102,17 +101,8 @@ begin
   //Panel1.TabOrder := ;
   //Panel1.OnMouseDown := ;
   //Label1.OnMouseDown := ;
-  //Memo1.
-  //Memo1.ReadOnly := ;
-  //Memo1.NumbersOnly := ;
-  //TForm.OnClose := ;
-  StringGrid1.FocusColor := clRed;
-  StringGrid1.Editor := Memo1;
-  //StringGrid1.TitleFont;
+  //ListBox1.bo
   //TButton.Click;
-  //Label1.ParentColor := ;
-  //TEdit.ParentFont := ;
-  //Self.Hint := ;
 end;
 
 procedure TTestFrame.Button1Click(Sender: TObject);
@@ -156,6 +146,13 @@ begin
 
 
   f.ShowModal;
+end;
+
+procedure TTestFrame.Button3Click(Sender: TObject);
+begin
+  ListBox1.Canvas.Brush.Color := clRed;
+  ListBox1.Canvas.FillRect(33,33,44,66);
+  //ComboBox1.MaxLength := ;
 end;
 
 procedure TTestFrame.Panel6Click(Sender: TObject);
@@ -223,7 +220,7 @@ begin
   FGridLayout.ReLayout;
 
   g := TAStringGrid.Create(Self);
-  g.Parent := Self;
+  //g.Parent := Self;
   g.Width := 300;
   g.Height := 200;
   g.Options := g.Options + [goEditing];
@@ -248,11 +245,31 @@ constructor TTestForm.Create(AOwner: TAComponent);
 var
   p: TAPanel;
   i: Integer;
+  lb: TAListBox;
+  cb: TAComboBox;
+  sl: TStrings;
 begin
   inherited Create(AOwner);
   FCenterPanel.Width := 400;
   FCenterPanel.Height := 300;
   FCenterPanel.Color := clGray;
+  //
+  lb := TAListBox.Create(Self);
+  lb.Parent := Self;
+  lb.Items.Add('aa');
+  lb.Items.Add('bb');
+  lb.Items.Add('cc');
+  cb := TAComboBox.Create(Self);
+  cb.Parent := Self;
+  cb.Top := 100;
+
+  sl := TStringList.Create;
+  sl.Add('甲');
+  sl.Add('乙');
+  sl.Add('丙');
+  lb.Items := sl;
+
+
   FGridLayout := TAGridLayout.Create(nil, FCenterPanel, 3, 4);
 
   for i:=0 to 6 do

@@ -8,6 +8,7 @@
       <Unit0>
         <Filename Value="mpos_mfs.ppr"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="7"/>
         <CursorPos X="54" Y="16"/>
         <UsageCount Value="20"/>
@@ -93,7 +94,6 @@
       <Unit10>
         <Filename Value="uNavigatorFrame.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="277"/>
         <CursorPos X="10" Y="288"/>
@@ -118,7 +118,7 @@
       <Unit13>
         <Filename Value="nav_parameter.inc"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="2"/>
         <TopLine Value="98"/>
         <CursorPos X="60" Y="111"/>
         <UsageCount Value="20"/>
@@ -126,19 +126,18 @@
       </Unit13>
       <Unit14>
         <Filename Value="..\..\kit\CMSDK\cm_tree.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="10"/>
-        <CursorPos X="3" Y="14"/>
+        <CursorPos X="23" Y="10"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit14>
       <Unit15>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\inc\objpash.inc"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="285"/>
         <CursorPos X="8" Y="299"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit15>
       <Unit16>
         <Filename Value="C:\codetyphon\fpcsrc\rtl\objpas\sysutils\intfh.inc"/>

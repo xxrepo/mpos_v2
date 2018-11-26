@@ -11,12 +11,14 @@
   }
 
   IAToolkit = interface(IUnknown)
-    ['{7323BB96-D74B-443F-959A-BB847F2778CC}']
+    ['{3C5EB947-43A1-4D74-A76E-95167B22A322}']
     function CreateCustomBitmap(ATarget: TACustomBitmap): IACustomBitmapPeer;
     function CreateFont(ATarget: TAFont): IAFontPeer;
     function CreateCanvas(ATarget: TACanvas): IACanvasPeer;
     function CreateBorderSpacing(ATarget: TAControlBorderSpacing; OwnerControl: TAControl): IAControlBorderSpacingPeer;
     //
+    function CreateListBox(ATarget: TAListBox): IAListBoxPeer;
+    function CreateComboBox(ATarget: TAComboBox): IAComboBoxPeer;
     function CreateLabel(ATarget: TALabel): IALabelPeer;
     function CreatePanel(ATarget: TAPanel): IAPanelPeer;
     function CreateEdit(ATarget: TAEdit): IAEditPeer;

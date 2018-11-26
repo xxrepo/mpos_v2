@@ -37,6 +37,22 @@ type
     function GetACustomControl: TACustomControl;
   end;
 
+  { TListBoxEvent }
+
+  TListBoxEvent = class(TWinControlEvent, IListBoxEvent)
+  public
+    constructor Create(ASource: TObject; AAListBox: TAListBox);
+    function GetAListBox: TAListBox;
+  end;
+
+  { TComboBoxEvent }
+
+  TComboBoxEvent = class(TWinControlEvent, IComboBoxEvent)
+  public
+    constructor Create(ASource: TObject; AAComboBox: TAComboBox);
+    function GetAComboBox: TAComboBox;
+  end;
+
   { TEditEvent }
 
   TEditEvent = class(TWinControlEvent, IEditEvent)
@@ -147,6 +163,30 @@ end;
 function TCustomControlEvent.GetACustomControl: TACustomControl;
 begin
   Result := TACustomControl(FAControl);
+end;
+
+{ TListBoxEvent }
+
+constructor TListBoxEvent.Create(ASource: TObject; AAListBox: TAListBox);
+begin
+  inherited Create(ASource, AAListBox);
+end;
+
+function TListBoxEvent.GetAListBox: TAListBox;
+begin
+  Result := TAListBox(FAControl);
+end;
+
+{ TComboBoxEvent }
+
+constructor TComboBoxEvent.Create(ASource: TObject; AAComboBox: TAComboBox);
+begin
+  inherited Create(ASource, AAComboBox);
+end;
+
+function TComboBoxEvent.GetAComboBox: TAComboBox;
+begin
+  Result := TAComboBox(FAControl);
 end;
 
 { TEditEvent }

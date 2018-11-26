@@ -239,7 +239,7 @@ type
   public
     function GetParent: TAWinControl;
     procedure SetParent(AValue: TAWinControl);
-  protected
+  protected  //control 未公开
     procedure Click; virtual;
     procedure DblClick; virtual;
   public
@@ -307,7 +307,7 @@ type
 
   { TProxyCustomControlPeer }
 
-  TProxyCustomControlPeer = class(TProxyWinControlPeer, IACustomControlPeer)
+  TProxyCustomControlPeer = class abstract(TProxyWinControlPeer, IACustomControlPeer)
   private
     FCanvas: TACanvas;
   protected
@@ -317,6 +317,7 @@ type
     destructor Destroy; override;
     function GetDelegate: TCustomControl;
     procedure CustomControlPaintEvent(Sender: TObject);
+  public //override WinControl
     function GetBorderStyle: TBorderStyle; override;
     procedure SetBorderStyle(AValue: TBorderStyle); override;
   public
@@ -325,6 +326,99 @@ type
     procedure AddCustomControlListener(l: ICustomControlListener);
     procedure RemoveCustomControlListener(l: ICustomControlListener);
     function GetCustomControlListeners: TCustomControlListenerList;
+  end;
+
+  { TProxyListBoxPeer }
+
+  TProxyListBoxPeer = class(TProxyWinControlPeer, IAListBoxPeer)
+  private
+    FCanvas: TACanvas;
+  protected
+    procedure CheckListBoxEvents;
+  public
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
+    destructor Destroy; override;
+    function GetDelegate: TListBox;
+    procedure ListBoxSelectionChangeEvent(Sender: TObject; User: Boolean);
+  public //override TProxyControlPeer
+    procedure Click; override;
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
+  public //override TProxyWinControlPeer
+    function GetBorderStyle: TBorderStyle; override;
+    procedure SetBorderStyle(AValue: TBorderStyle); override;
+  public
+    function GetCanvas: TACanvas;
+    function GetCount: Integer;
+    function GetItemHeight: Integer;
+    function GetItemIndex: Integer;
+    function GetItems: TStrings;
+    function GetSelected(Index: Integer): Boolean;
+    function GetSorted: Boolean;
+    procedure SetItemHeight(AValue: Integer);
+    procedure SetItemIndex(AValue: Integer);
+    procedure SetItems(AValue: TStrings);
+    procedure SetSelected(Index: Integer; AValue: Boolean);
+    procedure SetSorted(AValue: Boolean);
+    procedure Clear;
+    function GetSelectedText: string;
+    function ItemRect(Index: Integer): TRect;
+    procedure AddListBoxListener(l: IListBoxListener);
+    procedure RemoveListBoxListener(l: IListBoxListener);
+    function GetListBoxListeners: TListBoxListenerList;
+  end;
+
+  { TProxyComboBoxPeer }
+
+  TProxyComboBoxPeer = class(TProxyWinControlPeer, IAComboBoxPeer)
+  private
+    FCanvas: TACanvas;
+  protected
+    procedure CheckComboBoxEvents;
+  public
+    constructor Create(TheTarget: TAComponent; AOwner: TComponent); override;
+    destructor Destroy; override;
+    function GetDelegate: TComboBox;
+    procedure ComboBoxChangeEvent(Sender: TObject);
+    procedure ComboBoxDropDownEvent(Sender: TObject);
+    procedure ComboBoxSelectEvent(Sender: TObject);
+  public //override TProxyControlPeer
+    function GetParentColor: Boolean; override;
+    function GetParentFont: Boolean; override;
+    procedure SetParentColor(AValue: Boolean); override;
+    procedure SetParentFont(AValue: Boolean); override;
+  public //override TProxyWinControlPeer
+    function GetBorderStyle: TBorderStyle; override;
+    procedure SetBorderStyle(AValue: TBorderStyle); override;
+  public
+    function GetMaxLength: Integer;
+    function GetSorted: Boolean;
+    procedure SetMaxLength(AValue: Integer);
+    procedure SetSorted(AValue: Boolean);
+    procedure AddComboBoxListener(l: IComboBoxListener);
+    procedure RemoveComboBoxListener(l: IComboBoxListener);
+    function GetComboBoxListeners: TComboBoxListenerList;
+    //
+    function GetCanvas: TACanvas;
+    function GetDropDownCount: Integer;
+    function GetItemIndex: Integer;
+    function GetItems: TStrings;
+    function GetSelLength: Integer;
+    function GetSelStart: Integer;
+    function GetSelText: string;
+    function GetStyle: TComboBoxStyle;
+    procedure SetDropDownCount(AValue: Integer);
+    procedure SetItemIndex(AValue: Integer);
+    procedure SetItems(AValue: TStrings);
+    procedure SetSelLength(AValue: Integer);
+    procedure SetSelStart(AValue: Integer);
+    procedure SetSelText(AValue: string);
+    procedure SetStyle(AValue: TComboBoxStyle);
+    //
+    procedure Clear;
+    procedure SelectAll;
   end;
 
   { TProxyLabelPeer }
@@ -1616,6 +1710,431 @@ begin
     for i:=0 to FControlListenerList.Count-1 do
       if Supports(FControlListenerList[i], ICustomControlListener) then
         Result.Add(ICustomControlListener(FControlListenerList[i]));
+end;
+
+{ TProxyListBoxPeer }
+
+constructor TProxyListBoxPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
+begin
+  inherited Create(TheTarget, AOwner);
+  FCanvas := nil;
+  FDelegateObj := TListBox.Create(AOwner);
+end;
+
+destructor TProxyListBoxPeer.Destroy;
+begin
+  if Assigned(FCanvas) then
+    FCanvas.Free;
+  inherited Destroy;
+end;
+
+procedure TProxyListBoxPeer.CheckListBoxEvents;
+begin
+  if GetDelegate.OnSelectionChange <> @ListBoxSelectionChangeEvent then
+    GetDelegate.OnSelectionChange := @ListBoxSelectionChangeEvent;
+end;
+
+function TProxyListBoxPeer.GetDelegate: TListBox;
+begin
+  Result := TListBox(FDelegateObj);
+end;
+
+procedure TProxyListBoxPeer.ListBoxSelectionChangeEvent(Sender: TObject; User: Boolean);
+var
+  i: Integer;
+  lbe: IListBoxEvent;
+  lbl: IListBoxListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      lbe := TListBoxEvent.Create(Sender, TAListBox(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if Supports(FControlListenerList[i], IListBoxListener, lbl) then
+          lbl.ListBoxSelectionChange(lbe);
+    end;
+end;
+
+procedure TProxyListBoxPeer.Click;
+begin
+  GetDelegate.Click;
+end;
+
+function TProxyListBoxPeer.GetParentColor: Boolean;
+begin
+  Result := GetDelegate.ParentColor;
+end;
+
+function TProxyListBoxPeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyListBoxPeer.SetParentColor(AValue: Boolean);
+begin
+  GetDelegate.ParentColor := AValue;
+end;
+
+procedure TProxyListBoxPeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
+end;
+
+function TProxyListBoxPeer.GetBorderStyle: TBorderStyle;
+begin
+  Result := cm_AWT.TBorderStyle(GetDelegate.BorderStyle);
+end;
+
+procedure TProxyListBoxPeer.SetBorderStyle(AValue: TBorderStyle);
+begin
+  GetDelegate.BorderStyle := Controls.TBorderStyle(AValue);
+end;
+
+function TProxyListBoxPeer.GetCanvas: TACanvas;
+var
+  cp: IACanvasPeer;
+begin
+  Result := nil;
+  if not Assigned(FCanvas) then
+    begin
+      cp := TProxyCanvasPeer.Create(GetDelegate.Canvas);
+      FCanvas := TACanvas.Create(cp);
+    end;
+  Result := FCanvas;
+end;
+
+function TProxyListBoxPeer.GetCount: Integer;
+begin
+  Result := GetDelegate.Count;
+end;
+
+function TProxyListBoxPeer.GetItemHeight: Integer;
+begin
+  Result := GetDelegate.ItemHeight;
+end;
+
+function TProxyListBoxPeer.GetItemIndex: Integer;
+begin
+  Result := GetDelegate.ItemIndex;
+end;
+
+function TProxyListBoxPeer.GetItems: TStrings;
+begin
+  Result := GetDelegate.Items;
+end;
+
+function TProxyListBoxPeer.GetSelected(Index: Integer): Boolean;
+begin
+  Result := GetDelegate.Selected[Index];
+end;
+
+function TProxyListBoxPeer.GetSorted: Boolean;
+begin
+  Result := GetDelegate.Sorted;
+end;
+
+procedure TProxyListBoxPeer.SetItemHeight(AValue: Integer);
+begin
+  GetDelegate.ItemHeight := AValue;
+end;
+
+procedure TProxyListBoxPeer.SetItemIndex(AValue: Integer);
+begin
+  GetDelegate.ItemIndex := AValue;
+end;
+
+procedure TProxyListBoxPeer.SetItems(AValue: TStrings);
+begin
+  GetDelegate.Items := AValue;
+end;
+
+procedure TProxyListBoxPeer.SetSelected(Index: Integer; AValue: Boolean);
+begin
+  GetDelegate.Selected[Index] := AValue;
+end;
+
+procedure TProxyListBoxPeer.SetSorted(AValue: Boolean);
+begin
+  GetDelegate.Sorted := AValue;
+end;
+
+procedure TProxyListBoxPeer.Clear;
+begin
+  GetDelegate.Clear;
+end;
+
+function TProxyListBoxPeer.GetSelectedText: string;
+begin
+  Result := GetDelegate.GetSelectedText;
+end;
+
+function TProxyListBoxPeer.ItemRect(Index: Integer): TRect;
+begin
+  Result := GetDelegate.ItemRect(Index);
+end;
+
+procedure TProxyListBoxPeer.AddListBoxListener(l: IListBoxListener);
+begin
+  CheckListBoxEvents;
+  Self.AddWinControlListener(l);
+end;
+
+procedure TProxyListBoxPeer.RemoveListBoxListener(l: IListBoxListener);
+begin
+  Self.RemoveControlListener(l);
+end;
+
+function TProxyListBoxPeer.GetListBoxListeners: TListBoxListenerList;
+var
+  i: Integer;
+begin
+  // TODO 线程安全
+  Result := TListBoxListenerList.Create;
+  if Assigned(FControlListenerList) then
+    for i:=0 to FControlListenerList.Count-1 do
+      if Supports(FControlListenerList[i], IListBoxListener) then
+        Result.Add(IListBoxListener(FControlListenerList[i]));
+end;
+
+{ TProxyComboBoxPeer }
+
+constructor TProxyComboBoxPeer.Create(TheTarget: TAComponent; AOwner: TComponent);
+begin
+  inherited Create(TheTarget, AOwner);
+  FCanvas := nil;
+  FDelegateObj := TComboBox.Create(AOwner);
+end;
+
+destructor TProxyComboBoxPeer.Destroy;
+begin
+  if Assigned(FCanvas) then
+    FCanvas.Free;
+  inherited Destroy;
+end;
+
+procedure TProxyComboBoxPeer.CheckComboBoxEvents;
+begin
+  if GetDelegate.OnChange <> @ComboBoxChangeEvent then
+    GetDelegate.OnChange := @ComboBoxChangeEvent;
+  if GetDelegate.OnDropDown <> @ComboBoxDropDownEvent then
+    GetDelegate.OnDropDown := @ComboBoxDropDownEvent;
+  if GetDelegate.OnSelect <> @ComboBoxSelectEvent then
+    GetDelegate.OnSelect := @ComboBoxSelectEvent;
+end;
+
+function TProxyComboBoxPeer.GetDelegate: TComboBox;
+begin
+  Result := TComboBox(FDelegateObj);
+end;
+
+procedure TProxyComboBoxPeer.ComboBoxChangeEvent(Sender: TObject);
+var
+  i: Integer;
+  cbe: IComboBoxEvent;
+  cbl: IComboBoxListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      cbe := TComboBoxEvent.Create(Sender, TAComboBox(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if Supports(FControlListenerList[i], IComboBoxListener, cbl) then
+          cbl.ComboBoxChange(cbe);
+    end;
+end;
+
+procedure TProxyComboBoxPeer.ComboBoxDropDownEvent(Sender: TObject);
+var
+  i: Integer;
+  cbe: IComboBoxEvent;
+  cbl: IComboBoxListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      cbe := TComboBoxEvent.Create(Sender, TAComboBox(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if Supports(FControlListenerList[i], IComboBoxListener, cbl) then
+          cbl.ComboBoxDropDown(cbe);
+    end;
+end;
+
+procedure TProxyComboBoxPeer.ComboBoxSelectEvent(Sender: TObject);
+var
+  i: Integer;
+  cbe: IComboBoxEvent;
+  cbl: IComboBoxListener;
+begin
+  if Assigned(FControlListenerList) then
+    begin
+      cbe := TComboBoxEvent.Create(Sender, TAComboBox(Self.FTargetObj));
+      for i:=0 to FControlListenerList.Count-1 do
+        if Supports(FControlListenerList[i], IComboBoxListener, cbl) then
+          cbl.ComboBoxSelect(cbe);
+    end;
+end;
+
+function TProxyComboBoxPeer.GetParentColor: Boolean;
+begin
+  Result := GetDelegate.ParentColor;
+end;
+
+function TProxyComboBoxPeer.GetParentFont: Boolean;
+begin
+  Result := GetDelegate.ParentFont;
+end;
+
+procedure TProxyComboBoxPeer.SetParentColor(AValue: Boolean);
+begin
+  GetDelegate.ParentColor := AValue;
+end;
+
+procedure TProxyComboBoxPeer.SetParentFont(AValue: Boolean);
+begin
+  GetDelegate.ParentFont := AValue;
+end;
+
+function TProxyComboBoxPeer.GetBorderStyle: TBorderStyle;
+begin
+  Result := cm_AWT.TBorderStyle(GetDelegate.BorderStyle);
+end;
+
+procedure TProxyComboBoxPeer.SetBorderStyle(AValue: TBorderStyle);
+begin
+  GetDelegate.BorderStyle := Controls.TBorderStyle(AValue);
+end;
+
+function TProxyComboBoxPeer.GetMaxLength: Integer;
+begin
+  Result := GetDelegate.MaxLength;
+end;
+
+function TProxyComboBoxPeer.GetSorted: Boolean;
+begin
+  Result := GetDelegate.Sorted;
+end;
+
+procedure TProxyComboBoxPeer.SetMaxLength(AValue: Integer);
+begin
+  GetDelegate.MaxLength := AValue;
+end;
+
+procedure TProxyComboBoxPeer.SetSorted(AValue: Boolean);
+begin
+  GetDelegate.Sorted := AValue;
+end;
+
+procedure TProxyComboBoxPeer.AddComboBoxListener(l: IComboBoxListener);
+begin
+  CheckComboBoxEvents;
+  Self.AddWinControlListener(l);
+end;
+
+procedure TProxyComboBoxPeer.RemoveComboBoxListener(l: IComboBoxListener);
+begin
+  Self.RemoveControlListener(l);
+end;
+
+function TProxyComboBoxPeer.GetComboBoxListeners: TComboBoxListenerList;
+var
+  i: Integer;
+begin
+  // TODO 线程安全
+  Result := TComboBoxListenerList.Create;
+  if Assigned(FControlListenerList) then
+    for i:=0 to FControlListenerList.Count-1 do
+      if Supports(FControlListenerList[i], IComboBoxListener) then
+        Result.Add(IComboBoxListener(FControlListenerList[i]));
+end;
+
+function TProxyComboBoxPeer.GetCanvas: TACanvas;
+var
+  cp: IACanvasPeer;
+begin
+  Result := nil;
+  if not Assigned(FCanvas) then
+    begin
+      cp := TProxyCanvasPeer.Create(GetDelegate.Canvas);
+      FCanvas := TACanvas.Create(cp);
+    end;
+  Result := FCanvas;
+end;
+
+function TProxyComboBoxPeer.GetDropDownCount: Integer;
+begin
+  Result := GetDelegate.DropDownCount;
+end;
+
+function TProxyComboBoxPeer.GetItemIndex: Integer;
+begin
+  Result := GetDelegate.ItemIndex;
+end;
+
+function TProxyComboBoxPeer.GetItems: TStrings;
+begin
+  Result := GetDelegate.Items;
+end;
+
+function TProxyComboBoxPeer.GetSelLength: Integer;
+begin
+  Result := GetDelegate.SelLength;
+end;
+
+function TProxyComboBoxPeer.GetSelStart: Integer;
+begin
+  Result := GetDelegate.SelStart;
+end;
+
+function TProxyComboBoxPeer.GetSelText: string;
+begin
+  Result := GetDelegate.SelText;
+end;
+
+function TProxyComboBoxPeer.GetStyle: TComboBoxStyle;
+begin
+  Result := cm_AWT.TComboBoxStyle(GetDelegate.Style);
+end;
+
+procedure TProxyComboBoxPeer.SetDropDownCount(AValue: Integer);
+begin
+  GetDelegate.DropDownCount := AValue;
+end;
+
+procedure TProxyComboBoxPeer.SetItemIndex(AValue: Integer);
+begin
+  GetDelegate.ItemIndex := AValue;
+end;
+
+procedure TProxyComboBoxPeer.SetItems(AValue: TStrings);
+begin
+  GetDelegate.Items := AValue;
+end;
+
+procedure TProxyComboBoxPeer.SetSelLength(AValue: Integer);
+begin
+  GetDelegate.SelLength := AValue;
+end;
+
+procedure TProxyComboBoxPeer.SetSelStart(AValue: Integer);
+begin
+  GetDelegate.SelStart := AValue;
+end;
+
+procedure TProxyComboBoxPeer.SetSelText(AValue: string);
+begin
+  GetDelegate.SelText := AValue;
+end;
+
+procedure TProxyComboBoxPeer.SetStyle(AValue: TComboBoxStyle);
+begin
+  GetDelegate.Style := StdCtrls.TComboBoxStyle(AValue);
+end;
+
+procedure TProxyComboBoxPeer.Clear;
+begin
+  GetDelegate.Clear;
+end;
+
+procedure TProxyComboBoxPeer.SelectAll;
+begin
+  GetDelegate.SelectAll;
 end;
 
 { TProxyLabelPeer }

@@ -10,6 +10,8 @@ type
   TAControl = class;
   TAWinControl = class;
   TACustomControl = class;
+  TAListBox = class;
+  TAComboBox = class;
   TACustomEdit = class;
   TAForm = class;
   TACustomGrid = class;

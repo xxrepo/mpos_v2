@@ -20,6 +20,8 @@ type
     function CreateCanvas(ATarget: TACanvas): IACanvasPeer;
     function CreateBorderSpacing(ATarget: TAControlBorderSpacing; OwnerControl: TAControl): IAControlBorderSpacingPeer;
     //
+    function CreateListBox(ATarget: TAListBox): IAListBoxPeer;
+    function CreateComboBox(ATarget: TAComboBox): IAComboBoxPeer;
     function CreateLabel(ATarget: TALabel): IALabelPeer;
     function CreatePanel(ATarget: TAPanel): IAPanelPeer;
     function CreateEdit(ATarget: TAEdit): IAEditPeer;
@@ -82,6 +84,16 @@ begin
   c := OwnerControl.GetPeer.GetDelegate;
   if c is TControl then
     Result := TProxyControlBorderSpacingPeer.Create(TControl(c));
+end;
+
+function TProxyToolkit.CreateListBox(ATarget: TAListBox): IAListBoxPeer;
+begin
+  Result := TProxyListBoxPeer.Create(ATarget, nil);
+end;
+
+function TProxyToolkit.CreateComboBox(ATarget: TAComboBox): IAComboBoxPeer;
+begin
+  Result := TProxyComboBoxPeer.Create(ATarget, nil);
 end;
 
 function TProxyToolkit.CreateLabel(ATarget: TALabel): IALabelPeer;

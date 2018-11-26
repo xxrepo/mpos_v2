@@ -68,6 +68,36 @@ type
 
   TCustomControlListenerList = specialize TFGInterfaceList<ICustomControlListener>;
 
+  { IListBoxEvent }
+
+  IListBoxEvent = interface(IWinControlEvent)
+    ['{155E7F11-B262-4404-B3A8-27B06D0504B8}']
+    function GetAListBox: TAListBox;
+  end;
+
+  IListBoxListener = interface(IWinControlListener)
+    ['{E27DCA5F-6472-486D-AB59-8339AECE3CCE}']
+    procedure ListBoxSelectionChange(e: IListBoxEvent);
+  end;
+
+  TListBoxListenerList = specialize TFGInterfaceList<IListBoxListener>;
+
+  { IComboBoxEvent }
+
+  IComboBoxEvent = interface(IWinControlEvent)
+    ['{37DB41FB-359D-4EE4-BCE2-67247ED2F191}']
+    function GetAComboBox: TAComboBox;
+  end;
+
+  IComboBoxListener = interface(IWinControlListener)
+    ['{FC082D0A-A67E-4869-BC50-C37318AB1FB5}']
+    procedure ComboBoxChange(e: IComboBoxEvent);
+    procedure ComboBoxDropDown(e: IComboBoxEvent);
+    procedure ComboBoxSelect(e: IComboBoxEvent);
+  end;
+
+  TComboBoxListenerList = specialize TFGInterfaceList<IComboBoxListener>;
+
   { IFormEvent }
 
   IFormEvent = interface(ICustomControlEvent)

@@ -52,82 +52,46 @@ object TestFrame: TTestFrame
     TabOrder = 3
   end
   object Label1: TLabel
-    Left = 46
+    Left = 8
     Height = 12
-    Top = 87
+    Top = 61
     Width = 36
     Caption = 'Label1'
     ParentColor = False
   end
-  object Memo1: TMemo
-    Left = 8
-    Height = 90
-    Top = 104
-    Width = 88
-    Lines.Strings = (
-      'Memo1'
-    )
-    TabOrder = 4
-  end
-  object DateTimePicker1: TDateTimePicker
-    Left = 280
-    Height = 48
-    Top = 51
-    Width = 240
-    CenturyFrom = 1941
-    MaxDate = 2958465
-    MinDate = -53780
-    AutoSize = False
-    Font.Height = -19
-    ParentFont = False
-    TabOrder = 5
-    TrailingSeparator = False
-    TextForNullDate = 'NULL'
-    LeadingZeros = True
-    Kind = dtkDateTime
-    TimeFormat = tf24
-    TimeDisplay = tdHMS
-    DateMode = dmUpDown
-    Date = 43423
-    Time = 0.659917974538985
-    UseDefaultSeparators = True
-    HideDateTimeParts = []
-    MonthNames = 'Long'
-  end
   object Button2: TButton
-    Left = 104
+    Left = 64
     Height = 25
-    Top = 104
+    Top = 80
     Width = 75
     Caption = 'Button2'
     OnClick = Button2Click
+    TabOrder = 4
+  end
+  object ListBox1: TListBox
+    Left = 8
+    Height = 80
+    Top = 120
+    Width = 265
+    ItemHeight = 0
+    TabOrder = 5
+  end
+  object ComboBox1: TComboBox
+    Left = 8
+    Height = 25
+    Top = 224
+    Width = 100
+    ItemHeight = 17
     TabOrder = 6
+    Text = 'ComboBox1'
   end
-  object StringGrid1: TStringGrid
-    Left = 0
-    Height = 184
-    Top = 136
-    Width = 272
-    ColCount = 4
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
+  object Button3: TButton
+    Left = 145
+    Height = 25
+    Top = 267
+    Width = 75
+    Caption = 'Button3'
+    OnClick = Button3Click
     TabOrder = 7
-  end
-  object DBGrid1: TDBGrid
-    Left = 310
-    Height = 100
-    Top = 173
-    Width = 200
-    Color = clWindow
-    Columns = <>
-    TabOrder = 8
-  end
-  object DrawGrid1: TDrawGrid
-    Left = 0
-    Height = 116
-    Top = 320
-    Width = 272
-    ExtendedSelect = False
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
-    TabOrder = 9
   end
 end
